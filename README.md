@@ -1,5 +1,11 @@
 # TomCat Web
 
+## AI 编辑助手
+
+编辑器工具栏新增“AI 助手”。先通过云端登录并关联项目，再输入需求。前端通过同源 `/v1/editor-sessions` 长轮询接收工具命令，将 15 个共享 TomCat Skills 工具映射到真实 WASM 事务与预览接口；输出执行进度和 Agent 回复，场景修改后仍需点击保存。
+
+需要启动相邻 `Tc_Engine_Web_Mcp` 的 LangChain 服务，并配置后端 `Agent__Url` / `Agent__Secret`。关闭面板、退出页面或停止任务会关闭会话；已执行的编辑保留。首版每条需求独立执行，不包含持久聊天、脚本生成、自动构建发布。`node tests/agent-browser.mjs` 使用确定性模型测试真实 LangChain → MCP → 后端 → 浏览器 WASM 的创建、验证、撤销闭环。
+
 Vue 3 创作工作台，使用固定版本的上游 TomCat Web Editor / Player。社区和示例作品仍使用本地演示数据；编辑器实际运行 C++ 引擎，项目保存到 IndexedDB，未接入云端 API。
 
 ## 开发与构建

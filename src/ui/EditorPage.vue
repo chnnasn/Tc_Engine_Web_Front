@@ -7,6 +7,7 @@ import { EngineError, type Snapshot, type SceneState, type Operation } from '../
 import { readEngineProject, writeEngineProject, readCloudBinding, writeCloudBinding, type CloudBinding, type EngineDocument } from '../engine/storage'
 import { saveCloudProject, CloudError } from '../engine/cloud'
 import CloudProjects from './CloudProjects.vue'
+import AgentPanel from './AgentPanel.vue'
 import { downloadProject } from './project-file'
 
 const props = defineProps<{ project: Project }>()
@@ -23,6 +24,7 @@ const legacy = ref(false)
 const fileInput = ref<HTMLInputElement>()
 const busy = ref(false)
 const cloudOpen = ref(false)
+const agentOpen = ref(false)
 const binding = ref<CloudBinding>()
 let gone = false
 const needsSave = ref(false)
@@ -31,6 +33,11 @@ const editing = computed(() => Boolean(status.value) && (!status.value?.mode || 
 const selected = computed(() => snapshot.value?.entities.find(entity => entity.id === status.value?.selectedEntityId))
 function report(error: unknown) { emit('notify', error instanceof Error ? error.message : String(error)) }
 function updateStatus(next: SceneState) { status.value = next; emit('dirtyChange', needsSave.value || next.dirty) }
+function agentState(next: Snapshot) { snapshot.value = next; updateStatus(next) }
+async function agentCall<T = any>(type: string, payload?: unknown): Promise<T> {
+  if (!surface.value || gone) throw new Error('编辑器尚未就绪')
+  return surface.value.call<T>(type, payload)
+}
 async function refresh() {
   if (!surface.value) return
   snapshot.value = await surface.value.call<Snapshot>('snapshot')
@@ -165,9 +172,11 @@ onBeforeUnmount(() => { gone = true; window.removeEventListener('beforeunload', 
       <button class="button" :disabled="!editing || busy" @click="fileInput?.click()">导入图片</button>
       <button class="button" :disabled="!status || busy" @click="exportCurrent">导出项目</button>
       <button class="button" :disabled="saving" @click="cloudOpen = true">云端</button>
+      <button class="button" :disabled="!status" @click="agentOpen = !agentOpen">AI 助手</button>
       <button class="button button-primary" :disabled="!status || saving" @click="save">{{ saving ? '保存中…' : binding ? '保存到云端' : '保存' }}</button>
       <input ref="fileInput" hidden type="file" accept=".png,.jpg,.jpeg,.tga" @change="importImage" />
     </header>
+    <AgentPanel v-if="agentOpen && status && !failure" :project-id="binding?.projectId" :call="agentCall" @state="agentState" />
     <div v-if="legacy" class="native-notice">此项目含旧版界面原型数据，已原样保留。当前打开的是新的引擎场景；旧数据不会自动转换为游戏场景。</div>
     <div v-if="failure" class="native-notice" role="alert">{{ failure }}</div>
     <EngineSurface v-if="initialized && !failure" ref="surface" kind="editor" :name="project.name" :template="project.template" :document="stored" @ready="ready" @state="updateStatus" @actions="actions" @error="failure = $event" />
