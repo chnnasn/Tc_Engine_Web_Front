@@ -6,7 +6,7 @@ export interface EngineModule {
   _malloc(size: number): number
   _free(pointer: number): void
   HEAPU8: Uint8Array
-  FS: { readFile(path: string): Uint8Array; writeFile(path: string, bytes: Uint8Array): void; mkdirTree(path: string): void; readdir(path: string): string[]; stat(path: string): { mode: number }; isDir(mode: number): boolean }
+  FS: { readFile(path: string): Uint8Array; writeFile(path: string, bytes: Uint8Array): void; mkdirTree(path: string): void; readdir(path: string): string[]; stat(path: string): { mode: number }; isDir(mode: number): boolean; unlink(path: string): void; rmdir(path: string): void }
   PThread: { terminateAllThreads(): void }
 }
 export function capabilityErrors(): string[] {

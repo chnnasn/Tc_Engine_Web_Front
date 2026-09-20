@@ -63,6 +63,17 @@ function encode(bytes: Uint8Array) {
 }
 function restore(document: EngineDocument) {
   assertDocument(document)
+  if (document.version === 2) {
+    // Fresh MEMFS only: replace the bundled source tree, never merge stale assets into a restored revision.
+    const removeTree = (path: string) => {
+      for (const name of module!.FS.readdir(path).filter(name => name !== '.' && name !== '..')) {
+        const child = `${path}/${name}`
+        if (module!.FS.isDir(module!.FS.stat(child).mode)) { removeTree(child); module!.FS.rmdir(child) }
+        else module!.FS.unlink(child)
+      }
+    }
+    removeTree(`${projectRoot}/Assets`); removeTree(`${projectRoot}/ProjectSettings`)
+  }
   for (const [path, data] of Object.entries(document.files)) {
     const full = `${projectRoot}/${path}`
     module!.FS.mkdirTree(full.slice(0, full.lastIndexOf('/')))
@@ -72,15 +83,19 @@ function restore(document: EngineDocument) {
 function capture(): EngineDocument {
   const snapshot = protocol!.snapshot(state().sceneHandle)
   const files: Record<string, string> = {}
-  for (const folder of ['ProjectSettings', 'Assets/WebImports']) {
-    let names: string[]
-    try { names = module!.FS.readdir(`${projectRoot}/${folder}`) } catch { continue }
-    for (const name of names) {
+  const collect = (folder: string) => {
+    for (const name of module!.FS.readdir(`${projectRoot}/${folder}`).filter(name => name !== '.' && name !== '..')) {
       const relative = `${folder}/${name}`
-      if (validFilePath(relative)) files[relative] = encode(module!.FS.readFile(`${projectRoot}/${relative}`))
+      if (module!.FS.isDir(module!.FS.stat(`${projectRoot}/${relative}`).mode)) collect(relative)
+      else {
+        if (!validFilePath(relative)) throw new Error(`不支持的项目文件路径：${relative}`)
+        files[relative] = encode(module!.FS.readFile(`${projectRoot}/${relative}`))
+      }
     }
   }
-  const document: EngineDocument = { format: 'tomcat-engine-project', version: 1, engineCommit, sceneHandle: snapshot.sceneHandle, archive: snapshot.archive, files }
+  collect('ProjectSettings'); collect('Assets')
+  files['Project.tcproj'] = encode(module!.FS.readFile(`${projectRoot}/Project.tcproj`))
+  const document: EngineDocument = { format: 'tomcat-engine-project', version: 2, engineCommit, sceneHandle: snapshot.sceneHandle, archive: snapshot.archive, files }
   assertDocument(document)
   return document
 }

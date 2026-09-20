@@ -37,7 +37,7 @@ try {
     await save.click()
     await page.getByText('引擎项目已保存到此浏览器', { exact: true }).waitFor()
     const saved = await page.evaluate(async () => {
-      const db = await new Promise((resolve, reject) => { const r = indexedDB.open('tomcat-engine-v1', 1); r.onsuccess = () => resolve(r.result); r.onerror = () => reject(r.error) })
+      const db = await new Promise((resolve, reject) => { const r = indexedDB.open('tomcat-engine-v1'); r.onsuccess = () => resolve(r.result); r.onerror = () => reject(r.error) })
       const value = await new Promise(resolve => { const r = db.transaction('projects').objectStore('projects').get('my-first-game'); r.onsuccess = () => resolve(r.result) })
       db.close(); return value
     })

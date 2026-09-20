@@ -4,7 +4,9 @@ import EngineSurface from './EngineSurface.vue'
 import { useNavigation } from './navigation'
 import { nowLabel, type Project } from './data'
 import { EngineError, type Snapshot, type SceneState, type Operation } from '../engine/protocol'
-import { readEngineProject, writeEngineProject, type EngineDocument } from '../engine/storage'
+import { readEngineProject, writeEngineProject, readCloudBinding, writeCloudBinding, type CloudBinding, type EngineDocument } from '../engine/storage'
+import { saveCloudProject, CloudError } from '../engine/cloud'
+import CloudProjects from './CloudProjects.vue'
 import { downloadProject } from './project-file'
 
 const props = defineProps<{ project: Project }>()
@@ -20,6 +22,8 @@ const saving = ref(false)
 const legacy = ref(false)
 const fileInput = ref<HTMLInputElement>()
 const busy = ref(false)
+const cloudOpen = ref(false)
+const binding = ref<CloudBinding>()
 let gone = false
 const needsSave = ref(false)
 const dirty = computed(() => needsSave.value || Boolean(status.value?.dirty))
@@ -33,7 +37,7 @@ async function refresh() {
 }
 async function ready(next?: Snapshot) {
   if (!next) return
-  snapshot.value = next; needsSave.value = !stored.value; updateStatus(next)
+  snapshot.value = next; needsSave.value = !stored.value || Boolean(binding.value?.pending); updateStatus(next)
 }
 async function run(action: () => Promise<unknown>) {
   if (busy.value || gone) return
@@ -71,16 +75,33 @@ async function save() {
   saving.value = true
   try {
     const captured = await surface.value.call<{ document: EngineDocument; state: SceneState }>('capture')
-    await writeEngineProject(props.project.id, captured.document)
+    if (binding.value) {
+      needsSave.value = true; emit('dirtyChange', true)
+      binding.value = { ...binding.value, pending: true }
+      // Keep a local draft before network I/O; the cloud ETag is never advanced on failure.
+      await writeEngineProject(props.project.id, captured.document, { ...binding.value })
+      binding.value = await saveCloudProject(captured.document, { ...binding.value })
+      await writeEngineProject(props.project.id, captured.document, { ...binding.value })
+    } else await writeEngineProject(props.project.id, captured.document)
     if (gone) return
     stored.value = captured.document
     // A concurrent native edit must not be marked saved by an older IndexedDB write.
     const next = await surface.value.call<Snapshot>('markSaved', captured)
     needsSave.value = false; snapshot.value = next; updateStatus(next)
     emit('updateProject', { ...props.project, updated: nowLabel() })
-    emit('notify', '引擎项目已保存到此浏览器')
-  } catch (error) { if (!gone) report(error) }
+    emit('notify', binding.value ? '完整项目已保存到云端' : '引擎项目已保存到此浏览器')
+  } catch (error) {
+    if (!gone) { report(error); if (error instanceof CloudError && error.status === 401) cloudOpen.value = true }
+  }
   finally { saving.value = false }
+}
+async function attachCloud(next: CloudBinding) {
+  try { await writeCloudBinding(props.project.id, next); binding.value = next; needsSave.value = true; emit('dirtyChange', true); cloudOpen.value = false; emit('notify', '已关联，请点击“保存到云端”上传完整项目') }
+  catch (error) { report(error) }
+}
+async function detachCloud() {
+  try { await writeCloudBinding(props.project.id, null); binding.value = undefined; cloudOpen.value = false }
+  catch (error) { report(error) }
 }
 async function exportCurrent() {
   await run(async () => {
@@ -114,6 +135,7 @@ onMounted(async () => {
   window.addEventListener('beforeunload', beforeUnload); window.addEventListener('keydown', keydown)
   try {
     stored.value = await readEngineProject(props.project.id)
+    binding.value = await readCloudBinding(props.project.id)
     legacy.value = !stored.value && Boolean(localStorage.getItem(`tomcat-ui-scene-${props.project.id}`))
     if (!gone) initialized.value = true
   } catch (error) { failure.value = error instanceof Error ? error.message : String(error) }
@@ -130,7 +152,8 @@ onBeforeUnmount(() => { gone = true; window.removeEventListener('beforeunload', 
       <button class="button" :disabled="!editing || !status?.canRedo || busy" @click="history('redo')">重做</button>
       <button class="button" :disabled="!editing || busy" @click="fileInput?.click()">导入图片</button>
       <button class="button" :disabled="!status || busy" @click="exportCurrent">导出项目</button>
-      <button class="button button-primary" :disabled="!status || saving" @click="save">{{ saving ? '保存中…' : '保存' }}</button>
+      <button class="button" :disabled="saving" @click="cloudOpen = true">云端</button>
+      <button class="button button-primary" :disabled="!status || saving" @click="save">{{ saving ? '保存中…' : binding ? '保存到云端' : '保存' }}</button>
       <input ref="fileInput" hidden type="file" accept=".png,.jpg,.jpeg,.tga" @change="importImage" />
     </header>
     <div v-if="legacy" class="native-notice">此项目含旧版界面原型数据，已原样保留。当前打开的是新的引擎场景；旧数据不会自动转换为游戏场景。</div>
@@ -138,6 +161,7 @@ onBeforeUnmount(() => { gone = true; window.removeEventListener('beforeunload', 
     <EngineSurface v-if="initialized && !failure" ref="surface" kind="editor" :name="project.name" :template="project.template" :document="stored" @ready="ready" @state="updateStatus" @actions="actions" @error="failure = $event" />
     <div v-else-if="!failure" class="native-notice">正在读取项目…</div>
     <footer>本地引擎项目 · {{ status?.mode === 'play' ? '运行中' : status?.mode === 'pause' ? '已暂停' : '编辑模式' }} · {{ snapshot?.schemas.length || 0 }} 种组件类型 <span v-if="selected"> · {{ selected.name }}</span><span>使用画布内的 Inspector 编辑组件，Play / Pause / Stop 预览场景</span></footer>
+    <CloudProjects v-if="cloudOpen" :project="project" :binding="binding" @close="cloudOpen = false" @attach="attachCloud" @detach="detachCloud" />
   </main>
 </template>
 <style scoped>

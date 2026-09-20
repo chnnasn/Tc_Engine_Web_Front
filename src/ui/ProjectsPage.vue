@@ -4,6 +4,9 @@ import { ArrowUpRight, Download, FileJson, FolderOpen, Gamepad2, Grid2X2, List, 
 import { nowLabel, uid, type Project } from './data'
 import { exportProject, readProjectFile } from './project-file'
 import { readEngineProject, writeEngineProject } from '../engine/storage'
+import type { RestoredProject } from '../engine/cloud'
+import CloudProjects from './CloudProjects.vue'
+import { useNavigation } from './navigation'
 import AppLink from './AppLink.vue'
 import AppModal from './AppModal.vue'
 import ArtworkView from './ArtworkView.vue'
@@ -24,6 +27,18 @@ const view = ref<'grid' | 'list'>('grid')
 const action = ref<{ type: 'rename' | 'delete'; project: Project } | null>(null)
 const name = ref('')
 const fileInput = ref<HTMLInputElement>()
+const cloudOpen = ref(false)
+const navigate = useNavigation()
+async function restoreCloud(restored: RestoredProject) {
+  try {
+    const id = uid()
+    const project: Project = { id, name: restored.project.name, description: restored.project.description, template: restored.project.template, image: '', status: 'draft', updated: nowLabel() }
+    await writeEngineProject(id, restored.document, restored.binding || null)
+    setProjects(projects => [project, ...projects]); cloudOpen.value = false
+    emit('notify', restored.binding ? '云端完整项目已恢复' : '历史修订已恢复为独立本地副本')
+    navigate(`/editor/${id}`)
+  } catch (error) { emit('notify', error instanceof Error ? error.message : '恢复失败，本地项目未更改') }
+}
 const filters = [['all', '全部项目'], ['draft', '草稿'], ['published', '发布预览']]
 const visible = computed(() => props.projects.filter(project =>
   (filter.value === 'all' || project.status === filter.value) &&
@@ -107,10 +122,10 @@ async function exportItem(project: Project) {
   <main id="main-content" class="page workspace-page">
     <div class="page-topline">
       <div class="page-intro"><span class="eyebrow">YOUR NEXT LITTLE WORLD</span><h1>我的项目<span class="green-dot">.</span></h1><p>从一个想法，到一个可以分享的世界。</p></div>
-      <div class="page-actions"><button class="button" @click="fileInput?.click()"><Upload :size="16" />导入项目</button><button class="button button-primary" @click="emit('create')"><Plus :size="16" />新建项目</button></div>
+      <div class="page-actions"><button class="button" @click="cloudOpen = true">云端项目</button><button class="button" @click="fileInput?.click()"><Upload :size="16" />导入项目</button><button class="button button-primary" @click="emit('create')"><Plus :size="16" />新建项目</button></div>
     </div>
     <input ref="fileInput" class="sr-only" tabindex="-1" type="file" accept=".json,application/json" aria-label="导入 TomCat 项目 JSON" @change="selectImport" />
-    <div class="workspace-note"><span class="note-icon"><FolderOpen :size="20" :stroke-width="1.5" /></span><div><strong>你的创作，从这里继续</strong><p>项目保存在当前浏览器。导出一份项目文件，随时为想法留个备份。</p></div><span class="small-tag">本地工作空间</span></div>
+    <div class="workspace-note"><span class="note-icon"><FolderOpen :size="20" :stroke-width="1.5" /></span><div><strong>你的创作，从这里继续</strong><p>下方是此浏览器的项目副本。登录“云端项目”查看服务器列表和修订；编辑器关联云端后可同步完整项目。</p></div><span class="small-tag">本地工作空间</span></div>
 
     <div class="filter-bar project-filter">
       <div class="filter-tabs"><button v-for="item in filters" :key="item[0]" :class="{ active: filter === item[0] }" :aria-pressed="filter === item[0]" @click="filter = item[0]">{{ item[1] }}<span class="filter-count">{{ projects.filter(project => item[0] === 'all' || project.status === item[0]).length }}</span></button></div>
@@ -131,6 +146,7 @@ async function exportItem(project: Project) {
     <EmptyState v-else :title="query ? '没有找到这个项目' : '这里还没有项目'" :text="query ? '试试其他名称，或清空搜索。' : '把脑海里的第一个画面，变成一个新项目。'"><button class="button button-primary" @click="emit('create')"><Plus :size="16" />新建项目</button></EmptyState>
     <div class="workspace-help"><span><Gamepad2 :size="18" />还不知道从哪里开始？</span><TextLink href="/community">看看大家正在做什么</TextLink></div>
 
+    <CloudProjects v-if="cloudOpen" allow-restore @close="cloudOpen = false" @restored="restoreCloud" />
     <AppModal v-if="action" :title="action.type === 'rename' ? '给项目换个名字' : '删除这个项目？'" @close="action = null">
       <form v-if="action.type === 'rename'" @submit.prevent="renameProject"><label class="field-label" for="rename-project">项目名称</label><input id="rename-project" v-model="name" class="text-input" autofocus required maxlength="32" /><div class="dialog-actions"><button type="button" class="button" @click="action = null">取消</button><button class="button button-primary" :disabled="!name.trim()">保存名称</button></div></form>
       <template v-else><p class="dialog-description delete-description">“{{ action.project.name }}”将从此浏览器移除。删除后无法恢复，建议先导出项目备份。</p><div class="dialog-actions"><button class="button" @click="exportItem(action.project)"><Download :size="15" />先导出</button><button class="button" @click="action = null">取消</button><button class="button button-danger" @click="deleteProject">删除项目</button></div></template>
