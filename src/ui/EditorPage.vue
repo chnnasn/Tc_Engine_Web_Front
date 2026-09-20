@@ -70,6 +70,13 @@ function history(direction: 'undo' | 'redo') {
     snapshot.value = next; updateStatus(next)
   })
 }
+function preview(command: 'play' | 'pause' | 'resume' | 'step' | 'stop') {
+  void run(async () => {
+    await surface.value!.call('preview', { command })
+    await refresh()
+    updateStatus(snapshot.value!)
+  })
+}
 async function save() {
   if (saving.value || gone || !surface.value) return
   saving.value = true
@@ -150,6 +157,11 @@ onBeforeUnmount(() => { gone = true; window.removeEventListener('beforeunload', 
       <button class="button" :disabled="!editing || busy" @click="addEntity">添加对象</button>
       <button class="button" :disabled="!editing || !status?.canUndo || busy" @click="history('undo')">撤销</button>
       <button class="button" :disabled="!editing || !status?.canRedo || busy" @click="history('redo')">重做</button>
+      <button v-if="editing" class="button" :disabled="busy || saving" @click="preview('play')">运行预览</button>
+      <button v-if="status?.mode === 'play'" class="button" :disabled="busy || saving" @click="preview('pause')">暂停预览</button>
+      <button v-if="status?.mode === 'pause'" class="button" :disabled="busy || saving" @click="preview('resume')">继续运行</button>
+      <button v-if="status?.mode === 'pause'" class="button" :disabled="busy || saving" @click="preview('step')">单步运行</button>
+      <button v-if="status && !editing" class="button" :disabled="busy || saving" @click="preview('stop')">停止预览</button>
       <button class="button" :disabled="!editing || busy" @click="fileInput?.click()">导入图片</button>
       <button class="button" :disabled="!status || busy" @click="exportCurrent">导出项目</button>
       <button class="button" :disabled="saving" @click="cloudOpen = true">云端</button>
@@ -160,7 +172,7 @@ onBeforeUnmount(() => { gone = true; window.removeEventListener('beforeunload', 
     <div v-if="failure" class="native-notice" role="alert">{{ failure }}</div>
     <EngineSurface v-if="initialized && !failure" ref="surface" kind="editor" :name="project.name" :template="project.template" :document="stored" @ready="ready" @state="updateStatus" @actions="actions" @error="failure = $event" />
     <div v-else-if="!failure" class="native-notice">正在读取项目…</div>
-    <footer>本地引擎项目 · {{ status?.mode === 'play' ? '运行中' : status?.mode === 'pause' ? '已暂停' : '编辑模式' }} · {{ snapshot?.schemas.length || 0 }} 种组件类型 <span v-if="selected"> · {{ selected.name }}</span><span>使用画布内的 Inspector 编辑组件，Play / Pause / Stop 预览场景</span></footer>
+    <footer>{{ binding ? '已关联云端' : '本地引擎项目' }} · {{ status?.mode === 'play' ? '运行中' : status?.mode === 'pause' ? '已暂停' : '编辑模式' }} · {{ snapshot?.schemas.length || 0 }} 种组件类型 <span v-if="selected"> · {{ selected.name }}</span><span>预览不会公开发布；停止预览后继续编辑</span></footer>
     <CloudProjects v-if="cloudOpen" :project="project" :binding="binding" @close="cloudOpen = false" @attach="attachCloud" @detach="detachCloud" />
   </main>
 </template>

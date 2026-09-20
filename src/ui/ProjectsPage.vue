@@ -39,7 +39,7 @@ async function restoreCloud(restored: RestoredProject) {
     navigate(`/editor/${id}`)
   } catch (error) { emit('notify', error instanceof Error ? error.message : '恢复失败，本地项目未更改') }
 }
-const filters = [['all', '全部项目'], ['draft', '草稿'], ['published', '发布预览']]
+const filters = [['all', '全部项目'], ['draft', '草稿'], ['published', '展示草稿']]
 const visible = computed(() => props.projects.filter(project =>
   (filter.value === 'all' || project.status === filter.value) &&
   project.name.toLowerCase().includes(query.value.trim().toLowerCase())))
@@ -138,8 +138,8 @@ async function exportItem(project: Project) {
         <div class="project-content">
           <div class="project-card-heading"><AppLink :href="`/editor/${project.id}`"><h3>{{ project.name }}</h3></AppLink><details class="project-menu"><summary class="icon-button" :aria-label="`${project.name}更多操作`"><MoreHorizontal :size="19" /></summary><div class="menu-options"><button @click="beginRename(project)">重命名</button><button @click="duplicate(project)">创建副本</button><button @click="exportItem(project)">导出项目</button><button class="danger-text" @click="action = { type: 'delete', project }">删除项目</button></div></details></div>
           <p class="project-description">{{ project.description || '一个新的好玩想法。' }}</p>
-          <div class="project-status-row"><span class="status-pill" :class="{ 'status-published': project.status === 'published' }"><span />{{ project.status === 'published' ? '已生成发布预览' : '草稿' }}</span><span>{{ project.updated }}</span></div>
-          <div class="project-card-footer"><AppLink v-if="project.status === 'published'" class="text-link" :href="`/preview/${project.id}`">查看发布预览</AppLink><span v-else><FileJson :size="13" />本地项目</span><AppLink :href="`/editor/${project.id}`" class="text-link">打开编辑器<ArrowUpRight :size="15" /></AppLink></div>
+          <div class="project-status-row"><span class="status-pill" :class="{ 'status-published': project.status === 'published' }"><span />{{ project.status === 'published' ? '本地展示草稿' : '草稿' }}</span><span>{{ project.updated }}</span></div>
+          <div class="project-card-footer"><AppLink v-if="project.status === 'published'" class="text-link" :href="`/preview/${project.id}`">查看展示草稿</AppLink><span v-else><FileJson :size="13" />本地项目</span><AppLink :href="`/editor/${project.id}`" class="text-link">打开编辑器<ArrowUpRight :size="15" /></AppLink></div>
         </div>
       </article>
     </div>

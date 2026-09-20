@@ -73,3 +73,7 @@ node tests/cloud-browser.mjs
 ```
 
 测试创建临时 SQLite、独立 API/Vite 进程及两个独立浏览器上下文，验证真实引擎跨浏览器完整恢复、配置/图片/meta 字节一致、过期 ETag、断网草稿、历史副本和损坏下载拒绝。可用 `TEST_API_DIRECTORY` 指定其他后端 TomCat.Api 路径；测试使用本地端口 5192。
+
+顶部“我的账户”已接入真实登录、注册和账号状态；云端项目列表及修订来自 API，本地列表仍用于保存离线副本。编辑器工具栏的运行、暂停、继续、单步、停止直接调用 `preview.control`。云端保存完成前不调用 `scene.markSaved`，上传失败和 412 场景有浏览器级调用断言。
+
+公开发布另见 [独立发布阶段](docs/publication-phase.md)：包括不可变修订输入、场景资产映射、Cook worker、产物存储、发布 API 和匿名播放器验收。该阶段尚未实现。
