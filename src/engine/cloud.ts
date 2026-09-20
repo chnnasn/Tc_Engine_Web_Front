@@ -44,7 +44,9 @@ export async function contentHash(bytes: Uint8Array) {
   const digest = await crypto.subtle.digest('SHA-256', new Uint8Array(bytes).buffer)
   return [...new Uint8Array(digest)].map(byte => byte.toString(16).padStart(2, '0')).join('')
 }
-export async function saveCloudProject(document: EngineDocument, binding: CloudBinding): Promise<CloudBinding> {
+export const syncConfiguration = async (): Promise<{ enabled: boolean; intervalMs: number }> => (await api('/projects/sync-config')).json()
+export const cloudSyncStatus = async (id: string): Promise<{ etag: string | null; persisted: boolean }> => (await api(`${idPath(id)}/sync-status`)).json()
+export async function saveCloudProject(document: EngineDocument, binding: CloudBinding, options: { automatic?: boolean; reuseUploads?: boolean } = {}): Promise<CloudBinding> {
   assertDocument(document)
   if (document.version !== 2) throw new Error('请在引擎中打开旧项目并保存完整配置后，再同步云端')
   const user = await currentUser()
@@ -53,13 +55,18 @@ export async function saveCloudProject(document: EngineDocument, binding: CloudB
   for (const [path, encoded] of Object.entries(document.files)) {
     const bytes = decodeFile(encoded)
     const hash = await contentHash(bytes)
-    const uploaded = await (await api(`${idPath(binding.projectId)}/uploads/${hash}`, { method: 'PUT', headers: { 'Content-Type': 'application/octet-stream' }, body: new Uint8Array(bytes).buffer })).json()
-    if (uploaded.contentHash !== hash || uploaded.size !== bytes.length || !/^[a-f0-9]{32}$/.test(uploaded.uploadId)) throw new Error('云端上传校验失败')
+    let uploaded: { uploadId: string; contentHash: string; size: number } | undefined
+    if (options.reuseUploads) {
+      try { uploaded = await (await api(`${idPath(binding.projectId)}/uploads/by-hash/${hash}`)).json() }
+      catch (error) { if (!(error instanceof CloudError && error.status === 404)) throw error }
+    }
+    if (!uploaded) uploaded = await (await api(`${idPath(binding.projectId)}/uploads/${hash}`, { method: 'PUT', headers: { 'Content-Type': 'application/octet-stream' }, body: new Uint8Array(bytes).buffer })).json()
+    if (!uploaded || uploaded.contentHash !== hash || uploaded.size !== bytes.length || !/^[a-f0-9]{32}$/.test(uploaded.uploadId)) throw new Error('云端上传校验失败')
     files.push({ path, uploadId: uploaded.uploadId, contentHash: hash, size: bytes.length })
   }
   const manifest: Manifest = { schemaVersion: 2, engineCommit: document.engineCommit, sceneHandle: document.sceneHandle, archive: document.archive, files }
   const headers = binding.etag === null ? { 'If-None-Match': '*' } : { 'If-Match': binding.etag }
-  const response = await api(`${idPath(binding.projectId)}/revisions`, json('POST', manifest, headers))
+  const response = await api(`${idPath(binding.projectId)}/${options.automatic ? 'working-state' : 'revisions'}`, json(options.automatic ? 'PUT' : 'POST', manifest, headers))
   const saved = await response.json()
   if (!/^"[a-f0-9]{32}"$/.test(saved.etag) || response.headers.get('etag') !== saved.etag) throw new Error('云端返回的修订凭据无效，请恢复最新修订后继续')
   return { ...binding, etag: saved.etag, pending: false }
@@ -69,7 +76,7 @@ export async function restoreCloudProject(projectId: string, revisionId?: string
   const project: CloudProject = await (await api(idPath(projectId))).json()
   const revision = revisionId || project.currentRevisionId
   if (!revision) throw new Error('此云端项目尚无已保存修订')
-  const response = await api(`${idPath(projectId)}/revisions/${encodeURIComponent(revision)}`)
+  const response = await api(revisionId ? `${idPath(projectId)}/revisions/${encodeURIComponent(revisionId)}` : `${idPath(projectId)}/working-state`)
   const manifest: Manifest = await response.json()
   if (manifest.schemaVersion !== 2 || manifest.engineCommit !== engineCommit || !Array.isArray(manifest.files) || manifest.files.length > 512) throw new Error('此修订不包含完整资源，或使用了不兼容的引擎版本')
   const paths = new Set<string>()
@@ -90,6 +97,6 @@ export async function restoreCloudProject(projectId: string, revisionId?: string
   const document: EngineDocument = { format: 'tomcat-engine-project', version: 2, engineCommit: manifest.engineCommit, sceneHandle: manifest.sceneHandle, archive: manifest.archive, files }
   assertDocument(document)
   const etag = response.headers.get('etag')
-  if (etag !== `"${revision}"`) throw new Error('云端修订凭据不一致')
-  return { project, document, binding: revision === project.currentRevisionId ? { ownerId: user.id, projectId, etag, pending: false } : undefined }
+  if (!etag || !/^"[a-f0-9]{32}"$/.test(etag) || (revisionId && etag !== `"${revisionId}"`)) throw new Error('云端修订凭据不一致')
+  return { project, document, binding: !revisionId || revision === project.currentRevisionId ? { ownerId: user.id, projectId, etag, pending: false } : undefined }
 }

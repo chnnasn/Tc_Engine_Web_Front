@@ -33,3 +33,21 @@ test('412 preserves caller ETag without retrying against server current revision
     assert.equal(revisions,1);assert.equal(binding.etag,'"previous"');assert.equal(binding.pending,true)
   } finally {globalThis.fetch=original}
 })
+
+test('automatic sync reuses uploaded bytes and submits a conditional working snapshot', async () => {
+  const original = globalThis.fetch
+  let uploads = 0, snapshots = 0
+  try {
+    globalThis.fetch = async (path, init) => {
+      if (path === '/v1/auth/me') return json({ id: 'alice' })
+      if (path.includes('/uploads/by-hash/')) return json({ uploadId: 'a'.repeat(32), contentHash: path.split('/').pop(), size: 2 })
+      if (path.includes('/uploads/')) { uploads++; throw new Error('Existing bytes must not be uploaded again') }
+      assert.ok(path.endsWith('/working-state')); assert.equal(init.method, 'PUT'); assert.equal(init.headers['If-Match'], binding.etag)
+      assert.equal(JSON.parse(init.body).archive, document.archive); snapshots++
+      return json({ etag: '"' + 'b'.repeat(32) + '"' }, 202, { etag: '"' + 'b'.repeat(32) + '"' })
+    }
+    const saved = await saveCloudProject(document, binding, { automatic: true, reuseUploads: true })
+    assert.equal(uploads, 0); assert.equal(snapshots, 1); assert.equal(saved.pending, false)
+    assert.equal(binding.etag, '"previous"')
+  } finally { globalThis.fetch = original }
+})

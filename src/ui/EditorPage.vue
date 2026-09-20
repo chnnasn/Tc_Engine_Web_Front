@@ -5,7 +5,7 @@ import { useNavigation } from './navigation'
 import { nowLabel, type Project } from './data'
 import { EngineError, type Snapshot, type SceneState, type Operation } from '../engine/protocol'
 import { readEngineProject, writeEngineProject, readCloudBinding, writeCloudBinding, type CloudBinding, type EngineDocument } from '../engine/storage'
-import { saveCloudProject, CloudError } from '../engine/cloud'
+import { saveCloudProject, syncConfiguration, cloudSyncStatus, CloudError } from '../engine/cloud'
 import CloudProjects from './CloudProjects.vue'
 import AgentPanel from './AgentPanel.vue'
 import { downloadProject } from './project-file'
@@ -27,6 +27,23 @@ const cloudOpen = ref(false)
 const agentOpen = ref(false)
 const binding = ref<CloudBinding>()
 let gone = false
+let syncTimer: ReturnType<typeof setTimeout> | undefined
+const automaticSync = ref(false)
+const syncMessage = ref('')
+let syncedDocument = ''
+let draftDocument = ''
+let syncBlocked = false
+let syncConfigLoaded = false
+async function pollSync() {
+  try {
+    if (!gone && binding.value && !syncConfigLoaded) {
+      automaticSync.value = (await syncConfiguration()).enabled
+      syncConfigLoaded = true
+    }
+    if (!gone && automaticSync.value && binding.value && editing.value && !busy.value && !saving.value) await save(true)
+  } catch (error) { syncMessage.value = error instanceof Error ? error.message : String(error) }
+  finally { if (!gone) syncTimer = setTimeout(pollSync, syncConfigLoaded ? 2000 : 10000) }
+}
 const needsSave = ref(false)
 const dirty = computed(() => needsSave.value || Boolean(status.value?.dirty))
 const editing = computed(() => Boolean(status.value) && (!status.value?.mode || status.value.mode === 'edit'))
@@ -84,36 +101,75 @@ function preview(command: 'play' | 'pause' | 'resume' | 'step' | 'stop') {
     updateStatus(snapshot.value!)
   })
 }
-async function save() {
+async function save(automatic = false) {
   if (saving.value || gone || !surface.value) return
   saving.value = true
   try {
     const captured = await surface.value.call<{ document: EngineDocument; state: SceneState }>('capture')
+    const serialized = JSON.stringify(captured.document)
+    if (automatic && syncBlocked && binding.value) {
+      if (serialized !== draftDocument) {
+        binding.value = { ...binding.value, pending: true }
+        await writeEngineProject(props.project.id, captured.document, { ...binding.value })
+        draftDocument = serialized
+        needsSave.value = true; emit('dirtyChange', true)
+      }
+      return
+    }
+    if (automatic && serialized === syncedDocument) {
+      if (binding.value && dirty.value) {
+        const current = await cloudSyncStatus(binding.value.projectId)
+        if (current.etag !== binding.value.etag) throw new CloudError(412, '云端已有新修订，本地内容已保留。请恢复最新版本比较，或另建云端项目')
+        if (current.persisted) {
+          const next = await surface.value.call<Snapshot>('markSaved', captured)
+          needsSave.value = false; snapshot.value = next; updateStatus(next)
+          syncMessage.value = '已自动保存到数据库'
+        }
+      }
+      return
+    }
     if (binding.value) {
       needsSave.value = true; emit('dirtyChange', true)
       binding.value = { ...binding.value, pending: true }
       // Keep a local draft before network I/O; the cloud ETag is never advanced on failure.
       await writeEngineProject(props.project.id, captured.document, { ...binding.value })
-      binding.value = await saveCloudProject(captured.document, { ...binding.value })
+      draftDocument = serialized
+      binding.value = await saveCloudProject(captured.document, { ...binding.value }, { automatic, reuseUploads: automaticSync.value })
       await writeEngineProject(props.project.id, captured.document, { ...binding.value })
     } else await writeEngineProject(props.project.id, captured.document)
+    syncedDocument = serialized
     if (gone) return
     stored.value = captured.document
+    if (automatic) {
+      syncMessage.value = '已同步，等待定期落库'
+      return
+    }
+    syncMessage.value = binding.value ? '已保存到数据库' : ''
+    syncBlocked = false
     // A concurrent native edit must not be marked saved by an older IndexedDB write.
     const next = await surface.value.call<Snapshot>('markSaved', captured)
     needsSave.value = false; snapshot.value = next; updateStatus(next)
     emit('updateProject', { ...props.project, updated: nowLabel() })
     emit('notify', binding.value ? '完整项目已保存到云端' : '引擎项目已保存到此浏览器')
   } catch (error) {
-    if (!gone) { report(error); if (error instanceof CloudError && error.status === 401) cloudOpen.value = true }
+    if (!gone) {
+      if (automatic) {
+        syncMessage.value = error instanceof Error ? error.message : String(error)
+        if (error instanceof CloudError && [401, 412].includes(error.status)) syncBlocked = true
+      } else { report(error); if (error instanceof CloudError && error.status === 401) cloudOpen.value = true }
+    }
   }
   finally { saving.value = false }
 }
 async function attachCloud(next: CloudBinding) {
+  if (saving.value) return
+  syncedDocument = ''; syncBlocked = false; syncMessage.value = ''; syncConfigLoaded = false
   try { await writeCloudBinding(props.project.id, next); binding.value = next; needsSave.value = true; emit('dirtyChange', true); cloudOpen.value = false; emit('notify', '已关联，请点击“保存到云端”上传完整项目') }
   catch (error) { report(error) }
 }
 async function detachCloud() {
+  if (saving.value) return
+  syncedDocument = ''; syncMessage.value = ''; syncBlocked = false
   try { await writeCloudBinding(props.project.id, null); binding.value = undefined; cloudOpen.value = false }
   catch (error) { report(error) }
 }
@@ -151,10 +207,10 @@ onMounted(async () => {
     stored.value = await readEngineProject(props.project.id)
     binding.value = await readCloudBinding(props.project.id)
     legacy.value = !stored.value && Boolean(localStorage.getItem(`tomcat-ui-scene-${props.project.id}`))
-    if (!gone) initialized.value = true
+    if (!gone) { initialized.value = true; syncTimer = setTimeout(pollSync, 2000) }
   } catch (error) { failure.value = error instanceof Error ? error.message : String(error) }
 })
-onBeforeUnmount(() => { gone = true; window.removeEventListener('beforeunload', beforeUnload); window.removeEventListener('keydown', keydown); emit('dirtyChange', false) })
+onBeforeUnmount(() => { gone = true; clearTimeout(syncTimer); window.removeEventListener('beforeunload', beforeUnload); window.removeEventListener('keydown', keydown); emit('dirtyChange', false) })
 </script>
 <template>
   <main id="main-content" class="native-editor">
@@ -173,7 +229,7 @@ onBeforeUnmount(() => { gone = true; window.removeEventListener('beforeunload', 
       <button class="button" :disabled="!status || busy" @click="exportCurrent">导出项目</button>
       <button class="button" :disabled="saving" @click="cloudOpen = true">云端</button>
       <button class="button" :disabled="!status" @click="agentOpen = !agentOpen">AI 助手</button>
-      <button class="button button-primary" :disabled="!status || saving" @click="save">{{ saving ? '保存中…' : binding ? '保存到云端' : '保存' }}</button>
+      <button class="button button-primary" :disabled="!status || saving" @click="save()">{{ saving ? '保存中…' : binding ? '保存到云端' : '保存' }}</button>
       <input ref="fileInput" hidden type="file" accept=".png,.jpg,.jpeg,.tga" @change="importImage" />
     </header>
     <AgentPanel v-if="agentOpen && status && !failure" :project-id="binding?.projectId" :call="agentCall" @state="agentState" />
@@ -181,7 +237,7 @@ onBeforeUnmount(() => { gone = true; window.removeEventListener('beforeunload', 
     <div v-if="failure" class="native-notice" role="alert">{{ failure }}</div>
     <EngineSurface v-if="initialized && !failure" ref="surface" kind="editor" :name="project.name" :template="project.template" :document="stored" @ready="ready" @state="updateStatus" @actions="actions" @error="failure = $event" />
     <div v-else-if="!failure" class="native-notice">正在读取项目…</div>
-    <footer>{{ binding ? '已关联云端' : '本地引擎项目' }} · {{ status?.mode === 'play' ? '运行中' : status?.mode === 'pause' ? '已暂停' : '编辑模式' }} · {{ snapshot?.schemas.length || 0 }} 种组件类型 <span v-if="selected"> · {{ selected.name }}</span><span>预览不会公开发布；停止预览后继续编辑</span></footer>
+    <footer><span v-if="binding && syncMessage" role="status">{{ syncMessage }} · </span>{{ binding ? '已关联云端' : '本地引擎项目' }} · {{ status?.mode === 'play' ? '运行中' : status?.mode === 'pause' ? '已暂停' : '编辑模式' }} · {{ snapshot?.schemas.length || 0 }} 种组件类型 <span v-if="selected"> · {{ selected.name }}</span><span>预览不会公开发布；停止预览后继续编辑</span></footer>
     <CloudProjects v-if="cloudOpen" :project="project" :binding="binding" @close="cloudOpen = false" @attach="attachCloud" @detach="detachCloud" />
   </main>
 </template>

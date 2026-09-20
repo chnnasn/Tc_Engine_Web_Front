@@ -6,7 +6,7 @@
 
 需要启动相邻 `Tc_Engine_Web_Mcp` 的 LangChain 服务，并配置后端 `Agent__Url` / `Agent__Secret`。关闭面板、退出页面或停止任务会关闭会话；已执行的编辑保留。首版每条需求独立执行，不包含持久聊天、脚本生成、自动构建发布。`node tests/agent-browser.mjs` 使用确定性模型测试真实 LangChain → MCP → 后端 → 浏览器 WASM 的创建、验证、撤销闭环。
 
-Vue 3 创作工作台，使用固定版本的上游 TomCat Web Editor / Player。社区和示例作品仍使用本地演示数据；编辑器实际运行 C++ 引擎，项目保存到 IndexedDB，未接入云端 API。
+Vue 3 创作工作台，使用固定版本的上游 TomCat Web Editor / Player。社区和示例作品仍使用本地演示数据；编辑器实际运行 C++ 引擎，项目保存到 IndexedDB，并支持云端保存与可选的 Redis 自动同步。
 
 ## 开发与构建
 
@@ -83,3 +83,18 @@ node tests/cloud-browser.mjs
 顶部“我的账户”已接入真实登录、注册和账号状态；云端项目列表及修订来自 API，本地列表仍用于保存离线副本。编辑器工具栏的运行、暂停、继续、单步、停止直接调用 `preview.control`。云端保存完成前不调用 `scene.markSaved`，上传失败和 412 场景有浏览器级调用断言。
 
 公开发布另见 [独立发布阶段](docs/publication-phase.md)：包括不可变修订输入、场景资产映射、Cook worker、产物存储、发布 API 和匿名播放器验收。该阶段尚未实现。
+
+## 自动同步
+
+后端配置 Redis 后，已关联云端的项目在编辑模式下每轮同步完成约 2 秒后再次检查完整快照；内容未变不重复上传，已上传资源按 SHA-256 复用。场景归档目前仍为完整快照，尚非对象级增量协议。后端每 30 秒生成数据库历史版本；手动保存或 Ctrl/Cmd+S 立即落库。
+
+页脚显示同步状态。仅在后端确认落库且当前内容仍与快照一致时清除未保存标记。断网时保留 IndexedDB 草稿并自动重试；版本冲突会停止上传、保留原凭据，后续编辑继续保存为本地草稿。恢复“最新修订”会优先获取 Redis 中尚未落库的状态，指定历史版本仍从数据库恢复。
+
+后端未配置 Redis 时保留手动保存行为。启用方式及单实例限制见相邻后端 README。完整 WASM 自动同步验收：
+
+```powershell
+$env:TEST_REDIS_SERVER = '你的 redis-server 可执行文件绝对路径'
+node tests/realtime-browser.mjs
+```
+
+需先构建后端 Release 和前端引擎资源，并安装 Chrome。测试启动临时 Redis（16389 端口）、API 和 Vite（5193 端口），覆盖自动同步、落库确认、资源复用、手动保存、断网重试和过期写入。
