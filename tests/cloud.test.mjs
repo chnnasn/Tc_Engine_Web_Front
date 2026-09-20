@@ -5,6 +5,21 @@ import { assertDocument, engineCommit, requiredFiles } from '../src/engine/stora
 const document = {format:'tomcat-engine-project',version:2,engineCommit,sceneHandle:'18446744073709551615',archive:'Scene: example',files:Object.fromEntries(requiredFiles.map(path=>[path,btoa('{}')]))}
 const binding={ownerId:'alice',projectId:'project',etag:'"previous"',pending:true}
 const json = (value,status=200,headers={}) => new Response(JSON.stringify(value),{status,headers:{'content-type':'application/json',...headers}})
+test('checkpoint writes are immediate conditional revisions with durable task metadata', async () => {
+  const original = globalThis.fetch
+  const checkpoint = { runId: 'c'.repeat(32), phase: 'start', sceneVersion: '1:3' }
+  try {
+    await assert.rejects(saveCloudProject(document, binding, { automatic: true, checkpoint }), /立即落库/)
+    globalThis.fetch = async (path, init) => {
+      if (path === '/v1/auth/me') return json({ id: 'alice' })
+      if (path.includes('/uploads/')) return json({ uploadId: 'a'.repeat(32), contentHash: path.split('/').pop(), size: 2 })
+      assert.ok(path.endsWith('/revisions')); assert.equal(init.headers['If-Match'], binding.etag)
+      assert.deepEqual(JSON.parse(init.body).aiCheckpoint, checkpoint)
+      return json({ etag: '"' + 'b'.repeat(32) + '"' }, 201, { etag: '"' + 'b'.repeat(32) + '"' })
+    }
+    await saveCloudProject(document, binding, { checkpoint })
+  } finally { globalThis.fetch = original }
+})
 test('complete bundle rejects missing configs, images without metadata and orphan metadata',()=>{
   assertDocument(document)
   for(const files of [{...document.files,'Assets/test.png':btoa('image')},{...document.files,'Assets/test.png.tcmeta':btoa('meta')},{}]) assert.throws(()=>assertDocument({...document,files}))

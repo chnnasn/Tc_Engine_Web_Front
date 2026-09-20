@@ -3,14 +3,16 @@ import { onBeforeUnmount, ref, watch } from 'vue'
 import { executeTool, type AutomationCommand, type EngineCall } from '../engine/automation'
 import { engineCommit } from '../engine/storage'
 import type { Snapshot } from '../engine/protocol'
+import type { CheckpointReceipt } from '../engine/sync-status'
 
-const props = defineProps<{ projectId?: string; call: EngineCall }>()
+const props = defineProps<{ projectId?: string; call: EngineCall; checkpoint: (runId: string, phase: 'start' | 'end', signal: AbortSignal) => Promise<CheckpointReceipt> }>()
 const emit = defineEmits<{ state: [snapshot: Snapshot] }>()
 const prompt = ref('')
 const answer = ref('')
 const error = ref('')
 const running = ref(false)
 const events = ref<string[]>([])
+const checkpoints = ref<CheckpointReceipt[]>([])
 let sessionId: string | undefined
 let controller: AbortController | undefined
 let disposed = false
@@ -49,13 +51,21 @@ async function poll(id: string, signal: AbortSignal) {
 }
 async function send() {
   if (running.value || !prompt.value.trim() || !props.projectId) return
-  running.value = true; error.value = ''; answer.value = ''; events.value = []
+  running.value = true; error.value = ''; answer.value = ''; events.value = []; checkpoints.value = []
+  let stage = 'start'
   try {
     // Each request is an isolated run; no shared conversation or credentials across editors.
     await close()
     const projectId = props.projectId
     controller = new AbortController()
     const signal = controller.signal
+    const runId = crypto.randomUUID().replace(/-/g, '')
+    events.value.push('正在保存任务开始检查点…')
+    const start = await props.checkpoint(runId, 'start', signal)
+    checkpoints.value.push(start)
+    signal.throwIfAborted()
+    if (!start.current) throw new Error('开始检查点已保存，但场景同时发生变化；任务未执行，请检查后重试')
+    stage = 'agent'
     const registered = await api('/', { method: 'POST', body: JSON.stringify({ projectId, engineCommit }), signal })
     sessionId = registered.editorSessionId
     if (disposed || signal.aborted || props.projectId !== projectId) { await close(); return }
@@ -63,8 +73,14 @@ async function send() {
     void poll(id, signal)
     const result = await api(`/${id}/agent`, { method: 'POST', body: JSON.stringify({ prompt: prompt.value }), signal })
     answer.value = result.output
+    signal.throwIfAborted()
+    stage = 'end'
+    events.value.push('正在保存任务结束检查点…')
+    const end = await props.checkpoint(runId, 'end', signal)
+    checkpoints.value.push(end)
+    if (!end.current) error.value = '结束检查点已落库，但场景有后续修改，尚未全部保存。'
   } catch (cause) {
-    if (!error.value) error.value = cause instanceof Error ? cause.message : String(cause)
+    if (!error.value) error.value = (stage === 'start' ? '任务未启动：' : stage === 'end' ? 'AI 已执行，但结束检查点未确认保存：' : '') + (cause instanceof Error ? cause.message : String(cause))
   } finally { await close(); running.value = false }
 }
 async function cancel() { error.value = '已停止任务。已执行的修改会保留，请检查场景；需要时使用撤销。'; await close() }
@@ -80,7 +96,8 @@ onBeforeUnmount(() => { disposed = true; void close() })
       <button class="button button-primary" :disabled="running || !projectId || !prompt.trim()">{{ running ? 'AI 正在执行…' : '执行' }}</button>
       <button v-if="running" type="button" class="button" @click="cancel">停止</button>
     </form>
-    <p class="hint">每次请求独立执行，修改后请保存项目。当前支持场景和组件编辑；暂不支持脚本生成与发布。</p>
+    <p class="hint">任务开始前、正常结束后自动建立落库检查点。失败或停止时保留开始检查点和已执行的修改。</p>
+    <p v-for="item in checkpoints" :key="item.phase">{{ item.phase === 'start' ? '开始' : '结束' }}检查点：{{ item.revisionId }} · 已落库</p>
     <div class="agent-output" aria-live="polite"><p v-for="(event, index) in events" :key="index">{{ event }}</p><p v-if="answer" class="answer">{{ answer }}</p></div>
     <p v-if="error" role="alert">{{ error }}</p>
   </section>

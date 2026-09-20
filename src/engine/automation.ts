@@ -4,7 +4,7 @@ export type EngineCall = <T = any>(type: string, payload?: unknown) => Promise<T
 export interface AutomationCommand { requestId: string; name: string; arguments: Record<string, any> }
 export const supportedTools = ['editor_get_status', 'scene_get_tree', 'entity_get', 'component_get_schema',
   'entity_create', 'entity_delete', 'entity_reparent', 'component_add', 'component_remove', 'component_set',
-  'editor_play', 'editor_pause', 'editor_stop', 'history_undo', 'history_redo'] as const
+  'editor_play', 'editor_pause', 'editor_stop', 'history_undo', 'history_redo', 'project_get_sync_status'] as const
 const version = (snapshot: Snapshot) => `${snapshot.sceneHandle}:${snapshot.revision}`
 
 // Translate the shared desktop tool vocabulary at the engine boundary. Never expose arbitrary RPC.
@@ -12,6 +12,7 @@ export async function executeTool(command: AutomationCommand, call: EngineCall, 
   try {
     const { name, arguments: args } = command
     if (!(supportedTools as readonly string[]).includes(name)) throw new EngineError('UNSUPPORTED_TOOL', name)
+    if (name === 'project_get_sync_status') return { ok: true as const, data: await call('projectSyncStatus'), request_id: command.requestId }
     let snapshot = await call<Snapshot>('snapshot')
     changed(snapshot)
     const meta = () => ({ scene_version: version(snapshot), scene_handle: snapshot.sceneHandle, mode: snapshot.mode || 'edit' })

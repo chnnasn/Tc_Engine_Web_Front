@@ -70,7 +70,7 @@ onBeforeUnmount(() => { gone = true })
         <p v-if="!projects.length && !busy">暂无云端项目。</p>
         <div v-if="selected">
           <label class="field-label" for="cloud-revision">{{ selected.name }} · 恢复版本</label>
-          <select id="cloud-revision" v-model="revision" class="text-input"><option value="">最新修订</option><option v-for="item in revisions" :key="item.revisionId" :value="item.revisionId">{{ new Date(item.createdAt).toLocaleString() }} · {{ item.revisionId.slice(0, 8) }}</option></select>
+          <select id="cloud-revision" v-model="revision" class="text-input"><option value="">最新修订</option><option v-for="item in revisions" :key="item.revisionId" :value="item.revisionId">{{ new Date(item.createdAt).toLocaleString() }} · {{ item.revisionId.slice(0, 8) }}{{ item.aiCheckpoint ? ` · AI ${item.aiCheckpoint.phase === 'start' ? '开始' : '结束'} · ${item.aiCheckpoint.runId.slice(0, 8)}` : '' }}</option></select>
           <div class="dialog-actions"><button class="button button-primary" :disabled="busy || !selected.currentRevisionId" @click="restore">{{ busy ? '校验并下载中…' : '恢复为本地副本' }}</button></div>
         </div>
       </template>

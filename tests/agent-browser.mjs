@@ -27,9 +27,15 @@ try {
   const apiDir = resolve('../Tc_Engine_Web_backend/TomCat.Api')
   const mcpDir = resolve('../Tc_Engine_Web_Mcp')
   const mcpPort = await freePort(), vitePort = await freePort()
+  let redisConnection = ''
+  if (process.env.TEST_REDIS_SERVER) {
+    const port = await freePort()
+    await start(process.env.TEST_REDIS_SERVER, ['--bind', '127.0.0.1', '--port', String(port), '--appendonly', 'yes', '--appendfsync', 'always', '--maxmemory-policy', 'noeviction'], { cwd: directory }, /(Ready to accept connections)/i)
+    redisConnection = `127.0.0.1:${port}`
+  }
   const secret = 'integration-test-secret-01234567890123456789'
   const api = await start('dotnet', [join(apiDir, 'bin/Release/net10.0/TomCat.Api.dll'), '--urls', 'http://127.0.0.1:0'], {
-    cwd: apiDir, env: { ...process.env, ASPNETCORE_ENVIRONMENT: 'Development', Storage__Directory: directory, Agent__Url: `http://127.0.0.1:${mcpPort}`, Agent__Secret: secret },
+    cwd: apiDir, env: { ...process.env, ASPNETCORE_ENVIRONMENT: 'Development', Storage__Directory: directory, Agent__Url: `http://127.0.0.1:${mcpPort}`, Agent__Secret: secret, Redis__ConnectionString: redisConnection, Redis__FlushIntervalSeconds: '3600' },
   }, /Now listening on:\s+(http:\/\/127\.0\.0\.1:\d+)/)
   await start(join(mcpDir, '.venv/Scripts/python.exe'), ['tests/agent_fixture.py'], {
     cwd: mcpDir, env: { ...process.env, PORT: String(mcpPort), TOMCAT_BACKEND_URL: api, TOMCAT_AGENT_SECRET: secret, TOMCAT_MCP_URL: `http://127.0.0.1:${mcpPort}/mcp/`, LANGSMITH_TRACING: 'false', LANGCHAIN_TRACING_V2: 'false' },
@@ -58,7 +64,9 @@ try {
   await page.getByLabel('描述你想修改的场景').fill('创建一个 AI_Player 对象，读取验证，然后撤销并确认移除。')
   await page.getByRole('button', { name: '执行', exact: true }).click()
   await page.getByText('已创建、读取验证并撤销 AI_Player。', { exact: true }).waitFor({ timeout: 90000 })
-  assert.equal(results.length, 7)
+  await page.getByText(/^结束检查点：/).waitFor({ timeout: 90000 })
+  await page.getByRole('button', { name: '执行', exact: true }).waitFor()
+  assert.equal(results.length, 8)
   assert.ok(results.every(r => r.ok), JSON.stringify(results))
   assert.ok(results[1].data.schemas.length > 0, 'schema comes from real WASM')
   const created = results[3].data.entity
@@ -66,6 +74,39 @@ try {
   assert.equal(typeof created.id, 'string')
   assert.equal(results[4].data.entity.id, created.id)
   assert.equal(results[6].data.entities.some(e => e.id === created.id), false)
+  assert.equal(typeof results[7].data.currentContentPersisted, 'boolean')
+  const projectId = await page.evaluate(async () => (await (await fetch('/v1/projects')).json())[0].id)
+  const revisions = await page.evaluate(async id => (await fetch(`/v1/projects/${id}/revisions`)).json(), projectId)
+  const checkpoints = revisions.filter(r => r.aiCheckpoint)
+  assert.equal(checkpoints.length, 2)
+  assert.deepEqual(new Set(checkpoints.map(r => r.aiCheckpoint.phase)), new Set(['start', 'end']))
+  assert.equal(checkpoints[0].aiCheckpoint.runId, checkpoints[1].aiCheckpoint.runId)
+  for (const checkpoint of checkpoints) {
+    const manifest = await page.evaluate(async ({ id, revision }) => (await fetch(`/v1/projects/${id}/revisions/${revision}`)).json(), { id: projectId, revision: checkpoint.revisionId })
+    assert.deepEqual(manifest.aiCheckpoint, checkpoint.aiCheckpoint)
+    assert.ok(manifest.files.some(file => file.path === 'Project.tcproj'))
+  }
+  // Refuse to start the agent when the mandatory baseline cannot be saved.
+  let agentRequests = 0
+  page.on('request', request => { if (/\/editor-sessions\/[^/]+\/agent$/.test(request.url())) agentRequests++ })
+  await page.route('**/v1/projects/*/revisions', route => route.request().method() === 'POST' ? route.fulfill({ status: 412, contentType: 'application/json', body: '{}' }) : route.continue())
+  await page.getByRole('button', { name: '执行', exact: true }).click()
+  await page.locator('.agent-panel [role=alert]').filter({ hasText: '云端已有新修订' }).waitFor()
+  assert.equal(agentRequests, 0)
+  assert.equal(results.length, 8)
+  await page.unroute('**/v1/projects/*/revisions')
+  // A failed end checkpoint must not be displayed as saved, even if the agent succeeded.
+  let revisionWrites = 0
+  await page.route('**/v1/projects/*/revisions', route => {
+    if (route.request().method() === 'POST' && ++revisionWrites === 2) return route.fulfill({ status: 412, contentType: 'application/json', body: '{}' })
+    return route.continue()
+  })
+  await page.getByRole('button', { name: '执行', exact: true }).click()
+  await page.locator('.agent-panel [role=alert]').filter({ hasText: 'AI 已执行，但结束检查点未确认保存' }).waitFor({ timeout: 90000 })
+  assert.equal(agentRequests, 1)
+  assert.equal(await page.getByText(/^结束检查点：/).count(), 0)
+  assert.equal(await page.getByText(/^开始检查点：/).count(), 1)
+  await page.unroute('**/v1/projects/*/revisions')
   assert.deepEqual(errors, [])
   console.log('PASS: real LangChain graph → HTTP MCP → authenticated .NET broker → browser → WASM: schema, create, read, undo, verify')
 } catch (error) {

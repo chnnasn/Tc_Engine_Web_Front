@@ -8,6 +8,7 @@ import { readEngineProject, writeEngineProject, readCloudBinding, writeCloudBind
 import { saveCloudProject, syncConfiguration, cloudSyncStatus, CloudError } from '../engine/cloud'
 import CloudProjects from './CloudProjects.vue'
 import AgentPanel from './AgentPanel.vue'
+import { describeSync, type CheckpointReceipt } from '../engine/sync-status'
 import { downloadProject } from './project-file'
 
 const props = defineProps<{ project: Project }>()
@@ -53,7 +54,61 @@ function updateStatus(next: SceneState) { status.value = next; emit('dirtyChange
 function agentState(next: Snapshot) { snapshot.value = next; updateStatus(next) }
 async function agentCall<T = any>(type: string, payload?: unknown): Promise<T> {
   if (!surface.value || gone) throw new Error('编辑器尚未就绪')
+  if (type === 'projectSyncStatus') {
+    if (!binding.value) throw new Error('请先关联云端项目')
+    if (saving.value) throw new EngineError('SAVE_IN_PROGRESS', '正在同步，请稍后重新查询')
+    const link = { ...binding.value }
+    const before = await surface.value.call<{ document: EngineDocument; state: SceneState }>('capture')
+    const cloud = await cloudSyncStatus(link.projectId)
+    const after = await surface.value.call<{ document: EngineDocument; state: SceneState }>('capture')
+    if (binding.value?.projectId !== link.projectId || binding.value.etag !== link.etag || saving.value) throw new EngineError('SAVE_IN_PROGRESS', '同步状态已变化，请重新查询')
+    return { ...describeSync({ etag: link.etag, matches: JSON.stringify(after.document) === syncedDocument,
+      changedDuringQuery: JSON.stringify(before.document) !== JSON.stringify(after.document), blocked: syncBlocked }, cloud),
+      projectId: link.projectId, sceneVersion: `${after.state.sceneHandle}:${after.state.revision}` } as T
+  }
   return surface.value.call<T>(type, payload)
+}
+async function checkpoint(runId: string, phase: 'start' | 'end', signal: AbortSignal): Promise<CheckpointReceipt> {
+  // Serialize with manual and automatic saves without silently skipping a required checkpoint.
+  const deadline = Date.now() + 65000
+  while (saving.value) {
+    signal.throwIfAborted()
+    if (Date.now() > deadline) throw new Error('等待保存超时，尚未建立检查点')
+    await new Promise(resolve => setTimeout(resolve, 25))
+  }
+  signal.throwIfAborted()
+  if (gone || !surface.value || !binding.value) throw new Error('编辑器或云端关联不可用')
+  saving.value = true
+  try {
+    const link = { ...binding.value }
+    const captured = await surface.value.call<{ document: EngineDocument; state: SceneState }>('capture')
+    if (captured.state.mode && captured.state.mode !== 'edit') throw new Error('请先停止运行预览，再建立任务检查点')
+    const metadata = { runId, phase, sceneVersion: `${captured.state.sceneHandle}:${captured.state.revision}` }
+    binding.value = { ...link, pending: true }
+    needsSave.value = true; emit('dirtyChange', true)
+    await writeEngineProject(props.project.id, captured.document, { ...binding.value })
+    draftDocument = JSON.stringify(captured.document)
+    signal.throwIfAborted()
+    const saved = await saveCloudProject(captured.document, link, { reuseUploads: true, checkpoint: metadata })
+    // If cancellation arrived during upload, still retain the acknowledged ETag locally.
+    binding.value = saved
+    await writeEngineProject(props.project.id, captured.document, { ...saved })
+    syncedDocument = JSON.stringify(captured.document); stored.value = captured.document; syncBlocked = false
+    let current = false
+    if (!gone) {
+      try {
+        const next = await surface.value!.call<Snapshot>('markSaved', captured)
+        needsSave.value = false; snapshot.value = next; updateStatus(next); current = true
+      } catch (error) {
+        if (!(error instanceof EngineError && error.code === 'REVISION_CONFLICT')) throw error
+      }
+    }
+    syncMessage.value = current ? 'AI 任务检查点已保存到数据库' : '检查点已落库，当前场景还有新修改'
+    return { ...metadata, revisionId: saved.etag!.slice(1, -1), persisted: true, current }
+  } catch (error) {
+    if (error instanceof CloudError && [401, 412].includes(error.status)) syncBlocked = true
+    throw error
+  } finally { saving.value = false }
 }
 async function refresh() {
   if (!surface.value) return
@@ -232,7 +287,7 @@ onBeforeUnmount(() => { gone = true; clearTimeout(syncTimer); window.removeEvent
       <button class="button button-primary" :disabled="!status || saving" @click="save()">{{ saving ? '保存中…' : binding ? '保存到云端' : '保存' }}</button>
       <input ref="fileInput" hidden type="file" accept=".png,.jpg,.jpeg,.tga" @change="importImage" />
     </header>
-    <AgentPanel v-if="agentOpen && status && !failure" :project-id="binding?.projectId" :call="agentCall" @state="agentState" />
+    <AgentPanel v-if="agentOpen && status && !failure" :project-id="binding?.projectId" :call="agentCall" :checkpoint="checkpoint" @state="agentState" />
     <div v-if="legacy" class="native-notice">此项目含旧版界面原型数据，已原样保留。当前打开的是新的引擎场景；旧数据不会自动转换为游戏场景。</div>
     <div v-if="failure" class="native-notice" role="alert">{{ failure }}</div>
     <EngineSurface v-if="initialized && !failure" ref="surface" kind="editor" :name="project.name" :template="project.template" :document="stored" @ready="ready" @state="updateStatus" @actions="actions" @error="failure = $event" />

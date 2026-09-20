@@ -2,9 +2,10 @@ import { assertDocument, engineCommit, validFilePath, requiredFiles, type CloudB
 
 export interface CloudUser { id: string; username: string }
 export interface CloudProject { id: string; name: string; description: string; template: '2D' | '空白'; currentRevisionId: string | null; etag: string | null }
-export interface CloudRevision { revisionId: string; etag: string; createdAt: string }
+export interface AiCheckpoint { runId: string; phase: 'start' | 'end'; sceneVersion: string }
+export interface CloudRevision { revisionId: string; etag: string; createdAt: string; aiCheckpoint?: AiCheckpoint }
 interface FileReference { path: string; uploadId: string; contentHash: string; size: number }
-interface Manifest { schemaVersion: 2; engineCommit: string; sceneHandle: string; archive: string; files: FileReference[] }
+interface Manifest { schemaVersion: 2; engineCommit: string; sceneHandle: string; archive: string; files: FileReference[]; aiCheckpoint?: AiCheckpoint }
 export interface RestoredProject { project: CloudProject; document: EngineDocument; binding?: CloudBinding }
 export class CloudError extends Error {
   status: number
@@ -46,7 +47,8 @@ export async function contentHash(bytes: Uint8Array) {
 }
 export const syncConfiguration = async (): Promise<{ enabled: boolean; intervalMs: number }> => (await api('/projects/sync-config')).json()
 export const cloudSyncStatus = async (id: string): Promise<{ etag: string | null; persisted: boolean }> => (await api(`${idPath(id)}/sync-status`)).json()
-export async function saveCloudProject(document: EngineDocument, binding: CloudBinding, options: { automatic?: boolean; reuseUploads?: boolean } = {}): Promise<CloudBinding> {
+export async function saveCloudProject(document: EngineDocument, binding: CloudBinding, options: { automatic?: boolean; reuseUploads?: boolean; checkpoint?: AiCheckpoint } = {}): Promise<CloudBinding> {
+  if (options.automatic && options.checkpoint) throw new Error('检查点必须立即落库')
   assertDocument(document)
   if (document.version !== 2) throw new Error('请在引擎中打开旧项目并保存完整配置后，再同步云端')
   const user = await currentUser()
@@ -65,6 +67,7 @@ export async function saveCloudProject(document: EngineDocument, binding: CloudB
     files.push({ path, uploadId: uploaded.uploadId, contentHash: hash, size: bytes.length })
   }
   const manifest: Manifest = { schemaVersion: 2, engineCommit: document.engineCommit, sceneHandle: document.sceneHandle, archive: document.archive, files }
+  if (options.checkpoint) manifest.aiCheckpoint = options.checkpoint
   const headers = binding.etag === null ? { 'If-None-Match': '*' } : { 'If-Match': binding.etag }
   const response = await api(`${idPath(binding.projectId)}/${options.automatic ? 'working-state' : 'revisions'}`, json(options.automatic ? 'PUT' : 'POST', manifest, headers))
   const saved = await response.json()
