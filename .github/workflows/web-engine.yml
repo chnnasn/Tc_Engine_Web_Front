@@ -1,0 +1,30 @@
+name: Web engine
+on: [push, pull_request, workflow_dispatch]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - uses: mymindstorm/setup-emsdk@v14
+        with:
+          version: '4.0.15'
+          actions-cache-folder: emsdk-cache
+      - run: npm ci
+      - run: npm test
+      - run: npm run engine:build
+      - run: npm run build
+      - run: npx playwright install --with-deps chromium
+      - name: Browser regression
+        run: |
+          npm run preview -- --host 127.0.0.1 &
+          server_pid=$!
+          trap 'kill "$server_pid"' EXIT
+          TEST_BASE_URL=http://127.0.0.1:4173 TEST_BROWSER_CHANNEL=chromium npm run test:browser
+      - uses: actions/upload-artifact@v4
+        with:
+          name: tomcat-web-with-engine
+          path: dist

@@ -1,9 +1,10 @@
 {
   "compilerOptions": {
+    "allowImportingTsExtensions": true,
     "target": "ES2020", "useDefineForClassFields": true, "lib": ["ES2020", "DOM", "DOM.Iterable"],
     "allowJs": false, "skipLibCheck": true, "esModuleInterop": true, "allowSyntheticDefaultImports": true,
     "strict": true, "forceConsistentCasingInFileNames": true, "module": "ESNext", "moduleResolution": "Bundler",
     "resolveJsonModule": true, "isolatedModules": true, "noEmit": true,
     "tsBuildInfoFile": "./node_modules/.cache/tomcat-web.tsbuildinfo"
-  }, "include": ["src/main.ts", "src/ui/**/*.ts", "src/ui/**/*.vue", "src/vite-env.d.ts"]
+  }, "include": ["src/**/*.ts", "src/**/*.vue"]
 }

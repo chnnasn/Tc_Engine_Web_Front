@@ -1,4 +1,6 @@
 dist/
+.engine/
+public/engine/
 node_modules/
 *.tsbuildinfo
 

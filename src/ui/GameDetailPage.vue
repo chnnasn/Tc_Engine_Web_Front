@@ -39,7 +39,7 @@ function submitComment() {
         </section>
       </div>
       <aside class="detail-sidebar">
-        <div class="play-panel"><span class="small-tag">作品界面预览</span><h3>准备好出发了吗？</h3><p>打开一个新世界，<br />给自己一点游玩的时间。</p><button class="button button-primary" @click="player = true"><Play :size="16" fill="currentColor" />打开游玩预览</button><span class="play-footnote">当前为静态界面，尚未接入内核</span><div class="play-stats"><span><Clock3 :size="15" />{{ game.duration }}</span><span><Heart :size="15" />{{ game.likes }} 人喜欢</span></div></div>
+        <div class="play-panel"><span class="small-tag">作品界面预览</span><h3>准备好出发了吗？</h3><p>打开一个新世界，<br />给自己一点游玩的时间。</p><button class="button button-primary" @click="player = true"><Play :size="16" fill="currentColor" />打开游玩预览</button><span class="play-footnote">示例作品无游戏包，可打开本地 TCPAK</span><div class="play-stats"><span><Clock3 :size="15" />{{ game.duration }}</span><span><Heart :size="15" />{{ game.likes }} 人喜欢</span></div></div>
         <div class="creator-panel"><span class="creator-avatar">{{ game.author.slice(0, 1) }}</span><div><span>由独立创作者带来</span><strong>{{ game.author }}</strong></div><p>做一点小而有趣的东西，<br />慢慢把想法变成世界。</p><TextLink :href="game.id === 'puzzle' ? '/community/first-puzzle' : game.id === 'desert' ? '/community/weekend' : '/community/forest-devlog'">看看创作日常</TextLink></div>
         <div class="detail-facts"><div><span>游玩方式</span><span>浏览器</span></div><div><span>支持语言</span><span>简体中文</span></div><div><span>作品状态</span><span>示例作品</span></div></div>
       </aside>

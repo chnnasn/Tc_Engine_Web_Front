@@ -1,23 +1,31 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { ExternalLink, Play } from '@lucide/vue'
 import type { Game } from './data'
 import AppModal from './AppModal.vue'
-import ArtworkView from './ArtworkView.vue'
-
+import EngineSurface from './EngineSurface.vue'
 defineProps<{ game: Game }>()
 const emit = defineEmits<{ close: [] }>()
-const expanded = ref(false)
+const bytes = ref<Uint8Array>()
+const error = ref('')
+const running = ref(false)
+const generation = ref(0)
+async function choose(event: Event) {
+  const input = event.target as HTMLInputElement
+  const file = input.files?.[0]; input.value = ''
+  if (!file) return
+  if (!file.size || file.size > 256 * 1024 * 1024) { error.value = '请选择不超过 256 MiB 的 TCPAK'; return }
+  try { bytes.value = new Uint8Array(await file.arrayBuffer()); generation.value++; error.value = ''; running.value = false }
+  catch { error.value = '资源包读取失败' }
+}
 </script>
-
 <template>
-  <AppModal :title="`${game.title} · 游玩预览`" wide @close="emit('close')">
-    <div class="player-preview" :class="{ 'player-expanded': expanded }">
-      <ArtworkView :src="game.image" :alt="`${game.title}封面`" />
-      <div class="player-preview-message"><span class="player-symbol"><Play :size="25" :stroke-width="1.5" /></span><h3>故事，即将开始</h3><p>当前仅展示播放器界面<br />尚未接入游戏运行时</p></div>
-      <button class="player-expand icon-button" :aria-label="expanded ? '恢复预览比例' : '放大预览画面'" @click="expanded = !expanded"><ExternalLink :size="17" /></button>
-    </div>
-    <p class="local-note">这是作品播放页的静态演示。封面与作品资料均为示例内容。</p>
-    <div class="dialog-actions"><button class="button button-primary" @click="emit('close')">返回作品介绍</button></div>
+  <AppModal :title="`${game.title} · 播放器`" wide @close="emit('close')">
+    <p class="local-note">示例作品尚未提供游戏包。选择本地 TCPAK，可在独立的真实引擎播放器中运行；不支持含 C# 的包。</p>
+    <label class="field-label">打开 TCPAK 资源包<input type="file" accept=".tcpak" @change="choose" /></label>
+    <p v-if="error" role="alert">{{ error }}</p>
+    <p v-if="running" role="status">正在运行本地游戏包</p>
+    <div v-if="bytes" class="runtime-player"><EngineSurface :key="generation" kind="player" :bytes="bytes" @ready="running = true" @error="error = $event; running = false" /></div>
+    <div class="dialog-actions"><button class="button" @click="bytes = undefined; running = false">停止</button><button class="button button-primary" @click="emit('close')">关闭播放器</button></div>
   </AppModal>
 </template>
+<style scoped>.runtime-player{height:55vh;min-height:320px;margin-top:16px}input{display:block;margin:12px 0}</style>

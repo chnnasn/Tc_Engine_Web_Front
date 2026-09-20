@@ -41,6 +41,7 @@ function normalizePath(value: string) {
 
 function navigate(url: string) {
   if (url === path.value) return
+  if (editorDirty.value && !window.confirm('当前场景有未保存的修改。确定放弃修改并离开编辑器吗？')) return
   history.pushState({}, '', url)
   path.value = normalizePath(url)
   window.scrollTo({ top: 0 })
@@ -128,12 +129,12 @@ onBeforeUnmount(() => {
   <EditorPage v-else-if="editorProject" :key="editorProject.id" :project="editorProject" @dirty-change="editorDirty = $event" @update-project="updateProject" @notify="notify" />
   <NotFoundPage v-else />
 
-  <footer v-if="!isEditor" class="site-footer"><div><AppLink href="/" class="footer-brand">tomcat.</AppLink><span>让好玩的想法发生。</span></div><span>界面预览 · 数据仅保存在此浏览器</span><span>© 2026 TomCat</span></footer>
+  <footer v-if="!isEditor" class="site-footer"><div><AppLink href="/" class="footer-brand">tomcat.</AppLink><span>让好玩的想法发生。</span></div><span>本地空间 · 数据仅保存在此浏览器</span><span>© 2026 TomCat</span></footer>
   <div v-if="storageError" class="storage-warning" role="alert">浏览器存储不可用，当前修改将在关闭页面后丢失。</div>
   <div v-if="toast" class="toast" role="status"><Check :size="17" />{{ toast }}</div>
 
   <AppModal v-if="newProject" title="开始一个新项目" @close="newProject = false">
     <p class="dialog-description">先给你的想法起个名字，剩下的慢慢来。</p>
-    <form @submit.prevent="createProject"><label class="field-label" for="project-name">项目名称</label><input id="project-name" v-model="projectName" class="text-input" autofocus required maxlength="32" placeholder="例如：森林里的小小冒险" /><span class="field-hint">可以随时修改，最多 32 个字。</span><fieldset class="template-field"><legend>从哪里开始</legend><div class="template-options"><label v-for="item in (['2D', '空白'] as const)" :key="item" class="template-option" :class="{ selected: template === item }"><input v-model="template" type="radio" name="template" :value="item" /><Gamepad2 :size="22" /><strong>{{ item === '2D' ? '2D 场景' : '空白项目' }}</strong><span>{{ item === '2D' ? '从基础场景开始创作' : '留一张白纸给你的想法' }}</span></label></div></fieldset><p class="local-note">当前为静态原型，新项目仅保存在此浏览器。</p><div class="dialog-actions"><button type="button" class="button" @click="newProject = false">再想想</button><button class="button button-primary" :disabled="!projectName.trim()">创建项目<ArrowRight :size="16" /></button></div></form>
+    <form @submit.prevent="createProject"><label class="field-label" for="project-name">项目名称</label><input id="project-name" v-model="projectName" class="text-input" autofocus required maxlength="32" placeholder="例如：森林里的小小冒险" /><span class="field-hint">可以随时修改，最多 32 个字。</span><fieldset class="template-field"><legend>从哪里开始</legend><div class="template-options"><label v-for="item in (['2D', '空白'] as const)" :key="item" class="template-option" :class="{ selected: template === item }"><input v-model="template" type="radio" name="template" :value="item" /><Gamepad2 :size="22" /><strong>{{ item === '2D' ? '2D 场景' : '空白项目' }}</strong><span>{{ item === '2D' ? '从基础场景开始创作' : '留一张白纸给你的想法' }}</span></label></div></fieldset><p class="local-note">新项目仅保存在此浏览器，编辑器将加载真实引擎。</p><div class="dialog-actions"><button type="button" class="button" @click="newProject = false">再想想</button><button class="button button-primary" :disabled="!projectName.trim()">创建项目<ArrowRight :size="16" /></button></div></form>
   </AppModal>
 </template>

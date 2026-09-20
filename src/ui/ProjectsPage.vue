@@ -3,6 +3,7 @@ import { computed, ref } from 'vue'
 import { ArrowUpRight, Download, FileJson, FolderOpen, Gamepad2, Grid2X2, List, MoreHorizontal, Plus, Upload } from '@lucide/vue'
 import { nowLabel, uid, type Project } from './data'
 import { exportProject, readProjectFile } from './project-file'
+import { readEngineProject, writeEngineProject } from '../engine/storage'
 import AppLink from './AppLink.vue'
 import AppModal from './AppModal.vue'
 import ArtworkView from './ArtworkView.vue'
@@ -32,9 +33,11 @@ function setProjects(update: (projects: Project[]) => Project[]) {
   emit('update:projects', update(props.projects))
 }
 
-function duplicate(project: Project) {
+async function duplicate(project: Project) {
   const copy: Project = { ...project, id: uid(), name: `${project.name} 副本`.slice(0, 32), status: 'draft', updated: nowLabel() }
   try {
+    const engine = await readEngineProject(project.id)
+    if (engine) await writeEngineProject(copy.id, engine)
     const scene = localStorage.getItem(`tomcat-ui-scene-${project.id}`)
     if (scene) localStorage.setItem(`tomcat-ui-scene-${copy.id}`, scene)
   } catch {
@@ -46,14 +49,15 @@ function duplicate(project: Project) {
 }
 
 async function importFile(file: File) {
-  if (file.size > 2_000_000) {
-    emit('notify', '请选择小于 2 MB 的项目 JSON 文件')
+  if (file.size > 64 * 1024 * 1024) {
+    emit('notify', '请选择不超过 64 MiB 的项目 JSON 文件')
     return
   }
   try {
     const imported = await readProjectFile(file)
     const id = uid()
     const project: Project = { id, ...imported.project, updated: nowLabel() }
+    if (imported.engine) await writeEngineProject(id, imported.engine)
     if (imported.scene) localStorage.setItem(`tomcat-ui-scene-${id}`, JSON.stringify(imported.scene))
     setProjects(projects => [project, ...projects])
     emit('notify', '项目已导入到本地空间')
@@ -84,13 +88,18 @@ function renameProject() {
   emit('notify', '项目已重命名')
 }
 
-function deleteProject() {
+async function deleteProject() {
   if (!action.value) return
   const id = action.value.project.id
+  try { await writeEngineProject(id) } catch { emit('notify', '项目文件删除失败，请重试'); return }
   setProjects(projects => projects.filter(project => project.id !== id))
   try { localStorage.removeItem(`tomcat-ui-scene-${id}`) } catch { /* Metadata removal can proceed. */ }
   action.value = null
   emit('notify', '项目已删除')
+}
+async function exportItem(project: Project) {
+  try { await exportProject(project); emit('notify', '项目文件已导出') }
+  catch (error) { emit('notify', error instanceof Error ? error.message : '导出失败') }
 }
 </script>
 
@@ -112,7 +121,7 @@ function deleteProject() {
       <article v-for="project in visible" :key="project.id" class="project-card">
         <AppLink class="project-cover" :href="`/editor/${project.id}`" :aria-label="`编辑${project.name}`"><ArtworkView :src="project.image" :alt="`${project.name}项目封面`" /><span class="project-template">{{ project.template === '2D' ? '2D 场景' : '空白项目' }}</span></AppLink>
         <div class="project-content">
-          <div class="project-card-heading"><AppLink :href="`/editor/${project.id}`"><h3>{{ project.name }}</h3></AppLink><details class="project-menu"><summary class="icon-button" :aria-label="`${project.name}更多操作`"><MoreHorizontal :size="19" /></summary><div class="menu-options"><button @click="beginRename(project)">重命名</button><button @click="duplicate(project)">创建副本</button><button @click="exportProject(project); emit('notify', '项目文件已导出')">导出项目</button><button class="danger-text" @click="action = { type: 'delete', project }">删除项目</button></div></details></div>
+          <div class="project-card-heading"><AppLink :href="`/editor/${project.id}`"><h3>{{ project.name }}</h3></AppLink><details class="project-menu"><summary class="icon-button" :aria-label="`${project.name}更多操作`"><MoreHorizontal :size="19" /></summary><div class="menu-options"><button @click="beginRename(project)">重命名</button><button @click="duplicate(project)">创建副本</button><button @click="exportItem(project)">导出项目</button><button class="danger-text" @click="action = { type: 'delete', project }">删除项目</button></div></details></div>
           <p class="project-description">{{ project.description || '一个新的好玩想法。' }}</p>
           <div class="project-status-row"><span class="status-pill" :class="{ 'status-published': project.status === 'published' }"><span />{{ project.status === 'published' ? '已生成发布预览' : '草稿' }}</span><span>{{ project.updated }}</span></div>
           <div class="project-card-footer"><AppLink v-if="project.status === 'published'" class="text-link" :href="`/preview/${project.id}`">查看发布预览</AppLink><span v-else><FileJson :size="13" />本地项目</span><AppLink :href="`/editor/${project.id}`" class="text-link">打开编辑器<ArrowUpRight :size="15" /></AppLink></div>
@@ -124,7 +133,7 @@ function deleteProject() {
 
     <AppModal v-if="action" :title="action.type === 'rename' ? '给项目换个名字' : '删除这个项目？'" @close="action = null">
       <form v-if="action.type === 'rename'" @submit.prevent="renameProject"><label class="field-label" for="rename-project">项目名称</label><input id="rename-project" v-model="name" class="text-input" autofocus required maxlength="32" /><div class="dialog-actions"><button type="button" class="button" @click="action = null">取消</button><button class="button button-primary" :disabled="!name.trim()">保存名称</button></div></form>
-      <template v-else><p class="dialog-description delete-description">“{{ action.project.name }}”将从此浏览器移除。删除后无法恢复，建议先导出项目备份。</p><div class="dialog-actions"><button class="button" @click="exportProject(action.project); emit('notify', '项目文件已导出')"><Download :size="15" />先导出</button><button class="button" @click="action = null">取消</button><button class="button button-danger" @click="deleteProject">删除项目</button></div></template>
+      <template v-else><p class="dialog-description delete-description">“{{ action.project.name }}”将从此浏览器移除。删除后无法恢复，建议先导出项目备份。</p><div class="dialog-actions"><button class="button" @click="exportItem(action.project)"><Download :size="15" />先导出</button><button class="button" @click="action = null">取消</button><button class="button button-danger" @click="deleteProject">删除项目</button></div></template>
     </AppModal>
   </main>
 </template>
