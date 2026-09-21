@@ -19,7 +19,10 @@ async function api(path: string, init: RequestInit = {}) {
   if (!response.ok) {
     let message = '云端请求失败'
     try { message = (await response.json()).error || message } catch { /* Empty precondition responses. */ }
-    if (response.status === 401) message = '请先登录云端账号'
+    if (response.status === 401) {
+      message = '请先登录云端账号'
+      if (!['/auth/login', '/auth/register'].includes(path) && typeof window !== 'undefined') window.dispatchEvent(new Event('tomcat-auth-expired'))
+    }
     if (response.status === 404) message = '云端项目或文件不存在，或当前账号没有访问权限'
     if (response.status === 412) message = '云端已有新修订，本地内容已保留。请从项目列表恢复最新版本进行比较，或另建云端项目'
     throw new CloudError(response.status, message)
@@ -30,10 +33,20 @@ async function api(path: string, init: RequestInit = {}) {
 const json = (method: string, body: unknown, headers = {}) => ({ method, headers: { 'Content-Type': 'application/json', ...headers }, body: JSON.stringify(body) })
 const idPath = (id: string) => `/projects/${encodeURIComponent(id)}`
 export const currentUser = async (): Promise<CloudUser> => (await api('/auth/me')).json()
-export const authenticate = async (mode: 'login' | 'register', username: string, password: string): Promise<CloudUser> => (await api(`/auth/${mode}`, json('POST', { username, password }))).json()
-export const logout = async () => { await api('/auth/logout', { method: 'POST' }) }
+export const authenticate = async (mode: 'login' | 'register', username: string, password: string): Promise<CloudUser> => {
+  const user = await (await api(`/auth/${mode}`, json('POST', { username, password }))).json()
+  if (typeof window !== 'undefined') window.dispatchEvent(new Event('tomcat-auth-changed'))
+  return user
+}
+export const logout = async () => {
+  await api('/auth/logout', { method: 'POST' })
+  if (typeof window !== 'undefined') window.dispatchEvent(new Event('tomcat-auth-expired'))
+}
+export const getCloudProject = async (id: string): Promise<CloudProject> => (await api(idPath(id))).json()
 export const listCloudProjects = async (): Promise<CloudProject[]> => (await api('/projects')).json()
 export const createCloudProject = async (project: { name: string; description: string; template: string }): Promise<CloudProject> => (await api('/projects', json('POST', project))).json()
+export const updateCloudProject = async (id: string, project: { name: string; description: string; template: string }) => { await api(idPath(id), json('PUT', project)) }
+export const deleteCloudProject = async (id: string) => { await api(idPath(id), { method: 'DELETE' }) }
 export const listRevisions = async (id: string): Promise<CloudRevision[]> => (await api(`${idPath(id)}/revisions`)).json()
 export function decodeFile(base64: string): Uint8Array { return Uint8Array.from(atob(base64), char => char.charCodeAt(0)) }
 function encodeFile(bytes: Uint8Array) {

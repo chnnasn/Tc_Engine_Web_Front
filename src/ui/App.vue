@@ -1,9 +1,11 @@
 <script setup lang="ts">
 import { computed, nextTick, onBeforeUnmount, onMounted, provide, ref, watch } from 'vue'
 import { ArrowRight, ArrowUpRight, Check, Gamepad2, Plus } from '@lucide/vue'
-import { games, initialProjects, initialTopics, isProjects, isStringArray, isTopics, nowLabel, uid, type Project } from './data'
+import { games, initialTopics, isProjects, isStringArray, isTopics, nowLabel, uid, type Project } from './data'
 import { useLocalState } from './local-state'
 import { navigationKey } from './navigation'
+import { accessKey, requiresAccount } from './access'
+import { writeCloudBinding } from '../engine/storage'
 import AppLink from './AppLink.vue'
 import AppModal from './AppModal.vue'
 import CommunityPage from './CommunityPage.vue'
@@ -15,13 +17,17 @@ import ProfilePage from './ProfilePage.vue'
 import ProjectsPage from './ProjectsPage.vue'
 import PublishedPreviewPage from './PublishedPreviewPage.vue'
 import CloudProjects from './CloudProjects.vue'
-import { currentUser, CloudError, type CloudUser } from '../engine/cloud'
+import { currentUser, createCloudProject, CloudError, type CloudUser } from '../engine/cloud'
 import TopicDetailPage from './TopicDetailPage.vue'
 
 const path = ref(normalizePath(location.pathname))
 const editorDirty = ref(false)
-const { state: saved, storageError: saveError } = useLocalState<string[]>('tomcat-ui-bookmarks-v1', [], isStringArray)
-const { state: projects, storageError: projectError } = useLocalState<Project[]>('tomcat-ui-projects-v1', initialProjects, isProjects)
+const account = ref<CloudUser>()
+const accountReady = ref(false)
+const creating = ref(false)
+const accountScope = computed(() => account.value?.id || 'guest')
+const { state: saved, storageError: saveError } = useLocalState<string[]>(() => `tomcat-ui-bookmarks-v2-${accountScope.value}`, [], isStringArray)
+const { state: projects, storageError: projectError } = useLocalState<Project[]>(() => `tomcat-ui-projects-v2-${accountScope.value}`, [], isProjects)
 const { state: topics, storageError: topicError } = useLocalState('tomcat-ui-topics-v1', initialTopics, isTopics)
 const newProject = ref(false)
 const projectName = ref('')
@@ -29,7 +35,6 @@ const template = ref<'2D' | '空白'>('2D')
 const toast = ref('')
 const accountOpen = ref(false)
 const cloudAccountOpen = ref(false)
-const account = ref<CloudUser>()
 const accountStatus = ref('')
 let accountRequest = 0
 async function refreshAccount() {
@@ -41,10 +46,26 @@ async function refreshAccount() {
   } catch (error) {
     if (request === accountRequest) {
       account.value = undefined
-      accountStatus.value = error instanceof CloudError && error.status === 401 ? '尚未登录 · 可使用本地空间' : '云端连接失败 · 可使用本地空间'
+      accountStatus.value = error instanceof CloudError && error.status === 401 ? '尚未登录' : '云端连接失败，请重试'
     }
-  }
+  } finally { if (request === accountRequest) accountReady.value = true }
+  return Boolean(account.value)
 }
+function openLogin() { cloudAccountOpen.value = true }
+async function requireLogin() {
+  const previous = account.value?.id
+  if (await refreshAccount()) return !previous || previous === account.value?.id
+  openLogin()
+  return false
+}
+provide(accessKey, { user: account, requireLogin, openLogin })
+function expireAccount() {
+  accountRequest++; account.value = undefined; accountReady.value = true
+  accountStatus.value = '登录已失效，请重新登录'
+  newProject.value = false
+}
+function recheckAccount() { void refreshAccount() }
+let accountTimer: ReturnType<typeof setInterval> | undefined
 function toggleAccount() { accountOpen.value = !accountOpen.value; if (accountOpen.value) void refreshAccount() }
 function closeCloudAccount() { cloudAccountOpen.value = false; void refreshAccount() }
 let toastTimer: number | undefined
@@ -53,7 +74,8 @@ const game = computed(() => games.find(item => path.value === `/games/${item.id}
 const topic = computed(() => topics.value.find(item => path.value === `/community/${item.id}`))
 const previewProject = computed(() => projects.value.find(item => item.status === 'published' && path.value === `/preview/${item.id}`))
 const editorProject = computed(() => projects.value.find(item => path.value === `/editor/${item.id}`) || (path.value === '/editor' ? projects.value[0] : undefined))
-const isEditor = computed(() => Boolean(editorProject.value))
+const blocked = computed(() => requiresAccount(path.value) && (!accountReady.value || !account.value))
+const isEditor = computed(() => !blocked.value && Boolean(editorProject.value))
 const storageError = computed(() => saveError.value || projectError.value || topicError.value)
 
 function normalizePath(value: string) {
@@ -75,24 +97,36 @@ function notify(message: string) {
   toast.value = message
 }
 
-function toggleSave(id: string) {
+async function toggleSave(id: string) {
+  if (!await requireLogin()) return
   const wasSaved = saved.value.includes(id)
   saved.value = wasSaved ? saved.value.filter(item => item !== id) : [...saved.value, id]
   notify(wasSaved ? '已取消收藏' : '已加入我的收藏')
 }
 
-function openCreate() {
+async function openCreate() {
+  if (!await requireLogin()) return
   projectName.value = ''
   template.value = '2D'
   newProject.value = true
 }
 
-function createProject() {
-  if (!projectName.value.trim()) return
-  projects.value = [{ id: uid(), name: projectName.value.trim(), template: template.value, image: '', status: 'draft', updated: nowLabel(), description: '一个新的好玩想法。' }, ...projects.value]
-  newProject.value = false
-  notify('项目已创建')
-  navigate('/projects')
+async function createProject() {
+  if (creating.value || !projectName.value.trim()) return
+  creating.value = true
+  try {
+    if (!await requireLogin()) return
+    const ownerId = account.value!.id
+    const project: Project = { id: uid(), name: projectName.value.trim(), template: template.value, image: '', status: 'draft', updated: nowLabel(), description: '一个新的好玩想法。' }
+    const cloud = await createCloudProject(project)
+    if (account.value?.id !== ownerId) return
+    await writeCloudBinding(project.id, { ownerId, projectId: cloud.id, etag: null, pending: true })
+    projects.value = [project, ...projects.value]
+    newProject.value = false
+    notify('云端项目已创建')
+    navigate(`/editor/${project.id}`)
+  } catch (error) { notify(error instanceof Error ? error.message : '创建失败，请重试') }
+  finally { creating.value = false }
 }
 
 function updateProject(next: Project) {
@@ -123,9 +157,20 @@ watch(path, async () => {
   main?.focus({ preventScroll: true })
 }, { immediate: true })
 
-onMounted(() => window.addEventListener('popstate', handlePopState))
+onMounted(() => {
+  window.addEventListener('popstate', handlePopState)
+  window.addEventListener('focus', recheckAccount)
+  window.addEventListener('tomcat-auth-changed', recheckAccount)
+  window.addEventListener('tomcat-auth-expired', expireAccount)
+  void refreshAccount()
+  accountTimer = setInterval(recheckAccount, 30000)
+})
 onBeforeUnmount(() => {
   accountRequest++
+  clearInterval(accountTimer)
+  window.removeEventListener('focus', recheckAccount)
+  window.removeEventListener('tomcat-auth-changed', recheckAccount)
+  window.removeEventListener('tomcat-auth-expired', expireAccount)
   window.removeEventListener('popstate', handlePopState)
   if (toastTimer !== undefined) window.clearTimeout(toastTimer)
 })
@@ -141,23 +186,30 @@ onBeforeUnmount(() => {
     </div>
   </header>
 
-  <HomePage v-if="path === '/'" :saved="saved" @toggle-save="toggleSave" @create="openCreate" />
-  <ProjectsPage v-else-if="path === '/projects'" :projects="projects" @update:projects="projects = $event" @create="openCreate" @notify="notify" />
+  <main v-if="blocked" id="main-content" class="page">
+    <h1>{{ accountReady ? '登录后继续' : '正在验证登录状态…' }}</h1>
+    <p>编辑器、项目与收藏需要登录云端账号。游客可以游玩大厅作品、浏览论坛；发帖和评论需要登录。</p>
+    <p v-if="accountReady">{{ accountStatus }}</p>
+    <button v-if="accountReady" class="button button-primary" @click="openLogin">登录 / 注册</button>
+    <AppLink href="/" class="button">返回游戏大厅</AppLink>
+  </main>
+  <HomePage v-else-if="path === '/'" :saved="saved" @toggle-save="toggleSave" @create="openCreate" />
+  <ProjectsPage :key="accountScope" v-else-if="path === '/projects'" :projects="projects" @update:projects="projects = $event" @create="openCreate" @notify="notify" />
   <CommunityPage v-else-if="path === '/community'" :topics="topics" @update:topics="topics = $event" @notify="notify" />
   <ProfilePage v-else-if="path === '/profile'" :saved="saved" @toggle-save="toggleSave" />
   <PublishedPreviewPage v-else-if="previewProject" :key="previewProject.id" :project="previewProject" />
   <GameDetailPage v-else-if="game" :key="game.id" :game="game" :saved="saved.includes(game.id)" @toggle-save="toggleSave(game.id)" @notify="notify" />
   <TopicDetailPage v-else-if="topic" :key="topic.id" :topic="topic" :topics="topics" @update:topics="topics = $event" @notify="notify" />
-  <EditorPage v-else-if="editorProject" :key="editorProject.id" :project="editorProject" @dirty-change="editorDirty = $event" @update-project="updateProject" @notify="notify" />
+  <EditorPage v-else-if="editorProject" :key="`${accountScope}-${editorProject.id}`" :project="editorProject" @dirty-change="editorDirty = $event" @update-project="updateProject" @notify="notify" />
   <NotFoundPage v-else />
 
-  <footer v-if="!isEditor" class="site-footer"><div><AppLink href="/" class="footer-brand">tomcat.</AppLink><span>让好玩的想法发生。</span></div><span>本地草稿 · 可登录保存到云端</span><span>© 2026 TomCat</span></footer>
+  <footer v-if="!isEditor" class="site-footer"><div><AppLink href="/" class="footer-brand">tomcat.</AppLink><span>让好玩的想法发生。</span></div><span>登录创作 · 云端保存</span><span>© 2026 TomCat</span></footer>
   <div v-if="storageError" class="storage-warning" role="alert">浏览器存储不可用，当前修改将在关闭页面后丢失。</div>
   <div v-if="toast" class="toast" role="status"><Check :size="17" />{{ toast }}</div>
 
   <CloudProjects v-if="cloudAccountOpen" @close="closeCloudAccount" />
   <AppModal v-if="newProject" title="开始一个新项目" @close="newProject = false">
     <p class="dialog-description">先给你的想法起个名字，剩下的慢慢来。</p>
-    <form @submit.prevent="createProject"><label class="field-label" for="project-name">项目名称</label><input id="project-name" v-model="projectName" class="text-input" autofocus required maxlength="32" placeholder="例如：森林里的小小冒险" /><span class="field-hint">可以随时修改，最多 32 个字。</span><fieldset class="template-field"><legend>从哪里开始</legend><div class="template-options"><label v-for="item in (['2D', '空白'] as const)" :key="item" class="template-option" :class="{ selected: template === item }"><input v-model="template" type="radio" name="template" :value="item" /><Gamepad2 :size="22" /><strong>{{ item === '2D' ? '2D 场景' : '空白项目' }}</strong><span>{{ item === '2D' ? '从基础场景开始创作' : '留一张白纸给你的想法' }}</span></label></div></fieldset><p class="local-note">新项目仅保存在此浏览器，编辑器将加载真实引擎。</p><div class="dialog-actions"><button type="button" class="button" @click="newProject = false">再想想</button><button class="button button-primary" :disabled="!projectName.trim()">创建项目<ArrowRight :size="16" /></button></div></form>
+    <form @submit.prevent="createProject"><label class="field-label" for="project-name">项目名称</label><input id="project-name" v-model="projectName" class="text-input" autofocus required maxlength="32" placeholder="例如：森林里的小小冒险" /><span class="field-hint">可以随时修改，最多 32 个字。</span><fieldset class="template-field"><legend>从哪里开始</legend><div class="template-options"><label v-for="item in (['2D', '空白'] as const)" :key="item" class="template-option" :class="{ selected: template === item }"><input v-model="template" type="radio" name="template" :value="item" /><Gamepad2 :size="22" /><strong>{{ item === '2D' ? '2D 场景' : '空白项目' }}</strong><span>{{ item === '2D' ? '从基础场景开始创作' : '留一张白纸给你的想法' }}</span></label></div></fieldset><p class="local-note">新项目必须先创建云端关联，浏览器仅保留恢复用的缓存。</p><div class="dialog-actions"><button type="button" class="button" @click="newProject = false">再想想</button><button class="button button-primary" :disabled="creating || !projectName.trim()">创建项目<ArrowRight :size="16" /></button></div></form>
   </AppModal>
 </template>

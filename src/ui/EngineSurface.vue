@@ -2,7 +2,7 @@
 import { onBeforeUnmount, ref } from 'vue'
 import { EngineError, type Snapshot, type SceneState } from '../engine/protocol'
 import type { EngineDocument } from '../engine/storage'
-const props = defineProps<{ kind: 'editor' | 'player'; name?: string; template?: string; document?: EngineDocument; bytes?: Uint8Array }>()
+const props = defineProps<{ kind: 'editor' | 'player'; cloudProjectId?: string; name?: string; template?: string; document?: EngineDocument; bytes?: Uint8Array }>()
 const emit = defineEmits<{ ready: [snapshot?: Snapshot]; state: [state: SceneState]; actions: [actions: number]; error: [message: string] }>()
 const iframe = ref<HTMLIFrameElement>()
 const active = ref(true)

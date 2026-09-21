@@ -5,7 +5,7 @@ import { authenticate, currentUser, logout, listCloudProjects, listRevisions, cr
 import type { CloudBinding } from '../engine/storage'
 import type { Project } from './data'
 const props = defineProps<{ project?: Project; binding?: CloudBinding; allowRestore?: boolean }>()
-const emit = defineEmits<{ close: []; attach: [binding: CloudBinding]; detach: []; restored: [restored: RestoredProject] }>()
+const emit = defineEmits<{ close: []; attach: [binding: CloudBinding]; restored: [restored: RestoredProject] }>()
 const user = ref<CloudUser>()
 const username = ref('')
 const password = ref('')
@@ -50,7 +50,7 @@ onBeforeUnmount(() => { gone = true })
   <AppModal title="云端项目" @close="!busy && emit('close')">
     <p v-if="error" class="cloud-error" role="alert">{{ error }}</p>
     <form v-if="!user" @submit.prevent="signIn">
-      <p class="local-note">登录后可保存完整项目，并在其他浏览器恢复。</p>
+      <p class="local-note">编辑器和创作操作必须登录。项目与云端账号绑定，游客可以游玩大厅作品和浏览论坛。</p>
       <label class="field-label" for="cloud-username">用户名</label><input id="cloud-username" v-model="username" class="text-input" autocomplete="username" required minlength="3" maxlength="32" />
       <label class="field-label" for="cloud-password">密码</label><input id="cloud-password" v-model="password" class="text-input" type="password" :autocomplete="mode === 'login' ? 'current-password' : 'new-password'" required minlength="12" maxlength="128" />
       <div class="dialog-actions"><button type="button" class="button" :disabled="busy" @click="mode = mode === 'login' ? 'register' : 'login'">{{ mode === 'login' ? '切换到注册' : '切换到登录' }}</button><button class="button button-primary" :disabled="busy">{{ busy ? '连接中…' : mode === 'login' ? '登录' : '注册并登录' }}</button></div>
@@ -60,11 +60,11 @@ onBeforeUnmount(() => { gone = true })
       <template v-if="project">
         <p v-if="binding" class="local-note">此项目已关联云端。点击编辑器中的“保存到云端”将同时保存场景、配置和资源。</p>
         <p v-else class="local-note">关联后，编辑器的保存和 Ctrl / ⌘ + S 会保存到云端。网络失败时保留本地草稿。</p>
-        <div class="dialog-actions"><button v-if="binding" class="button" :disabled="busy" @click="emit('detach')">解除关联，保留本地</button><button class="button button-primary" :disabled="busy" @click="create">{{ binding ? '另建云端项目' : '创建云端项目并关联' }}</button></div>
+        <div class="dialog-actions"><button class="button button-primary" :disabled="busy" @click="create">{{ binding ? '另建云端项目' : '创建云端项目并关联' }}</button></div>
         <p class="local-note">已有云端项目可在项目列表的“云端项目”中恢复；不会覆盖当前编辑内容。</p>
       </template>
       <template v-if="allowRestore">
-        <p class="local-note">恢复会创建本地副本。最新修订保持云端关联，历史修订作为独立本地副本打开。</p>
+        <p class="local-note">恢复会创建本地副本。最新修订保持云端关联，历史修订会在进入编辑器时创建新的云端项目。</p>
         <button class="button" :disabled="busy" @click="perform(refresh)">刷新云端列表</button>
         <ul class="cloud-list"><li v-for="item in projects" :key="item.id"><button class="button" :disabled="busy" @click="choose(item)">{{ item.name }}{{ item.currentRevisionId ? '' : '（尚未保存）' }}</button></li></ul>
         <p v-if="!projects.length && !busy">暂无云端项目。</p>

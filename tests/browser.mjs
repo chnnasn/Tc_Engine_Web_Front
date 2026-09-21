@@ -6,6 +6,20 @@ const base = process.env.TEST_BASE_URL || 'http://127.0.0.1:5173'
 if (!process.argv.includes('--missing')) execFileSync(process.execPath, ['tests/player-fixture.cjs'], { stdio: 'inherit' })
 const browser = await chromium.launch({ channel: process.env.TEST_BROWSER_CHANNEL || 'chrome', headless: true, args: ['--enable-webgl', '--use-angle=swiftshader', '--enable-unsafe-swiftshader'] })
 const page = await browser.newPage({ viewport: { width: 1440, height: 960 } })
+// The engine regression uses an authenticated cloud fixture; guest access has its own suite.
+await page.addInitScript(() => {
+  localStorage.setItem('tomcat-ui-projects-v2-engine-test', JSON.stringify([{ id: 'my-first-game', name: '我的第一个游戏', description: '', template: '2D', image: '', status: 'draft', updated: '今天' }]))
+})
+await page.route('**/v1/**', route => {
+  const path = new URL(route.request().url()).pathname
+  const json = (value, headers = {}) => route.fulfill({ json: value, headers })
+  if (path === '/v1/auth/me') return json({ id: 'engine-test', username: 'engine-test' })
+  if (path === '/v1/projects/sync-config') return json({ enabled: false })
+  if (path === '/v1/projects' && route.request().method() === 'GET') return json([])
+  if (path.includes('/uploads/')) return json({ uploadId: 'a'.repeat(32), contentHash: path.split('/').pop(), size: route.request().postDataBuffer().length })
+  if (path.endsWith('/revisions')) return json({ etag: '"' + 'b'.repeat(32) + '"' }, { etag: '"' + 'b'.repeat(32) + '"' })
+  return json({ id: 'engine-project', currentRevisionId: null, etag: null })
+})
 const errors = []
 page.on('pageerror', error => errors.push(error.message))
 page.on('dialog', dialog => dialog.accept())
@@ -26,16 +40,16 @@ try {
     await page.getByRole('button', { name: '返回项目' }).click()
     await page.getByRole('heading', { name: '我的项目' }).waitFor()
   } else {
-    const save = page.getByRole('button', { name: '保存', exact: true })
+    const save = page.getByRole('button', { name: '保存到云端', exact: true })
     await save.waitFor()
-    await page.waitForFunction(() => [...document.querySelectorAll('button')].some(b => b.textContent === '保存' && !b.disabled), null, { timeout: 120000 })
+    await page.waitForFunction(() => [...document.querySelectorAll('button')].some(b => b.textContent === '保存到云端' && !b.disabled), null, { timeout: 120000 })
     await page.getByRole('button', { name: '添加对象', exact: true }).click()
     await page.waitForFunction(() => document.body.textContent.includes('New Entity'))
     const tga = Buffer.from([0,0,2,0,0,0,0,0,0,0,0,0,1,0,1,0,24,0,0,0,255])
     await page.locator('input[type=file]').setInputFiles({ name: 'red.tga', mimeType: 'application/octet-stream', buffer: tga })
     await page.getByText('图片已导入，请保存项目', { exact: true }).waitFor()
     await save.click()
-    await page.getByText('引擎项目已保存到此浏览器', { exact: true }).waitFor()
+    await page.getByText('完整项目已保存到云端', { exact: true }).waitFor()
     const saved = await page.evaluate(async () => {
       const db = await new Promise((resolve, reject) => { const r = indexedDB.open('tomcat-engine-v1'); r.onsuccess = () => resolve(r.result); r.onerror = () => reject(r.error) })
       const value = await new Promise(resolve => { const r = db.transaction('projects').objectStore('projects').get('my-first-game'); r.onsuccess = () => resolve(r.result) })
@@ -45,7 +59,7 @@ try {
     assert.ok(Object.keys(saved.files).some(path => path.endsWith('.tga')))
     assert.ok(Object.keys(saved.files).some(path => path.endsWith('.tga.tcmeta')))
     await page.reload()
-    await page.waitForFunction(() => [...document.querySelectorAll('button')].some(b => b.textContent === '保存' && !b.disabled), null, { timeout: 120000 })
+    await page.waitForFunction(() => [...document.querySelectorAll('button')].some(b => b.textContent === '保存到云端' && !b.disabled), null, { timeout: 120000 })
     assert.equal(await page.getByText('我的第一个游戏 · 未保存', { exact: true }).count(), 0)
     await page.getByRole('button', { name: '运行预览', exact: true }).click()
     await page.getByRole('button', { name: '暂停预览', exact: true }).click()
@@ -61,7 +75,7 @@ try {
       await page.getByRole('heading', { name: '我的项目' }).waitFor()
       assert.equal(await page.locator('iframe').count(), 0)
       await page.goto(`${base}/editor/my-first-game`)
-      await page.waitForFunction(() => [...document.querySelectorAll('button')].some(b => b.textContent === '保存' && !b.disabled), null, { timeout: 120000 })
+      await page.waitForFunction(() => [...document.querySelectorAll('button')].some(b => b.textContent === '保存到云端' && !b.disabled), null, { timeout: 120000 })
     }
     // Exercise the public iframe host using the same MessageChannel contract as Vue.
     await page.goto(`${base}/projects`)
@@ -77,7 +91,7 @@ try {
           else if (waiting.has(d.id)) { const item = waiting.get(d.id); waiting.delete(d.id); d.error ? item.reject(new Error(d.error.code)) : item.resolve(d.result) }
         }
       })
-      iframe.contentWindow.postMessage({ type: 'tomcat-connect', kind: 'editor', name: 'Browser regression', template: '2D' }, location.origin, [channel.port2])
+      iframe.contentWindow.postMessage({ type: 'tomcat-connect', kind: 'editor', cloudProjectId: 'engine-project', name: 'Browser regression', template: '2D' }, location.origin, [channel.port2])
       const call = (type, payload = {}) => new Promise((resolve, reject) => { const key = ++id; waiting.set(key, { resolve, reject }); channel.port1.postMessage({ id: key, type, payload }) })
       try {
         const initial = await ready

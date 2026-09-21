@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { useAccess } from './access'
 import { ref } from 'vue'
 import { ArrowLeft, Bookmark, Clock3, Heart, Play, Send } from '@lucide/vue'
 import { isComments, uid, type Game, type LocalComment } from './data'
@@ -8,13 +9,15 @@ import ArtworkView from './ArtworkView.vue'
 import PlayerPreview from './PlayerPreview.vue'
 import TextLink from './TextLink.vue'
 
+const { user, requireLogin, openLogin } = useAccess()
 const props = defineProps<{ game: Game; saved: boolean }>()
 const emit = defineEmits<{ toggleSave: []; notify: [message: string] }>()
 const player = ref(false)
 const comment = ref('')
 const { state: comments, storageError } = useLocalState<LocalComment[]>(`tomcat-ui-comments-${props.game.id}`, [], isComments)
 
-function submitComment() {
+async function submitComment() {
+  if (!await requireLogin()) return
   if (!comment.value.trim()) return
   comments.value = [...comments.value, { id: uid(), text: comment.value.trim() }]
   comment.value = ''
@@ -33,7 +36,7 @@ function submitComment() {
         <section class="content-section comment-section">
           <div class="section-heading"><h2>留下你的想法<span class="subtle-count">{{ comments.length }}</span></h2><span class="muted-small">本地留言</span></div>
           <p class="comment-intro">一句感受，一个建议，都是创作者继续前行的动力。</p>
-          <form @submit.prevent="submitComment"><label class="sr-only" for="game-comment">你的留言</label><textarea id="game-comment" v-model="comment" class="text-input" maxlength="500" required placeholder="你喜欢这个世界里的哪一个瞬间？" /><div class="comment-form-footer"><span>{{ comment.length }} / 500</span><button class="button button-primary" :disabled="!comment.trim()"><Send :size="15" />留下想法</button></div></form>
+          <button v-if="!user" class="button button-primary" @click="openLogin">登录后参与讨论</button><form v-else @submit.prevent="submitComment"><label class="sr-only" for="game-comment">你的留言</label><textarea id="game-comment" v-model="comment" class="text-input" maxlength="500" required placeholder="你喜欢这个世界里的哪一个瞬间？" /><div class="comment-form-footer"><span>{{ comment.length }} / 500</span><button class="button button-primary" :disabled="!comment.trim()"><Send :size="15" />留下想法</button></div></form>
           <p v-if="storageError" class="danger-text" role="alert">留言无法保存，浏览器存储不可用。</p>
           <div v-for="item in comments" :key="item.id" class="comment"><span class="avatar">M</span><div><strong>我<span>刚刚 · 本地</span></strong><p>{{ item.text }}</p></div></div>
         </section>

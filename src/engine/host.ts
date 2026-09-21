@@ -1,3 +1,4 @@
+import { currentUser, getCloudProject } from './cloud'
 import { EditorProtocol, EngineError, type SceneState, type Snapshot, type Operation } from './protocol'
 import { assertDocument, engineCommit, projectRoot, validFilePath, type EngineDocument } from './storage'
 import { loadModule, bootPlayer, shutdown, type EngineModule, type RuntimeKind } from './runtime'
@@ -131,6 +132,12 @@ addEventListener('message', async event => {
     catch (error) { send({ id, error: { code: error instanceof EngineError ? error.code : 'HOST_ERROR', message: error instanceof Error ? error.message : String(error) } }) }
   }
   try {
+    if (kind === 'editor') {
+      await currentUser()
+      if (typeof event.data.cloudProjectId !== 'string' || !event.data.cloudProjectId) throw new Error('编辑器必须关联云端项目')
+      await getCloudProject(event.data.cloudProjectId)
+    }
+    if (stopped) return
     const loaded = await loadModule(kind, canvas)
     if (stopped) { shutdown(loaded, kind); return }
     module = loaded
