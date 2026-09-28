@@ -8,6 +8,7 @@ import {
 } from './runtime'
 
 const canvas = document.querySelector<HTMLCanvasElement>('#canvas')!
+const stage = document.querySelector<HTMLElement>('#stage')!
 let engine: LoadedEngine | undefined
 let protocol: EditorProtocol | undefined
 let port: MessagePort | undefined
@@ -31,10 +32,31 @@ function exports() { return engine!.web.engine }
 function filesystem() { return engineFilesystem(engine!.web) }
 function state(): SceneState { return JSON.parse(exports().EditorState()) }
 function dimensions() { return [Math.max(1, Math.min(8192, Math.round(innerWidth * devicePixelRatio))), Math.max(1, Math.min(8192, Math.round(innerHeight * devicePixelRatio)))] }
+/**
+ * 把引擎视口切成“设备像素”大小。
+ *
+ * 引擎侧（Emscripten GLFW）在 glfwCreateWindow 收尾时会调用 adjustCanvasDimensions()，
+ * 用画布的 **CSS 尺寸**（clientWidth/clientHeight）覆盖绘制缓冲，并把它同时当作 WebGL viewport
+ * 与鼠标坐标空间；而 glfwSetWindowSize 也会照这个尺寸重设缓冲。若把设备像素直接交给引擎，
+ * 两者就差一个 devicePixelRatio：viewport 按设备像素铺开、缓冲只有 CSS 尺寸，画面被放大 dpr 倍
+ * 并锚定在左下角（高 DPI 屏幕上表现为内容偏到右下且被裁切，DPR=1 时恰好看不出问题）。
+ *
+ * 因此让舞台的布局尺寸等于设备像素、再缩放回视口：画布 clientWidth、引擎窗口尺寸、鼠标坐标空间
+ * 三者始终一致，绘制缓冲也保持设备像素（高 DPI 下依旧清晰）。
+ */
+function applyViewport(w: number, h: number) {
+  width = w; height = h
+  // 正常情况 innerWidth/w 就是 1/devicePixelRatio；设备像素被 8192 上限夹住时它也仍然铺满视口宽度。
+  const scale = innerWidth / w
+  stage.style.width = `${w}px`
+  stage.style.height = `${h}px`
+  stage.style.transform = scale === 1 ? '' : `scale(${scale})`
+  canvas.width = w; canvas.height = h
+}
 function resize() {
   const [w, h] = dimensions()
   if (width === w && height === h) return
-  width = w!; height = h!; canvas.width = width; canvas.height = height
+  applyViewport(w!, h!)
   if (kind === 'editor') exports().EditorResize(width, height)
   else exports().PlayerResize(width, height)
 }
@@ -365,8 +387,9 @@ addEventListener('message', async event => {
     const loaded = await loadEngine(canvas)
     if (stopped) { shutdown(loaded.web, kind); return }
     engine = loaded
-    ;[width, height] = dimensions() as [number, number]
-    canvas.width = width; canvas.height = height
+    // 必须在 boot 之前完成：glfwCreateWindow 会按画布的 CSS 尺寸定缓冲，舞台此时就得是对的尺寸。
+    const [initialWidth, initialHeight] = dimensions() as [number, number]
+    applyViewport(initialWidth, initialHeight)
     let snapshot: Snapshot | undefined
     if (kind === 'editor') {
       if (exports().EditorBoot(width, height) !== 0) throw new Error(exports().EditorError() || '编辑器启动失败')

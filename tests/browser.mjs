@@ -1,9 +1,13 @@
 import assert from 'node:assert/strict'
 import { chromium } from 'playwright'
-import { mkdirSync } from 'node:fs'
+import { mkdirSync, readFileSync } from 'node:fs'
 import { execFileSync } from 'node:child_process'
 const base = process.env.TEST_BASE_URL || 'http://127.0.0.1:5173'
-if (!process.argv.includes('--missing')) execFileSync(process.execPath, ['tests/player-fixture.cjs'], { stdio: 'inherit' })
+if (!process.argv.includes('--missing')) {
+  execFileSync(process.execPath, ['tests/player-fixture.cjs'], { stdio: 'inherit' })
+  // 播放器改从后端取包，示例包需要先从引擎烘焙产物派生出来。
+  execFileSync(process.execPath, ['scripts/build-sample-games.mjs'], { stdio: 'inherit' })
+}
 const browser = await chromium.launch({ channel: process.env.TEST_BROWSER_CHANNEL || 'chrome', headless: true, args: ['--enable-webgl', '--use-angle=swiftshader', '--enable-unsafe-swiftshader'] })
 const page = await browser.newPage({ viewport: { width: 1440, height: 960 } })
 // The engine regression uses an authenticated cloud fixture; guest access has its own suite.
@@ -13,6 +17,13 @@ await page.addInitScript(() => {
 await page.route('**/v1/**', route => {
   const path = new URL(route.request().url()).pathname
   const json = (value, headers = {}) => route.fulfill({ json: value, headers })
+  // 示例游戏包由后端提供：forest 是真实包，desert 故意损坏，puzzle 缺包。
+  if (path.startsWith('/v1/games/') && path.endsWith('/package')) {
+    const id = path.split('/')[3]
+    if (id === 'forest') return route.fulfill({ status: 200, headers: { 'content-type': 'application/octet-stream' }, body: readFileSync('.engine/games/forest.tcpak') })
+    if (id === 'desert') return route.fulfill({ status: 200, headers: { 'content-type': 'application/octet-stream' }, body: Buffer.from('not a tcpak') })
+    return route.fulfill({ status: 404, json: { error: '没有这个示例游戏包。' } })
+  }
   if (path === '/v1/auth/me') return json({ id: 'engine-test', username: 'engine-test' })
   if (path === '/v1/projects/sync-config') return json({ enabled: false })
   if (path === '/v1/projects' && route.request().method() === 'GET') return json([])
@@ -159,22 +170,62 @@ try {
     assert.ok(result.schemaCount > 0); assert.equal(result.entityId, '18446744073709551615'); assert.deepEqual(result.position, [1, 2, 0]); assert.ok(result.undone && result.redone && result.conflict)
   }
   if (!process.argv.includes('--missing')) {
+    // 示例作品：播放器按作品 id 从后端取包，用户不再需要自己上传 TCPAK。
     await page.goto(`${base}/games/forest`)
     await page.getByRole('button', { name: '打开游玩预览' }).click()
     for (let i = 0; i < 2; i++) {
-      await page.locator('input[type=file]').setInputFiles('.engine/sample.tcpak')
-      await page.getByText(/正在运行本地游戏包/).waitFor({ timeout: 240000 })
+      await page.getByText(/正在运行 林间来信 的游戏包/).waitFor({ timeout: 240000 })
       if (i === 0) await page.screenshot({ path: '.engine/player-browser.png' })
       await page.getByRole('button', { name: '停止', exact: true }).click()
       assert.equal(await page.locator('iframe').count(), 0)
       for (let tries = 0; tries < 100 && page.workers().length; tries++) await new Promise(resolve => setTimeout(resolve, 100))
       assert.equal(page.workers().length, 0, 'pthread workers must terminate on stop')
+      if (i === 0) await page.getByRole('button', { name: '重新加载', exact: true }).click()
     }
-    await page.locator('input[type=file]').setInputFiles({ name: 'invalid.tcpak', mimeType: 'application/octet-stream', buffer: Buffer.from('invalid') })
+    await page.getByRole('button', { name: '关闭播放器', exact: true }).click()
+    // 高 DPI 回归：引擎（Emscripten GLFW）会把画布的 CSS 尺寸当作绘制缓冲，并据此设置 viewport，
+    // 所以视口必须先铺成设备像素、再由舞台缩放回 CSS 尺寸（见 host.ts applyViewport）。
+    // 若把设备像素直接交给引擎，viewport 与缓冲会差一个 devicePixelRatio，画面被放大并偏移到右下角。
+    const hidpi = await browser.newPage({ viewport: { width: 1200, height: 800 }, deviceScaleFactor: 2 })
+    hidpi.on('pageerror', error => errors.push(error.message))
+    await hidpi.route('**/v1/**', route => {
+      const path = new URL(route.request().url()).pathname
+      if (path.startsWith('/v1/games/')) return route.fulfill({ status: 200, headers: { 'content-type': 'application/octet-stream' }, body: readFileSync('.engine/games/forest.tcpak') })
+      if (path === '/v1/auth/me') return route.fulfill({ json: { id: 'engine-test', username: 'engine-test' } })
+      return route.fulfill({ json: {} })
+    })
+    try {
+      await hidpi.goto(`${base}/games/forest`)
+      await hidpi.getByRole('button', { name: '打开游玩预览' }).click()
+      await hidpi.getByText(/正在运行 林间来信 的游戏包/).waitFor({ timeout: 240000 })
+      await hidpi.waitForTimeout(1000)
+      const surface = await hidpi.evaluate(() => {
+        const frame = document.querySelector('iframe')
+        const canvas = frame.contentDocument.querySelector('#canvas')
+        const rect = canvas.getBoundingClientRect()
+        return { dpr: frame.contentWindow.devicePixelRatio, inner: [frame.contentWindow.innerWidth, frame.contentWindow.innerHeight], bitmap: [canvas.width, canvas.height], rect: [Math.round(rect.width), Math.round(rect.height)] }
+      })
+      assert.equal(surface.dpr, 2)
+      // 绘制缓冲跟着设备像素走：DPR=2 时缓冲是 CSS 尺寸的两倍（高 DPI 下依然清晰）。
+      assert.deepEqual(surface.bitmap, [Math.round(surface.inner[0] * 2), Math.round(surface.inner[1] * 2)])
+      // 可见区域仍等于视口，即舞台被 1/dpr 缩回，画面不会被放大或裁切。
+      assert.deepEqual(surface.rect, surface.inner)
+      await hidpi.locator('.runtime-player').screenshot({ path: '.engine/player-hidpi.png' })
+    } finally { await hidpi.close() }
+    // 后端没有这个作品的包：给出明确提示，而不是让用户自己去找本地文件。
+    await page.goto(`${base}/games/puzzle`)
+    await page.getByRole('button', { name: '打开游玩预览' }).click()
+    await page.getByRole('alert').waitFor({ timeout: 30000 })
+    assert.match(await page.getByRole('alert').textContent(), /后端尚未提供/)
+    assert.equal(await page.locator('iframe').count(), 0)
+    await page.getByRole('button', { name: '关闭播放器', exact: true }).click()
+    // 后端返回损坏的包：引擎拒绝加载，并给出“包损坏/版本不匹配”的提示。
+    await page.goto(`${base}/games/desert`)
+    await page.getByRole('button', { name: '打开游玩预览' }).click()
     await page.getByRole('alert').waitFor({ timeout: 240000 })
     assert.equal(await page.locator('iframe').count(), 0)
     await page.getByRole('button', { name: '关闭播放器', exact: true }).click()
   }
   assert.deepEqual(errors, [])
-  console.log(process.argv.includes('--missing') ? 'PASS: isolation, missing-engine diagnostic and route cleanup' : 'PASS: real managed editor, in-browser C# compile + lifecycle execution, archive persistence, repeated cleanup, uint64, undo/redo, preview, save conflict')
+  console.log(process.argv.includes('--missing') ? 'PASS: isolation, missing-engine diagnostic and route cleanup' : 'PASS: real managed editor, in-browser C# compile + lifecycle execution, archive persistence, repeated cleanup, uint64, undo/redo, preview, save conflict, backend-served game packages, HiDPI viewport')
 } finally { await browser.close() }

@@ -1,15 +1,18 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { computed, onBeforeUnmount, ref } from 'vue'
 import type { Game } from './data'
 import AppModal from './AppModal.vue'
 import EngineSurface from './EngineSurface.vue'
-defineProps<{ game: Game }>()
+const props = defineProps<{ game: Game }>()
 const emit = defineEmits<{ close: [] }>()
+// 引擎侧同样以 256 MiB 为上限，这里提前拦截，避免把超大响应读进内存。
+const MAX_PACKAGE = 256 * 1024 * 1024
 const bytes = ref<Uint8Array>()
 const error = ref('')
 const running = ref(false)
+const loading = ref(false)
 const generation = ref(0)
-const fileName = ref('')
+const controller = new AbortController()
 // 托管（C#）包与桌面包的错误文案不同：区分“能力不支持”和“包本身损坏”。
 const hint = computed(() => {
   const message = error.value
@@ -18,24 +21,42 @@ const hint = computed(() => {
   if (/tcpak|package|corrupt|invalid|版本|version/i.test(message)) return '资源包损坏或引擎版本不匹配，请使用当前引擎重新打包。'
   return ''
 })
-async function choose(event: Event) {
-  const input = event.target as HTMLInputElement
-  const file = input.files?.[0]; input.value = ''
-  if (!file) return
-  if (!file.size || file.size > 256 * 1024 * 1024) { error.value = '请选择不超过 256 MiB 的 TCPAK'; return }
-  try { bytes.value = new Uint8Array(await file.arrayBuffer()); fileName.value = file.name; generation.value++; error.value = ''; running.value = false }
-  catch { error.value = '资源包读取失败' }
+// 游戏包由后端按作品 id 提供，用户无需（也不应）自己上传。
+async function load() {
+  loading.value = true
+  error.value = ''
+  bytes.value = undefined
+  running.value = false
+  generation.value++
+  try {
+    const response = await fetch(`/v1/games/${encodeURIComponent(props.game.id)}/package`, {
+      credentials: 'same-origin', headers: { 'X-TomCat-Request': '1' }, signal: controller.signal,
+    })
+    if (response.status === 404) { error.value = '后端尚未提供这个作品的游戏包'; return }
+    if (!response.ok) { error.value = `游戏包下载失败（HTTP ${response.status}）`; return }
+    if (Number(response.headers.get('content-length') ?? 0) > MAX_PACKAGE) { error.value = '游戏包超过 256 MiB，网页播放器无法加载'; return }
+    const buffer = await response.arrayBuffer()
+    if (!buffer.byteLength) { error.value = '游戏包为空，无法运行'; return }
+    if (buffer.byteLength > MAX_PACKAGE) { error.value = '游戏包超过 256 MiB，网页播放器无法加载'; return }
+    bytes.value = new Uint8Array(buffer)
+  } catch (failure) {
+    if ((failure as Error | undefined)?.name !== 'AbortError') error.value = '无法连接后端，游戏包未能加载'
+  } finally {
+    loading.value = false
+  }
 }
-function stop() { bytes.value = undefined; running.value = false; error.value = ''; fileName.value = '' }
+load()
+function stop() { bytes.value = undefined; running.value = false; error.value = '' }
+onBeforeUnmount(() => controller.abort())
 </script>
 <template>
   <AppModal :title="`${game.title} · 播放器`" wide @close="emit('close')">
-    <p class="local-note">示例作品尚未提供游戏包。选择本地 TCPAK 可在独立的真实引擎播放器中运行：托管（C#）包已支持，但只接受 portable 纯托管载荷，含原生依赖的桌面包会被明确拒绝。</p>
-    <label class="field-label">打开 TCPAK 资源包<input type="file" accept=".tcpak" @change="choose" /></label>
-    <p v-if="error" role="alert">{{ error }}<span v-if="hint" class="player-hint">{{ hint }}</span></p>
-    <p v-if="running" role="status">正在运行本地游戏包{{ fileName ? `：${fileName}` : '' }}（C# 脚本已在浏览器内加载）</p>
+    <p class="local-note">播放器会从后端获取这个作品的游戏包（TCPAK），在独立的真实引擎中运行。托管（C#）包已支持；含原生依赖的桌面包会被明确拒绝。</p>
+    <p v-if="loading" role="status">正在从后端加载游戏包…</p>
+    <p v-else-if="error" role="alert">{{ error }}<span v-if="hint" class="player-hint">{{ hint }}</span></p>
+    <p v-if="running" role="status">正在运行 {{ game.title }} 的游戏包（C# 脚本已在浏览器内加载）</p>
     <div v-if="bytes" class="runtime-player"><EngineSurface :key="generation" kind="player" :bytes="bytes" @ready="running = true" @error="error = $event; running = false" /></div>
-    <div class="dialog-actions"><button class="button" :disabled="!bytes" @click="stop">停止</button><button class="button button-primary" @click="emit('close')">关闭播放器</button></div>
+    <div class="dialog-actions"><button v-if="bytes" class="button" @click="stop">停止</button><button v-else-if="!loading" class="button" @click="load">{{ error ? '重试' : '重新加载' }}</button><button class="button button-primary" @click="emit('close')">关闭播放器</button></div>
   </AppModal>
 </template>
-<style scoped>.runtime-player{height:55vh;min-height:320px;margin-top:16px}input{display:block;margin:12px 0}.player-hint{display:block;margin-top:6px;color:#7b848f;font-size:13px}</style>
+<style scoped>.runtime-player{height:55vh;min-height:320px;margin-top:16px}.player-hint{display:block;margin-top:6px;color:#7b848f;font-size:13px}</style>
