@@ -21,7 +21,10 @@ await page.route('**/v1/**', route => {
   return json({ id: 'engine-project', currentRevisionId: null, etag: null })
 })
 const errors = []
+const logs = []
 page.on('pageerror', error => errors.push(error.message))
+// SwiftShader 软件渲染会刷大量 glClear 警告，过滤掉以免淹没脚本日志。
+page.on('console', message => { const text = message.text(); if (!text.includes('GL_INVALID_OPERATION')) logs.push(text) })
 page.on('dialog', dialog => dialog.accept())
 try {
   for (let i = 0; i < 40; i++) {
@@ -42,7 +45,7 @@ try {
   } else {
     const save = page.getByRole('button', { name: '保存到云端', exact: true })
     await save.waitFor()
-    await page.waitForFunction(() => [...document.querySelectorAll('button')].some(b => b.textContent === '保存到云端' && !b.disabled), null, { timeout: 120000 })
+    await page.waitForFunction(() => [...document.querySelectorAll('button')].some(b => b.textContent === '保存到云端' && !b.disabled), null, { timeout: 240000 })
     await page.getByRole('button', { name: '添加对象', exact: true }).click()
     await page.waitForFunction(() => document.body.textContent.includes('New Entity'))
     const tga = Buffer.from([0,0,2,0,0,0,0,0,0,0,0,0,1,0,1,0,24,0,0,0,255])
@@ -59,7 +62,7 @@ try {
     assert.ok(Object.keys(saved.files).some(path => path.endsWith('.tga')))
     assert.ok(Object.keys(saved.files).some(path => path.endsWith('.tga.tcmeta')))
     await page.reload()
-    await page.waitForFunction(() => [...document.querySelectorAll('button')].some(b => b.textContent === '保存到云端' && !b.disabled), null, { timeout: 120000 })
+    await page.waitForFunction(() => [...document.querySelectorAll('button')].some(b => b.textContent === '保存到云端' && !b.disabled), null, { timeout: 240000 })
     assert.equal(await page.getByText('我的第一个游戏 · 未保存', { exact: true }).count(), 0)
     await page.getByRole('button', { name: '运行预览', exact: true }).click()
     await page.getByRole('button', { name: '暂停预览', exact: true }).click()
@@ -70,12 +73,57 @@ try {
     await page.waitForFunction(() => [...document.querySelectorAll('button')].some(b => b.textContent === '添加对象' && !b.disabled))
     assert.equal(await page.getByText('我的第一个游戏 · 未保存', { exact: true }).count(), 0)
     mkdirSync('.engine', { recursive: true }); await page.screenshot({ path: '.engine/editor-browser.png' })
+    // C# 脚本：浏览器内 Roslyn 编译、托管 ABI 安装与诊断回传。
+    const scriptSource = 'using TomCat;\npublic sealed class WebSmoke : TomCatBehaviour\n{\n    protected override void OnCreate() { Log.Info("WEB_SMOKE_ONCREATE"); }\n    protected override void OnUpdate(float deltaTime) { }\n}\n'
+    await page.getByRole('button', { name: 'C# 脚本', exact: true }).click()
+    await page.getByPlaceholder('新脚本类名').fill('WebSmoke')
+    await page.getByRole('button', { name: '新建', exact: true }).click()
+    await page.locator('.script-panel .list li', { hasText: 'WebSmoke' }).first().waitFor({ timeout: 30000 })
+    await page.getByLabel('C# 脚本源码').fill(scriptSource)
+    await page.getByRole('button', { name: '编译并安装', exact: true }).click()
+    await page.locator('.script-panel .state.ok').waitFor({ timeout: 240000 })
+    assert.equal(await page.locator('.script-panel .diagnostics li.error').count(), 0)
+    // 挂载到选中实体并运行预览：证明浏览器内 C# 真的被引擎执行（而不只是编译通过）。
+    await page.getByRole('button', { name: '添加对象', exact: true }).click()
+    await page.waitForFunction(() => document.body.textContent.includes('New Entity'))
+    await page.getByRole('button', { name: '挂载当前脚本', exact: true }).click()
+    await page.locator('.script-panel .attach .chips em', { hasText: 'WebSmoke' }).waitFor({ timeout: 30000 })
+    await page.getByRole('button', { name: 'C# 脚本', exact: true }).click()
+    await page.getByRole('button', { name: '运行预览', exact: true }).click()
+    await page.getByRole('button', { name: '暂停预览', exact: true }).waitFor({ timeout: 240000 })
+    for (let tries = 0; tries < 600 && !logs.some(text => text.includes('WEB_SMOKE_ONCREATE')); tries++) await new Promise(resolve => setTimeout(resolve, 100))
+    assert.ok(logs.some(text => text.includes('WEB_SMOKE_ONCREATE')), `expected the C# lifecycle log, got ${JSON.stringify(logs.slice(-25))}`)
+    await page.getByRole('button', { name: '停止预览', exact: true }).click()
+    await page.waitForFunction(() => [...document.querySelectorAll('button')].some(b => b.textContent === '运行预览' && !b.disabled))
+    // 重新打开面板：编译过一代程序集后再次编译，必须给出“重建会话”提示而不是静默失效。
+    await page.getByRole('button', { name: 'C# 脚本', exact: true }).click()
+    // 故意写入语法错误，验证 Roslyn 诊断被回传并渲染。
+    await page.getByLabel('C# 脚本源码').fill('using TomCat;\npublic sealed class WebSmoke : TomCatBehaviour { protected override void OnCreate() { int broken = ; } }')
+    await page.getByRole('button', { name: '编译并安装', exact: true }).click()
+    await page.locator('.script-panel .diagnostics li.error').first().waitFor({ timeout: 240000 })
+    assert.match(await page.locator('.script-panel .diagnostics li.error').first().textContent(), /CS\d{4}/)
+    assert.equal(await page.locator('.script-panel .state.ok').count(), 0)
+    // 程序集已装载过：面板必须提示重建会话，而不是假装能原地热替换。
+    await page.locator('.script-panel .rebuild').waitFor({ timeout: 30000 })
+    // 恢复可编译内容，并确认脚本随项目一起保存。
+    await page.getByLabel('C# 脚本源码').fill(scriptSource)
+    await page.getByRole('button', { name: '保存脚本', exact: true }).click()
+    await page.getByRole('button', { name: 'C# 脚本', exact: true }).click()
+    await save.click()
+    await page.getByText('完整项目已保存到云端', { exact: true }).waitFor({ timeout: 240000 })
+    const withScript = await page.evaluate(async () => {
+      const db = await new Promise((resolve, reject) => { const r = indexedDB.open('tomcat-engine-v1'); r.onsuccess = () => resolve(r.result); r.onerror = () => reject(r.error) })
+      const value = await new Promise(resolve => { const r = db.transaction('projects').objectStore('projects').get('my-first-game'); r.onsuccess = () => resolve(r.result) })
+      db.close(); return Object.keys(value.files).filter(path => path.includes('Scripts/'))
+    })
+    assert.ok(withScript.includes('Assets/Scripts/WebSmoke.cs'), `expected script in archive, got ${JSON.stringify(withScript)}`)
+    assert.ok(withScript.includes('Assets/Scripts/WebSmoke.cs.tcmeta'), `expected script meta in archive, got ${JSON.stringify(withScript)}`)
     for (let i = 0; i < 3; i++) {
       await page.getByRole('button', { name: '返回项目' }).click()
       await page.getByRole('heading', { name: '我的项目' }).waitFor()
       assert.equal(await page.locator('iframe').count(), 0)
       await page.goto(`${base}/editor/my-first-game`)
-      await page.waitForFunction(() => [...document.querySelectorAll('button')].some(b => b.textContent === '保存到云端' && !b.disabled), null, { timeout: 120000 })
+      await page.waitForFunction(() => [...document.querySelectorAll('button')].some(b => b.textContent === '保存到云端' && !b.disabled), null, { timeout: 240000 })
     }
     // Exercise the public iframe host using the same MessageChannel contract as Vue.
     await page.goto(`${base}/projects`)
@@ -115,7 +163,7 @@ try {
     await page.getByRole('button', { name: '打开游玩预览' }).click()
     for (let i = 0; i < 2; i++) {
       await page.locator('input[type=file]').setInputFiles('.engine/sample.tcpak')
-      await page.getByText('正在运行本地游戏包', { exact: true }).waitFor({ timeout: 120000 })
+      await page.getByText(/正在运行本地游戏包/).waitFor({ timeout: 240000 })
       if (i === 0) await page.screenshot({ path: '.engine/player-browser.png' })
       await page.getByRole('button', { name: '停止', exact: true }).click()
       assert.equal(await page.locator('iframe').count(), 0)
@@ -123,10 +171,10 @@ try {
       assert.equal(page.workers().length, 0, 'pthread workers must terminate on stop')
     }
     await page.locator('input[type=file]').setInputFiles({ name: 'invalid.tcpak', mimeType: 'application/octet-stream', buffer: Buffer.from('invalid') })
-    await page.getByRole('alert').waitFor({ timeout: 120000 })
+    await page.getByRole('alert').waitFor({ timeout: 240000 })
     assert.equal(await page.locator('iframe').count(), 0)
     await page.getByRole('button', { name: '关闭播放器', exact: true }).click()
   }
   assert.deepEqual(errors, [])
-  console.log(process.argv.includes('--missing') ? 'PASS: isolation, missing-engine diagnostic and route cleanup' : 'PASS: real editor, archive persistence, repeated cleanup, uint64, undo/redo, preview, save conflict')
+  console.log(process.argv.includes('--missing') ? 'PASS: isolation, missing-engine diagnostic and route cleanup' : 'PASS: real managed editor, in-browser C# compile + lifecycle execution, archive persistence, repeated cleanup, uint64, undo/redo, preview, save conflict')
 } finally { await browser.close() }

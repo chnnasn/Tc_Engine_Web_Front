@@ -12,7 +12,13 @@ Vue 3 创作工作台，使用固定版本的上游 TomCat Web Editor / Player�
 
 ## 开发与构建
 
-需要 Node.js 22.18+、Python、Git、CMake 3.20+、Ninja 和 **Emscripten 4.0.15**。先激活 Emscripten SDK（Windows：`emsdk_env.bat`；Linux/macOS：`source emsdk_env.sh`），确保这些工具在 PATH 中。
+需要 Node.js 22.18+、Git、CMake 3.20+、Ninja，以及 **.NET 10 SDK + `wasm-tools` 工作负载**：
+
+```sh
+dotnet workload install wasm-tools
+```
+
+Emscripten 默认取自 `wasm-tools` 自带的工作负载 pack，无需单独安装；若要使用独立 emsdk，设置 `EMSDK`（可选 `EMSDK_PYTHON`）即可。`TOMCAT_ENGINE_SOURCE` 可指向已有的干净检出（提交必须与锁文件一致）；`CMAKE_BUILD_PARALLEL_LEVEL` 调整编译并行度。
 
 ```sh
 npm ci
@@ -20,9 +26,9 @@ npm run engine:build
 npm run dev
 ```
 
-`engine.lock.json` 固定引擎提交 `0a731be0d56352d5ae5785ffaece3edd834238ab`。构建脚本会检出到 `.engine/source`、初始化四个依赖子模块，直接使用上游 `Web/CMakeLists.txt`，执行上游 RPC 和 Player Cook 回归后，再复制两个模块的 JS/WASM/DATA 到 `public/engine/<commit>/`。没有本地 C++ 移植补丁。
+`engine.lock.json` 固定引擎提交 `684eb8f3ad512fe14b7d82943f77ecb725f57887`，并记录 `kind: managed` 与 `legacyCommits`。构建脚本检出到 `.engine/source`、初始化四个依赖子模块，然后用 **托管（C#）管线** 生成引擎产物：先用 Emscripten 编出 C++ 静态库（`tomcat_managed_web_entrypoints`、`tc_player_core`、`tc_yaml`、`box2d`），再 `dotnet publish -r browser-wasm` 发布 `Managed/TomCat.WebHost`——**最终 `.wasm` 由 .NET 运行时拥有**，C++ 引擎归档被链接进同一块 WebAssembly 内存，原生与托管共享函数表。最后把完整的 `main.js`、`_framework/` 与 C# 编译引用集 `refs/` 复制到 `public/engine/<commit>/`。没有本地 C++ 移植补丁。
 
-可通过 `TOMCAT_ENGINE_SOURCE` 指定已有的干净检出，提交必须匹配锁文件；脚本会初始化该检出的子模块。`CMAKE_BUILD_PARALLEL_LEVEL` 可调整编译并行度。
+托管模块是单线程构建（`WasmEnableThreads=false`），产物中不含 `SharedArrayBuffer`/pthread，因此**不再要求跨源隔离**；`vite.config.ts` 与 `netlify.toml` 仍保留 COOP/COEP 以便将来启用线程构建。
 
 ```sh
 npm test
@@ -32,7 +38,9 @@ npm run preview
 npm run test:browser
 ```
 
-`npm run build` 只构建网站，需先生成引擎产物。`npm run engine:build` 的真实上游回归不可由 TypeScript 单元测试代替。浏览器回归默认访问开发服务器 `http://127.0.0.1:5173`；验证 preview 时设置 `TEST_BASE_URL=http://127.0.0.1:4173`。
+`npm run build` 只构建网站，需先生成引擎产物。浏览器回归默认访问开发服务器 `http://127.0.0.1:5173`；验证 preview 时设置 `TEST_BASE_URL=http://127.0.0.1:4173`。
+
+托管产物体积明显大于旧的纯 Emscripten 产物（含 .NET 运行时、Roslyn 与烘焙进模块文件系统的预加载资源），首次进入编辑器/播放器需要下载 `_framework/`。
 
 ## 访问权限
 
@@ -44,20 +52,32 @@ npm run test:browser
 
 ## 编辑器和项目
 
-- `/editor/:id` 使用独立同源 iframe，内部启动 `TomCatEditorModule`，展示上游 Hierarchy、Inspector、Project、Scene / Game 面板。
+- `/editor/:id` 使用独立同源 iframe，内部加载托管 Web 引擎（`globalThis.TomCatWeb`），展示上游 Hierarchy、Inspector、Project、Scene / Game 面板。
 - `tomcat.web.v1` 是唯一编辑协议。快照包含归档和组件 schema；添加对象、原生属性编辑、撤销和重做均经过引擎事务。uint64 ID 始终为十进制字符串，场景修订号为安全整数。
 - 工具栏保存及原生 Ctrl/Cmd+S 保存实际场景归档、`Project.tcproj`、全部 ProjectSettings 与 Assets（包括图片和 `.tcmeta`）。只有云端保存及 IndexedDB 事务完成且场景/配置/资源仍与捕获时一致，才确认 `scene.markSaved`。保存期间发生编辑时会保留未保存状态。
-- 导出格式为 `tomcat-project` v2，包含引擎文档及版本；导入、复制、删除使用同一存储。不同引擎版本暂时拒绝导入，升级时需明确提供兼容策略。
+- 导出格式为 `tomcat-project` v2，包含引擎文档及版本；导入、复制、删除使用同一存储。`engine.lock.json` 的 `legacyCommits` 列出仍可读取的旧引擎提交（当前为 `0a731be0…`）：这类项目可以打开并原样保留，但保存到云端前必须由当前引擎重新 `capture`（写入新的 `engineCommit`），否则以“项目使用了不兼容的引擎版本”拒绝。
 - 旧 `tomcat-static-project` v1 文件仍可导入、导出和备份，但不会自动转成引擎场景。打开旧项目会说明正在使用新场景，原 localStorage 数据保留。
 - 上游 Web 会话只支持内置项目挂载根，因此本版通过独立会话恢复规范化归档与资源；不是任意桌面目录导入器。场景会话 Handle 由引擎新建，实体和资产 ID 保留。
 
+## C# 脚本
+
+编辑器工具栏的“C# 脚本”面板支持在浏览器内新建、导入、编辑、删除 `Assets/Scripts/**/*.cs`，并用 Roslyn 编译后直接安装到当前会话：
+
+- 每个脚本写入时同步生成 schema v2 `.tcmeta`（`Type: CSharpScript` + 稳定 `Handle`），Handle 与编译清单 `ScriptAssets.json` 一致。
+- “编译并安装”调用 `globalThis.TomCatWeb.compileAndInstall({ sources, references, scriptAssetsJson })`；诊断来自 Roslyn 与 TomCat 源生成器，逐条显示 `severity/code/message/file:line:column`。
+- **挂载**：引擎把 `CSharpScripts` 注册为 `AddableInInspector = false`，`component.add` / `component.patch` 都无法添加，因此面板通过把组件记录注入场景归档再走 `scene.loadArchive` 来挂载（与上游 `Web/tests/managed-browser-smoke.html` 同一路径）。`src/engine/scene-archive.ts` 负责行级注入，注入结果仍由引擎 `Decode` 校验，格式错误会以 `INVALID_SCENE` 拒绝而不是写坏场景。挂载记为可撤销的 “Import scene” 事务。
+- 点击“运行预览”时会先自动编译安装含 C# 的场景所需程序集；编译失败或未安装会被引擎以 `SCRIPT_COMPILE_FAILED` / `SCRIPT_ASSEMBLY_REQUIRED` 明确拒绝，不会静默降级。
+- **脚本 Handle 必须精确传递**：Handle 是 uint64，源生成器用 `GetUInt64()` 解析，而 JS 的 `Number` 在 2^53 以上会丢精度，导致引擎报 `Missing C# script asset …the attachment was skipped`。因此 `scriptAssetsJson()` 手工拼接 JSON 保留十进制原文，绝不经过 `Number`。
+- **重新编译需要重建会话**：原生 `WebEditorSession::SetManagedAssembly` 每个模块只接受一代程序集，浏览器 WebAssembly 没有可回收 ALC。脚本改动后面板会提示“重建引擎会话”，点击后宿主先抓取完整项目、重新挂载 iframe，新模块启动时恢复场景再重新编译安装。因此不要期待原地热重载。
+- 脚本文件、`.tcmeta` 与依赖图片都随项目一起保存到云端；前端 `assertDocument` 与后端 `ProjectFiles.TryManifest` 都会校验 `.cs` 必须成对出现 `.tcmeta`。
+
 ## 播放器和生命周期
 
-作品页的播放器可选择本地 TCPAK，启动独立的 `TomCatPlayerModule`。示例作品没有实际资源包；此版本没有将当前编辑项目 Cook/公开发布的服务。编辑项目的运行预览使用原生 Play / Pause / Step / Stop。
+作品页的播放器可选择本地 TCPAK，启动独立的托管播放器会话。示例作品没有实际资源包；此版本没有将当前编辑项目 Cook/公开发布的服务。编辑项目的运行预览使用原生 Play / Pause / Step / Stop。
 
-加载前检查安全上下文、跨源隔离、SharedArrayBuffer、Worker、WebAssembly 和 WebGL2。Vue 路由退出、关闭播放器、加载失败和 WebGL 上下文丢失时，取消帧循环、断开 ResizeObserver、调用原生 shutdown、终止 pthread 池并销毁 iframe。重开创建全新模块和画布。
+加载前检查安全上下文、WebAssembly 和 WebGL2（托管构建是单线程，不再要求跨源隔离或 `SharedArrayBuffer`）。Vue 路由退出、关闭播放器、加载失败和 WebGL 上下文丢失时，取消帧循环、断开 ResizeObserver、调用原生 shutdown、终止可能存在的 pthread 池并销毁 iframe。重开创建全新模块和画布。
 
-上游限制仍然适用：含 C# 的包不能运行，无可听 WebAudio，自定义 Cooked SPIR-V Shader 和多重采样不支持；桌面新增工具不代表浏览器已支持。
+上游限制仍然适用：无可听 WebAudio，自定义 Cooked SPIR-V Shader 和多重采样不支持；桌面新增工具不代表浏览器已支持。**含 C# 的 TCPAK 现在可以播放**（这是本次升级的主要目标），但包内脚本必须是已编译进 `Assembly-CSharp` 的类型；浏览器不提供反射式脚本发现。
 
 ## 部署
 
@@ -68,7 +88,15 @@ Cross-Origin-Opener-Policy: same-origin
 Cross-Origin-Embedder-Policy: require-corp
 ```
 
-Netlify 的 `scripts/build-netlify.sh` 会安装锁定 SDK、构建引擎和网站；GitHub Actions 同样验证上游回归并上传包含引擎的 `dist`。自托管需提供上述响应头和正确的 WASM MIME 类型，静态资源不可被 SPA 回退替换；外部素材需满足 CORS/CORP。
+托管构建是单线程的，上述响应头不是运行前提，仅为将来启用线程构建保留。自托管需提供正确的 WASM MIME 类型（`.wasm` → `application/wasm`），静态资源不可被 SPA 回退替换；外部素材需满足 CORS/CORP。
+
+`scripts/build-netlify.sh` 负责发布构建。托管引擎产物需要 .NET 10 SDK + `wasm-tools` + CMake + Ninja，明显重于旧的纯 Emscripten 构建，因此脚本按以下顺序处理：
+
+1. 若 `public/engine/<commit>/manifest.json` 已存在，直接复用（本地或 CI 预构建产物）；
+2. 否则若设置了 `ENGINE_ARTIFACT_URL`，下载并解包预构建的引擎压缩包到 `public/engine/<commit>/`；
+3. 否则在具备完整工具链的机器上运行 `npm run engine:build`。
+
+Netlify 的默认构建镜像不保证具备上述工具链，推荐**预先构建引擎产物**（本地构建后提交，或用 CI 产物/对象存储），让 Netlify 只执行 `npm run build`。`netlify.toml` 的 `NODE_VERSION` 需为 22。
 
 引擎产物与 SDK 不提交 Git，保存在忽略目录中。更新引擎必须调整锁文件、重新构建并通过浏览器验收。
 ## 完整项目云端保存与恢复
@@ -77,7 +105,7 @@ Netlify 的 `scripts/build-netlify.sh` 会安装锁定 SDK、构建引擎和网�
 
 保存先持久化本地草稿及旧 ETag，再逐个上传完整文件。上传成功后提交 schemaVersion 2 不可变文件清单；服务端在同一事务校验全部引用并更新修订指针。断网、上传失败、账号不符和 412 冲突均保留草稿；重新打开仍提示未保存。冲突不会自动采用新 ETag 覆盖他人修改，可恢复最新版本比较，或另建云端项目。
 
-每个文件上限 8 MiB、项目二进制文件总量 36 MiB、最多 512 个文件；场景归档上限 4 MiB，图片导入入口目前限制 2 MiB。路径限定为 Project.tcproj、ProjectSettings/*.json 和安全的 Assets 子路径。旧本地引擎文档可以打开，再保存升级为完整文档；没有资源实体的旧云端修订不能当作完整项目恢复。当前只保留活动场景的内存编辑状态，其他 Assets 文件按引擎文件系统中的已写入内容保存。
+每个文件上限 8 MiB、项目二进制文件总量 36 MiB、最多 512 个文件；场景归档上限 4 MiB，图片导入入口目前限制 2 MiB，单个 C# 脚本限制 512 KiB。路径限定为 Project.tcproj、ProjectSettings/*.json 和安全的 Assets 子路径；图片（`.png/.jpg/.jpeg/.tga`）与 C# 脚本（`.cs`）都必须成对提供 `.tcmeta`，前后端校验一致。旧本地引擎文档可以打开，再保存升级为完整文档；没有资源实体的旧云端修订不能当作完整项目恢复。当前只保留活动场景的内存编辑状态，其他 Assets 文件按引擎文件系统中的已写入内容保存。
 
 本地启动相邻后端仓库的 API（默认端口 5080），Vite 开发和 preview 会代理 `/v1`。可用 `TOMCAT_API_PROXY` 覆盖代理目标。Netlify 构建时设置 `TOMCAT_API_ORIGIN=https://你的后端域名`，生成位于 SPA 回退之前的 `/v1/*` 代理规则；自托管同样需要同源 `/v1` 反向代理。未配置后端时无法使用编辑器，游客仍可浏览公开页面与游玩作品。后端需要持久化存储卷和正确的 AllowedHosts；不能仅部署静态网站获得云端存储。
 

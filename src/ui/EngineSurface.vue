@@ -32,7 +32,8 @@ function fail(message: string) { error.value = message; loading.value = false; s
 function connect() {
   if (!active.value || port) return
   const channel = new MessageChannel(); port = channel.port1
-  bootTimer = setTimeout(() => fail('引擎启动超时，请检查资源下载后重试'), 120000)
+  // 托管产物（.NET 运行时 + Roslyn + _framework）明显大于旧的 Emscripten 模块，首次加载需要更长时间。
+  bootTimer = setTimeout(() => fail('引擎启动超时，请检查资源下载后重试'), 240000)
   port.onmessage = event => {
     const data = event.data
     if (data.event === 'ready') { clearTimeout(bootTimer); loading.value = false; emit('ready', data.snapshot) }

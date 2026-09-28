@@ -1,6 +1,16 @@
 {
   "repository": "https://github.com/chnnasn/TomCat_Engine.git",
-  "commit": "0a731be0d56352d5ae5785ffaece3edd834238ab",
-  "emscripten": "4.0.15",
-  "protocol": "tomcat.web.v1"
+  "commit": "684eb8f3ad512fe14b7d82943f77ecb725f57887",
+  "kind": "managed",
+  "protocol": "tomcat.web.v1",
+  "legacyCommits": [
+    "0a731be0d56352d5ae5785ffaece3edd834238ab"
+  ],
+  "toolchain": {
+    "dotnet": "10.0",
+    "workload": "wasm-tools",
+    "cmake": "3.20",
+    "ninja": "required",
+    "emscripten": "provided by the dotnet wasm-tools workload pack"
+  }
 }

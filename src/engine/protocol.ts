@@ -49,4 +49,10 @@ export class EditorProtocol {
   history(state: SceneState, direction: 'undo' | 'redo') {
     return this.request<Snapshot>(`history.${direction}`, { sceneHandle: state.sceneHandle, baseRevision: state.revision })
   }
+  /** 用整份场景归档替换当前场景；引擎记为可撤销的 "Import scene" 事务。 */
+  loadArchive(state: SceneState, archive: string) {
+    assertState(state)
+    if (typeof archive !== 'string' || archive.length === 0 || new TextEncoder().encode(archive).length > 4 * 1024 * 1024) throw new Error('场景归档无效或超过 4 MiB')
+    return this.request<Snapshot>('scene.loadArchive', { sceneHandle: state.sceneHandle, baseRevision: state.revision, archive })
+  }
 }

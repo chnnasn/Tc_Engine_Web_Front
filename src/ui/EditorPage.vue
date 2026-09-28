@@ -4,10 +4,11 @@ import EngineSurface from './EngineSurface.vue'
 import { useNavigation } from './navigation'
 import { nowLabel, type Project } from './data'
 import { EngineError, type Snapshot, type SceneState, type Operation } from '../engine/protocol'
-import { readEngineProject, writeEngineProject, readCloudBinding, writeCloudBinding, type CloudBinding, type EngineDocument } from '../engine/storage'
+import { readEngineProject, writeEngineProject, readCloudBinding, writeCloudBinding, isLegacyDocument, engineCommit, type CloudBinding, type EngineDocument } from '../engine/storage'
 import { currentUser, getCloudProject, createCloudProject, restoreCloudProject, saveCloudProject, syncConfiguration, cloudSyncStatus, CloudError } from '../engine/cloud'
 import CloudProjects from './CloudProjects.vue'
 import AgentPanel from './AgentPanel.vue'
+import ScriptPanel from './ScriptPanel.vue'
 import { describeSync, type CheckpointReceipt } from '../engine/sync-status'
 import { downloadProject } from './project-file'
 
@@ -15,6 +16,8 @@ const props = defineProps<{ project: Project }>()
 const emit = defineEmits<{ updateProject: [project: Project]; notify: [message: string]; dirtyChange: [dirty: boolean] }>()
 const navigate = useNavigation()
 const surface = ref<InstanceType<typeof EngineSurface>>()
+// 重建引擎会话：browser-wasm 无法在同一模块内替换 C# 程序集，改换 key 让宿主 iframe 重新挂载。
+const surfaceKey = ref(0)
 const stored = ref<EngineDocument>()
 const initialized = ref(false)
 const failure = ref('')
@@ -26,7 +29,9 @@ const fileInput = ref<HTMLInputElement>()
 const busy = ref(false)
 const cloudOpen = ref(false)
 const agentOpen = ref(false)
+const scriptOpen = ref(false)
 const binding = ref<CloudBinding>()
+const legacyEngine = computed(() => Boolean(stored.value && isLegacyDocument(stored.value)))
 let gone = false
 let syncTimer: ReturnType<typeof setTimeout> | undefined
 const automaticSync = ref(false)
@@ -50,7 +55,14 @@ const dirty = computed(() => needsSave.value || Boolean(status.value?.dirty))
 const editing = computed(() => Boolean(status.value) && (!status.value?.mode || status.value.mode === 'edit'))
 const selected = computed(() => snapshot.value?.entities.find(entity => entity.id === status.value?.selectedEntityId))
 function report(error: unknown) { emit('notify', error instanceof Error ? error.message : String(error)) }
-function updateStatus(next: SceneState) { status.value = next; emit('dirtyChange', needsSave.value || next.dirty) }
+function updateStatus(next: SceneState) {
+  // scene.snapshot 不返回 mode（只有 EditorState/Status 才有）。preview() 刷新快照后若直接
+  // 覆盖 status，会把 play/pause 模式清掉，播放控制按钮随之消失。保留上一次已知的模式，
+  // 真正的模式变化由 iframe 每 ~100ms 推送的 state 事件纠正。
+  const mode = next.mode ?? status.value?.mode
+  status.value = mode ? { ...next, mode } : next
+  emit('dirtyChange', needsSave.value || next.dirty)
+}
 function agentState(next: Snapshot) { snapshot.value = next; updateStatus(next) }
 async function agentCall<T = any>(type: string, payload?: unknown): Promise<T> {
   if (!surface.value || gone) throw new Error('编辑器尚未就绪')
@@ -67,6 +79,26 @@ async function agentCall<T = any>(type: string, payload?: unknown): Promise<T> {
       projectId: link.projectId, sceneVersion: `${after.state.sceneHandle}:${after.state.revision}` } as T
   }
   return surface.value.call<T>(type, payload)
+}
+function markDirty() { needsSave.value = true; emit('dirtyChange', true) }
+async function scriptCall<T = any>(type: string, payload?: unknown): Promise<T> {
+  if (!surface.value || gone) throw new Error('编辑器尚未就绪')
+  return surface.value.call<T>(type, payload)
+}
+/**
+ * 重建引擎会话：先抓取当前项目，再让宿主 iframe 重新挂载。
+ * 新模块启动时会带着这份文档恢复场景，随后可重新编译并安装最新 C# 脚本。
+ */
+async function restartSession() {
+  await run(async () => {
+    if (!surface.value) return
+    const captured = await surface.value.call<{ document: EngineDocument; state: SceneState }>('capture')
+    stored.value = captured.document
+    needsSave.value = true; emit('dirtyChange', true)
+    status.value = undefined
+    surfaceKey.value += 1
+    emit('notify', '正在重建引擎会话并恢复项目…')
+  })
 }
 async function checkpoint(runId: string, phase: 'start' | 'end', signal: AbortSignal): Promise<CheckpointReceipt> {
   // Serialize with manual and automatic saves without silently skipping a required checkpoint.
@@ -126,6 +158,10 @@ async function run(action: () => Promise<unknown>) {
     if (error instanceof EngineError && error.code === 'REVISION_CONFLICT') {
       try { await refresh() } catch { /* Keep original diagnostic. */ }
       emit('notify', '场景已变化，请检查最新内容后重试')
+    } else if (error instanceof EngineError && error.code === 'SESSION_RESTART_REQUIRED') {
+      // 脚本改过但本会话已装过程序集：引导用户到脚本面板重建会话。
+      scriptOpen.value = true
+      emit('notify', error.message)
     } else report(error)
   } finally { busy.value = false }
 }
@@ -295,14 +331,17 @@ onBeforeUnmount(() => { gone = true; clearTimeout(syncTimer); window.removeEvent
       <button class="button" :disabled="!editing || busy" @click="fileInput?.click()">导入图片</button>
       <button class="button" :disabled="!status || busy" @click="exportCurrent">导出项目</button>
       <button class="button" :disabled="saving" @click="cloudOpen = true">云端</button>
+      <button class="button" :disabled="!status" @click="scriptOpen = !scriptOpen">C# 脚本</button>
       <button class="button" :disabled="!status" @click="agentOpen = !agentOpen">AI 助手</button>
       <button class="button button-primary" :disabled="!status || saving" @click="save()">{{ saving ? '保存中…' : '保存到云端' }}</button>
       <input ref="fileInput" hidden type="file" accept=".png,.jpg,.jpeg,.tga" @change="importImage" />
     </header>
     <AgentPanel v-if="agentOpen && status && !failure" :project-id="binding?.projectId" :call="agentCall" :checkpoint="checkpoint" @state="agentState" />
+    <ScriptPanel v-if="scriptOpen && status && !failure" :call="scriptCall" :entity-id="status?.selectedEntityId ?? null" :entity-name="selected?.name ?? null" @notify="emit('notify', $event)" @dirty="markDirty" @restart="restartSession" @snapshot="agentState" />
+    <div v-if="legacyEngine" class="native-notice">此项目由旧引擎版本（{{ stored?.engineCommit.slice(0, 7) }}）保存。当前引擎可以打开它，保存一次即可升级到 {{ engineCommit.slice(0, 7) }}；升级前保存的云端修订需要重新保存后才能恢复。</div>
     <div v-if="legacy" class="native-notice">此项目含旧版界面原型数据，已原样保留。当前打开的是新的引擎场景；旧数据不会自动转换为游戏场景。</div>
     <div v-if="failure" class="native-notice" role="alert">{{ failure }}</div>
-    <EngineSurface v-if="initialized && !failure" ref="surface" kind="editor" :name="project.name" :template="project.template" :document="stored" :cloud-project-id="binding?.projectId" @ready="ready" @state="updateStatus" @actions="actions" @error="failure = $event" />
+    <EngineSurface v-if="initialized && !failure" :key="surfaceKey" ref="surface" kind="editor" :name="project.name" :template="project.template" :document="stored" :cloud-project-id="binding?.projectId" @ready="ready" @state="updateStatus" @actions="actions" @error="failure = $event" />
     <div v-else-if="!failure" class="native-notice">正在读取项目…</div>
     <footer><span v-if="binding && syncMessage" role="status">{{ syncMessage }} · </span>{{ binding ? '已关联云端' : '正在验证云端关联' }} · {{ status?.mode === 'play' ? '运行中' : status?.mode === 'pause' ? '已暂停' : '编辑模式' }} · {{ snapshot?.schemas.length || 0 }} 种组件类型 <span v-if="selected"> · {{ selected.name }}</span><span>预览不会公开发布；停止预览后继续编辑</span></footer>
     <CloudProjects v-if="cloudOpen" :project="project" :binding="binding" @close="cloudOpen = false" @attach="attachCloud" />
