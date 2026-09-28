@@ -40,6 +40,7 @@ async function publish() {
     <div class="page-topline"><div class="page-intro"><span class="eyebrow">MADE BETTER, TOGETHER</span><h1>创作者社区<span class="green-dot">.</span></h1><p>聊聊游戏，分享进展，也为彼此的想法加一点油。</p></div><button class="button button-primary" @click="async () => { if (await requireLogin()) compose = true }"><Plus :size="16" />发起话题</button></div>
     <div class="community-layout">
       <div class="community-main">
+        <div class="section-index"><span>THE CONVERSATION</span><span>{{ topics.length }} 个话题 · 创作手记</span></div>
         <div class="community-filter"><div class="filter-tabs"><button v-for="item in topicCategories" :key="item" :class="{ active: category === item }" :aria-pressed="category === item" @click="category = item">{{ item }}</button></div><SearchField v-model="query" placeholder="搜索话题或创作者" /></div>
         <div class="topics-list">
           <AppLink v-for="topic in visible" :key="topic.id" class="topic-row" :href="`/community/${topic.id}`"><span class="topic-avatar" :style="{ background: topic.color }">{{ topic.avatar }}</span><div class="topic-main"><h3><Pin v-if="topic.pinned" :size="13" class="pin-icon" />{{ topic.title }}</h3><div class="topic-meta"><span class="topic-category">{{ topic.category }}</span><span>{{ topic.author }}</span><span>{{ topic.time }}</span></div></div><span class="topic-replies"><MessageSquare :size="16" /><span>{{ topic.replies }}</span></span><ChevronRight :size="16" class="topic-chevron" /></AppLink>

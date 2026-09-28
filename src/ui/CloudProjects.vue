@@ -50,6 +50,7 @@ onBeforeUnmount(() => { gone = true })
   <AppModal title="云端项目" @close="!busy && emit('close')">
     <p v-if="error" class="cloud-error" role="alert">{{ error }}</p>
     <form v-if="!user" @submit.prevent="signIn">
+      <div class="auth-intro"><img src="/HubLogo.ico" alt="" /><span class="eyebrow">A HOME FOR YOUR IDEAS</span><h3>{{ mode === 'login' ? '欢迎回到创作之间。' : '让第一个想法，在这里开始。' }}</h3><p>收藏喜欢的世界，继续自己的作品。</p></div>
       <p class="local-note">编辑器和创作操作必须登录。项目与云端账号绑定，游客可以游玩大厅作品和浏览论坛。</p>
       <label class="field-label" for="cloud-username">用户名</label><input id="cloud-username" v-model="username" class="text-input" autocomplete="username" required minlength="3" maxlength="32" />
       <label class="field-label" for="cloud-password">密码</label><input id="cloud-password" v-model="password" class="text-input" type="password" :autocomplete="mode === 'login' ? 'current-password' : 'new-password'" required minlength="12" maxlength="128" />

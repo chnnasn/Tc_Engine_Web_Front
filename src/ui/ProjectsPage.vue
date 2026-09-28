@@ -171,6 +171,7 @@ onMounted(async () => {
       <div class="page-actions"><button class="button" @click="cloudOpen = true">云端项目</button><button class="button" @click="fileInput?.click()"><Upload :size="16" />导入项目</button><button class="button button-primary" @click="emit('create')"><Plus :size="16" />新建项目</button></div>
     </div>
     <input ref="fileInput" class="sr-only" tabindex="-1" type="file" accept=".json,application/json" aria-label="导入 TomCat 项目 JSON" @change="selectImport" />
+    <section class="workspace-overview" aria-label="项目概览"><div><span>01 / WORKSPACE</span><strong>{{ projects.length.toString().padStart(2, '0') }}</strong><p>正在这里生长的想法</p></div><div><span>02 / IN PROGRESS</span><strong>{{ projects.filter(p => p.status === 'draft').length.toString().padStart(2, '0') }}</strong><p>等待继续打磨的草稿</p></div><button @click="emit('create')"><Plus :size="25" /><span>下一件作品<br /><strong>从一个空白开始</strong></span><ArrowUpRight :size="22" /></button></section>
     <div class="workspace-note"><span class="note-icon"><FolderOpen :size="20" :stroke-width="1.5" /></span><div><strong>你的创作，从这里继续</strong><p>项目与当前云端账号绑定。新建、导入与编辑均需登录；浏览器缓存用于恢复未同步的修改。</p></div><span class="small-tag">云端工作空间</span></div>
 
     <div class="filter-bar project-filter">

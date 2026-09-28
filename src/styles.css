@@ -1,4 +1,5 @@
 @import './ui/pages.css';
+@import './ui/warm.css';
 
 :root { font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif; color: #242a27; background: #fafbf9; font-synthesis: none; text-rendering: optimizeLegibility; -webkit-font-smoothing: antialiased; --green: #356447; --green-soft: #eaf0e8; --muted: #737971; --line: #e5e8e1; --surface: #fff; }
 * { box-sizing: border-box; }
@@ -25,6 +26,7 @@ svg { flex-shrink: 0; vertical-align: middle; }
 .header-inner { max-width: 1312px; height: 100%; padding: 0 40px; margin: auto; display: flex; align-items: center; gap: 58px; }
 .brand { display: flex; align-items: center; gap: 9px; font-weight: 750; font-size: 26px; letter-spacing: -1.1px; line-height: 1; }
 .brand-mark { display: grid; place-items: center; color: var(--green); width: 32px; height: 32px; background: var(--green-soft); border-radius: 9px; }
+.brand-mark img { display: block; width: 32px; height: 32px; object-fit: contain; }
 .brand-dot { color: var(--green); }
 .main-nav { display: flex; align-items: stretch; gap: 32px; height: 100%; }
 .main-nav a { position: relative; display: flex; align-items: center; color: #666c65; font-size: 14px; font-weight: 500; white-space: nowrap; }

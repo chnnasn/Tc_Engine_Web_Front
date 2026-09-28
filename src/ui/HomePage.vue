@@ -28,11 +28,11 @@ const filtered = computed(() => {
 
 <template>
   <main id="main-content" class="page home-page">
-    <div class="page-intro">
+    <div class="editorial-heading"><div class="page-intro">
       <span class="eyebrow">A LITTLE PLAY, A LITTLE POSSIBILITY</span>
       <h1>发现游戏<span class="green-dot">.</span></h1>
       <p>有趣的世界，不一定很大。从这里，遇见下一个好玩的想法。</p>
-    </div>
+    </div><div class="editorial-note"><span>游玩 / 交流 / 创造</span><p>小小的世界，<br />也容得下很大的想象。</p><a href="#discover-title" class="text-link">翻开本期精选 <ArrowRight :size="15" /></a></div></div>
 
     <section class="feature" aria-label="本周精选作品">
       <div class="feature-copy">
@@ -47,6 +47,7 @@ const filtered = computed(() => {
     </section>
 
     <section class="discover-section" aria-labelledby="discover-title">
+      <div class="section-index"><span>01 / THE COLLECTION</span><span>独立作品选集</span></div>
       <div class="section-heading">
         <div><h2 id="discover-title">值得一玩<span class="subtle-count">03</span></h2><p>独立创作者的小小世界，等你来探索。</p></div>
         <label class="sort-select"><span class="sr-only">游戏排序</span><select v-model="sort"><option value="recommended">编辑推荐</option><option value="newest">最近上架</option><option value="popular">人气优先</option></select><ChevronDown :size="14" /></label>

@@ -177,21 +177,25 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
+  <div :class="{ 'warm-site': !isEditor }">
   <a class="skip-link" href="#main-content">跳到主要内容</a>
   <header v-if="!isEditor" class="site-header">
     <div class="header-inner">
-      <AppLink href="/" class="brand" aria-label="TomCat 首页"><span class="brand-mark"><Gamepad2 :size="21" :stroke-width="1.8" /></span><span>tomcat<span class="brand-dot">.</span></span></AppLink>
+      <AppLink href="/" class="brand" aria-label="TomCat 首页"><span class="brand-mark"><img src="/HubLogo.ico" alt="" /></span><span>tomcat<span class="brand-dot">.</span></span></AppLink>
       <nav class="main-nav" aria-label="主导航"><AppLink href="/" :aria-current="path === '/' || path.startsWith('/games') ? 'page' : undefined" :class="{ active: path === '/' || path.startsWith('/games') }">发现游戏</AppLink><AppLink href="/community" :aria-current="path.startsWith('/community') ? 'page' : undefined" :class="{ active: path.startsWith('/community') }">社区</AppLink><AppLink href="/projects" :aria-current="path.startsWith('/projects') ? 'page' : undefined" :class="{ active: path.startsWith('/projects') }">我的项目</AppLink></nav>
       <div class="header-actions"><span class="preview-badge">界面预览</span><button class="button button-primary header-create" @click="openCreate"><Plus :size="16" />新建项目</button><div class="account-area"><button class="avatar" aria-label="打开我的账户" :aria-expanded="accountOpen" @click="toggleAccount">{{ account?.username.slice(0, 1).toUpperCase() || '?' }}</button><div v-if="accountOpen" class="account-menu"><strong>{{ account ? account.username : '我的账户' }}</strong><span>{{ accountStatus }}</span><button class="button" @click="cloudAccountOpen = true; accountOpen = false">{{ account ? '管理云端账号' : '登录 / 注册' }}</button><AppLink href="/profile">我的收藏 <ArrowUpRight :size="15" /></AppLink><AppLink href="/projects">项目工作台 <ArrowUpRight :size="15" /></AppLink></div></div></div>
     </div>
   </header>
 
-  <main v-if="blocked" id="main-content" class="page">
+  <main v-if="blocked" id="main-content" class="page access-page">
+    <div class="access-art" aria-hidden="true"><span>THE CREATOR’S DESK</span><div class="paper-sheet paper-back"></div><div class="paper-sheet paper-front"><img src="/HubLogo.ico" alt="" /><p>让想法<br />有一个家。</p><small>TOMCAT · CREATIVE WORKSPACE</small></div></div>
+    <div class="access-copy"><span class="eyebrow">YOUR SPACE TO CREATE</span>
     <h1>{{ accountReady ? '登录后继续' : '正在验证登录状态…' }}</h1>
     <p>编辑器、项目与收藏需要登录云端账号。游客可以游玩大厅作品、浏览论坛；发帖和评论需要登录。</p>
     <p v-if="accountReady">{{ accountStatus }}</p>
     <button v-if="accountReady" class="button button-primary" @click="openLogin">登录 / 注册</button>
     <AppLink href="/" class="button">返回游戏大厅</AppLink>
+    </div>
   </main>
   <HomePage v-else-if="path === '/'" :saved="saved" @toggle-save="toggleSave" @create="openCreate" />
   <ProjectsPage :key="accountScope" v-else-if="path === '/projects'" :projects="projects" @update:projects="projects = $event" @create="openCreate" @notify="notify" />
@@ -212,4 +216,5 @@ onBeforeUnmount(() => {
     <p class="dialog-description">先给你的想法起个名字，剩下的慢慢来。</p>
     <form @submit.prevent="createProject"><label class="field-label" for="project-name">项目名称</label><input id="project-name" v-model="projectName" class="text-input" autofocus required maxlength="32" placeholder="例如：森林里的小小冒险" /><span class="field-hint">可以随时修改，最多 32 个字。</span><fieldset class="template-field"><legend>从哪里开始</legend><div class="template-options"><label v-for="item in (['2D', '空白'] as const)" :key="item" class="template-option" :class="{ selected: template === item }"><input v-model="template" type="radio" name="template" :value="item" /><Gamepad2 :size="22" /><strong>{{ item === '2D' ? '2D 场景' : '空白项目' }}</strong><span>{{ item === '2D' ? '从基础场景开始创作' : '留一张白纸给你的想法' }}</span></label></div></fieldset><p class="local-note">新项目必须先创建云端关联，浏览器仅保留恢复用的缓存。</p><div class="dialog-actions"><button type="button" class="button" @click="newProject = false">再想想</button><button class="button button-primary" :disabled="creating || !projectName.trim()">创建项目<ArrowRight :size="16" /></button></div></form>
   </AppModal>
+  </div>
 </template>
