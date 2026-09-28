@@ -60,6 +60,19 @@ export async function contentHash(bytes: Uint8Array) {
 }
 export const syncConfiguration = async (): Promise<{ enabled: boolean; intervalMs: number }> => (await api('/projects/sync-config')).json()
 export const cloudSyncStatus = async (id: string): Promise<{ etag: string | null; persisted: boolean }> => (await api(`${idPath(id)}/sync-status`)).json()
+export interface PublishState {
+  projectId: string; revisionId: string; engineCommit: string; title: string; description: string
+  status: 'pending' | 'published' | 'failed'; error: string; byteLength: number
+  etag: string | null; requestedAt: string; publishedAt: string
+}
+/** 发布使用最近一次云端保存的修订；未保存的编辑不会包含在内。 */
+export const publishProject = async (id: string, title: string, description: string): Promise<PublishState> =>
+  (await api(`${idPath(id)}/publish`, json('POST', { title, description }))).json()
+export const fetchPublishState = async (id: string): Promise<PublishState | undefined> => {
+  try { return (await api(`${idPath(id)}/publish`)).json() as Promise<PublishState> }
+  catch (error) { if (error instanceof CloudError && error.status === 404) return undefined; throw error }
+}
+export const unpublishProject = async (id: string) => { await api(`${idPath(id)}/publish`, { method: 'DELETE' }) }
 export async function saveCloudProject(document: EngineDocument, binding: CloudBinding, options: { automatic?: boolean; reuseUploads?: boolean; checkpoint?: AiCheckpoint } = {}): Promise<CloudBinding> {
   if (options.automatic && options.checkpoint) throw new Error('检查点必须立即落库')
   // 旧引擎草稿必须先由当前引擎重新捕获，才能作为完整项目写入云端。

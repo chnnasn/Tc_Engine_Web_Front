@@ -8,6 +8,7 @@ import { accessKey, requiresAccount } from './access'
 import { writeCloudBinding } from '../engine/storage'
 import AppLink from './AppLink.vue'
 import AppModal from './AppModal.vue'
+import ArcadePage from './ArcadePage.vue'
 import CommunityPage from './CommunityPage.vue'
 import EditorPage from './EditorPage.vue'
 import GameDetailPage from './GameDetailPage.vue'
@@ -18,6 +19,7 @@ import ProjectsPage from './ProjectsPage.vue'
 import PublishedPreviewPage from './PublishedPreviewPage.vue'
 import CloudProjects from './CloudProjects.vue'
 import { currentUser, createCloudProject, CloudError, type CloudUser } from '../engine/cloud'
+import PlayPage from './PlayPage.vue'
 import TopicDetailPage from './TopicDetailPage.vue'
 
 const path = ref(normalizePath(location.pathname))
@@ -73,6 +75,7 @@ let toastTimer: number | undefined
 const game = computed(() => games.find(item => path.value === `/games/${item.id}`))
 const topic = computed(() => topics.value.find(item => path.value === `/community/${item.id}`))
 const previewProject = computed(() => projects.value.find(item => item.status === 'published' && path.value === `/preview/${item.id}`))
+const playId = computed(() => path.value.startsWith('/play/') ? path.value.slice('/play/'.length) || undefined : undefined)
 const editorProject = computed(() => projects.value.find(item => path.value === `/editor/${item.id}`) || (path.value === '/editor' ? projects.value[0] : undefined))
 const blocked = computed(() => requiresAccount(path.value) && (!accountReady.value || !account.value))
 const isEditor = computed(() => !blocked.value && Boolean(editorProject.value))
@@ -149,7 +152,7 @@ watch(toast, value => {
 
 watch(path, async () => {
   const title = editorProject.value?.name || previewProject.value?.name || game.value?.title || topic.value?.title ||
-    (path.value === '/projects' ? '我的项目' : path.value === '/community' ? '创作者社区' : path.value === '/profile' ? '我的收藏' : '发现游戏')
+    (path.value === '/projects' ? '我的项目' : path.value === '/community' ? '创作者社区' : path.value === '/profile' ? '我的收藏' : path.value === '/play' || playId.value ? '玩家作品' : '发现游戏')
   document.title = `${title} · TomCat`
   await nextTick()
   const main = document.getElementById('main-content')
@@ -182,7 +185,7 @@ onBeforeUnmount(() => {
   <header v-if="!isEditor" class="site-header">
     <div class="header-inner">
       <AppLink href="/" class="brand" aria-label="TomCat 首页"><span class="brand-mark"><img src="/HubLogo.ico" alt="" /></span><span>tomcat<span class="brand-dot">.</span></span></AppLink>
-      <nav class="main-nav" aria-label="主导航"><AppLink href="/" :aria-current="path === '/' || path.startsWith('/games') ? 'page' : undefined" :class="{ active: path === '/' || path.startsWith('/games') }">发现游戏</AppLink><AppLink href="/community" :aria-current="path.startsWith('/community') ? 'page' : undefined" :class="{ active: path.startsWith('/community') }">社区</AppLink><AppLink href="/projects" :aria-current="path.startsWith('/projects') ? 'page' : undefined" :class="{ active: path.startsWith('/projects') }">我的项目</AppLink></nav>
+      <nav class="main-nav" aria-label="主导航"><AppLink href="/" :aria-current="path === '/' || path.startsWith('/games') ? 'page' : undefined" :class="{ active: path === '/' || path.startsWith('/games') }">发现游戏</AppLink><AppLink href="/play" :aria-current="path === '/play' || playId ? 'page' : undefined" :class="{ active: path === '/play' || Boolean(playId) }">玩家作品</AppLink><AppLink href="/community" :aria-current="path.startsWith('/community') ? 'page' : undefined" :class="{ active: path.startsWith('/community') }">社区</AppLink><AppLink href="/projects" :aria-current="path.startsWith('/projects') ? 'page' : undefined" :class="{ active: path.startsWith('/projects') }">我的项目</AppLink></nav>
       <div class="header-actions"><span class="preview-badge">界面预览</span><button class="button button-primary header-create" @click="openCreate"><Plus :size="16" />新建项目</button><div class="account-area"><button class="avatar" aria-label="打开我的账户" :aria-expanded="accountOpen" @click="toggleAccount">{{ account?.username.slice(0, 1).toUpperCase() || '?' }}</button><div v-if="accountOpen" class="account-menu"><strong>{{ account ? account.username : '我的账户' }}</strong><span>{{ accountStatus }}</span><button class="button" @click="cloudAccountOpen = true; accountOpen = false">{{ account ? '管理云端账号' : '登录 / 注册' }}</button><AppLink href="/profile">我的收藏 <ArrowUpRight :size="15" /></AppLink><AppLink href="/projects">项目工作台 <ArrowUpRight :size="15" /></AppLink></div></div></div>
     </div>
   </header>
@@ -203,6 +206,8 @@ onBeforeUnmount(() => {
   <ProfilePage v-else-if="path === '/profile'" :saved="saved" @toggle-save="toggleSave" />
   <PublishedPreviewPage v-else-if="previewProject" :key="previewProject.id" :project="previewProject" />
   <GameDetailPage v-else-if="game" :key="game.id" :game="game" :saved="saved.includes(game.id)" @toggle-save="toggleSave(game.id)" @notify="notify" />
+  <ArcadePage v-else-if="path === '/play'" @notify="notify" />
+  <PlayPage v-else-if="playId" :key="playId" :game-id="playId" @notify="notify" />
   <TopicDetailPage v-else-if="topic" :key="topic.id" :topic="topic" :topics="topics" @update:topics="topics = $event" @notify="notify" />
   <EditorPage v-else-if="editorProject" :key="`${accountScope}-${editorProject.id}`" :project="editorProject" @dirty-change="editorDirty = $event" @update-project="updateProject" @notify="notify" />
   <NotFoundPage v-else />

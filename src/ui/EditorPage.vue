@@ -9,6 +9,7 @@ import { currentUser, getCloudProject, createCloudProject, restoreCloudProject, 
 import CloudProjects from './CloudProjects.vue'
 import AgentPanel from './AgentPanel.vue'
 import ScriptPanel from './ScriptPanel.vue'
+import PublishDialog from './PublishDialog.vue'
 import { describeSync, type CheckpointReceipt } from '../engine/sync-status'
 import { downloadProject } from './project-file'
 
@@ -30,6 +31,7 @@ const busy = ref(false)
 const cloudOpen = ref(false)
 const agentOpen = ref(false)
 const scriptOpen = ref(false)
+const publishOpen = ref(false)
 const binding = ref<CloudBinding>()
 const legacyEngine = computed(() => Boolean(stored.value && isLegacyDocument(stored.value)))
 let gone = false
@@ -333,6 +335,7 @@ onBeforeUnmount(() => { gone = true; clearTimeout(syncTimer); window.removeEvent
       <button class="button" :disabled="saving" @click="cloudOpen = true">云端</button>
       <button class="button" :disabled="!status" @click="scriptOpen = !scriptOpen">C# 脚本</button>
       <button class="button" :disabled="!status" @click="agentOpen = !agentOpen">AI 助手</button>
+      <button class="button" :disabled="saving" @click="publishOpen = true">发布</button>
       <button class="button button-primary" :disabled="!status || saving" @click="save()">{{ saving ? '保存中…' : '保存到云端' }}</button>
       <input ref="fileInput" hidden type="file" accept=".png,.jpg,.jpeg,.tga" @change="importImage" />
     </header>
@@ -345,6 +348,7 @@ onBeforeUnmount(() => { gone = true; clearTimeout(syncTimer); window.removeEvent
     <div v-else-if="!failure" class="native-notice">正在读取项目…</div>
     <footer><span v-if="binding && syncMessage" role="status">{{ syncMessage }} · </span>{{ binding ? '已关联云端' : '正在验证云端关联' }} · {{ status?.mode === 'play' ? '运行中' : status?.mode === 'pause' ? '已暂停' : '编辑模式' }} · {{ snapshot?.schemas.length || 0 }} 种组件类型 <span v-if="selected"> · {{ selected.name }}</span><span>预览不会公开发布；停止预览后继续编辑</span></footer>
     <CloudProjects v-if="cloudOpen" :project="project" :binding="binding" @close="cloudOpen = false" @attach="attachCloud" />
+    <PublishDialog v-if="publishOpen" :project-id="binding?.projectId" :project-name="project.name" :project-description="project.description" :dirty="dirty" @close="publishOpen = false" @notify="emit('notify', $event)" />
   </main>
 </template>
 <style scoped>
