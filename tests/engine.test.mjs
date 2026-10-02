@@ -2,7 +2,7 @@ import { test } from 'node:test'
 import assert from 'node:assert/strict'
 import { EditorProtocol, EngineError, assertHandle } from '../src/engine/protocol.ts'
 import { bootPlayer, shutdown, compileAndInstall, bytesToBase64, capabilityErrors, scriptAssetsJson } from '../src/engine/runtime.ts'
-import { assertDocument, engineCommit, isLegacyDocument, isLegacyEngineCommit, legacyEngineCommits, validFilePath } from '../src/engine/storage.ts'
+import { assertDocument, engineCommit, validFilePath } from '../src/engine/storage.ts'
 import { attachScripts, detachScripts, readScripts } from '../src/engine/scene-archive.ts'
 
 test('uint64 boundaries remain exact strings through transactions and schemas', () => {
@@ -78,7 +78,7 @@ test('project document validates pinned engine, uint64, base64 and file paths', 
   const document = { format: 'tomcat-engine-project', version: 1, engineCommit, sceneHandle: '18446744073709551615', archive: 'scene', files: { 'ProjectSettings/PlayerSettings.json': 'e30=' } }
   assertDocument(document)
   assert.throws(() => assertDocument({ ...document, engineCommit: 'old' }))
-  assert.throws(() => assertDocument({ ...document, engineCommit: 'old' }, { allowLegacy: false }))
+  assert.throws(() => assertDocument({ ...document, engineCommit: 'old' }))
   assert.throws(() => assertDocument({ ...document, sceneHandle: 12 }))
   assert.throws(() => assertDocument({ ...document, files: { '../Project.tcproj': 'e30=' } }))
   assert.throws(() => assertDocument({ ...document, files: { 'Assets/WebImports/a.png': '***' } }))
@@ -87,19 +87,9 @@ test('project document validates pinned engine, uint64, base64 and file paths', 
   assert.equal(validFilePath('Assets/Scripts/Player.cs'), true)
   assert.equal(validFilePath('Assets/Scripts/Player.cs.tcmeta'), true)
 })
-test('legacy engine commits stay readable locally but never pass as current', () => {
-  assert.ok(legacyEngineCommits.length > 0)
-  const legacy = legacyEngineCommits[0]
-  assert.equal(isLegacyEngineCommit(legacy), true)
-  assert.equal(isLegacyEngineCommit(engineCommit), false)
-  const document = { format: 'tomcat-engine-project', version: 2, engineCommit: legacy, sceneHandle: '1', archive: 'scene', files: {
-    'Project.tcproj': 'e30=', 'ProjectSettings/BuildSettings.json': 'e30=', 'ProjectSettings/ProjectSettings.json': 'e30=', 'ProjectSettings/PlayerSettings.json': 'e30=',
-  } }
-  // 本地草稿可以打开，但默认校验（云端写入路径）必须拒绝。
-  assertDocument(document, { allowLegacy: true })
+test('old engine projects are rejected', () => {
+  const document = { format: 'tomcat-engine-project', version: 2, engineCommit: '1223a9610066d420485fa7f273b0eeca34835bbf', sceneHandle: '1', archive: 'scene', files: {} }
   assert.throws(() => assertDocument(document), /不兼容的引擎版本/)
-  assert.equal(isLegacyDocument(document), true)
-  assert.equal(isLegacyDocument({ engineCommit }), false)
 })
 test('version 2 projects require .tcmeta beside scripts and images', () => {
   const base = {

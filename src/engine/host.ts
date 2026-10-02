@@ -101,7 +101,7 @@ function tick(time: number) {
 // 项目文件系统（MEMFS）
 // ---------------------------------------------------------------------------
 function restore(document: EngineDocument) {
-  assertDocument(document, { allowLegacy: true })
+  assertDocument(document)
   const fs = filesystem()
   if (document.version === 2) {
     // 只在新 MEMFS 上工作：替换随包分发的源目录，绝不把陈旧资源并入恢复出的修订。
@@ -142,7 +142,7 @@ function capture(): EngineDocument {
   collect('ProjectSettings'); collect('Assets')
   files['Project.tcproj'] = encode(fs.readFile(`${projectRoot}/Project.tcproj`) as Uint8Array)
   const document: EngineDocument = { format: 'tomcat-engine-project', version: 2, engineCommit, sceneHandle: snapshot.sceneHandle, archive: snapshot.archive, files }
-  assertDocument(document, { allowLegacy: true })
+  assertDocument(document)
   return document
 }
 

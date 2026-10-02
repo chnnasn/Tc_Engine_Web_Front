@@ -10,26 +10,19 @@ export interface EngineDocument {
   files: Record<string, string> // Base64 MEMFS project settings and imported assets (including .tcmeta).
 }
 export const engineCommit = lock.commit
-/**
- * 曾经锁定过的引擎提交。旧项目的 archive 仍可能被新引擎解析，因此允许读取与本地留存，
- * 但保存到云端时必须先由当前引擎重新捕获（capture 会写入新的 engineCommit）。
- */
-export const legacyEngineCommits: string[] = (lock as { legacyCommits?: string[] }).legacyCommits ?? []
 export const projectRoot = '/Samples/PhysicsPlayground'
 export interface CloudBinding { ownerId: string; projectId: string; etag: string | null; pending?: boolean }
 export const requiredFiles = ['Project.tcproj', 'ProjectSettings/BuildSettings.json', 'ProjectSettings/ProjectSettings.json', 'ProjectSettings/PlayerSettings.json']
-export function isLegacyEngineCommit(commit: string) { return legacyEngineCommits.includes(commit) }
-export function isLegacyDocument(value: Pick<EngineDocument, 'engineCommit'>) { return value.engineCommit !== engineCommit }
 export function validFilePath(path: string) {
   return path === 'Project.tcproj' || /^ProjectSettings\/[A-Za-z0-9_-]+\.json$/.test(path) ||
     (path.length <= 240 && path.startsWith('Assets/') && path.split('/').every(part => /^[A-Za-z0-9][A-Za-z0-9_.-]*$/.test(part) && !part.endsWith('.')))
 }
-export function assertDocument(value: unknown, options: { allowLegacy?: boolean } = {}): asserts value is EngineDocument {
+export function assertDocument(value: unknown): asserts value is EngineDocument {
   const d = value as EngineDocument
   if (!d || d.format !== 'tomcat-engine-project' || ![1, 2].includes(d.version) || typeof d.engineCommit !== 'string' ||
       typeof d.archive !== 'string' || new TextEncoder().encode(d.archive).length > 4 * 1024 * 1024 ||
       !d.files || typeof d.files !== 'object' || Array.isArray(d.files)) throw new Error('项目格式或引擎版本不兼容')
-  if (d.engineCommit !== engineCommit && !(options.allowLegacy === true && isLegacyEngineCommit(d.engineCommit))) throw new Error('项目使用了不兼容的引擎版本')
+  if (d.engineCommit !== engineCommit) throw new Error('项目使用了不兼容的引擎版本')
   assertHandle(d.sceneHandle)
   let bytes = 0
   const paths = Object.keys(d.files)
@@ -69,7 +62,17 @@ export async function readEngineProject(id: string): Promise<EngineDocument | un
       const r = db.transaction('projects').objectStore('projects').get(id)
       r.onsuccess = () => resolve(r.result); r.onerror = () => reject(r.error)
     })
-    if (value !== undefined) assertDocument(value, { allowLegacy: true })
+    if (value !== undefined) {
+      try { assertDocument(value) }
+      catch (error) {
+        const old = value as Partial<EngineDocument>
+        if (old?.engineCommit !== engineCommit) {
+          await writeEngineProject(id)
+          return undefined
+        }
+        throw error
+      }
+    }
     return value as EngineDocument | undefined
   } finally { db.close() }
 }
@@ -93,7 +96,7 @@ export async function writeCloudBinding(id: string, binding: CloudBinding | null
   } finally { db.close() }
 }
 export async function writeEngineProject(id: string, value?: EngineDocument, binding?: CloudBinding | null) {
-  if (value) assertDocument(value, { allowLegacy: true })
+  if (value) assertDocument(value)
   const db = await database()
   try {
     await new Promise<void>((resolve, reject) => {

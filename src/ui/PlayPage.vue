@@ -18,9 +18,7 @@ const compatibility = computed(() => game.value ? engineCompatibility(game.value
 const warning = computed(() => {
   if (compatibility.value === 'match') return ''
   const commit = game.value?.engineCommit.slice(0, 7) ?? ''
-  return compatibility.value === 'legacy'
-    ? `此作品由旧引擎版本（${commit}）打包，可能无法在当前播放器中运行。`
-    : `此作品由其他引擎版本（${commit}）打包，与当前播放器可能不兼容。`
+  return `此作品由其他引擎版本（${commit}）打包，请作者重新发布。`
 })
 
 async function load() {
@@ -30,10 +28,10 @@ async function load() {
   running.value = false
   try {
     game.value = await publishedGame(props.gameId)
-    // 先取详情再下载大包：404 / 元数据错误不必等完整下载。
+    if (engineCompatibility(game.value.engineCommit) !== 'match') throw new Error('作品使用旧引擎，请作者重新保存并发布')
     bytes.value = await loadPublishedPackage(props.gameId, controller.signal)
   } catch (cause) {
-    error.value = cause instanceof ArcadeError ? cause.message : '作品加载失败，请稍后重试'
+    error.value = cause instanceof Error ? cause.message : '作品加载失败，请稍后重试'
   } finally { loading.value = false }
 }
 onMounted(load)

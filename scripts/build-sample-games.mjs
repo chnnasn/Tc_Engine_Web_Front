@@ -5,7 +5,7 @@
 //   wasm-tools + CMake + Ninja；而且 Web/CMakeLists.txt 只预载 Samples/PhysicsPlayground，
 //   build-engine.mjs 又要求引擎工作树干净，无法在不改上游检出内容的前提下加入新示例工程。
 //
-//   幸运的是 tcpak v7 的索引是定长结构，场景资产的载荷就是引擎自己序列化出来的场景
+//   幸运的是 tcpak v8 的索引是定长结构，场景资产的载荷就是引擎自己序列化出来的场景
 //   YAML 文本（与 Assets/Scene/*.tomcat 同构）。因此这里直接改写场景载荷、重算每个条目
 //   的 SHA-256 与偏移即可得到合法的引擎包，产物仍由引擎在加载时完整校验。
 //
@@ -20,7 +20,7 @@ import { fileURLToPath } from 'node:url'
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 const BASE_PACKAGE = resolve(root, '.engine/sample.tcpak')
 
-// tcpak v7 布局：magic(8) + version(u32) + headerSize(u32) + entryCount(u64) + ...
+// tcpak v8 布局：magic(8) + version(u32) + headerSize(u32) + entryCount(u64) + ...
 const ENTRY_SIZE = 64 // u64 handle + u16 type + u16 flags + u32 reserved + u64 offset + u64 size + 32B sha256
 const SCENE_ASSET_TYPE = 1
 const SPRITE_HANDLE = '6071781742850736130'
@@ -139,7 +139,7 @@ ${transformSection(translation, rotation, scale)}
         PerspectiveNear: ${num(CAMERA_NEAR)}
         PerspectiveFar: 1000
         OrthographicSize: 10
-        OrthographicNear: -1
+        OrthographicNear: 0
         OrthographicFar: 1
       Primary: true
       FixedAspectRatio: false
@@ -149,7 +149,7 @@ ${identityComponents(uuid, name)}
 ${transformComponents(translation, rotation, scale)}
       - TypeId: ${TYPE.camera}
         StableName: TomCat.Camera
-        SchemaVersion: 2
+        SchemaVersion: 4
         Properties:
           - PropertyId: 300
             StableName: Primary
@@ -168,7 +168,7 @@ ${transformComponents(translation, rotation, scale)}
             Value: 10
           - PropertyId: 305
             StableName: OrthographicNearClip
-            Value: -1
+            Value: 0
           - PropertyId: 306
             StableName: OrthographicFarClip
             Value: 1
@@ -184,6 +184,15 @@ ${transformComponents(translation, rotation, scale)}
           - PropertyId: 310
             StableName: Enabled
             Value: true
+          - PropertyId: 311
+            StableName: Exposure
+            Value: 0
+          - PropertyId: 312
+            StableName: Saturation
+            Value: 1
+          - PropertyId: 313
+            StableName: Vignette
+            Value: 0
     Parent: 0`
 }
 
@@ -244,7 +253,7 @@ ${identityComponents(uuid, name)}
 ${transformComponents(translation, rotation, scale)}
       - TypeId: ${TYPE.spriteRenderer}
         StableName: TomCat.SpriteRenderer
-        SchemaVersion: 1
+        SchemaVersion: 2
         Properties:
           - PropertyId: 200
             StableName: Enabled
@@ -263,6 +272,15 @@ ${transformComponents(translation, rotation, scale)}
             Value: 0
           - PropertyId: 205
             StableName: OrderInLayer
+            Value: 0
+          - PropertyId: 206
+            StableName: NormalMap
+            Value: 0
+          - PropertyId: 207
+            StableName: CastShadows
+            Value: false
+          - PropertyId: 208
+            StableName: Material
             Value: 0
 ${componentRigidbody}      - TypeId: ${TYPE.boxCollider2D}
         StableName: TomCat.BoxCollider2D
@@ -360,11 +378,11 @@ Entities:
 ${bodies.join('\n')}`
 }
 
-// 改写场景载荷后按 tcpak v7 规则重排索引：条目顺序不变，偏移与摘要重算。
+// 改写场景载荷后按 tcpak v8 规则重排索引：条目顺序不变，偏移与摘要重算。
 export function repackPackage(base, sceneText) {
   const headerSize = base.readUInt32LE(12)
   const entryCount = Number(base.readBigUInt64LE(16))
-  if (base.subarray(0, 8).toString('ascii') !== 'TCPACK01' || base.readUInt32LE(8) !== 7) throw new Error('示例基底必须是 tcpak v7')
+  if (base.subarray(0, 8).toString('ascii') !== 'TCPACK01' || base.readUInt32LE(8) !== 8) throw new Error('示例基底必须是 tcpak v8')
   const entries = []
   for (let index = 0; index < entryCount; index++) {
     const at = headerSize + index * ENTRY_SIZE

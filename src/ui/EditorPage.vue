@@ -4,7 +4,7 @@ import EngineSurface from './EngineSurface.vue'
 import { useNavigation } from './navigation'
 import { nowLabel, type Project } from './data'
 import { EngineError, type Snapshot, type SceneState, type Operation } from '../engine/protocol'
-import { readEngineProject, writeEngineProject, readCloudBinding, writeCloudBinding, isLegacyDocument, engineCommit, type CloudBinding, type EngineDocument } from '../engine/storage'
+import { readEngineProject, writeEngineProject, readCloudBinding, writeCloudBinding, engineCommit, type CloudBinding, type EngineDocument } from '../engine/storage'
 import { currentUser, getCloudProject, createCloudProject, restoreCloudProject, saveCloudProject, syncConfiguration, cloudSyncStatus, CloudError } from '../engine/cloud'
 import CloudProjects from './CloudProjects.vue'
 import AgentPanel from './AgentPanel.vue'
@@ -33,7 +33,6 @@ const agentOpen = ref(false)
 const scriptOpen = ref(false)
 const publishOpen = ref(false)
 const binding = ref<CloudBinding>()
-const legacyEngine = computed(() => Boolean(stored.value && isLegacyDocument(stored.value)))
 let gone = false
 let syncTimer: ReturnType<typeof setTimeout> | undefined
 const automaticSync = ref(false)
@@ -311,7 +310,6 @@ onMounted(async () => {
       await writeEngineProject(props.project.id, restored.document, { ...binding.value })
     }
     binding.value = await readCloudBinding(props.project.id)
-    legacy.value = !stored.value && Boolean(localStorage.getItem(`tomcat-ui-scene-${props.project.id}`))
     if (!gone) { initialized.value = true; syncTimer = setTimeout(pollSync, 2000) }
   } catch (error) { failure.value = error instanceof Error ? error.message : String(error) }
 })
@@ -341,8 +339,6 @@ onBeforeUnmount(() => { gone = true; clearTimeout(syncTimer); window.removeEvent
     </header>
     <AgentPanel v-if="agentOpen && status && !failure" :project-id="binding?.projectId" :call="agentCall" :checkpoint="checkpoint" @state="agentState" />
     <ScriptPanel v-if="scriptOpen && status && !failure" :call="scriptCall" :entity-id="status?.selectedEntityId ?? null" :entity-name="selected?.name ?? null" @notify="emit('notify', $event)" @dirty="markDirty" @restart="restartSession" @snapshot="agentState" />
-    <div v-if="legacyEngine" class="native-notice">此项目由旧引擎版本（{{ stored?.engineCommit.slice(0, 7) }}）保存。当前引擎可以打开它，保存一次即可升级到 {{ engineCommit.slice(0, 7) }}；升级前保存的云端修订需要重新保存后才能恢复。</div>
-    <div v-if="legacy" class="native-notice">此项目含旧版界面原型数据，已原样保留。当前打开的是新的引擎场景；旧数据不会自动转换为游戏场景。</div>
     <div v-if="failure" class="native-notice" role="alert">{{ failure }}</div>
     <EngineSurface v-if="initialized && !failure" :key="surfaceKey" ref="surface" kind="editor" :name="project.name" :template="project.template" :document="stored" :cloud-project-id="binding?.projectId" @ready="ready" @state="updateStatus" @actions="actions" @error="failure = $event" />
     <div v-else-if="!failure" class="native-notice">正在读取项目…</div>
