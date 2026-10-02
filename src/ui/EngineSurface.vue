@@ -7,6 +7,7 @@ const emit = defineEmits<{ ready: [snapshot?: Snapshot]; state: [state: SceneSta
 const iframe = ref<HTMLIFrameElement>()
 const active = ref(true)
 const loading = ref(true)
+const downloadStatus = ref('正在下载 TomCat 引擎，首次加载可能需要数分钟…')
 const error = ref('')
 const hostUrl = `${import.meta.env.BASE_URL}engine-host.html`
 let port: MessagePort | undefined
@@ -33,10 +34,11 @@ function connect() {
   if (!active.value || port) return
   const channel = new MessageChannel(); port = channel.port1
   // 托管产物（.NET 运行时 + Roslyn + _framework）明显大于旧的 Emscripten 模块，首次加载需要更长时间。
-  bootTimer = setTimeout(() => fail('引擎启动超时，请检查资源下载后重试'), 240000)
+  bootTimer = setTimeout(() => fail('引擎启动超时，请检查资源下载后重试'), 660000)
   port.onmessage = event => {
     const data = event.data
-    if (data.event === 'ready') { clearTimeout(bootTimer); loading.value = false; emit('ready', data.snapshot) }
+    if (data.event === 'download') downloadStatus.value = `正在下载引擎资源（${data.loaded}/${data.total}），首次加载可能需要数分钟…`
+    else if (data.event === 'ready') { clearTimeout(bootTimer); loading.value = false; emit('ready', data.snapshot) }
     else if (data.event === 'fatal') fail(data.message)
     else if (data.event === 'state') emit('state', data.state)
     else if (data.event === 'actions') emit('actions', data.actions)
@@ -63,7 +65,7 @@ defineExpose({ call, stop })
 <template>
   <div class="engine-surface">
     <iframe v-if="active" ref="iframe" :src="hostUrl" :title="kind === 'editor' ? 'TomCat 原生编辑器' : 'TomCat 游戏播放器'" allow="cross-origin-isolated; fullscreen" @load="connect" />
-    <div v-if="loading || error" class="engine-message" role="status">{{ error || '正在加载 TomCat 引擎…' }}</div>
+    <div v-if="loading || error" class="engine-message" role="status">{{ error || downloadStatus }}</div>
   </div>
 </template>
 <style scoped>

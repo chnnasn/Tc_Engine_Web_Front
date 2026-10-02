@@ -8,6 +8,10 @@ import {
 } from './runtime'
 
 const canvas = document.querySelector<HTMLCanvasElement>('#canvas')!
+addEventListener('tomcat-web-download-progress', event => {
+  const { loaded, total } = (event as CustomEvent).detail
+  send({ event: 'download', loaded, total })
+})
 const stage = document.querySelector<HTMLElement>('#stage')!
 let engine: LoadedEngine | undefined
 let protocol: EditorProtocol | undefined
