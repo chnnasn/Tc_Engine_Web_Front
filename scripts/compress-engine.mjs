@@ -6,6 +6,15 @@ const root = 'dist/engine/' + lock.commit
 const headers = []
 const chunks = {}
 const types = { js: 'text/javascript', wasm: 'application/wasm', png: 'image/png', ttf: 'font/ttf', otf: 'font/otf', ico: 'image/x-icon', dll: 'application/octet-stream' }
+// Production startup does not need the large native symbol map.
+const bootPath = join(root, '_framework/dotnet.boot.js')
+const boot = readFileSync(bootPath, 'utf8')
+const start = boot.indexOf('/*json-start*/') + '/*json-start*/'.length
+const end = boot.indexOf('/*json-end*/')
+if (start < '/*json-start*/'.length || end < start) throw new Error('Unsupported runtime boot config')
+const config = JSON.parse(boot.slice(start, end))
+config.resources.wasmSymbols = []
+writeFileSync(bootPath, boot.slice(0, start) + JSON.stringify(config) + boot.slice(end))
 function output(path, bytes, type) {
   writeFileSync(path, gzipSync(bytes, { level: 9 }))
   headers.push('/' + relative('dist', path).replaceAll('\\', '/') + '\n  Content-Encoding: gzip\n  Content-Type: ' + type + '\n  Cache-Control: public, max-age=31536000, immutable\n')
@@ -45,16 +54,18 @@ async function downloadResource(url) {
 }
 function resourceLoader(type, name, url) {
   const path = new URL(url, import.meta.url).pathname;
-  if (path.endsWith('.js')) return url + '.gz';
+  if (path.endsWith('.js')) return url + '.gz?boot=2';
   if (!/\\.(wasm|png|ttf|otf|ico|dll)$/.test(path)) return undefined;
   return (async () => {
     const count = resourceChunks[path];
     const parts = [];
     let contentType;
     if (count) {
-      for (let index = 0; index < count; index++) {
-        const part = await downloadResource(url + '.part-' + index + '.gz');
-        parts.push(part.bytes); contentType = part.type;
+      for (let index = 0; index < count; index += 4) {
+        await Promise.all(Array.from({ length: Math.min(4, count - index) }, async (_, offset) => {
+          const part = await downloadResource(url + '.part-' + (index + offset) + '.gz');
+          parts[index + offset] = part.bytes; contentType = part.type;
+        }));
       }
     } else {
       const part = await downloadResource(url + '.gz');
