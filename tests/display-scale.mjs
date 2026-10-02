@@ -79,11 +79,12 @@ try {
     // 字体图集按比例重烘焙：基准 32 接口单位 -> 32 x dpr 物理像素
     assert.equal(state.scale.bakedFontSize, Math.round(state.scale.baseFontSize * dpr),
       `${label}: 字体图集未按比例重烘焙（${state.scale.baseFontSize} -> ${state.scale.bakedFontSize}）`)
-    // 引擎坐标系 = 画布 CSS 盒子 = 视口；绘制缓冲由 GLFW 决定，与窗口尺寸一致
+    // 引擎坐标系 = 画布 CSS 盒子 = 视口；绘制缓冲是 CSS x DPR（Emscripten 用 Math.floor）
     assert.deepEqual(state.client, state.inner, `${label}: 画布 CSS 盒子不等于视口`)
     assert.deepEqual(state.rect, state.inner, `${label}: 画布可见区域不等于视口`)
-    assert.deepEqual(state.bitmap, state.client, `${label}: 绘制缓冲与引擎窗口尺寸脱节`)
-    console.log(`${label}: effective=${state.scale.effectiveScale} font=${state.scale.baseFontSize}->${state.scale.bakedFontSize} 画布 ${state.client.join('x')} 视口 ${state.inner.join('x')}`)
+    assert.deepEqual(state.bitmap, [Math.floor(state.client[0] * dpr), Math.floor(state.client[1] * dpr)],
+      `${label}: 绘制缓冲不是 CSS x DPR（${state.client.join('x')} x ${dpr} -> ${state.bitmap.join('x')}）`)
+    console.log(`${label}: effective=${state.scale.effectiveScale} font=${state.scale.baseFontSize}->${state.scale.bakedFontSize} 缓冲 ${state.bitmap.join('x')} 画布 ${state.client.join('x')} 视口 ${state.inner.join('x')}`)
     await context.close()
   }
 
