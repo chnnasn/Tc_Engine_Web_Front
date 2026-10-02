@@ -221,8 +221,8 @@ try {
       // 引擎坐标系 = 画布的 CSS 盒子 = 视口：ImGui 就在 CSS 像素里排版，缩放与 DPR 无关。
       assert.deepEqual(surface.client, surface.inner)
       assert.deepEqual(surface.rect, surface.inner)
-      // 绘制缓冲与引擎窗口尺寸一致（由 GLFW 决定），且栈里没有任何缩放变换。
-      assert.deepEqual(surface.bitmap, surface.client)
+      // CSS 布局保持逻辑像素；绘制缓冲使用设备像素，且没有额外 CSS 缩放。
+      assert.deepEqual(surface.bitmap, surface.client.map(size => Math.round(size * surface.dpr)))
       assert.equal(surface.stageTransform, 'none')
       assert.equal(surface.canvasTransform, 'none')
       await hidpi.locator('.runtime-player').screenshot({ path: '.engine/player-hidpi.png' })
