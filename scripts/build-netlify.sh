@@ -52,6 +52,7 @@ node --input-type=module -e '
 '
 
 npm run build
+node scripts/compress-engine.mjs
 
 # 只发布锁定的引擎产物，剔除历史提交遗留的 bundle。
 if [ -d dist/engine ]; then
