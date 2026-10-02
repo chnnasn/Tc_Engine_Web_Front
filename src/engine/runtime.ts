@@ -164,9 +164,21 @@ export async function loadEngine(canvas: HTMLCanvasElement): Promise<LoadedEngin
       script.src = `${engineBase()}${manifest.entry || 'main.js'}`
       const timer = setTimeout(() => { cleanup(); reject(new Error('引擎模块启动超时，请检查网络后重试')) }, 600000)
       const onReady = () => { cleanup(); resolve() }
-      const cleanup = () => { clearTimeout(timer); removeEventListener('tomcat-web-ready', onReady) }
+      const onFailure = (event: PromiseRejectionEvent | ErrorEvent) => {
+        cleanup()
+        const reason = 'reason' in event ? event.reason : event.error || event.message
+        reject(new Error(`引擎启动失败：${reason instanceof Error ? reason.message : String(reason)}`))
+      }
+      const cleanup = () => {
+        clearTimeout(timer)
+        removeEventListener('tomcat-web-ready', onReady)
+        removeEventListener('unhandledrejection', onFailure)
+        removeEventListener('error', onFailure)
+      }
       script.onerror = () => { cleanup(); reject(new Error('引擎模块加载失败，请检查资源部署')) }
       addEventListener('tomcat-web-ready', onReady)
+      addEventListener('unhandledrejection', onFailure)
+      addEventListener('error', onFailure)
       document.head.append(script)
     })
   }
