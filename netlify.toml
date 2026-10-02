@@ -5,6 +5,7 @@
 [build.environment]
   NODE_VERSION = "22"
   TOMCAT_API_ORIGIN = "https://tcenginewebbackend-production.up.railway.app"
+  ENGINE_ARTIFACT_URL = "https://github.com/chnnasn/Tc_Engine_Web_Front/releases/download/web-engine-e9c2a428/tomcat-web-engine-e9c2a428.tar.gz"
 
 [[headers]]
   for = "/*"
