@@ -3,6 +3,7 @@ import { computed, onBeforeUnmount, ref } from 'vue'
 import type { Game } from './data'
 import AppModal from './AppModal.vue'
 import EngineSurface from './EngineSurface.vue'
+import engineLock from '../../engine.lock.json'
 const props = defineProps<{ game: Game }>()
 const emit = defineEmits<{ close: [] }>()
 // 引擎侧同样以 256 MiB 为上限，这里提前拦截，避免把超大响应读进内存。
@@ -29,7 +30,7 @@ async function load() {
   running.value = false
   generation.value++
   try {
-    const response = await fetch(`/v1/games/${encodeURIComponent(props.game.id)}/package`, {
+    const response = await fetch(`/v1/games/${encodeURIComponent(props.game.id)}/package?engine=${engineLock.commit}`, {
       credentials: 'same-origin', headers: { 'X-TomCat-Request': '1' }, signal: controller.signal,
     })
     if (response.status === 404) { error.value = '后端尚未提供这个作品的游戏包'; return }
