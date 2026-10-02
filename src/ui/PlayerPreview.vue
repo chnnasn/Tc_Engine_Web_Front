@@ -18,6 +18,7 @@ const controller = new AbortController()
 const hint = computed(() => {
   const message = error.value
   if (!message) return ''
+  if (/引擎启动失败|failed to fetch|模块加载失败/i.test(message)) return '引擎资源下载失败，请检查网络连接后重试。'
   if (/portable|managed|win-x64|native|托管|原生/i.test(message)) return '该资源包使用桌面端托管载荷或原生依赖。网页端只支持 portable 纯托管 C# 包，请在桌面编辑器重新 Cook 后再试。'
   if (/tcpak|package|corrupt|invalid|版本|version/i.test(message)) return '资源包损坏或引擎版本不匹配，请使用当前引擎重新打包。'
   return ''
