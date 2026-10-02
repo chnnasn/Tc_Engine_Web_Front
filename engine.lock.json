@@ -1,6 +1,6 @@
 {
   "repository": "https://github.com/chnnasn/TomCat_Engine.git",
-  "commit": "f51b5371cf81e9164ab075619d76a7646dabbee4",
+  "commit": "52f07c2df86ec3c095ad0fad8e6b46030c3830c9",
   "kind": "managed",
   "protocol": "tomcat.web.v1",
   "legacyCommits": [],
