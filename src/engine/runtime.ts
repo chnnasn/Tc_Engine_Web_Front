@@ -38,6 +38,12 @@ export interface EngineExports {
   EditorRpc(request: string): string
   EditorState(): string
   EditorTakeActions(): number
+  /** 界面所在表面的显示比例（浏览器设备像素比）。引擎据此重烘焙字体图集与样式尺寸。 */
+  EditorSetUiScale(scale: number): void
+  /** 工作区 blob：引擎段（schema 版本 + 面板可见性掩码）后接 ImGui 的托管段。 */
+  EditorSaveLayout(): string
+  /** 应用工作区；数据不可用（版本不符、缺少 ImGui 托管段）时返回 0 并沿用默认布局。 */
+  EditorLoadLayout(settings: string): number
 }
 
 export interface CompileSource { path: string; text: string }

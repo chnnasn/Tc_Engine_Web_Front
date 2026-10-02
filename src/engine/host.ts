@@ -1,5 +1,5 @@
 import { currentUser, getCloudProject } from './cloud'
-import { EditorProtocol, EngineError, type SceneState, type Snapshot, type Operation } from './protocol'
+import { PROTOCOL, EditorProtocol, EngineError, type SceneState, type Snapshot, type Operation } from './protocol'
 import { assertDocument, engineCommit, projectRoot, validFilePath, type EngineDocument } from './storage'
 import { attachScripts, detachScripts, readScripts } from './scene-archive'
 import {
@@ -20,6 +20,10 @@ let previousState = ''
 let lastTime = 0
 let lastPoll = 0
 let width = 0, height = 0
+// 布局：引擎产出/应用工作区，宿主只负责搬运；版本与引擎提交一起进 key，升级后自然失效。
+let lastAutoSave = 0
+// 已经通知引擎的显示比例，用来识别"只换了 DPR、CSS 尺寸没变"的情况。
+let appliedScale = 0
 // C# 程序集是会话级的：browser-wasm 没有可回收 ALC，原生 WebEditorSession 每会话只接受
 // 一代程序集。assemblyLoaded 记录“本模块已安装过”，一旦为真就不能再替换，只能重建承载页面。
 let assemblyLoaded = false
@@ -29,40 +33,123 @@ let scriptDiagnostics: CompileDiagnostic[] = []
 
 function send(message: unknown) { port?.postMessage(message) }
 function exports() { return engine!.web.engine }
+/**
+ * 引擎 RPC。显示比例与工作区都走这条通道：引擎的原生导出面只有一个入口
+ * （tc_web_editor_rpc），新增导出意味着托管 WASM 多一个原生 import，而 import 在模块实例化时
+ * 解析——名字对不上会让整个编辑器起不来，代价与"两个非热路径调用"不相称。
+ */
+function checkReply(reply: string, description: string): string {
+  let parsed: any
+  try { parsed = JSON.parse(reply) } catch { throw new Error(`${description}：引擎返回了无法解析的应答`) }
+  if (parsed?.protocol !== 'tomcat.web.v1' || parsed?.ok !== true) {
+    throw new Error(`${description}：${parsed?.error?.message || '引擎拒绝了该请求'}`)
+  }
+  return parsed.result
+}
+function rpc(type: string, payload: Record<string, unknown>, description: string) {
+  const value = exports()
+  // 直接导出优先：宿主不需要为它们解析应答。
+  if (type === 'editor.setDisplayScale' && typeof value.EditorSetUiScale === 'function') {
+    value.EditorSetUiScale((payload as { scale: number }).scale)
+    return undefined
+  }
+  if (type === 'editor.saveLayout' && typeof value.EditorSaveLayout === 'function') {
+    return { settings: value.EditorSaveLayout() }
+  }
+  if (type === 'editor.loadLayout' && typeof value.EditorLoadLayout === 'function') {
+    return { applied: value.EditorLoadLayout((payload as { settings: string }).settings) !== 0 }
+  }
+  return checkReply(value.EditorRpc(JSON.stringify({ protocol: PROTOCOL, requestId: `host-${++rpcSequence}`, type, payload })), description)
+}
+let rpcSequence = 0
 function filesystem() { return engineFilesystem(engine!.web) }
 function state(): SceneState { return JSON.parse(exports().EditorState()) }
-function dimensions() { return [Math.max(1, Math.min(8192, Math.round(innerWidth * devicePixelRatio))), Math.max(1, Math.min(8192, Math.round(innerHeight * devicePixelRatio)))] }
+function viewportScale() { return Math.max(1, Math.min(2.5, devicePixelRatio || 1)) }
+function cssSize(): [number, number] { return [Math.max(1, Math.round(innerWidth)), Math.max(1, Math.round(innerHeight))] }
+function dimensions(): [number, number] {
+  // 引擎坐标系是 CSS 像素：ImGui 的 DisplaySize 取自画布的 CSS 盒子，字号也按 CSS 像素定尺。
+  // 设备像素只体现在绘制缓冲上。
+  return cssSize()
+}
 /**
- * 把引擎视口切成“设备像素”大小。
+ * 让引擎的坐标系等于 CSS 像素坐标系。
  *
- * 引擎侧（Emscripten GLFW）在 glfwCreateWindow 收尾时会调用 adjustCanvasDimensions()，
- * 用画布的 **CSS 尺寸**（clientWidth/clientHeight）覆盖绘制缓冲，并把它同时当作 WebGL viewport
- * 与鼠标坐标空间；而 glfwSetWindowSize 也会照这个尺寸重设缓冲。若把设备像素直接交给引擎，
- * 两者就差一个 devicePixelRatio：viewport 按设备像素铺开、缓冲只有 CSS 尺寸，画面被放大 dpr 倍
- * 并锚定在左下角（高 DPI 屏幕上表现为内容偏到右下且被裁切，DPR=1 时恰好看不出问题）。
- *
- * 因此让舞台的布局尺寸等于设备像素、再缩放回视口：画布 clientWidth、引擎窗口尺寸、鼠标坐标空间
- * 三者始终一致，绘制缓冲也保持设备像素（高 DPI 下依旧清晰）。
+ * 引擎侧（Emscripten GLFW）用画布的 CSS 盒子同时当窗口尺寸、鼠标坐标空间与 ImGui 的
+ * DisplaySize，并把绘制缓冲（glfwGetFramebufferSize）当作 OpenGL 视口；ImGui 的
+ * DisplayFramebufferScale 就是这两者的比值。GLFW 还有一层行为要照顾：glfwCreateWindow 与
+ * 浏览器尺寸变化时它会用 **clientWidth/clientHeight** 覆盖绘制缓冲与画布内联样式
+ * （GLFW.adjustCanvasDimensions）。所以宿主不能自己给画布定尺寸——那样会在引擎启动时被覆盖掉，
+ * 而且一旦让 1 CSS 像素 = 1 设备像素去迎合它，DPR=2 的屏幕上 ImGui 就在设备像素坐标系里排版，
+ * 字号与所有面板都只剩应有的一半。
  */
 function applyViewport(w: number, h: number) {
   width = w; height = h
-  // 正常情况 innerWidth/w 就是 1/devicePixelRatio；设备像素被 8192 上限夹住时它也仍然铺满视口宽度。
-  const scale = innerWidth / w
   stage.style.width = `${w}px`
   stage.style.height = `${h}px`
-  stage.style.transform = scale === 1 ? '' : `scale(${scale})`
-  canvas.width = w; canvas.height = h
+  stage.style.transform = ''
+  // 画布的尺寸由引擎拥有：宿主把舞台设成 CSS 尺寸、让画布铺满它（engine-host.html 的
+  // #stage>canvas 规则），GLFW 据此把缓冲也设成 CSS 尺寸，ImGui 的 DisplaySize 与
+  // DisplayFramebufferScale 随之都是 CSS 像素下的正确值，界面单位与设备像素比无关。
+  //
+  // 代价：高 DPI 屏上绘制缓冲是 CSS 分辨率、由浏览器放大。要做到既正确又逐物理像素清晰，
+  // 需要引擎按 devicePixelRatio 设置 ImGui 的 framebuffer scale——仅靠宿主改画布无法绕过
+  // GLFW 的这次覆盖（已实测）。
+  canvas.style.width = ''
+  canvas.style.height = ''
+  canvas.style.transform = ''
+  canvas.style.transformOrigin = ''
 }
 function resize() {
   const [w, h] = dimensions()
-  if (width === w && height === h) return
-  applyViewport(w!, h!)
+  const scale = viewportScale()
+  if (width === w && height === h && scale === appliedScale) return
+  applyViewport(w, h)
+  appliedScale = scale
+  // 缩放必须在尺寸之前告知引擎：它决定字体图集与样式尺寸的重烘焙。
+  try { rpc('editor.setDisplayScale', { scale }, '设置显示比例') } catch { /* 引擎尚未就绪。 */ }
   if (kind === 'editor') exports().EditorResize(width, height)
   else exports().PlayerResize(width, height)
+}
+const layoutKey = () => `tomcat.web-editor-layout.v1.${engineCommit}`
+/** 上一次落盘的工作区内容，用来判断是否真的变了。 */
+let savedLayout = ''
+/** 退出前把工作区交给宿主存储；玩家会话没有布局，失败也不影响关闭。 */
+function flushLayout() {
+  if (kind !== 'editor' || !engine || stopped) return
+  try {
+    const result = rpc('editor.saveLayout', {}, '保存工作区') as { settings?: string } | undefined
+    const settings = result?.settings
+    if (settings) { localStorage.setItem(layoutKey(), settings); savedLayout = settings }
+  } catch { /* 引擎不可用或存储被禁用。 */ }
+}
+function restoreLayout() {
+  if (kind !== 'editor') return
+  try {
+    const settings = localStorage.getItem(layoutKey())
+    if (!settings) return
+    // 引擎在数据不可用（版本不符、缺少 ImGui 托管段）时拒绝并沿用默认布局。
+    const result = rpc('editor.loadLayout', { settings }, '恢复工作区') as { applied?: boolean } | undefined
+    if (result?.applied) savedLayout = settings
+    else localStorage.removeItem(layoutKey())
+  } catch { /* 损坏的数据不应阻止编辑器启动。 */ }
+}
+/**
+ * 周期性落盘。引擎不暴露"布局脏了"的标记，所以这里取一次当前工作区与上次落盘的内容比较；
+ * 序列化本身只是内存操作（数百字节），10 秒一次的开销可以忽略。真正必要的落盘点是 dispose。
+ */
+function maybeAutoSaveLayout(time: number) {
+  if (kind !== 'editor' || !engine || stopped || time - lastAutoSave < 10000) return
+  lastAutoSave = time
+  try {
+    const result = rpc('editor.saveLayout', {}, '保存工作区') as { settings?: string } | undefined
+    const settings = result?.settings
+    if (settings && settings !== savedLayout) { localStorage.setItem(layoutKey(), settings); savedLayout = settings }
+  } catch { /* 引擎不可用或存储被禁用。 */ }
 }
 function dispose() {
   if (stopped) return
   stopped = true; cancelAnimationFrame(frame); observer?.disconnect()
+  flushLayout()
   try { if (engine) shutdown(engine.web, kind) } finally { engine = undefined; port?.close() }
 }
 addEventListener('pagehide', dispose)
@@ -73,11 +160,22 @@ canvas.addEventListener('wheel', event => event.preventDefault(), { passive: fal
 addEventListener('keydown', event => {
   if ([' ', 'Tab', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'Backspace'].includes(event.key) || ((event.ctrlKey || event.metaKey) && ['s', 'z', 'y'].includes(event.key.toLowerCase()))) event.preventDefault()
 })
-function fail(error: unknown) { send({ event: 'fatal', message: error instanceof Error ? error.message : String(error) }); dispose() }
+function fail(error: unknown) {
+  // 这类失败往往只以退出码的形式出现，所以尽量把原因变成可读的一句话。
+  const message = error instanceof Error ? error.message : (() => {
+    const value = error as { message?: string; status?: number }
+    if (value && typeof value.message === 'string') return value.status === undefined ? value.message : `${value.message}（status ${value.status}）`
+    return String(error)
+  })()
+  console.error('[tomcat-host] fail:', message, error)
+  send({ event: 'fatal', message })
+  dispose()
+}
 function tick(time: number) {
   if (stopped || !engine) return
   try {
     resize()
+    maybeAutoSaveLayout(time)
     const delta = lastTime ? Math.min((time - lastTime) / 1000, .1) : 0
     lastTime = time
     if (kind === 'editor') exports().EditorFrame(delta)
@@ -403,6 +501,8 @@ addEventListener('message', async event => {
         snapshot = protocol.request<Snapshot>('scene.loadArchive', { sceneHandle: snapshot.sceneHandle, baseRevision: snapshot.revision, archive: document.archive })
         snapshot = protocol.request<Snapshot>('scene.markSaved', { sceneHandle: snapshot.sceneHandle, baseRevision: snapshot.revision })
       }
+      // 工作区必须在引擎启动后、第一次绘制前恢复：载入会重置停靠树，晚于首帧就会闪一下默认布局。
+      restoreLayout()
     } else {
       bootPlayer(loaded.web, event.data.bytes, width, height)
     }

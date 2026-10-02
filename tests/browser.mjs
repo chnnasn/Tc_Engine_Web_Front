@@ -183,9 +183,12 @@ try {
       if (i === 0) await page.getByRole('button', { name: '重新加载', exact: true }).click()
     }
     await page.getByRole('button', { name: '关闭播放器', exact: true }).click()
-    // 高 DPI 回归：引擎（Emscripten GLFW）会把画布的 CSS 尺寸当作绘制缓冲，并据此设置 viewport，
-    // 所以视口必须先铺成设备像素、再由舞台缩放回 CSS 尺寸（见 host.ts applyViewport）。
-    // 若把设备像素直接交给引擎，viewport 与缓冲会差一个 devicePixelRatio，画面被放大并偏移到右下角。
+    // 高 DPI 回归：引擎把画布的 CSS 盒子当作窗口尺寸、鼠标坐标空间与 ImGui 的 DisplaySize，
+    // 把绘制缓冲（glfwGetFramebufferSize）当作 OpenGL 视口，两者的比值就是 ImGui 的
+    // DisplayFramebufferScale。Emscripten 的 GLFW 还会用 clientWidth/clientHeight 覆盖绘制缓冲，
+    // 所以宿主只把舞台设成 CSS 尺寸、由引擎决定缓冲（见 host.ts applyViewport）：栈里任何
+    // "1 CSS 像素 = 1 缓冲像素" 的假设都会让 ImGui 在设备像素坐标系里排版，2x 屏上字号与所有
+    // 面板只有应有的一半——这条断言此前固化的正是那个错误行为。
     const hidpi = await browser.newPage({ viewport: { width: 1200, height: 800 }, deviceScaleFactor: 2 })
     hidpi.on('pageerror', error => errors.push(error.message))
     await hidpi.route('**/v1/**', route => {
@@ -202,14 +205,26 @@ try {
       const surface = await hidpi.evaluate(() => {
         const frame = document.querySelector('iframe')
         const canvas = frame.contentDocument.querySelector('#canvas')
+        const stage = frame.contentDocument.querySelector('#stage')
         const rect = canvas.getBoundingClientRect()
-        return { dpr: frame.contentWindow.devicePixelRatio, inner: [frame.contentWindow.innerWidth, frame.contentWindow.innerHeight], bitmap: [canvas.width, canvas.height], rect: [Math.round(rect.width), Math.round(rect.height)] }
+        return {
+          dpr: frame.contentWindow.devicePixelRatio,
+          inner: [frame.contentWindow.innerWidth, frame.contentWindow.innerHeight],
+          bitmap: [canvas.width, canvas.height],
+          client: [canvas.clientWidth, canvas.clientHeight],
+          rect: [Math.round(rect.width), Math.round(rect.height)],
+          stageTransform: stage.style.transform || 'none',
+          canvasTransform: canvas.style.transform || 'none',
+        }
       })
       assert.equal(surface.dpr, 2)
-      // 绘制缓冲跟着设备像素走：DPR=2 时缓冲是 CSS 尺寸的两倍（高 DPI 下依然清晰）。
-      assert.deepEqual(surface.bitmap, [Math.round(surface.inner[0] * 2), Math.round(surface.inner[1] * 2)])
-      // 可见区域仍等于视口，即舞台被 1/dpr 缩回，画面不会被放大或裁切。
+      // 引擎坐标系 = 画布的 CSS 盒子 = 视口：ImGui 就在 CSS 像素里排版，缩放与 DPR 无关。
+      assert.deepEqual(surface.client, surface.inner)
       assert.deepEqual(surface.rect, surface.inner)
+      // 绘制缓冲与引擎窗口尺寸一致（由 GLFW 决定），且栈里没有任何缩放变换。
+      assert.deepEqual(surface.bitmap, surface.client)
+      assert.equal(surface.stageTransform, 'none')
+      assert.equal(surface.canvasTransform, 'none')
       await hidpi.locator('.runtime-player').screenshot({ path: '.engine/player-hidpi.png' })
     } finally { await hidpi.close() }
     // 后端没有这个作品的包：给出明确提示，而不是让用户自己去找本地文件。
