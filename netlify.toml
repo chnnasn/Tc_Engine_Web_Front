@@ -4,6 +4,7 @@
 
 [build.environment]
   NODE_VERSION = "22"
+  TOMCAT_API_ORIGIN = "https://tcenginewebbackend-production.up.railway.app"
 
 [[headers]]
   for = "/*"
