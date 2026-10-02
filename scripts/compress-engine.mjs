@@ -40,7 +40,12 @@ const marker = 'dotnet.withModuleConfig({ canvas }).create()'
 if (!source.includes(marker)) throw new Error('Unsupported engine bootstrap')
 const loader = `
 const resourceChunks = ${JSON.stringify(chunks)};
+let activeDownloads = 0;
+const downloadQueue = [];
 async function downloadResource(url) {
+  if (activeDownloads >= 4) await new Promise(resolve => downloadQueue.push(resolve));
+  else activeDownloads++;
+  try {
   for (let attempt = 0; attempt < 3; attempt++) {
     try {
       const response = await fetch(url, { signal: AbortSignal.timeout(60000) });
@@ -50,6 +55,10 @@ async function downloadResource(url) {
       if (attempt === 2) throw new Error('资源下载失败：' + url + ' (' + error.message + ')');
       await new Promise(resolve => setTimeout(resolve, 1000 * (attempt + 1)));
     }
+  }
+  } finally {
+    const next = downloadQueue.shift();
+    if (next) next(); else activeDownloads--;
   }
 }
 function resourceLoader(type, name, url) {
