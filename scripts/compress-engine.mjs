@@ -5,7 +5,7 @@ const lock = JSON.parse(readFileSync('engine.lock.json', 'utf8'))
 const root = 'dist/engine/' + lock.commit
 const headers = []
 const chunks = {}
-const types = { js: 'text/javascript', wasm: 'application/wasm', png: 'image/png', ttf: 'font/ttf', otf: 'font/otf', ico: 'image/x-icon', dll: 'application/octet-stream' }
+const types = { js: 'text/javascript', wasm: 'application/wasm', png: 'image/png', ttf: 'font/ttf', otf: 'font/otf', ico: 'image/x-icon', dll: 'application/octet-stream', tomcat: 'text/plain', tcmeta: 'text/plain', tcproj: 'application/json', json: 'application/json', md: 'text/plain' }
 // Production startup does not need the large native symbol map.
 const bootPath = join(root, '_framework/dotnet.boot.js')
 const boot = readFileSync(bootPath, 'utf8')
@@ -47,7 +47,7 @@ async function downloadResource(url) {
       if (!response.ok) throw new Error('HTTP ' + response.status + ': ' + url);
       return { bytes: new Uint8Array(await response.arrayBuffer()), type: response.headers.get('Content-Type') };
     } catch (error) {
-      if (attempt === 2) throw error;
+      if (attempt === 2) throw new Error('资源下载失败：' + url + ' (' + error.message + ')');
       await new Promise(resolve => setTimeout(resolve, 1000 * (attempt + 1)));
     }
   }
@@ -55,7 +55,7 @@ async function downloadResource(url) {
 function resourceLoader(type, name, url) {
   const path = new URL(url, import.meta.url).pathname;
   if (path.endsWith('.js')) return url + '.gz?boot=2';
-  if (!/\\.(wasm|png|ttf|otf|ico|dll)$/.test(path)) return undefined;
+  if (!/\\.(wasm|png|ttf|otf|ico|dll|tomcat|tcmeta|tcproj|json|md)$/.test(path)) return undefined;
   return (async () => {
     const count = resourceChunks[path];
     const parts = [];
@@ -74,6 +74,9 @@ function resourceLoader(type, name, url) {
     return new Response(new Blob(parts), { headers: { 'Content-Type': contentType || 'application/octet-stream' } });
   })();
 }
+// Complete and cache module bodies with retries before native dynamic imports.
+await Promise.all(['dotnet.native.js', 'dotnet.runtime.js', 'dotnet.boot.js'].map(name =>
+  downloadResource(new URL('./_framework/' + name + '.gz?boot=2', import.meta.url).href)));
 `
 writeFileSync(entry, loader + source.replace(marker, "dotnet.withConfig({ maxParallelDownloads: 4 }).withResourceLoader(resourceLoader).withModuleConfig({ canvas, onDownloadResourceProgress: (loaded, total) => globalThis.dispatchEvent(new CustomEvent('tomcat-web-download-progress', { detail: { loaded, total } })) }).create()"))
 writeFileSync('dist/_headers', headers.join('\n'))
