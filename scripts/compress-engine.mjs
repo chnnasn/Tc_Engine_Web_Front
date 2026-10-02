@@ -21,6 +21,6 @@ const entry = join(root, 'main.js')
 const source = readFileSync(entry, 'utf8')
 const marker = 'dotnet.withModuleConfig({ canvas }).create()'
 if (!source.includes(marker)) throw new Error('Unsupported engine bootstrap: compression loader was not installed')
-writeFileSync(entry, source.replace(marker, `dotnet.withResourceLoader((type, name, url) => /\\.(wasm|png|ttf|ico|dll)$/.test(new URL(url, import.meta.url).pathname) ? url + '.gz' : undefined).withModuleConfig({ canvas }).create()`))
+writeFileSync(entry, source.replace(marker, `dotnet.withConfig({ maxParallelDownloads: 4 }).withResourceLoader((type, name, url) => /\\.(wasm|png|ttf|ico|dll)$/.test(new URL(url, import.meta.url).pathname) ? url + '.gz' : undefined).withModuleConfig({ canvas }).create()`))
 writeFileSync('dist/_headers', headers.join('\n'))
 console.log(`Compressed ${headers.length} engine resources`)
