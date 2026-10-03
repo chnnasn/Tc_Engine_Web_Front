@@ -17,7 +17,7 @@ config.resources.wasmSymbols = []
 writeFileSync(bootPath, boot.slice(0, start) + JSON.stringify(config) + boot.slice(end))
 function output(path, bytes, type) {
   writeFileSync(path, gzipSync(bytes, { level: 9 }))
-  headers.push('/' + relative('dist', path).replaceAll('\\', '/') + '\n  Content-Encoding: gzip\n  Content-Type: ' + type + '\n  Cache-Control: public, max-age=31536000, immutable\n')
+  headers.push('/' + relative('dist', path).replaceAll('\\', '/') + '\n  Content-Encoding: gzip\n  Content-Type: ' + type + '\n')
 }
 function walk(directory) {
   for (const entry of readdirSync(directory, { withFileTypes: true })) {

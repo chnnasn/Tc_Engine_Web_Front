@@ -34,11 +34,12 @@ const filtered = computed(() => {
       <p>有趣的世界，不一定很大。从这里，遇见下一个好玩的想法。</p>
     </div><div class="editorial-note"><span>游玩 / 交流 / 创造</span><p>小小的世界，<br />也容得下很大的想象。</p><a href="#discover-title" class="text-link">翻开本期精选 <ArrowRight :size="15" /></a></div></div>
 
-    <section class="feature" aria-label="本周精选作品">
+    <p class="local-note">当前提供三个内置引擎示例；社区为界面演示，话题和回复仅保存在本地。</p>
+    <section class="feature" aria-label="内置引擎示例">
       <div class="feature-copy">
-        <div class="feature-label"><span class="small-line" />本周精选<span class="feature-number">VOL. 01</span></div>
+        <div class="feature-label"><span class="small-line" />内置示例<span class="feature-number">VOL. 01</span></div>
         <div><span class="feature-genre">探索 · 慢节奏 · 治愈</span><h2>林间来信</h2><p>沿着溪流，穿过森林。<br />把一封信，送到世界的小小角落。</p></div>
-        <div class="feature-bottom"><AppLink class="button button-dark" href="/games/forest">探索这个世界<ArrowUpRight :size="17" /></AppLink><span>by 木木工作室</span></div>
+        <div class="feature-bottom"><AppLink class="button button-dark" href="/games/forest">探索这个世界<ArrowUpRight :size="17" /></AppLink><span>TC Fun 引擎示例</span></div>
       </div>
       <AppLink href="/games/forest" class="feature-art" aria-label="探索林间来信">
         <ArtworkView :src="games[0].image" alt="林间来信：红斗篷旅人在溪流与小屋之间漫步" eager />
@@ -62,7 +63,7 @@ const filtered = computed(() => {
 
     <section class="home-bottom">
       <div class="community-preview">
-        <div class="section-heading"><h2>创作这件小事</h2><TextLink href="/community">去社区逛逛</TextLink></div>
+        <div class="section-heading"><h2>社区界面演示</h2><TextLink href="/community">去社区逛逛</TextLink></div>
         <div class="compact-topics"><AppLink v-for="topic in initialTopics.slice(1, 4)" :key="topic.id" :href="`/community/${topic.id}`" class="compact-topic"><span class="topic-category">{{ topic.category }}</span><span class="compact-topic-title">{{ topic.title }}</span><span class="reply-count"><MessageSquare :size="14" />{{ topic.replies }}</span></AppLink></div>
       </div>
       <aside class="create-aside"><div class="aside-icon"><Sparkles :size="21" :stroke-width="1.5" /></div><h3>不止游玩，也来创造。</h3><p>给那个还没完成的想法，<br />一个开始的地方。</p><button class="text-link" @click="emit('create')">创建我的第一个项目<ArrowRight :size="17" /></button></aside>

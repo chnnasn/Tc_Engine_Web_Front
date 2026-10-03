@@ -38,6 +38,7 @@ async function publish() {
 <template>
   <main id="main-content" class="page community-page">
     <div class="page-topline"><div class="page-intro"><span class="eyebrow">MADE BETTER, TOGETHER</span><h1>创作者社区<span class="green-dot">.</span></h1><p>聊聊游戏，分享进展，也为彼此的想法加一点油。</p></div><button class="button button-primary" @click="async () => { if (await requireLogin()) compose = true }"><Plus :size="16" />发起话题</button></div>
+    <p class="local-note">社区界面演示：预置话题为示例，新话题与回复仅在本地可见。</p>
     <div class="community-layout">
       <div class="community-main">
         <div class="section-index"><span>THE CONVERSATION</span><span>{{ topics.length }} 个话题 · 创作手记</span></div>

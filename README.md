@@ -121,7 +121,7 @@ Netlify 的默认构建镜像不保证具备上述工具链，推荐**预先构�
 
 每个文件上限 8 MiB、项目二进制文件总量 36 MiB、最多 512 个文件；场景归档上限 4 MiB，图片导入入口目前限制 2 MiB，单个 C# 脚本限制 512 KiB。路径限定为 Project.tcproj、ProjectSettings/*.json 和安全的 Assets 子路径；图片（`.png/.jpg/.jpeg/.tga`）与 C# 脚本（`.cs`）都必须成对提供 `.tcmeta`，前后端校验一致。旧本地引擎文档可以打开，再保存升级为完整文档；没有资源实体的旧云端修订不能当作完整项目恢复。当前只保留活动场景的内存编辑状态，其他 Assets 文件按引擎文件系统中的已写入内容保存。
 
-本地启动相邻后端仓库的 API（默认端口 5080），Vite 开发和 preview 会代理 `/v1`。可用 `TOMCAT_API_PROXY` 覆盖代理目标。Netlify 构建时设置 `TOMCAT_API_ORIGIN=https://你的后端域名`，生成位于 SPA 回退之前的 `/v1/*` 代理规则；自托管同样需要同源 `/v1` 反向代理。未配置后端时无法使用编辑器，游客仍可浏览公开页面与游玩作品。后端需要持久化存储卷和正确的 AllowedHosts；不能仅部署静态网站获得云端存储。
+本地启动相邻后端仓库的 API（默认端口 5080），Vite 开发和 preview 会代理 `/v1`。可用 `TOMCAT_API_PROXY` 覆盖代理目标。Netlify 的 `netlify.toml` 显式配置 `/v1/*` 和健康检查代理，修改其中的 Railway 目标地址即可。生产环境还需在 Netlify 的 Runtime 范围配置 `TOMCAT_PROXY_SECRET`，与后端 `Proxy__Secret` 相同，用于签名代理请求；自托管同样需要同源 `/v1` 反向代理。未配置后端时无法使用编辑器，游客仍可浏览公开页面与游玩作品。后端需要持久化存储卷和正确的 AllowedHosts；不能仅部署静态网站获得云端存储。
 
 端到端测试（需要已构建的 WASM、Chrome、相邻后端 Release 程序集）：
 

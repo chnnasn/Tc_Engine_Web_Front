@@ -4,7 +4,6 @@
 
 [build.environment]
   NODE_VERSION = "22"
-  TOMCAT_API_ORIGIN = "https://tcenginewebbackend-production.up.railway.app"
   ENGINE_ARTIFACT_URL = "https://github.com/chnnasn/Tc_Engine_Web_Front/releases/download/web-engine-b6e9478a/tomcat-web-engine-b6e9478a.tar.gz"
 
 [[headers]]
@@ -14,3 +13,50 @@
     Referrer-Policy = "strict-origin-when-cross-origin"
     Cross-Origin-Opener-Policy = "same-origin"
     Cross-Origin-Embedder-Policy = "require-corp"
+
+[[headers]]
+  for = "/engine/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+    X-Robots-Tag = "noindex"
+
+[[headers]]
+  for = "/assets/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[redirects]]
+  from = "/v1/*"
+  to = "https://tcenginewebbackend-production.up.railway.app/v1/:splat"
+  status = 200
+  signed = "TOMCAT_PROXY_SECRET"
+
+[[redirects]]
+  from = "/health"
+  to = "https://tcenginewebbackend-production.up.railway.app/health"
+  status = 200
+
+[[redirects]]
+  from = "/api/health"
+  to = "https://tcenginewebbackend-production.up.railway.app/health"
+  status = 200
+
+[[redirects]]
+  from = "/engine/*"
+  to = "/404.html"
+  status = 404
+
+[[redirects]]
+  from = "/assets/*"
+  to = "/404.html"
+  status = 404
+
+[[redirects]]
+  from = "/api/*"
+  to = "/404.html"
+  status = 404
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
