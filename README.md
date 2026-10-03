@@ -158,3 +158,5 @@ node tests/realtime-browser.mjs
 后端需要配置 SMTP 才能在线发送验证码，参见后端 README 的“邮箱注册与旧账号绑定”。未配置时页面会显示邮件服务不可用，不会跳过邮箱验证。
 
 浏览器回归：启动 `npm run dev` 后运行 `node tests/email-auth-browser.mjs`（注册、验证码错误、用户名设置和旧账号绑定），以及 `npm run test:auth`（既有权限与账号隔离）。前者模拟 API 响应；后端邮件验证链由后端 HTTP 集成测试覆盖。
+
+账号弹窗现提供“忘记密码”和“修改密码”。找回需使用已验证的绑定邮箱；修改需输入当前密码。改密后所有设备需重新登录，项目归属保持不变。浏览器回归 `tests/email-auth-browser.mjs` 同时覆盖这两个流程、确认密码不一致和当前密码错误提示。

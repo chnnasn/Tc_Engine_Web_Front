@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { onBeforeUnmount, onMounted, ref } from 'vue'
 import AppModal from './AppModal.vue'
-import { authenticate, requestEmailCode, verifyEmailCode, completeRegistration, currentUser, logout, listCloudProjects, listRevisions, createCloudProject, restoreCloudProject, CloudError, type CloudUser, type CloudProject, type CloudRevision, type RestoredProject } from '../engine/cloud'
+import { authenticate, forgotPassword, resetPassword, changePassword, requestEmailCode, verifyEmailCode, completeRegistration, currentUser, logout, listCloudProjects, listRevisions, createCloudProject, restoreCloudProject, CloudError, type CloudUser, type CloudProject, type CloudRevision, type RestoredProject } from '../engine/cloud'
 import type { CloudBinding } from '../engine/storage'
 import type { Project } from './data'
 const props = defineProps<{ project?: Project; binding?: CloudBinding; allowRestore?: boolean }>()
@@ -17,6 +17,32 @@ const stage = ref<'credentials' | 'verify' | 'username'>('credentials')
 const bindingEmail = ref(false)
 const resendAt = ref(0)
 const notice = ref('')
+const resetResendAt = ref(0)
+const passwordMode = ref<'none' | 'forgot' | 'reset' | 'change'>('none')
+const newPassword = ref('')
+const confirmPassword = ref('')
+function openPassword(mode: 'none' | 'forgot' | 'change') {
+  passwordMode.value = mode; password.value = ''; newPassword.value = ''; confirmPassword.value = ''; code.value = ''
+  error.value = ''; notice.value = ''; challengeId.value = ''; stage.value = 'credentials'; bindingEmail.value = false
+}
+function clearAccount() {
+  user.value = undefined; projects.value = []; selected.value = undefined; revisions.value = []; token.value = ''
+}
+function submitPassword() { void perform(async () => {
+  if (passwordMode.value === 'forgot') {
+    if (Date.now() < resetResendAt.value) throw new Error(`请等待 ${Math.ceil((resetResendAt.value - Date.now()) / 1000)} 秒后重新发送`)
+    const result = await forgotPassword(email.value)
+    challengeId.value = result.challengeId; resetResendAt.value = Date.now() + result.resendAfter * 1000
+    passwordMode.value = 'reset'; notice.value = result.message; return
+  }
+  if (newPassword.value !== confirmPassword.value) throw new Error('两次输入的新密码不一致')
+  try {
+    if (passwordMode.value === 'reset') await resetPassword(challengeId.value, code.value, newPassword.value)
+    else await changePassword(password.value, newPassword.value)
+    clearAccount(); openPassword('none'); mode.value = 'login'; notice.value = '密码已更新，请使用新密码重新登录。'
+  } finally { password.value = ''; newPassword.value = ''; confirmPassword.value = '' }
+}) }
+
 const mode = ref<'login' | 'register'>('login')
 const busy = ref(false)
 const error = ref('')
@@ -81,7 +107,28 @@ onBeforeUnmount(() => { gone = true })
   <AppModal title="云端项目" @close="!busy && emit('close')">
     <p v-if="error" class="cloud-error" role="alert">{{ error }}</p>
     <p v-if="notice" class="local-note" role="status">{{ notice }}</p>
-    <form v-if="!user || bindingEmail" @submit.prevent="signIn">
+    <form v-if="passwordMode !== 'none'" @submit.prevent="submitPassword">
+      <h3>{{ passwordMode === 'change' ? '修改密码' : '找回密码' }}</h3>
+      <template v-if="passwordMode === 'forgot'">
+        <p class="local-note">输入已绑定并验证的邮箱。尚未绑定邮箱的旧账号需先登录并绑定邮箱。</p>
+        <label class="field-label" for="recovery-email">邮箱</label><input id="recovery-email" v-model="email" class="text-input" type="email" autocomplete="email" required maxlength="254" :disabled="busy" />
+      </template>
+      <template v-else>
+        <template v-if="passwordMode === 'reset'">
+          <p>验证邮箱：{{ email }}</p>
+          <label class="field-label" for="recovery-code">六位验证码</label><input id="recovery-code" v-model="code" class="text-input" inputmode="numeric" autocomplete="one-time-code" pattern="[0-9]{6}" maxlength="6" required :disabled="busy" />
+          <button type="button" class="button" :disabled="busy" @click="passwordMode = 'forgot'; code = ''; newPassword = ''; confirmPassword = ''">重新发送验证码</button>
+        </template>
+        <template v-else>
+          <label class="field-label" for="current-password">当前密码</label><input id="current-password" v-model="password" class="text-input" type="password" autocomplete="current-password" required maxlength="128" :disabled="busy" />
+        </template>
+        <label class="field-label" for="new-password">新密码</label><input id="new-password" v-model="newPassword" class="text-input" type="password" autocomplete="new-password" required minlength="12" maxlength="128" :disabled="busy" />
+        <label class="field-label" for="confirm-password">确认新密码</label><input id="confirm-password" v-model="confirmPassword" class="text-input" type="password" autocomplete="new-password" required minlength="12" maxlength="128" :disabled="busy" />
+        <p class="local-note">密码须为 12–128 个字符，修改后所有设备需重新登录。</p>
+      </template>
+      <div class="dialog-actions"><button type="button" class="button" :disabled="busy" @click="openPassword('none')">返回</button><button class="button button-primary" :disabled="busy">{{ busy ? '处理中…' : passwordMode === 'forgot' ? '发送重置验证码' : passwordMode === 'reset' ? '重置密码' : '确认修改密码' }}</button></div>
+    </form>
+    <form v-else-if="!user || bindingEmail" @submit.prevent="signIn">
       <div class="auth-intro"><img src="/HubLogo.ico" alt="" /><h3>{{ bindingEmail ? '绑定邮箱' : mode === 'login' ? '欢迎回来' : '创建账号' }}</h3></div>
       <template v-if="stage === 'credentials'">
         <p class="local-note">{{ bindingEmail ? '验证邮箱后，原账号与项目将保留。' : mode === 'login' ? '使用邮箱登录；尚未绑定邮箱的旧账号可填写原用户名。' : '验证邮箱后设置用户名，用于展示你的作品。' }}</p>
@@ -101,6 +148,7 @@ onBeforeUnmount(() => { gone = true })
         <p class="local-note">3–32 个字母、数字或下划线；登录时使用邮箱。</p>
       </template>
       <div class="dialog-actions">
+        <button v-if="mode === 'login' && !bindingEmail" type="button" class="button" :disabled="busy" @click="openPassword('forgot')">忘记密码</button>
         <button v-if="!bindingEmail" type="button" class="button" :disabled="busy" @click="switchMode">{{ mode === 'login' ? '切换到注册' : '返回登录' }}</button>
         <button v-else type="button" class="button" :disabled="busy" @click="bindingEmail = false; stage = 'credentials'; notice = ''; password = ''; token = ''">取消绑定</button>
         <button class="button button-primary" :disabled="busy">{{ busy ? '处理中…' : stage === 'verify' ? '验证邮箱' : stage === 'username' ? '完成注册' : mode === 'login' && !bindingEmail ? '登录' : '发送验证码' }}</button>
@@ -108,6 +156,7 @@ onBeforeUnmount(() => { gone = true })
     </form>
     <template v-else>
       <p>当前账号：<strong>{{ user.username }}</strong> <button class="button" :disabled="busy" @click="signOut">退出账号</button></p>
+      <button class="button" :disabled="busy" @click="openPassword('change')">修改密码</button>
       <p v-if="user.email">邮箱：{{ user.email }}</p>
       <button v-else class="button" :disabled="busy" @click="bindingEmail = true; email = ''; stage = 'credentials'; notice = ''; resendAt = 0">绑定邮箱</button>
       <template v-if="project">

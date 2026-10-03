@@ -47,6 +47,16 @@ export const completeRegistration = async (token: string, username: string): Pro
   if (typeof window !== 'undefined') window.dispatchEvent(new Event('tomcat-auth-changed'))
   return user
 }
+export const forgotPassword = async (email: string): Promise<{ challengeId: string; resendAfter: number; message: string }> =>
+  (await api('/auth/forgot-password', json('POST', { email }))).json()
+export const resetPassword = async (challengeId: string, code: string, newPassword: string) => {
+  await api('/auth/reset-password', json('POST', { challengeId, code, newPassword }))
+  if (typeof window !== 'undefined') window.dispatchEvent(new Event('tomcat-auth-expired'))
+}
+export const changePassword = async (currentPassword: string, newPassword: string) => {
+  await api('/auth/change-password', json('POST', { currentPassword, newPassword }))
+  if (typeof window !== 'undefined') window.dispatchEvent(new Event('tomcat-auth-expired'))
+}
 export const logout = async () => {
   await api('/auth/logout', { method: 'POST' })
   if (typeof window !== 'undefined') window.dispatchEvent(new Event('tomcat-auth-expired'))
