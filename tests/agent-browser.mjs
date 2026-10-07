@@ -87,7 +87,7 @@ try {
   }
   // Refuse to start the agent when the mandatory baseline cannot be saved.
   let agentRequests = 0
-  page.on('request', request => { if (/\/editor-sessions\/[^/]+\/agent$/.test(request.url())) agentRequests++ })
+  page.on('request', request => { if (/\/editor-sessions\/[^/]+\/agent-runs$/.test(request.url()) && request.method() === 'POST') agentRequests++ })
   await page.route('**/v1/projects/*/revisions', route => route.request().method() === 'POST' ? route.fulfill({ status: 412, contentType: 'application/json', body: '{}' }) : route.continue())
   await page.getByRole('button', { name: '执行', exact: true }).click()
   await page.locator('.agent-panel [role=alert]').filter({ hasText: '云端已有新修订' }).waitFor()

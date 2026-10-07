@@ -49,6 +49,24 @@ async function poll(id: string, signal: AbortSignal) {
     }
   }
 }
+async function waitForRun(id: string, runId: string, signal: AbortSignal) {
+  const deadline = Date.now() + 210000
+  while (!signal.aborted && sessionId === id) {
+    signal.throwIfAborted()
+    const result = await api(`/${id}/agent-runs/${runId}`, { signal: AbortSignal.any([signal, AbortSignal.timeout(10000)]) })
+    if (result.state === 'succeeded') return result
+    if (result.state === 'failed') throw new Error(result.error || 'AI 执行失败，请检查当前场景')
+    if (result.state !== 'running') throw new Error('无法确认 AI 任务状态，请检查当前场景')
+    if (Date.now() > deadline) throw new Error('等待 AI 结果超时，请检查当前场景')
+    await new Promise<void>((resolve, reject) => {
+      const stop = () => { clearTimeout(timer); reject(signal.reason) }
+      const timer = setTimeout(() => { signal.removeEventListener('abort', stop); resolve() }, 1000)
+      signal.addEventListener('abort', stop, { once: true })
+      if (signal.aborted) stop()
+    })
+  }
+  throw new Error('编辑器会话已关闭')
+}
 async function send() {
   if (running.value || !prompt.value.trim() || !props.projectId) return
   running.value = true; error.value = ''; answer.value = ''; events.value = []; checkpoints.value = []
@@ -71,7 +89,9 @@ async function send() {
     if (disposed || signal.aborted || props.projectId !== projectId) { await close(); return }
     const id = sessionId!
     void poll(id, signal)
-    const result = await api(`/${id}/agent`, { method: 'POST', body: JSON.stringify({ prompt: prompt.value }), signal })
+    await api(`/${id}/agent-runs`, { method: 'POST', body: JSON.stringify({ runId, prompt: prompt.value }), signal: AbortSignal.any([signal, AbortSignal.timeout(10000)]) })
+    events.value.push('任务已提交，正在等待 AI 执行…')
+    const result = await waitForRun(id, runId, signal)
     answer.value = result.output
     signal.throwIfAborted()
     stage = 'end'
