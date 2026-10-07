@@ -56,7 +56,7 @@ function call<T = any>(type: string, payload: unknown = {}): Promise<T> {
   if (!port || loading.value) return Promise.reject(new Error('引擎尚未就绪'))
   const id = ++sequence
   return new Promise((resolve, reject) => {
-    const timer = setTimeout(() => { pending.delete(id); reject(new Error('引擎请求超时')) }, 15000)
+    const timer = setTimeout(() => { pending.delete(id); reject(new Error('引擎请求超时')) }, ['scriptCompile', 'automationScript', 'preview'].includes(type) ? 120000 : 15000)
     pending.set(id, { resolve, reject, timer })
     try { port!.postMessage(wire({ id, type, payload })) }
     catch (error) { clearTimeout(timer); pending.delete(id); reject(error) }

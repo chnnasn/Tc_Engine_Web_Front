@@ -1,10 +1,13 @@
+import { readScripts } from './scene-archive.ts'
+import { scriptApi } from './script-automation.ts'
 import { EngineError, type Snapshot, type Operation } from './protocol.ts'
 
 export type EngineCall = <T = any>(type: string, payload?: unknown) => Promise<T>
 export interface AutomationCommand { requestId: string; name: string; arguments: Record<string, any> }
 export const supportedTools = ['editor_get_status', 'scene_get_tree', 'entity_get', 'component_get_schema',
   'entity_create', 'entity_delete', 'entity_reparent', 'component_add', 'component_remove', 'component_set',
-  'editor_play', 'editor_pause', 'editor_stop', 'history_undo', 'history_redo', 'project_get_sync_status'] as const
+  'editor_play', 'editor_pause', 'editor_stop', 'history_undo', 'history_redo', 'project_get_sync_status',
+  'script_get_api', 'script_list', 'script_read', 'script_write', 'script_compile', 'script_attach', 'script_detach'] as const
 const version = (snapshot: Snapshot) => `${snapshot.sceneHandle}:${snapshot.revision}`
 
 // Translate the shared desktop tool vocabulary at the engine boundary. Never expose arbitrary RPC.
@@ -17,6 +20,12 @@ export async function executeTool(command: AutomationCommand, call: EngineCall, 
     changed(snapshot)
     const meta = () => ({ scene_version: version(snapshot), scene_handle: snapshot.sceneHandle, mode: snapshot.mode || 'edit' })
     const success = (data: unknown) => ({ ok: true as const, data, request_id: command.requestId })
+    if (name === 'script_get_api') return success({ ...meta(), ...scriptApi })
+    if (name.startsWith('script_')) {
+      const result = await call('automationScript', { name, arguments: args })
+      changed(await call<Snapshot>('snapshot'))
+      return success(result)
+    }
     if (name === 'editor_get_status') return success({ ...meta(), dirty: snapshot.dirty, canUndo: snapshot.canUndo, canRedo: snapshot.canRedo, tools: supportedTools })
     if (name === 'component_get_schema') return success({ ...meta(), schemas: snapshot.schemas })
     if (name === 'scene_get_tree') {
@@ -27,7 +36,7 @@ export async function executeTool(command: AutomationCommand, call: EngineCall, 
     if (name === 'entity_get') {
       const entity = snapshot.entities.find(e => e.id === args.entity_id)
       if (!entity) throw new EngineError('ENTITY_NOT_FOUND', 'Entity does not exist')
-      return success({ ...meta(), entity })
+      return success({ ...meta(), entity: { ...entity, script_attachments: readScripts(snapshot.archive, entity.id) } })
     }
     if (args.scene_version !== undefined && args.scene_version !== version(snapshot)) throw new EngineError('SCENE_CHANGED', 'Scene changed. Read it again before editing.')
     if (['editor_play', 'editor_pause', 'editor_stop'].includes(name)) {

@@ -34,7 +34,7 @@ function adopt(reply: ScriptsReply) {
   scripts.value = reply.scripts ?? []
   installed.value = Boolean(reply.installed)
   loaded.value = Boolean(reply.assemblyLoaded)
-  if (reply.diagnostics?.length) diagnostics.value = reply.diagnostics
+  diagnostics.value = reply.diagnostics ?? []
   if (!scripts.value.some(script => script.path === selected.value)) selected.value = scripts.value[0]?.path ?? ''
   draft.value = current.value?.text ?? ''
 }

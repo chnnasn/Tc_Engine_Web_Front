@@ -130,6 +130,35 @@ export function detachScripts(archive: string, entityId: string): string {
   return [...lines.slice(0, components + 1), ...kept, ...tail].join('\n')
 }
 
+/** Edit one attachment while preserving every existing ID, enabled flag and stored field. */
+export function editScriptAttachment(archive: string, entityId: string, change: ScriptAttachment | string): string {
+  const lines = archive.split('\n')
+  const components = componentsLine(lines, entityId)
+  if (components < 0) throw new Error('Entity does not exist')
+  const to = sequenceEnd(lines, components)
+  const start = lines.findIndex((line, index) => index > components && index < to && line.trim() === `- TypeId: ${CSHARP_SCRIPTS_TYPE_ID}`)
+  if (typeof change !== 'string' && readScripts(archive, entityId).some(item => item.handle === change.handle)) return archive
+  if (start < 0) {
+    if (typeof change === 'string') throw new Error('Script attachment does not exist')
+    return attachScripts(archive, entityId, [change])
+  }
+  const end = itemEnd(lines, start, to)
+  if (typeof change === 'string') {
+    const item = lines.findIndex((line, index) => index > start && index < end && line === `            - AttachmentID: ${change}`)
+    if (item < 0) throw new Error('Script attachment does not exist')
+    let next = item + 1
+    while (next < end && !/^ {12}- AttachmentID:/.test(lines[next]!)) next++
+    lines.splice(item, next - item)
+    const result = lines.join('\n')
+    return readScripts(result, entityId).length ? result : detachScripts(result, entityId)
+  }
+  const scripts = lines.findIndex((line, index) => index > start && index < end && /^ {10}Scripts:/.test(line))
+  if (scripts < 0) throw new Error('Invalid CSharpScripts archive')
+  lines[scripts] = '          Scripts:'
+  lines.splice(end, 0, ...attachmentLines(change))
+  return lines.join('\n')
+}
+
 /** 读取指定实体当前挂载的脚本（用于 UI 回显）。 */
 export function readScripts(archive: string, entityId: string): ScriptAttachment[] {
   const lines = archive.split('\n')

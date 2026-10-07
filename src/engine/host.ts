@@ -2,6 +2,7 @@ import { currentUser, getCloudProject } from './cloud'
 import { PROTOCOL, EditorProtocol, EngineError, type SceneState, type Snapshot, type Operation } from './protocol'
 import { assertDocument, engineCommit, projectRoot, validFilePath, type EngineDocument } from './storage'
 import engineLock from '../../engine.lock.json'
+import { executeScriptTool } from './script-automation'
 import { attachScripts, detachScripts, readScripts } from './scene-archive'
 import {
   loadEngine, engineFilesystem, bootPlayer, shutdown, compileAndInstall, compileOnly, needsRuntimeRebuild, scriptAssetsJson,
@@ -321,6 +322,7 @@ function listScripts(): ScriptEntry[] {
   return results.sort((a, b) => a.path.localeCompare(b.path))
 }
 function writeScript(payload: { path: unknown; text: unknown; handle?: unknown }): ScriptEntry {
+  requireEditMode()
   if (typeof payload.text !== 'string') throw new Error('脚本内容无效')
   if (payload.text.length > 512 * 1024) throw new Error('单个脚本不能超过 512 KiB')
   const fs = filesystem()
@@ -330,16 +332,21 @@ function writeScript(payload: { path: unknown; text: unknown; handle?: unknown }
   fs.mkdirTree(full.slice(0, full.lastIndexOf('/')))
   fs.writeFile(full, payload.text)
   fs.writeFile(`${full}.tcmeta`, scriptMeta(handle))
+  protocol!.request('asset.refresh')
   return { path, handle, className: classNameOf(path), text: payload.text }
 }
 function deleteScript(payload: { path: unknown }) {
+  requireEditMode()
   const fs = filesystem()
   const path = normalizeScriptPath(payload.path)
   const full = `${projectRoot}/${path}`
   try { fs.unlink(full) } catch { /* 文件已不存在。 */ }
   try { fs.unlink(`${full}.tcmeta`) } catch { /* 元数据已不存在。 */ }
+  protocol!.request('asset.refresh')
 }
-async function buildCompileRequest(): Promise<{ request: CompileRequest; scripts: ScriptEntry[] }> {
+async function buildCompileRequest(validate?: () => void): Promise<{ request: CompileRequest; scripts: ScriptEntry[] }> {
+  const references = await engine!.references()
+  validate?.()
   const scripts = listScripts()
   if (!scripts.length) throw new Error('Assets/Scripts 下没有 .cs 文件')
   const fs = filesystem()
@@ -353,7 +360,7 @@ async function buildCompileRequest(): Promise<{ request: CompileRequest; scripts
     scripts,
     request: {
       sources: scripts.map(script => ({ path: script.path, text: script.text })),
-      references: await engine!.references(),
+      references,
       scriptAssetsJson: scriptAssetsJson(scripts.map(script => ({ path: script.path, handle: script.handle }))),
     },
   }
@@ -365,10 +372,14 @@ export interface CompileOutcome { succeeded: boolean; restartRequired: boolean; 
  * - 本会话已安装过一代程序集：原生侧会拒绝替换，改为只编译取诊断；
  *   若源码本身编译通过，则返回 restartRequired，由宿主页面重建引擎会话后恢复项目。
  */
-async function compileScripts(): Promise<CompileOutcome> {
+async function compileScripts(validate?: () => void): Promise<CompileOutcome> {
   const mode = state().mode
   if (mode && mode !== 'edit') throw new EngineError('PREVIEW_RUNNING', '请先停止运行预览，再编译 C# 脚本')
-  const { request, scripts } = await buildCompileRequest()
+  const { request, scripts } = await buildCompileRequest(validate)
+  if (assemblyLoaded && signatureOf(scripts) === installedSignature) {
+    scriptDiagnostics = []
+    return { succeeded: true, restartRequired: false, diagnostics: [], scripts: scripts.length }
+  }
   if (assemblyLoaded) {
     const probe = compileOnly(engine!.web, request)
     scriptDiagnostics = probe.diagnostics ?? []
@@ -440,7 +451,7 @@ function detachFromEntity(payload: { entityId: unknown }) {
 function command(type: string, payload: any): unknown {
   if (!engine || !protocol) throw new Error('编辑器尚未就绪')
   if (type === 'capture') return { document: capture(), state: state() }
-  if (type === 'snapshot') return protocol.snapshot(state().sceneHandle)
+  if (type === 'snapshot') return { ...protocol.snapshot(state().sceneHandle), mode: state().mode }
   if (type === 'transact') return protocol.transact(payload.state, payload.label, payload.operations as Operation[])
   if (type === 'history') return protocol.history(payload.state, payload.direction)
   if (type === 'markSaved') {
@@ -474,6 +485,14 @@ addEventListener('message', async event => {
     const { id, type, payload } = message.data
     if (type === 'dispose') { dispose(); return }
     try {
+      if (type === 'automationScript') {
+        const result = await executeScriptTool(payload.name, payload.arguments, {
+          snapshot: () => ({ ...protocol!.snapshot(state().sceneHandle), mode: state().mode || 'edit' }),
+          scripts: listScripts, write: writeScript, compile: compileScripts,
+          load: (snapshot, archive) => protocol!.loadArchive(snapshot, archive), installed: scriptsInstalled,
+        })
+        send({ id, result }); return
+      }
       if (type === 'scriptCompile') { send({ id, result: await compileScripts() }); return }
       if (type === 'preview' && payload?.command === 'play') await ensureScriptsInstalled()
       send({ id, result: command(type, payload) })

@@ -119,6 +119,15 @@ async function agentCall<T = any>(type: string, payload?: unknown): Promise<T> {
       changedDuringQuery: JSON.stringify(before.document) !== JSON.stringify(after.document), blocked: syncBlocked }, cloud),
       projectId: link.projectId, sceneVersion: `${after.state.sceneHandle}:${after.state.revision}` } as T
   }
+  if (type === 'automationScript') {
+    const name = (payload as { name: string }).name
+    const writes = ['script_write', 'script_compile', 'script_attach', 'script_detach'].includes(name)
+    if (writes && scriptDraftDirty.value) throw new EngineError('UNSAVED_SCRIPT_DRAFT', 'C# 面板有未保存的修改，请先保存脚本。')
+    const result = await surface.value.call<any>(type, payload)
+    if (result.changed) markDirty()
+    if (writes) await scriptPanel.value?.refresh()
+    return result as T
+  }
   return surface.value.call<T>(type, payload)
 }
 function markDirty() { needsSave.value = true; emit('dirtyChange', true) }
@@ -300,6 +309,7 @@ function actions(bits: number) {
   if (bits & 1) void requestSave()
   if (bits & 2) { emit('notify', '请点击“导入图片”选择文件'); fileInput.value?.click() }
   if (bits & 4) void exportCurrent()
+  if (bits & 8) { markDirty(); void scriptPanel.value?.refresh() }
 }
 async function importImage(event: Event) {
   const input = event.target as HTMLInputElement
