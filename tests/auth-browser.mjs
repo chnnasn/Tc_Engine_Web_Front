@@ -31,7 +31,7 @@ await page.route('**/v1/**', async route => {
   }
   return reply({ enabled: false })
 })
-await page.route('**/engine/**/manifest.json', route => { engineLoads++; return route.fulfill({ status: 404, body: 'missing engine fixture' }) })
+await page.context().route('**/engine/**/manifest.json', route => { engineLoads++; return route.fulfill({ status: 404, body: 'missing engine fixture' }) })
 try {
   for (const path of ['/editor/owned', '/editor', '/projects', '/profile', '/preview/owned']) {
     await page.goto(base + path)

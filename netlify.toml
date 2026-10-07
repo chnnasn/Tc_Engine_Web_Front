@@ -17,8 +17,17 @@
 [[headers]]
   for = "/engine/*"
   [headers.values]
-    Cache-Control = "public, max-age=31536000, immutable"
     X-Robots-Tag = "noindex"
+
+[[headers]]
+  for = "/engine-cache-sw.js"
+  [headers.values]
+    Cache-Control = "no-cache"
+
+[[headers]]
+  for = "/engine-cache-core.mjs"
+  [headers.values]
+    Cache-Control = "no-cache"
 
 [[headers]]
   for = "/assets/*"
@@ -40,6 +49,11 @@
   from = "/api/health"
   to = "https://tcenginewebbackend-production.up.railway.app/health"
   status = 200
+
+[[redirects]]
+  from = "/engine-cache/*"
+  to = "/404.html"
+  status = 404
 
 [[redirects]]
   from = "/engine/*"

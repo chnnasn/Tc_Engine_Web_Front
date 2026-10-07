@@ -241,6 +241,7 @@ writeFileSync(join(output, 'manifest.json'), JSON.stringify({
   refs: 'refs',
   refsList,
 }, null, 2))
+await (await import('./engine-manifest.mjs')).writeEngineManifest(output)
 console.log(`已生成托管 Web 引擎：${output}`)
 console.log(`  提交 ${lock.commit}`)
 console.log(`  引用程序集 ${refsList.length} 个`)

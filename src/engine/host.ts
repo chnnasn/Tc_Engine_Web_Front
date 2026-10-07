@@ -11,8 +11,7 @@ import {
 
 const canvas = document.querySelector<HTMLCanvasElement>('#canvas')!
 addEventListener('tomcat-web-download-progress', event => {
-  const { loaded, total } = (event as CustomEvent).detail
-  send({ event: 'download', loaded, total })
+  send({ event: 'download', ...(event as CustomEvent).detail })
 })
 const stage = document.querySelector<HTMLElement>('#stage')!
 let engine: LoadedEngine | undefined

@@ -131,16 +131,40 @@ export function capabilityErrors(): string[] {
   return errors
 }
 
-async function readManifest(): Promise<EngineManifest> {
-  let response: Response
-  try { response = await fetch(engineManifestUrl(), { cache: 'no-store' }) }
-  catch { throw new Error('未找到匹配版本的引擎，请先运行 npm run engine:build') }
-  if (!response.ok) throw new Error('未找到匹配版本的引擎，请先运行 npm run engine:build')
-  let manifest: EngineManifest
-  try { manifest = await response.json() } catch { throw new Error('引擎清单损坏，请重新运行 npm run engine:build') }
-  if (manifest.commit !== lock.commit) throw new Error('引擎产物与 engine.lock.json 不一致，请重新运行 npm run engine:build')
-  if (manifest.kind !== 'managed') throw new Error('当前引擎产物不是托管（C#）版本，请运行 npm run engine:build 重新构建')
-  return manifest
+async function prepareCachedEngine(): Promise<{ manifest: EngineManifest; baseUrl: string }> {
+  if (!('serviceWorker' in navigator) || !('caches' in globalThis) || !crypto.subtle) throw new Error('浏览器不支持引擎本地缓存，请使用支持 Service Worker 的浏览器并允许网站存储')
+  const base = new URL(import.meta.env.BASE_URL, location.href)
+  const scriptUrl = new URL('engine-cache-sw.js', base).href
+  const registration = await navigator.serviceWorker.getRegistration(base.href)
+  if (!registration || registration.active?.scriptURL !== scriptUrl) {
+    await navigator.serviceWorker.register(scriptUrl, { type: 'module', scope: base.pathname, updateViaCache: 'none' })
+  }
+  await new Promise<void>((resolve, reject) => {
+    const deadline = Date.now() + 30000
+    const poll = () => {
+      if (navigator.serviceWorker.controller?.scriptURL === scriptUrl) resolve()
+      else if (Date.now() >= deadline) reject(new Error('引擎缓存服务启动超时，请刷新页面重试'))
+      else setTimeout(poll, 50)
+    }
+    poll()
+  })
+  // Denial is harmless; missing or evicted files are repaired on next open.
+  void navigator.storage?.persist?.().catch(() => false)
+  return new Promise((resolve, reject) => {
+    const channel = new MessageChannel()
+    const timer = setTimeout(() => { channel.port1.close(); reject(new Error('引擎缓存准备超时，旧版本缓存已保留，请重试')) }, 600000)
+    channel.port1.onmessage = event => {
+      const data = event.data
+      if (data.type === 'progress') {
+        dispatchEvent(new CustomEvent('tomcat-web-download-progress', { detail: data.detail }))
+      } else {
+        clearTimeout(timer); channel.port1.close()
+        if (data.type === 'ready') resolve(data.result)
+        else reject(new Error(data.message || '引擎缓存准备失败'))
+      }
+    }
+    navigator.serviceWorker.controller!.postMessage({ type: 'tomcat-engine-prepare', commit: lock.commit }, [channel.port2])
+  })
 }
 
 /**
@@ -155,13 +179,13 @@ async function readManifest(): Promise<EngineManifest> {
 export async function loadEngine(canvas: HTMLCanvasElement): Promise<LoadedEngine> {
   const failures = capabilityErrors()
   if (failures.length) throw new Error(failures.join('；'))
-  const manifest = await readManifest()
+  const { manifest, baseUrl } = await prepareCachedEngine()
   if (!globalThis.TomCatWeb) {
     globalThis.TomCatWebCanvas = canvas
     await new Promise<void>((resolve, reject) => {
       const script = document.createElement('script')
       script.type = 'module'
-      script.src = `${engineBase()}${manifest.entry || 'main.js'}`
+      script.src = `${baseUrl}${manifest.entry || 'main.js'}`
       const timer = setTimeout(() => { cleanup(); reject(new Error('引擎模块启动超时，请检查网络后重试')) }, 600000)
       const onReady = () => { cleanup(); resolve() }
       const onFailure = (event: PromiseRejectionEvent | ErrorEvent) => {
@@ -192,7 +216,7 @@ export async function loadEngine(canvas: HTMLCanvasElement): Promise<LoadedEngin
       if (!names?.length) throw new Error('引擎产物未提供 C# 引用程序集，请重新运行 npm run engine:build')
       const directory = manifest.refs || 'refs'
       return Promise.all(names.map(async (name) => {
-        const response = await fetch(`${engineBase()}${directory}/${encodeURIComponent(name)}`)
+        const response = await fetch(`${baseUrl}${directory}/${encodeURIComponent(name)}`)
         if (!response.ok) throw new Error(`引用程序集缺失：${name}`)
         return { name, base64: bytesToBase64(new Uint8Array(await response.arrayBuffer())) }
       }))

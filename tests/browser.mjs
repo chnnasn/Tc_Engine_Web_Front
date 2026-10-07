@@ -44,7 +44,7 @@ try {
     try { if ((await fetch(base)).ok) break } catch { /* Preview may still be starting. */ }
     await new Promise(resolve => setTimeout(resolve, 250))
   }
-  if (process.argv.includes('--missing')) await page.route('**/engine/**/manifest.json', route => route.fulfill({ status: 404, body: 'missing' }))
+  if (process.argv.includes('--missing')) await page.context().route('**/engine/**/manifest.json', route => route.fulfill({ status: 404, body: 'missing' }))
   const response = await page.goto(`${base}/editor/my-first-game`)
   assert.equal(response.headers()['cross-origin-opener-policy'], 'same-origin')
   assert.equal(response.headers()['cross-origin-embedder-policy'], 'require-corp')

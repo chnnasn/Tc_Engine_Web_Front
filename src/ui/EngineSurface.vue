@@ -7,7 +7,7 @@ const emit = defineEmits<{ ready: [snapshot?: Snapshot]; state: [state: SceneSta
 const iframe = ref<HTMLIFrameElement>()
 const active = ref(true)
 const loading = ref(true)
-const downloadStatus = ref('正在下载 TomCat 引擎，首次加载可能需要数分钟…')
+const downloadStatus = ref('正在检查引擎版本和本地缓存…')
 const error = ref('')
 const hostUrl = `${import.meta.env.BASE_URL}engine-host.html`
 let port: MessagePort | undefined
@@ -40,7 +40,12 @@ function connect() {
   bootTimer = setTimeout(() => fail('引擎启动超时，请检查资源下载后重试'), 660000)
   port.onmessage = event => {
     const data = event.data
-    if (data.event === 'download') downloadStatus.value = `正在下载引擎资源（${data.loaded}/${data.total}），首次加载可能需要数分钟…`
+    if (data.event === 'download') {
+      if (data.phase === 'checking') downloadStatus.value = '正在检查引擎版本和本地缓存…'
+      else if (data.phase === 'ready') downloadStatus.value = data.downloaded ? '引擎已校验并缓存，正在启动…' : '正在从本地缓存启动引擎…'
+      else if (data.phase === 'downloading' || data.downloaded) downloadStatus.value = `正在下载并校验引擎（${data.loaded}/${data.total}），已复用 ${data.reused || 0} 个本地文件…`
+      else downloadStatus.value = `正在校验本地引擎（${data.loaded}/${data.total}）…`
+    }
     else if (data.event === 'ready') { clearTimeout(bootTimer); loading.value = false; emit('ready', data.snapshot) }
     else if (data.event === 'fatal') fail(data.message)
     else if (data.event === 'state') emit('state', data.state)

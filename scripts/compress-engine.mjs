@@ -1,92 +1,34 @@
-import { readdirSync, readFileSync, writeFileSync } from 'node:fs'
+import { readFileSync, writeFileSync } from 'node:fs'
 import { join, relative } from 'node:path'
 import { gzipSync } from 'node:zlib'
+import { writeEngineManifest } from './engine-manifest.mjs'
+
 const lock = JSON.parse(readFileSync('engine.lock.json', 'utf8'))
 const root = 'dist/engine/' + lock.commit
+const manifest = await writeEngineManifest(root)
 const headers = []
-const chunks = {}
-const types = { js: 'text/javascript', wasm: 'application/wasm', png: 'image/png', ttf: 'font/ttf', otf: 'font/otf', ico: 'image/x-icon', dll: 'application/octet-stream', tomcat: 'text/plain', tcmeta: 'text/plain', tcproj: 'application/json', json: 'application/json', md: 'text/plain' }
-// Production startup does not need the large native symbol map.
-const bootPath = join(root, '_framework/dotnet.boot.js')
-const boot = readFileSync(bootPath, 'utf8')
-const start = boot.indexOf('/*json-start*/') + '/*json-start*/'.length
-const end = boot.indexOf('/*json-end*/')
-if (start < '/*json-start*/'.length || end < start) throw new Error('Unsupported runtime boot config')
-const config = JSON.parse(boot.slice(start, end))
-config.resources.wasmSymbols = []
-writeFileSync(bootPath, boot.slice(0, start) + JSON.stringify(config) + boot.slice(end))
 function output(path, bytes, type) {
   writeFileSync(path, gzipSync(bytes, { level: 9 }))
-  headers.push('/' + relative('dist', path).replaceAll('\\', '/') + '\n  Content-Encoding: gzip\n  Content-Type: ' + type + '\n')
+  headers.push('/' + relative('dist', path).replaceAll('\\', '/') + '\n  Content-Encoding: gzip\n  Content-Type: ' + type + '\n  Cache-Control: public, max-age=31536000, immutable\n')
 }
-function walk(directory) {
-  for (const entry of readdirSync(directory, { withFileTypes: true })) {
-    const path = join(directory, entry.name)
-    if (entry.isDirectory()) { walk(path); continue }
-    const type = types[entry.name.split('.').pop()]
-    if (!type) continue
-    const bytes = readFileSync(path)
-    if (!path.endsWith('.js') && bytes.length > 524288) {
-      const count = Math.ceil(bytes.length / 262144)
-      chunks['/' + relative('dist', path).replaceAll('\\', '/')] = count
-      for (let i = 0; i < count; i++) output(path + '.part-' + i + '.gz', bytes.subarray(i * 262144, (i + 1) * 262144), type)
-    } else output(path + '.gz', bytes, type)
-  }
-}
-walk(join(root, '_framework'))
-const entry = join(root, 'main.js')
-const source = readFileSync(entry, 'utf8')
-const marker = 'dotnet.withModuleConfig({ canvas }).create()'
-if (!source.includes(marker)) throw new Error('Unsupported engine bootstrap')
-const loader = `
-const resourceChunks = ${JSON.stringify(chunks)};
-let activeDownloads = 0;
-const downloadQueue = [];
-async function downloadResource(url) {
-  if (activeDownloads >= 4) await new Promise(resolve => downloadQueue.push(resolve));
-  else activeDownloads++;
-  try {
-  for (let attempt = 0; attempt < 3; attempt++) {
-    try {
-      const response = await fetch(url, { signal: AbortSignal.timeout(60000) });
-      if (!response.ok) throw new Error('HTTP ' + response.status + ': ' + url);
-      return { bytes: new Uint8Array(await response.arrayBuffer()), type: response.headers.get('Content-Type') };
-    } catch (error) {
-      if (attempt === 2) throw new Error('资源下载失败：' + url + ' (' + error.message + ')');
-      await new Promise(resolve => setTimeout(resolve, 1000 * (attempt + 1)));
+for (const file of manifest.files) {
+  const path = join(root, file.path)
+  const bytes = readFileSync(path)
+  headers.push(`/engine/${lock.commit}/${file.path}\n  Cache-Control: public, max-age=31536000, immutable\n`)
+  // Verify the decompressed, joined bytes before committing the complete file.
+  if (bytes.length > 524288) {
+    file.parts = []
+    for (let offset = 0, index = 0; offset < bytes.length; offset += 262144, index++) {
+      const part = file.path + '.part-' + index + '.gz'
+      output(join(root, part), bytes.subarray(offset, offset + 262144), file.contentType)
+      file.parts.push(part)
     }
-  }
-  } finally {
-    const next = downloadQueue.shift();
-    if (next) next(); else activeDownloads--;
+  } else {
+    output(path + '.gz', bytes, file.contentType)
+    file.parts = [file.path + '.gz']
   }
 }
-function resourceLoader(type, name, url) {
-  const path = new URL(url, import.meta.url).pathname;
-  if (path.endsWith('.js')) return url + '.gz?boot=2';
-  if (!/\\.(wasm|png|ttf|otf|ico|dll|tomcat|tcmeta|tcproj|json|md)$/.test(path)) return undefined;
-  return (async () => {
-    const count = resourceChunks[path];
-    const parts = [];
-    let contentType;
-    if (count) {
-      for (let index = 0; index < count; index += 4) {
-        await Promise.all(Array.from({ length: Math.min(4, count - index) }, async (_, offset) => {
-          const part = await downloadResource(url + '.part-' + (index + offset) + '.gz');
-          parts[index + offset] = part.bytes; contentType = part.type;
-        }));
-      }
-    } else {
-      const part = await downloadResource(url + '.gz');
-      parts.push(part.bytes); contentType = part.type;
-    }
-    return new Response(new Blob(parts), { headers: { 'Content-Type': contentType || 'application/octet-stream' } });
-  })();
-}
-// Complete and cache module bodies with retries before native dynamic imports.
-await Promise.all(['dotnet.native.js', 'dotnet.runtime.js', 'dotnet.boot.js'].map(name =>
-  downloadResource(new URL('./_framework/' + name + '.gz?boot=2', import.meta.url).href)));
-`
-writeFileSync(entry, loader + source.replace(marker, "dotnet.withConfig({ maxParallelDownloads: 4 }).withResourceLoader(resourceLoader).withModuleConfig({ canvas, onDownloadResourceProgress: (loaded, total) => globalThis.dispatchEvent(new CustomEvent('tomcat-web-download-progress', { detail: { loaded, total } })) }).create()"))
+writeFileSync(join(root, 'manifest.json'), JSON.stringify(manifest))
+headers.push(`/engine/${lock.commit}/manifest.json\n  Cache-Control: no-store\n`)
 writeFileSync('dist/_headers', headers.join('\n'))
-console.log('Prepared ' + headers.length + ' compressed engine resources and chunks')
+console.log('Prepared ' + manifest.files.length + ' verified engine resources with compressed transport')
