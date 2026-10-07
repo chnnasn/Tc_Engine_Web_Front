@@ -67,6 +67,7 @@ try {
   await page.getByLabel('描述你想修改的场景').fill('创建一个 AI_Player 对象，读取验证，然后撤销并确认移除。')
   await page.getByLabel('描述你想修改的场景').press('Control+Enter')
   await page.getByRole('button', { name: '停止', exact: true }).waitFor()
+  assert.equal(await page.getByLabel('描述你想修改的场景').inputValue(), '', 'sending clears the composer immediately')
   await page.getByRole('button', { name: '收起 AI 助手', exact: true }).click()
   assert.equal(await page.locator('.agent-panel').isVisible(), false)
   assert.equal(await page.getByRole('button', { name: 'AI 助手', exact: true }).getAttribute('aria-expanded'), 'false')
@@ -102,6 +103,7 @@ try {
     assert.ok(manifest.files.some(file => file.path === 'Project.tcproj'))
   }
   // Refuse to start the agent when the mandatory baseline cannot be saved.
+  await page.getByLabel('描述你想修改的场景').fill('创建一个 AI_Player 对象，读取验证，然后撤销并确认移除。')
   let agentRequests = 0
   page.on('request', request => { if (/\/editor-sessions\/[^/]+\/agent-runs$/.test(request.url()) && request.method() === 'POST') agentRequests++ })
   await page.route('**/v1/projects/*/revisions', route => route.request().method() === 'POST' ? route.fulfill({ status: 412, contentType: 'application/json', body: '{}' }) : route.continue())
@@ -109,6 +111,7 @@ try {
   await page.locator('.agent-panel [role=alert]').filter({ hasText: '云端已有新修订' }).waitFor()
   assert.equal(agentRequests, 0)
   assert.equal(results.length, 8)
+  assert.match(await page.getByLabel('描述你想修改的场景').inputValue(), /AI_Player/, 'failed requests restore the draft for retry')
   await page.unroute('**/v1/projects/*/revisions')
   // A failed end checkpoint must not be displayed as saved, even if the agent succeeded.
   let revisionWrites = 0

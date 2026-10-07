@@ -85,6 +85,7 @@ async function waitForRun(id: string, runId: string, signal: AbortSignal) {
 async function send() {
   if (running.value || !prompt.value.trim() || !props.projectId) return
   submittedPrompt.value = prompt.value.trim()
+  prompt.value = ''
   detailsOpen.value = false
   running.value = true; error.value = ''; answer.value = ''; events.value = []; checkpoints.value = []
   let stage = 'start'
@@ -117,6 +118,7 @@ async function send() {
     checkpoints.value.push(end)
     if (!end.current) error.value = '结束检查点已落库，但场景有后续修改，尚未全部保存。'
   } catch (cause) {
+    if (!disposed && !prompt.value) prompt.value = submittedPrompt.value
     if (!error.value) error.value = (stage === 'start' ? '任务未启动：' : stage === 'end' ? 'AI 已执行，但结束检查点未确认保存：' : '') + (cause instanceof Error ? cause.message : String(cause))
   } finally { await close(); running.value = false }
 }

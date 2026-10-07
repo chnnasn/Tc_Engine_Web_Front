@@ -25,6 +25,7 @@ const failure = ref('')
 const snapshot = ref<Snapshot>()
 const status = ref<SceneState>()
 const saving = ref(false)
+const saveActivity = ref<'automatic' | 'manual' | 'checkpoint' | ''>('')
 const legacy = ref(false)
 const fileInput = ref<HTMLInputElement>()
 const busy = ref(false)
@@ -55,6 +56,13 @@ async function pollSync() {
 }
 const needsSave = ref(false)
 const dirty = computed(() => needsSave.value || Boolean(status.value?.dirty))
+const saveStatus = computed(() => {
+  if (saveActivity.value === 'automatic') return '自动保存中…'
+  if (saveActivity.value === 'manual') return '保存中…'
+  if (saveActivity.value === 'checkpoint') return '正在保存 AI 检查点…'
+  if (dirty.value && ['已保存到数据库', '已自动保存到数据库', 'AI 任务检查点已保存到数据库'].includes(syncMessage.value)) return '有未保存的修改'
+  return syncMessage.value || (dirty.value ? '有未保存的修改' : binding.value ? '已关联云端' : '正在关联云端…')
+})
 const editing = computed(() => Boolean(status.value) && (!status.value?.mode || status.value.mode === 'edit'))
 const selected = computed(() => snapshot.value?.entities.find(entity => entity.id === status.value?.selectedEntityId))
 function report(error: unknown) { emit('notify', error instanceof Error ? error.message : String(error)) }
@@ -114,6 +122,7 @@ async function checkpoint(runId: string, phase: 'start' | 'end', signal: AbortSi
   signal.throwIfAborted()
   if (gone || !surface.value || !binding.value) throw new Error('编辑器或云端关联不可用')
   saving.value = true
+  saveActivity.value = 'checkpoint'
   try {
     const link = { ...binding.value }
     const captured = await surface.value.call<{ document: EngineDocument; state: SceneState }>('capture')
@@ -143,7 +152,7 @@ async function checkpoint(runId: string, phase: 'start' | 'end', signal: AbortSi
   } catch (error) {
     if (error instanceof CloudError && [401, 412].includes(error.status)) syncBlocked = true
     throw error
-  } finally { saving.value = false }
+  } finally { saving.value = false; saveActivity.value = '' }
 }
 async function refresh() {
   if (!surface.value) return
@@ -198,6 +207,7 @@ function preview(command: 'play' | 'pause' | 'resume' | 'step' | 'stop') {
 async function save(automatic = false) {
   if (saving.value || gone || !surface.value) return
   saving.value = true
+  if (!automatic) saveActivity.value = 'manual'
   try {
     const captured = await surface.value.call<{ document: EngineDocument; state: SceneState }>('capture')
     const serialized = JSON.stringify(captured.document)
@@ -223,6 +233,8 @@ async function save(automatic = false) {
       return
     }
     if (binding.value) {
+      // Polling an unchanged scene is not a save; only announce actual automatic writes.
+      if (automatic) saveActivity.value = 'automatic'
       needsSave.value = true; emit('dirtyChange', true)
       binding.value = { ...binding.value, pending: true }
       // Keep a local draft before network I/O; the cloud ETag is never advanced on failure.
@@ -253,7 +265,7 @@ async function save(automatic = false) {
       } else { report(error); if (error instanceof CloudError && error.status === 401) cloudOpen.value = true }
     }
   }
-  finally { saving.value = false }
+  finally { saving.value = false; saveActivity.value = '' }
 }
 async function attachCloud(next: CloudBinding) {
   if (saving.value) return
@@ -321,7 +333,7 @@ onBeforeUnmount(() => { gone = true; clearTimeout(syncTimer); window.removeEvent
   <main id="main-content" class="native-editor">
     <header class="native-toolbar">
       <button class="button" @click="navigate('/projects')">返回项目</button>
-      <strong>{{ project.name }}{{ dirty ? ' · 未保存' : '' }}</strong>
+      <div class="editor-project-info"><strong class="editor-project-name" :title="project.name">{{ project.name }}</strong><span class="editor-save-status" role="status" :title="saveStatus">{{ saveStatus }}</span></div>
       <button class="button" :disabled="!editing || busy" @click="addEntity">添加对象</button>
       <button class="button" :disabled="!editing || !status?.canUndo || busy" @click="history('undo')">撤销</button>
       <button class="button" :disabled="!editing || !status?.canRedo || busy" @click="history('redo')">重做</button>
@@ -336,7 +348,7 @@ onBeforeUnmount(() => { gone = true; clearTimeout(syncTimer); window.removeEvent
       <button class="button" :disabled="!status" @click="scriptOpen = !scriptOpen">C# 脚本</button>
       <button ref="agentTrigger" class="button" :class="{ 'agent-active': agentOpen }" :disabled="!status" :aria-expanded="agentOpen" aria-controls="editor-agent-panel" @click="agentOpen = !agentOpen">AI 助手</button>
       <button class="button" :disabled="saving" @click="publishOpen = true">发布</button>
-      <button class="button button-primary" :disabled="!status || saving" @click="save()">{{ saving ? '保存中…' : '保存到云端' }}</button>
+      <button class="button button-primary editor-save-button" :disabled="!status || saving" @click="save()">保存到云端</button>
       <input ref="fileInput" hidden type="file" accept=".png,.jpg,.jpeg,.tga" @change="importImage" />
     </header>
 
@@ -347,7 +359,7 @@ onBeforeUnmount(() => { gone = true; clearTimeout(syncTimer); window.removeEvent
     <div v-else-if="!failure" class="native-notice">正在读取项目…</div>
     <AgentPanel v-if="status && !failure" v-show="agentOpen" :visible="agentOpen" :project-id="binding?.projectId" :call="agentCall" :checkpoint="checkpoint" @state="agentState" @collapse="collapseAgent" />
     </div>
-    <footer><span v-if="binding && syncMessage" role="status">{{ syncMessage }} · </span>{{ binding ? '已关联云端' : '正在验证云端关联' }} · {{ status?.mode === 'play' ? '运行中' : status?.mode === 'pause' ? '已暂停' : '编辑模式' }} · {{ snapshot?.schemas.length || 0 }} 种组件类型 <span v-if="selected"> · {{ selected.name }}</span><span>预览不会公开发布；停止预览后继续编辑</span></footer>
+    <footer>{{ binding ? '已关联云端' : '正在验证云端关联' }} · {{ status?.mode === 'play' ? '运行中' : status?.mode === 'pause' ? '已暂停' : '编辑模式' }} · {{ snapshot?.schemas.length || 0 }} 种组件类型 <span v-if="selected"> · {{ selected.name }}</span><span>预览不会公开发布；停止预览后继续编辑</span></footer>
     <CloudProjects v-if="cloudOpen" :project="project" :binding="binding" @close="cloudOpen = false" @attach="attachCloud" />
     <PublishDialog v-if="publishOpen" :project-id="binding?.projectId" :project-name="project.name" :project-description="project.description" :dirty="dirty" @close="publishOpen = false" @notify="emit('notify', $event)" />
   </main>
@@ -355,4 +367,10 @@ onBeforeUnmount(() => { gone = true; clearTimeout(syncTimer); window.removeEvent
 <style scoped>
 .native-editor{height:100dvh;display:flex;flex-direction:column;background:#202329;color:#e8eeee}.native-toolbar{display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:10px 16px;background:#f5f6f2;color:#24322b}.native-toolbar strong{margin-right:auto}.native-toolbar .button{padding:8px 12px;min-height:34px}.native-editor :deep(.engine-surface){flex:1;min-height:0}.native-notice{padding:14px 20px;background:#394039;color:#fff}.native-editor footer{display:flex;gap:10px;flex-wrap:wrap;font-size:12px;padding:8px 16px;color:#bcc7c2}.native-editor footer span:last-child{margin-left:auto}
 .editor-workspace{display:flex;flex:1;min-height:0;min-width:0}.editor-workspace :deep(.engine-surface){min-width:0}.native-toolbar .agent-active{background:#f0e5db;border-color:#b8866b;color:#88412d}@media(max-width:760px){.editor-workspace{flex-direction:column;overflow:auto}.editor-workspace :deep(.engine-surface){min-height:260px;flex:1 0 260px}}
+</style>
+<style scoped>
+.editor-project-info{display:flex;align-items:center;gap:10px;flex:0 0 270px;max-width:calc(100% - 95px);min-width:0;margin-right:auto}
+.native-toolbar .editor-project-name{flex:1;min-width:0;margin:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.editor-save-status{flex:0 0 155px;min-width:0;color:#82796d;font-size:11px;font-weight:400;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.native-toolbar .editor-save-button{width:100px;flex:0 0 100px}
 </style>
