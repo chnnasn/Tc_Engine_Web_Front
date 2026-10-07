@@ -185,6 +185,10 @@ node tests/realtime-browser.mjs
 
 ### AI 脚本与 Project 文件删除
 
+AI 面板顶部提供当前项目的对话选择框和“新建对话”。对话按云端 `projectId` / `sessionId` 保存，刷新或重新打开项目后恢复，较早消息可继续向前加载；不同账号、项目和会话互不混用。模型会参考当前会话的近期成功对话，但所有修改仍需重新检查实时场景。临时编辑器连接关闭只停止工具执行，不删除已保存的对话；升级前没有落库的历史无法补回。
+
+浏览器测试 `tests/agent-browser.mjs` 同时验证刷新恢复、模型实际收到前文、新建会话为空及历史切换。
+
 AI 通过 `script_get_api` 获取与当前引擎匹配的 C# API，再使用 `script_list/read/write/compile/attach/detach` 操作项目。写入同时校验场景版本与源码 SHA-256；人类面板有未保存草稿时拒绝 AI 写入。`entity_get.script_attachments` 返回真实挂载，通用组件 `values: {}` 不能用来判断脚本为空。挂载和单项移除保留其他脚本的 ID、启用状态及存储字段。源码编辑不属于场景撤销历史，由 AI 任务前后检查点保存。
 
 原生 Project 对项目 Assets 内文件和目录开放右键 Delete，先显示确认；有引用时沿用桌面端提示，强制删除保留缺失引用。Packages 和根目录仍只读。文件删除触发项目脏状态和云端同步；写入源码后立即刷新原生资源登记，避免 Inspector 错报 Missing Script。
