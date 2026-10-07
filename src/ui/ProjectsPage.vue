@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, onMounted, onBeforeUnmount, ref } from 'vue'
-import { ArrowUpRight, Download, FileJson, FolderOpen, Gamepad2, Grid2X2, List, MoreHorizontal, Plus, Upload } from '@lucide/vue'
+import { ArrowUpRight, Cloud, Download, FileJson, FolderOpen, Gamepad2, Grid2X2, List, MoreHorizontal, Plus, Upload } from '@lucide/vue'
 import { nowLabel, uid, type Project } from './data'
 import { exportProject, readProjectFile } from './project-file'
 import { readCloudBinding, writeCloudBinding, readEngineProject, writeEngineProject } from '../engine/storage'
@@ -167,12 +167,12 @@ onMounted(async () => {
 <template>
   <main id="main-content" class="page workspace-page">
     <div class="page-topline">
-      <div class="page-intro"><span class="eyebrow">YOUR NEXT LITTLE WORLD</span><h1>我的项目<span class="green-dot">.</span></h1><p>从一个想法，到一个可以分享的世界。</p></div>
-      <div class="page-actions"><button class="button" @click="cloudOpen = true">云端项目</button><button class="button" @click="fileInput?.click()"><Upload :size="16" />导入项目</button><button class="button button-primary" @click="emit('create')"><Plus :size="16" />新建项目</button></div>
+      <div class="page-intro"><span class="eyebrow">YOUR CREATIVE SPACE</span><h1>我的项目<span class="green-dot">.</span></h1><p>欢迎回到工作台。接着上次的灵感，继续创造。</p></div>
+      <div class="page-actions"><button class="button" @click="cloudOpen = true"><Cloud :size="16" />云端项目</button><button class="button" @click="fileInput?.click()"><Upload :size="16" />导入项目</button><button class="button button-primary" @click="emit('create')"><Plus :size="16" />新建项目</button></div>
     </div>
     <input ref="fileInput" class="sr-only" tabindex="-1" type="file" accept=".json,application/json" aria-label="导入 TomCat 项目 JSON" @change="selectImport" />
-    <section class="workspace-overview" aria-label="项目概览"><div><span>01 / WORKSPACE</span><strong>{{ projects.length.toString().padStart(2, '0') }}</strong><p>正在这里生长的想法</p></div><div><span>02 / IN PROGRESS</span><strong>{{ projects.filter(p => p.status === 'draft').length.toString().padStart(2, '0') }}</strong><p>等待继续打磨的草稿</p></div><button @click="emit('create')"><Plus :size="25" /><span>下一件作品<br /><strong>从一个空白开始</strong></span><ArrowUpRight :size="22" /></button></section>
-    <div class="workspace-note"><span class="note-icon"><FolderOpen :size="20" :stroke-width="1.5" /></span><div><strong>你的创作，从这里继续</strong><p>项目与当前云端账号绑定。新建、导入与编辑均需登录；浏览器缓存用于恢复未同步的修改。</p></div><span class="small-tag">云端工作空间</span></div>
+    <section class="workspace-overview" aria-label="项目概览"><div><span><FolderOpen :size="16" />全部项目</span><strong>{{ projects.length.toString().padStart(2, '0') }}</strong><p>每一个想法都有自己的位置</p></div><div><span><FileJson :size="16" />创作中的草稿</span><strong>{{ projects.filter(p => p.status === 'draft').length.toString().padStart(2, '0') }}</strong><p>随时回来，继续上次的进度</p></div><button @click="emit('create')"><span class="overview-plus"><Plus :size="24" /></span><span>MAKE SOMETHING NEW<strong>下一个世界，由你开始</strong><small>创建场景，把灵感变成作品</small></span><ArrowUpRight :size="22" /></button></section>
+    <div class="workspace-note"><span class="note-icon"><Cloud :size="20" :stroke-width="1.5" /></span><div><strong>一个账号，连接你的创作</strong><p>项目保存在当前账号下，打开编辑器即可继续创作。</p></div><span class="small-tag">云端工作空间</span></div>
 
     <div class="filter-bar project-filter">
       <div class="filter-tabs"><button v-for="item in filters" :key="item[0]" :class="{ active: filter === item[0] }" :aria-pressed="filter === item[0]" @click="filter = item[0]">{{ item[1] }}<span class="filter-count">{{ projects.filter(project => item[0] === 'all' || project.status === item[0]).length }}</span></button></div>

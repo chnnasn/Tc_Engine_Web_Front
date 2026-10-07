@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, nextTick, onBeforeUnmount, onMounted, provide, ref, watch } from 'vue'
-import { ArrowRight, ArrowUpRight, Check, Gamepad2, Plus } from '@lucide/vue'
+import { ArrowRight, Bookmark, Check, ChevronDown, ChevronRight, Cloud, FolderOpen, Gamepad2, Plus, Settings2, UserRound } from '@lucide/vue'
 import { games, initialTopics, isProjects, isStringArray, isTopics, nowLabel, uid, type Project } from './data'
 import { useLocalState } from './local-state'
 import { navigationKey } from './navigation'
@@ -36,6 +36,14 @@ const projectName = ref('')
 const template = ref<'2D' | '空白'>('2D')
 const toast = ref('')
 const accountOpen = ref(false)
+const accountArea = ref<HTMLElement>()
+const accountTrigger = ref<HTMLButtonElement>()
+function dismissAccount(event: PointerEvent) {
+  if (!accountArea.value?.contains(event.target as Node)) accountOpen.value = false
+}
+function accountKeydown(event: KeyboardEvent) {
+  if (event.key === 'Escape' && accountOpen.value) { accountOpen.value = false; accountTrigger.value?.focus() }
+}
 const cloudAccountOpen = ref(false)
 const accountStatus = ref('')
 let accountRequest = 0
@@ -86,6 +94,7 @@ function normalizePath(value: string) {
 }
 
 function navigate(url: string) {
+  accountOpen.value = false
   if (url === path.value) return
   if (editorDirty.value && !window.confirm('当前场景有未保存的修改。确定放弃修改并离开编辑器吗？')) return
   history.pushState({}, '', url)
@@ -161,6 +170,8 @@ watch(path, async () => {
 }, { immediate: true })
 
 onMounted(() => {
+  document.addEventListener('pointerdown', dismissAccount)
+  document.addEventListener('keydown', accountKeydown)
   window.addEventListener('popstate', handlePopState)
   window.addEventListener('focus', recheckAccount)
   window.addEventListener('tomcat-auth-changed', recheckAccount)
@@ -169,6 +180,8 @@ onMounted(() => {
   accountTimer = setInterval(recheckAccount, 30000)
 })
 onBeforeUnmount(() => {
+  document.removeEventListener('pointerdown', dismissAccount)
+  document.removeEventListener('keydown', accountKeydown)
   accountRequest++
   clearInterval(accountTimer)
   window.removeEventListener('focus', recheckAccount)
@@ -180,13 +193,24 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <div :class="{ 'warm-site': !isEditor }">
+  <div class="studio-app" :class="{ 'studio-site': !isEditor }">
   <a class="skip-link" href="#main-content">跳到主要内容</a>
   <header v-if="!isEditor" class="site-header">
     <div class="header-inner">
       <AppLink href="/" class="brand" aria-label="TomCat 首页"><span class="brand-mark"><img src="/HubLogo.ico" alt="" /></span><span>tomcat<span class="brand-dot">.</span></span></AppLink>
       <nav class="main-nav" aria-label="主导航"><AppLink href="/" :aria-current="path === '/' || path.startsWith('/games') ? 'page' : undefined" :class="{ active: path === '/' || path.startsWith('/games') }">发现游戏</AppLink><AppLink href="/play" :aria-current="path === '/play' || playId ? 'page' : undefined" :class="{ active: path === '/play' || Boolean(playId) }">玩家作品</AppLink><AppLink href="/community" :aria-current="path.startsWith('/community') ? 'page' : undefined" :class="{ active: path.startsWith('/community') }">社区</AppLink><AppLink href="/projects" :aria-current="path.startsWith('/projects') ? 'page' : undefined" :class="{ active: path.startsWith('/projects') }">我的项目</AppLink></nav>
-      <div class="header-actions"><span class="preview-badge">界面预览</span><button class="button button-primary header-create" @click="openCreate"><Plus :size="16" />新建项目</button><div class="account-area"><button class="avatar" aria-label="打开我的账户" :aria-expanded="accountOpen" @click="toggleAccount">{{ account?.email.slice(0, 1).toUpperCase() || '?' }}</button><div v-if="accountOpen" class="account-menu"><strong>{{ account ? account.email : '我的账户' }}</strong><span>{{ accountStatus }}</span><button class="button" @click="cloudAccountOpen = true; accountOpen = false">{{ account ? '管理云端账号' : '登录 / 注册' }}</button><AppLink href="/profile">我的收藏 <ArrowUpRight :size="15" /></AppLink><AppLink href="/projects">项目工作台 <ArrowUpRight :size="15" /></AppLink></div></div></div>
+      <div class="header-actions">
+        <button class="button button-primary header-create" @click="openCreate"><Plus :size="16" />新建项目</button>
+        <div ref="accountArea" class="account-area">
+          <button ref="accountTrigger" class="account-trigger" aria-label="打开我的账户" aria-controls="account-popover" :aria-expanded="accountOpen" @click="toggleAccount"><span class="avatar"><template v-if="account">{{ account.email.slice(0, 1).toUpperCase() }}</template><UserRound v-else :size="17" /></span><ChevronDown :size="13" /></button>
+          <div v-if="accountOpen" id="account-popover" class="account-menu" aria-label="我的账户">
+            <div class="menu-identity"><span class="menu-avatar"><template v-if="account">{{ account.email.slice(0, 1).toUpperCase() }}</template><UserRound v-else :size="21" /></span><div><span class="menu-caption">{{ account ? '个人账号' : '欢迎来到 TomCat' }}</span><strong :title="account?.email">{{ account ? account.email : '开始你的创作之旅' }}</strong><span class="menu-status">{{ accountStatus }}</span></div></div>
+            <div class="menu-group"><button class="menu-row" :aria-label="account ? '管理云端账号' : '登录 / 注册'" @click="cloudAccountOpen = true; accountOpen = false"><Settings2 :size="18" /><span><strong>{{ account ? '管理云端账号' : '登录 / 注册' }}</strong><small>{{ account ? '邮箱、安全与登录设置' : '保存项目，同步你的创作' }}</small></span><ChevronRight :size="15" /></button></div>
+            <div class="menu-group"><AppLink class="menu-row" href="/projects"><FolderOpen :size="18" /><span><strong>项目工作台</strong><small>继续未完成的想法</small></span><ChevronRight :size="15" /></AppLink><AppLink class="menu-row" href="/profile"><Bookmark :size="18" /><span><strong>我的收藏</strong><small>随时回到喜欢的世界</small></span><ChevronRight :size="15" /></AppLink></div>
+            <div class="menu-footer"><Cloud :size="13" /><span>{{ account ? '你的专属创作空间' : '登录后开启云端工作空间' }}</span><span class="menu-footer-mark">TC</span></div>
+          </div>
+        </div>
+      </div>
     </div>
   </header>
 

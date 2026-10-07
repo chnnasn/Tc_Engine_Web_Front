@@ -29,17 +29,16 @@ const filtered = computed(() => {
 <template>
   <main id="main-content" class="page home-page">
     <div class="editorial-heading"><div class="page-intro">
-      <span class="eyebrow">A LITTLE PLAY, A LITTLE POSSIBILITY</span>
-      <h1>发现游戏<span class="green-dot">.</span></h1>
-      <p>有趣的世界，不一定很大。从这里，遇见下一个好玩的想法。</p>
-    </div><div class="editorial-note"><span>游玩 / 交流 / 创造</span><p>小小的世界，<br />也容得下很大的想象。</p><a href="#discover-title" class="text-link">翻开本期精选 <ArrowRight :size="15" /></a></div></div>
+      <span class="eyebrow"><span class="live-dot" />TOMCAT / PLAY & CREATE</span>
+      <h1>发现游戏，<br class="mobile-break" />也发现可能<span class="green-dot">.</span></h1>
+      <p>打开一个新世界，或者亲手创造下一个。</p>
+    </div><div class="editorial-note"><span>为好奇心而造</span><p>即刻游玩 · 自由创作</p><button class="text-link" @click="emit('create')">进入创作工作台 <ArrowUpRight :size="16" /></button></div></div>
 
-    <p class="local-note">当前提供三个内置引擎示例；社区为界面演示，话题和回复仅保存在本地。</p>
     <section class="feature" aria-label="内置引擎示例">
       <div class="feature-copy">
-        <div class="feature-label"><span class="small-line" />内置示例<span class="feature-number">VOL. 01</span></div>
+        <div class="feature-label"><span class="feature-badge">精选体验</span><span class="feature-number">01 / 03</span></div>
         <div><span class="feature-genre">探索 · 慢节奏 · 治愈</span><h2>林间来信</h2><p>沿着溪流，穿过森林。<br />把一封信，送到世界的小小角落。</p></div>
-        <div class="feature-bottom"><AppLink class="button button-dark" href="/games/forest">探索这个世界<ArrowUpRight :size="17" /></AppLink><span>TC Fun 引擎示例</span></div>
+        <div class="feature-bottom"><AppLink class="button button-dark" href="/games/forest">探索这个世界<ArrowUpRight :size="17" /></AppLink><span>内置引擎示例</span></div>
       </div>
       <AppLink href="/games/forest" class="feature-art" aria-label="探索林间来信">
         <ArtworkView :src="games[0].image" alt="林间来信：红斗篷旅人在溪流与小屋之间漫步" eager />
@@ -48,9 +47,9 @@ const filtered = computed(() => {
     </section>
 
     <section class="discover-section" aria-labelledby="discover-title">
-      <div class="section-index"><span>01 / THE COLLECTION</span><span>独立作品选集</span></div>
+      <div class="section-index"><span>EXPLORE THE COLLECTION</span><span>03 个内置引擎示例</span></div>
       <div class="section-heading">
-        <div><h2 id="discover-title">值得一玩<span class="subtle-count">03</span></h2><p>独立创作者的小小世界，等你来探索。</p></div>
+        <div><h2 id="discover-title">值得一玩<span class="subtle-count">03</span></h2><p>从一场小小的冒险开始。</p></div>
         <label class="sort-select"><span class="sr-only">游戏排序</span><select v-model="sort"><option value="recommended">编辑推荐</option><option value="newest">最近上架</option><option value="popular">人气优先</option></select><ChevronDown :size="14" /></label>
       </div>
       <div class="filter-bar">
