@@ -10,6 +10,8 @@ export interface EngineDocument {
   files: Record<string, string> // Base64 MEMFS project settings and imported assets (including .tcmeta).
 }
 export const engineCommit = lock.commit
+// Explicitly tested predecessors with the same project/scene/managed ABI formats.
+export const compatibleEngineCommit = (commit: string) => commit === engineCommit || (lock.legacyCommits as string[]).includes(commit)
 export const projectRoot = '/Samples/PhysicsPlayground'
 export interface CloudBinding { ownerId: string; projectId: string; etag: string | null; pending?: boolean }
 export const requiredFiles = ['Project.tcproj', 'ProjectSettings/BuildSettings.json', 'ProjectSettings/ProjectSettings.json', 'ProjectSettings/PlayerSettings.json']
@@ -22,7 +24,7 @@ export function assertDocument(value: unknown): asserts value is EngineDocument 
   if (!d || d.format !== 'tomcat-engine-project' || ![1, 2].includes(d.version) || typeof d.engineCommit !== 'string' ||
       typeof d.archive !== 'string' || new TextEncoder().encode(d.archive).length > 4 * 1024 * 1024 ||
       !d.files || typeof d.files !== 'object' || Array.isArray(d.files)) throw new Error('项目格式或引擎版本不兼容')
-  if (d.engineCommit !== engineCommit) throw new Error('项目使用了不兼容的引擎版本')
+  if (!compatibleEngineCommit(d.engineCommit)) throw new Error('项目使用了不兼容的引擎版本')
   assertHandle(d.sceneHandle)
   let bytes = 0
   const paths = Object.keys(d.files)
@@ -66,7 +68,7 @@ export async function readEngineProject(id: string): Promise<EngineDocument | un
       try { assertDocument(value) }
       catch (error) {
         const old = value as Partial<EngineDocument>
-        if (old?.engineCommit !== engineCommit) {
+        if (!compatibleEngineCommit(old?.engineCommit ?? '')) {
           await writeEngineProject(id)
           return undefined
         }

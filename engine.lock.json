@@ -1,9 +1,11 @@
 {
   "repository": "https://github.com/chnnasn/TomCat_Engine.git",
-  "commit": "41708b6c756d530a1c71f0e0ef2539a1df1bb03e",
+  "commit": "053fcce44c36ef94c4bd4a3750da7eb4e75d0303",
   "kind": "managed",
   "protocol": "tomcat.web.v1",
-  "legacyCommits": [],
+  "legacyCommits": [
+    "41708b6c756d530a1c71f0e0ef2539a1df1bb03e"
+  ],
   "toolchain": {
     "dotnet": "10.0",
     "workload": "wasm-tools",

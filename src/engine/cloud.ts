@@ -1,4 +1,4 @@
-import { assertDocument, engineCommit, validFilePath, requiredFiles, type CloudBinding, type EngineDocument } from './storage.ts'
+import { assertDocument, compatibleEngineCommit, validFilePath, requiredFiles, type CloudBinding, type EngineDocument } from './storage.ts'
 
 export interface CloudUser { id: string; email: string; emailVerified: boolean }
 export interface CloudProject { id: string; name: string; description: string; template: '2D' | '空白'; currentRevisionId: string | null; etag: string | null }
@@ -95,7 +95,7 @@ export const unpublishProject = async (id: string) => { await api(`${idPath(id)}
 export async function saveCloudProject(document: EngineDocument, binding: CloudBinding, options: { automatic?: boolean; reuseUploads?: boolean; checkpoint?: AiCheckpoint } = {}): Promise<CloudBinding> {
   if (options.automatic && options.checkpoint) throw new Error('检查点必须立即落库')
   // 旧引擎草稿必须先由当前引擎重新捕获，才能作为完整项目写入云端。
-  if (document.engineCommit !== engineCommit) throw new Error('旧项目不再支持，请删除后新建项目')
+  if (!compatibleEngineCommit(document.engineCommit)) throw new Error('项目使用了不兼容的引擎版本')
   assertDocument(document)
   if (document.version !== 2) throw new Error('请在引擎中打开旧项目并保存完整配置后，再同步云端')
   const user = await currentUser()
@@ -129,7 +129,7 @@ export async function restoreCloudProject(projectId: string, revisionId?: string
   const response = await api(revisionId ? `${idPath(projectId)}/revisions/${encodeURIComponent(revisionId)}` : `${idPath(projectId)}/working-state`)
   const manifest: Manifest = await response.json()
   if (manifest.schemaVersion !== 2 || !Array.isArray(manifest.files) || manifest.files.length > 512) throw new Error('此修订不包含完整资源，请先在编辑器中保存一次完整项目')
-  if (manifest.engineCommit !== engineCommit) throw new Error('旧修订不再支持，请删除后新建项目')
+  if (!compatibleEngineCommit(manifest.engineCommit)) throw new Error('修订使用了不兼容的引擎版本')
   const paths = new Set<string>()
   let total = 0
   for (const file of manifest.files) {

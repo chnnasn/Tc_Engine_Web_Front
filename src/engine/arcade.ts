@@ -1,6 +1,6 @@
 // 玩家作品（已发布游戏）的公开接口。游客可访问，不经过登录态检查；
 // 打包下载与播放器预览保持一致的 256 MiB 上限。
-import { engineCommit } from './storage.ts'
+import { compatibleEngineCommit } from './storage.ts'
 
 export const MAX_PACKAGE = 256 * 1024 * 1024
 
@@ -49,5 +49,5 @@ export async function loadPublishedPackage(id: string, signal?: AbortSignal): Pr
 
 /** 发布时记录的引擎版本与当前播放器引擎的关系；mismatch 时游玩页面需要给出警告。 */
 export function engineCompatibility(commit: string): 'match' | 'mismatch' {
-  return commit === engineCommit ? 'match' : 'mismatch'
+  return compatibleEngineCommit(commit) ? 'match' : 'mismatch'
 }
