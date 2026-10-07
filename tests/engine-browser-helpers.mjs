@@ -16,3 +16,13 @@ export async function preview(page, command) {
   await waitMode(page, command === 'stop' ? 'edit' : ['pause', 'step'].includes(command) ? 'pause' : 'play')
 }
 export const waitMode = (page, mode) => page.waitForFunction(mode => JSON.parse(document.querySelector('iframe').contentWindow.TomCatWeb.engine.EditorState()).mode === mode, mode)
+export async function fillCode(page, source) {
+  const input = page.getByRole('textbox', { name: 'C# 脚本源码', exact: true })
+  await input.press('Control+a')
+  await input.evaluate((element, text) => {
+    const clipboardData = new DataTransfer()
+    clipboardData.setData('text/plain', text)
+    element.dispatchEvent(new ClipboardEvent('paste', { clipboardData, bubbles: true, cancelable: true }))
+  }, source)
+}
+export const visibleCode = page => page.locator('.code-editor .view-line').evaluateAll(lines => lines.map(line => line.textContent.replaceAll('\u00a0', ' ').trimEnd()).join('\n').trimEnd())

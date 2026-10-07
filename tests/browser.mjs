@@ -1,4 +1,4 @@
-import { addEntity, preview, waitMode } from './engine-browser-helpers.mjs'
+import { addEntity, preview, waitMode, fillCode } from './engine-browser-helpers.mjs'
 import assert from 'node:assert/strict'
 import { chromium } from 'playwright'
 import { mkdirSync, readFileSync } from 'node:fs'
@@ -90,7 +90,7 @@ try {
     await page.getByPlaceholder('新脚本类名').fill('WebSmoke')
     await page.getByRole('button', { name: '新建', exact: true }).click()
     await page.locator('.script-panel .list li', { hasText: 'WebSmoke' }).first().waitFor({ timeout: 30000 })
-    await page.getByLabel('C# 脚本源码').fill(scriptSource)
+    await fillCode(page, scriptSource)
     await page.getByRole('button', { name: '编译并安装', exact: true }).click()
     await page.locator('.script-panel .state.ok').waitFor({ timeout: 240000 })
     assert.equal(await page.locator('.script-panel .diagnostics li.error').count(), 0)
@@ -108,7 +108,7 @@ try {
     // 重新打开面板：编译过一代程序集后再次编译，必须给出“重建会话”提示而不是静默失效。
     await page.getByRole('button', { name: 'C# 脚本', exact: true }).click()
     // 故意写入语法错误，验证 Roslyn 诊断被回传并渲染。
-    await page.getByLabel('C# 脚本源码').fill('using TomCat;\npublic sealed class WebSmoke : TomCatBehaviour { protected override void OnCreate() { int broken = ; } }')
+    await fillCode(page, 'using TomCat;\npublic sealed class WebSmoke : TomCatBehaviour { protected override void OnCreate() { int broken = ; } }')
     await page.getByRole('button', { name: '编译并安装', exact: true }).click()
     await page.locator('.script-panel .diagnostics li.error').first().waitFor({ timeout: 240000 })
     assert.match(await page.locator('.script-panel .diagnostics li.error').first().textContent(), /CS\d{4}/)
@@ -116,7 +116,7 @@ try {
     // 程序集已装载过：面板必须提示重建会话，而不是假装能原地热替换。
     await page.locator('.script-panel .rebuild').waitFor({ timeout: 30000 })
     // 恢复可编译内容，并确认脚本随项目一起保存。
-    await page.getByLabel('C# 脚本源码').fill(scriptSource)
+    await fillCode(page, scriptSource)
     await page.getByRole('button', { name: '保存脚本', exact: true }).click()
     await page.getByRole('button', { name: 'C# 脚本', exact: true }).click()
     await save.click()

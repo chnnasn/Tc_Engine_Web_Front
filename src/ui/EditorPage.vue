@@ -359,15 +359,18 @@ onBeforeUnmount(() => { gone = true; clearTimeout(syncTimer); clearTimeout(autom
     <div class="editor-workspace">
     <EngineSurface v-if="initialized && !failure" :key="surfaceKey" ref="surface" kind="editor" :name="project.name" :template="project.template" :document="stored" :cloud-project-id="binding?.projectId" @ready="ready" @state="updateStatus" @actions="actions" @error="failure = $event" />
     <div v-else-if="!failure" class="native-notice">正在读取项目…</div>
-    <ScriptPanel v-if="scriptVisited && status && !failure" v-show="scriptOpen" :visible="scriptOpen" :call="scriptCall" :entity-id="status?.selectedEntityId ?? null" :entity-name="selected?.name ?? null" @collapse="collapseScript" @draft-change="scriptDraftDirty = $event" @notify="emit('notify', $event)" @dirty="markDirty" @restart="restartSession" @snapshot="agentState" />
-    <AgentPanel v-if="status && !failure" v-show="agentOpen" :visible="agentOpen" :project-id="binding?.projectId" :call="agentCall" :checkpoint="checkpoint" @state="agentState" @collapse="collapseAgent" />
+    <ScriptPanel v-if="scriptVisited && status && !failure" v-show="scriptOpen" class="editor-floating editor-floating-scripts" :visible="scriptOpen" :call="scriptCall" :entity-id="status?.selectedEntityId ?? null" :entity-name="selected?.name ?? null" @collapse="collapseScript" @draft-change="scriptDraftDirty = $event" @notify="emit('notify', $event)" @dirty="markDirty" @restart="restartSession" @snapshot="agentState" />
+    <AgentPanel v-if="status && !failure" v-show="agentOpen" class="editor-floating" :visible="agentOpen" :project-id="binding?.projectId" :call="agentCall" :checkpoint="checkpoint" @state="agentState" @collapse="collapseAgent" />
     </div>
     <footer>{{ binding ? '已关联云端' : '正在验证云端关联' }} · {{ status?.mode === 'play' ? '运行中' : status?.mode === 'pause' ? '已暂停' : '编辑模式' }} · {{ snapshot?.schemas.length || 0 }} 种组件类型 <span v-if="selected"> · {{ selected.name }}</span><span>预览不会公开发布；停止预览后继续编辑</span></footer>
   </main>
 </template>
 <style scoped>
 .native-editor{height:100dvh;display:flex;flex-direction:column;background:#202329;color:#e8eeee}.native-toolbar{display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:10px 16px;background:#f5f6f2;color:#24322b}.native-toolbar strong{margin-right:auto}.native-toolbar .button{padding:8px 12px;min-height:34px}.native-editor :deep(.engine-surface){flex:1;min-height:0}.native-notice{padding:14px 20px;background:#394039;color:#fff}.native-editor footer{display:flex;gap:10px;flex-wrap:wrap;font-size:12px;padding:8px 16px;color:#bcc7c2}.native-editor footer span:last-child{margin-left:auto}
-.editor-workspace{display:flex;flex:1;min-height:0;min-width:0}.editor-workspace :deep(.engine-surface){min-width:0}.native-toolbar .agent-active{background:#f0e5db;border-color:#b8866b;color:#88412d}@media(max-width:760px){.editor-workspace{flex-direction:column;overflow:auto}.editor-workspace :deep(.engine-surface){min-height:260px;flex:1 0 260px}}
+.editor-workspace{position:relative;display:flex;flex:1;min-height:0;min-width:0;overflow:hidden}.editor-workspace :deep(.engine-surface){min-width:0}.native-toolbar .agent-active{background:#f0e5db;border-color:#b8866b;color:#88412d}
+.editor-workspace>.editor-floating{position:absolute;z-index:10;top:12px;right:12px;bottom:12px;width:390px;max-width:calc(100% - 24px);min-width:0;height:auto;border:1px solid #d8d2c8;border-radius:12px;box-shadow:0 12px 40px #0005,0 2px 8px #0003;overflow:hidden}
+.editor-workspace>.editor-floating-scripts{width:620px}
+@media(max-width:760px){.editor-workspace>.editor-floating{top:8px;right:8px;bottom:8px;max-width:calc(100% - 16px)}}
 </style>
 <style scoped>
 .editor-project-info{display:flex;align-items:center;gap:10px;flex:0 0 270px;max-width:calc(100% - 95px);min-width:0;margin-right:auto}

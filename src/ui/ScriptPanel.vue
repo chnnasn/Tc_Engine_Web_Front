@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import { computed, onMounted, ref, watch } from 'vue'
+import { computed, defineAsyncComponent, onMounted, ref, watch } from 'vue'
 import { Code2, FileCode2, PanelRightClose, Plus, Trash2, Upload } from '@lucide/vue'
 import type { Snapshot } from '../engine/protocol'
+const CodeEditor = defineAsyncComponent(() => import('./CodeEditor.vue'))
 export interface ScriptEntry { path: string; handle: string; className: string; text: string }
 export interface ScriptDiagnostic { severity: string; code: string; message: string; file: string | null; line: number; column: number }
 interface ScriptsReply { scripts: ScriptEntry[]; installed: boolean; assemblyLoaded?: boolean; diagnostics: ScriptDiagnostic[] }
@@ -168,9 +169,6 @@ onMounted(refresh)
 watch(() => props.entityId, refreshEntity)
 watch(() => props.visible, visible => { if (visible) void refresh() })
 watch(dirty, value => emit('draftChange', value))
-function sourceKeydown(event: KeyboardEvent) {
-  if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 's') { event.preventDefault(); event.stopPropagation(); save() }
-}
 defineExpose({ refresh })
 </script>
 <template>
@@ -194,7 +192,7 @@ defineExpose({ refresh })
       </ul>
       <div v-if="current" class="source-area">
         <div class="source-heading"><span>{{ current.className }}<small>{{ dirty ? '未保存' : '已写入项目' }}</small></span><button class="script-icon" :disabled="busy" aria-label="删除" title="删除当前脚本" @click="remove"><Trash2 :size="14" /></button></div>
-        <textarea v-model="draft" spellcheck="false" :disabled="busy" aria-label="C# 脚本源码" @keydown="sourceKeydown" />
+        <CodeEditor :key="current.path" v-model="draft" :disabled="busy" :visible="visible" @save="save" />
         <div class="source-footer"><span>C#</span><span>Ctrl / ⌘ + S 保存脚本</span></div>
       </div>
       <div v-else class="script-empty"><Code2 :size="30" :stroke-width="1.3" /><h2>给场景添一点逻辑。</h2><p>输入类名新建脚本，<br />或导入已有的 .cs 文件。</p></div>
@@ -219,7 +217,7 @@ defineExpose({ refresh })
 .script-icon{border:0;display:grid;place-items:center;flex-shrink:0;background:transparent;color:#82796d;padding:7px;border-radius:6px}.script-icon:hover:not(:disabled){background:#eae5db}
 .script-content{display:flex;flex-direction:column;flex:1;min-height:0;overflow:auto;overscroll-behavior:contain;padding:16px;gap:14px}.script-create{display:flex;align-items:center;gap:4px;flex-shrink:0;border:1px solid #d9d1c5;border-radius:9px;background:#fffdf9;padding:4px 6px}.script-create:focus-within{border-color:#b5a48e}.script-create input{min-width:0;width:100%;border:0;background:transparent;padding:6px;color:#39342d;font-size:12px;outline:none}
 .list{display:flex;flex-wrap:wrap;gap:5px;list-style:none;margin:0;padding:0;max-height:108px;overflow:auto;flex-shrink:0}.list li{min-width:0;max-width:100%}.list button{display:flex;align-items:center;gap:6px;max-width:100%;border:1px solid transparent;background:transparent;border-radius:6px;padding:7px 9px;color:#857a6e;font-size:11px}.list button.active{background:#ebe4d9;border-color:#dcd0c0;color:#654b37}.list button>span:first-of-type{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.draft-dot{width:5px;height:5px;background:#a65036;border-radius:50%;flex-shrink:0}
-.source-area{flex:1 0 280px;display:flex;flex-direction:column;min-height:280px;border:1px solid #dfd9cf;border-radius:10px;overflow:hidden;background:#fffdf9}.source-heading{display:flex;align-items:center;justify-content:space-between;padding:5px 10px;border-bottom:1px solid #eee8de;font-size:12px}.source-heading>span{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.source-heading small{font-size:10px;color:#998977;margin-left:9px}.source-area textarea{flex:1;min-height:200px;width:100%;resize:none;background:transparent;color:#443c33;border:0;padding:13px;font:12px/1.8 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;tab-size:4;white-space:pre;overflow:auto}.source-area textarea:focus-visible{outline:2px solid #b5a48e;outline-offset:-2px}.source-footer{display:flex;justify-content:space-between;padding:7px 12px;border-top:1px solid #eee8de;font-size:10px;color:#998977}
+.source-area{flex:1 0 280px;display:flex;flex-direction:column;min-height:280px;border:1px solid #dfd9cf;border-radius:10px;overflow:hidden;background:#1e1e1e}.source-heading{display:flex;align-items:center;justify-content:space-between;padding:5px 10px;border-bottom:1px solid #363636;background:#252526;color:#d4d4d4;font-size:12px}.source-heading>span{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.source-heading small{font-size:10px;color:#998977;margin-left:9px}.source-footer{display:flex;justify-content:space-between;padding:7px 12px;border-top:1px solid #363636;background:#252526;font-size:10px;color:#9d9d9d}
 .script-empty{flex:1;min-height:200px;padding:28px 8px;color:#857a6e}.script-empty>svg{color:#b46c50}.script-empty h2{font-family:Georgia,'Songti SC',serif;font-size:22px;font-weight:500;color:#39342d;margin:18px 0 10px}.script-empty p{font-size:12px;line-height:1.9}
 .attach{border-top:1px solid #e4dfd6;padding-top:12px;display:flex;flex-direction:column;gap:9px;font-size:11px;flex-shrink:0}.attach-heading{display:flex;align-items:baseline;gap:9px;min-width:0}.attach-heading>span{color:#918577;flex-shrink:0}.attach-heading strong{font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.chips{display:flex;flex-wrap:wrap;gap:5px}.chips em{font-style:normal;padding:3px 7px;background:#e9ede3;color:#657157;border-radius:5px}.attach-actions{display:flex;align-items:center;gap:12px}.script-panel .button{font-size:11px;padding:8px 11px;min-height:32px;border-radius:8px}.script-text-button{border:0;background:transparent;color:#857a6e;font-size:11px;padding:7px 0}
 .rebuild{flex-shrink:0;padding:12px;border-radius:8px;background:#f1e8d7;color:#846339;font-size:12px;line-height:1.7}.rebuild p{margin:0 0 8px}.message{margin:0;color:#9d4131;font-size:12px;line-height:1.7;overflow-wrap:anywhere}.diagnostics{list-style:none;margin:0;padding:0;max-height:180px;overflow:auto;flex-shrink:0;font-size:11px;line-height:1.7}.diagnostics li{display:flex;flex-direction:column;padding:8px 0;border-bottom:1px solid #e4dfd6;overflow-wrap:anywhere}.diagnostics .error b{color:#9d4131}.diagnostics .warning b{color:#846339}.diagnostics em{color:#918577;font-style:normal}

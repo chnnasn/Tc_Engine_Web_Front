@@ -15,6 +15,7 @@
   },
   "dependencies": {
     "@lucide/vue": "latest",
+    "monaco-editor": "0.57.0",
     "vue": "^3.5.0"
   },
   "devDependencies": {
@@ -24,5 +25,8 @@
     "typescript": "^6.0.0",
     "vite": "latest",
     "vue-tsc": "latest"
+  },
+  "overrides": {
+    "dompurify": "^3.4.16"
   }
 }
