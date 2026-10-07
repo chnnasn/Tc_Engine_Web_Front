@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
+import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import EngineSurface from './EngineSurface.vue'
 import { useNavigation } from './navigation'
 import { nowLabel, type Project } from './data'
@@ -26,6 +26,16 @@ const snapshot = ref<Snapshot>()
 const status = ref<SceneState>()
 const saving = ref(false)
 const saveActivity = ref<'automatic' | 'manual' | 'checkpoint' | ''>('')
+const manualSavePending = ref(false)
+// Background capture/upload still holds the serialization lock, but never dims the toolbar.
+const toolbarSaving = computed(() => manualSavePending.value || saveActivity.value === 'manual' || saveActivity.value === 'checkpoint')
+const automaticSaveVisible = ref(false)
+let automaticSaveTimer: ReturnType<typeof setTimeout> | undefined
+watch(saveActivity, activity => {
+  clearTimeout(automaticSaveTimer)
+  automaticSaveVisible.value = false
+  if (activity === 'automatic') automaticSaveTimer = setTimeout(() => { automaticSaveVisible.value = true }, 350)
+}, { flush: 'sync' })
 const legacy = ref(false)
 const fileInput = ref<HTMLInputElement>()
 const busy = ref(false)
@@ -50,14 +60,15 @@ async function pollSync() {
       automaticSync.value = (await syncConfiguration()).enabled
       syncConfigLoaded = true
     }
-    if (!gone && automaticSync.value && binding.value && editing.value && !busy.value && !saving.value) await save(true)
+    if (!gone && automaticSync.value && binding.value && editing.value && !busy.value && !saving.value && !manualSavePending.value) await save(true)
   } catch (error) { syncMessage.value = error instanceof Error ? error.message : String(error) }
   finally { if (!gone) syncTimer = setTimeout(pollSync, syncConfigLoaded ? 2000 : 10000) }
 }
 const needsSave = ref(false)
 const dirty = computed(() => needsSave.value || Boolean(status.value?.dirty))
 const saveStatus = computed(() => {
-  if (saveActivity.value === 'automatic') return '自动保存中…'
+  if (automaticSaveVisible.value) return '自动保存中…'
+  if (manualSavePending.value && saveActivity.value !== 'manual') return '等待当前同步完成…'
   if (saveActivity.value === 'manual') return '保存中…'
   if (saveActivity.value === 'checkpoint') return '正在保存 AI 检查点…'
   if (dirty.value && ['已保存到数据库', '已自动保存到数据库', 'AI 任务检查点已保存到数据库'].includes(syncMessage.value)) return '有未保存的修改'
@@ -199,10 +210,27 @@ function history(direction: 'undo' | 'redo') {
 }
 function preview(command: 'play' | 'pause' | 'resume' | 'step' | 'stop') {
   void run(async () => {
+    await waitForSave()
     await surface.value!.call('preview', { command })
     await refresh()
     updateStatus(snapshot.value!)
   })
+}
+async function waitForSave() {
+  const deadline = Date.now() + 65000
+  while (saving.value) {
+    if (gone) throw new Error('编辑器已关闭')
+    if (Date.now() > deadline) throw new Error('等待同步超时，请稍后重试')
+    await new Promise(resolve => setTimeout(resolve, 25))
+  }
+  if (gone) throw new Error('编辑器已关闭')
+}
+async function requestSave() {
+  if (manualSavePending.value || gone || !surface.value) return
+  manualSavePending.value = true
+  try { await waitForSave(); await save() }
+  catch (error) { if (!gone) report(error) }
+  finally { manualSavePending.value = false }
 }
 async function save(automatic = false) {
   if (saving.value || gone || !surface.value) return
@@ -268,10 +296,16 @@ async function save(automatic = false) {
   finally { saving.value = false; saveActivity.value = '' }
 }
 async function attachCloud(next: CloudBinding) {
-  if (saving.value) return
-  syncedDocument = ''; syncBlocked = false; syncMessage.value = ''; syncConfigLoaded = false
-  try { await writeCloudBinding(props.project.id, next); binding.value = next; needsSave.value = true; emit('dirtyChange', true); cloudOpen.value = false; emit('notify', '已关联，请点击“保存到云端”上传完整项目') }
+  try { await waitForSave() }
+  catch (error) { if (!gone) report(error); return }
+  saving.value = true
+  try {
+    await writeCloudBinding(props.project.id, next)
+    syncedDocument = ''; syncBlocked = false; syncMessage.value = ''; syncConfigLoaded = false
+    binding.value = next; needsSave.value = true; emit('dirtyChange', true); cloudOpen.value = false; emit('notify', '已关联，请点击“保存到云端”上传完整项目')
+  }
   catch (error) { report(error) }
+  finally { saving.value = false }
 }
 async function exportCurrent() {
   await run(async () => {
@@ -280,7 +314,7 @@ async function exportCurrent() {
   })
 }
 function actions(bits: number) {
-  if (bits & 1) void save()
+  if (bits & 1) void requestSave()
   if (bits & 2) { emit('notify', '请点击“导入图片”选择文件'); fileInput.value?.click() }
   if (bits & 4) void exportCurrent()
 }
@@ -299,7 +333,7 @@ async function importImage(event: Event) {
 }
 function beforeUnload(event: BeforeUnloadEvent) { if (dirty.value) { event.preventDefault(); event.returnValue = '' } }
 function keydown(event: KeyboardEvent) {
-  if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 's') { event.preventDefault(); void save() }
+  if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 's') { event.preventDefault(); void requestSave() }
 }
 onMounted(async () => {
   window.addEventListener('beforeunload', beforeUnload); window.addEventListener('keydown', keydown)
@@ -327,7 +361,7 @@ onMounted(async () => {
     if (!gone) { initialized.value = true; syncTimer = setTimeout(pollSync, 2000) }
   } catch (error) { failure.value = error instanceof Error ? error.message : String(error) }
 })
-onBeforeUnmount(() => { gone = true; clearTimeout(syncTimer); window.removeEventListener('beforeunload', beforeUnload); window.removeEventListener('keydown', keydown); emit('dirtyChange', false) })
+onBeforeUnmount(() => { gone = true; clearTimeout(syncTimer); clearTimeout(automaticSaveTimer); window.removeEventListener('beforeunload', beforeUnload); window.removeEventListener('keydown', keydown); emit('dirtyChange', false) })
 </script>
 <template>
   <main id="main-content" class="native-editor">
@@ -337,18 +371,18 @@ onBeforeUnmount(() => { gone = true; clearTimeout(syncTimer); window.removeEvent
       <button class="button" :disabled="!editing || busy" @click="addEntity">添加对象</button>
       <button class="button" :disabled="!editing || !status?.canUndo || busy" @click="history('undo')">撤销</button>
       <button class="button" :disabled="!editing || !status?.canRedo || busy" @click="history('redo')">重做</button>
-      <button v-if="editing" class="button" :disabled="busy || saving" @click="preview('play')">运行预览</button>
-      <button v-if="status?.mode === 'play'" class="button" :disabled="busy || saving" @click="preview('pause')">暂停预览</button>
-      <button v-if="status?.mode === 'pause'" class="button" :disabled="busy || saving" @click="preview('resume')">继续运行</button>
-      <button v-if="status?.mode === 'pause'" class="button" :disabled="busy || saving" @click="preview('step')">单步运行</button>
-      <button v-if="status && !editing" class="button" :disabled="busy || saving" @click="preview('stop')">停止预览</button>
+      <button v-if="editing" class="button" :disabled="busy || toolbarSaving" @click="preview('play')">运行预览</button>
+      <button v-if="status?.mode === 'play'" class="button" :disabled="busy || toolbarSaving" @click="preview('pause')">暂停预览</button>
+      <button v-if="status?.mode === 'pause'" class="button" :disabled="busy || toolbarSaving" @click="preview('resume')">继续运行</button>
+      <button v-if="status?.mode === 'pause'" class="button" :disabled="busy || toolbarSaving" @click="preview('step')">单步运行</button>
+      <button v-if="status && !editing" class="button" :disabled="busy || toolbarSaving" @click="preview('stop')">停止预览</button>
       <button class="button" :disabled="!editing || busy" @click="fileInput?.click()">导入图片</button>
       <button class="button" :disabled="!status || busy" @click="exportCurrent">导出项目</button>
-      <button class="button" :disabled="saving" @click="cloudOpen = true">云端</button>
+      <button class="button" :disabled="toolbarSaving" @click="cloudOpen = true">云端</button>
       <button class="button" :disabled="!status" @click="scriptOpen = !scriptOpen">C# 脚本</button>
       <button ref="agentTrigger" class="button" :class="{ 'agent-active': agentOpen }" :disabled="!status" :aria-expanded="agentOpen" aria-controls="editor-agent-panel" @click="agentOpen = !agentOpen">AI 助手</button>
-      <button class="button" :disabled="saving" @click="publishOpen = true">发布</button>
-      <button class="button button-primary editor-save-button" :disabled="!status || saving" @click="save()">保存到云端</button>
+      <button class="button" :disabled="toolbarSaving" @click="publishOpen = true">发布</button>
+      <button class="button button-primary editor-save-button" :disabled="!status || toolbarSaving" @click="requestSave()">保存到云端</button>
       <input ref="fileInput" hidden type="file" accept=".png,.jpg,.jpeg,.tga" @change="importImage" />
     </header>
 
