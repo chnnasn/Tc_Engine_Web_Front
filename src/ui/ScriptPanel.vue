@@ -98,12 +98,19 @@ async function importFile(event: Event) {
     emit('dirty'); emit('notify', `已导入 ${file.name}`)
   })
 }
+async function writeDraft() {
+  if (!current.value) return
+  adopt(await props.call<ScriptsReply>('scriptWrite', { path: current.value.path, text: draft.value, handle: current.value.handle || undefined }))
+  emit('dirty')
+}
 function save() {
-  void run(async () => {
-    if (!current.value) return
-    adopt(await props.call<ScriptsReply>('scriptWrite', { path: current.value.path, text: draft.value, handle: current.value.handle || undefined }))
-    emit('dirty'); emit('notify', '脚本已写入项目文件，请编译并保存项目')
-  })
+  void run(async () => { await writeDraft(); emit('notify', '脚本已写入项目文件，请编译并保存项目') })
+}
+async function flushDraft() {
+  if (busy.value) throw new Error('脚本正在处理中，请完成后再保存或离开')
+  if (!dirty.value) return
+  busy.value = true
+  try { await writeDraft() } finally { busy.value = false }
 }
 function remove() {
   void run(async () => {
@@ -136,7 +143,7 @@ function rebuild() {
 onMounted(refresh)
 watch(() => props.visible, visible => { if (visible) void refresh() })
 watch(dirty, value => emit('draftChange', value))
-defineExpose({ refresh })
+defineExpose({ refresh, flushDraft })
 </script>
 <template>
   <section id="editor-script-panel" class="script-panel" aria-label="C# 脚本面板">

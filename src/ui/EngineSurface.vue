@@ -21,6 +21,9 @@ function wire(value: any): any {
   if (value && typeof value === 'object') return Object.fromEntries(Object.entries(value).map(([key, item]) => [key, wire(item)]))
   return value
 }
+function saveLayout() {
+  try { iframe.value?.contentWindow?.dispatchEvent(new Event('tomcat-save-layout')) } catch { /* Context already gone. */ }
+}
 function stop() {
   clearTimeout(bootTimer)
   // Synchronous cleanup before removing the same-origin browsing context.
@@ -60,7 +63,7 @@ function call<T = any>(type: string, payload: unknown = {}): Promise<T> {
   })
 }
 onBeforeUnmount(stop)
-defineExpose({ call, stop })
+defineExpose({ call, stop, saveLayout })
 </script>
 <template>
   <div class="engine-surface">

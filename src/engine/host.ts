@@ -1,6 +1,7 @@
 import { currentUser, getCloudProject } from './cloud'
 import { PROTOCOL, EditorProtocol, EngineError, type SceneState, type Snapshot, type Operation } from './protocol'
 import { assertDocument, engineCommit, projectRoot, validFilePath, type EngineDocument } from './storage'
+import engineLock from '../../engine.lock.json'
 import { attachScripts, detachScripts, readScripts } from './scene-archive'
 import {
   loadEngine, engineFilesystem, bootPlayer, shutdown, compileAndInstall, compileOnly, needsRuntimeRebuild, scriptAssetsJson,
@@ -24,7 +25,7 @@ let previousState = ''
 let lastTime = 0
 let lastPoll = 0
 let width = 0, height = 0
-// 布局：引擎产出/应用工作区，宿主只负责搬运；版本与引擎提交一起进 key，升级后自然失效。
+// 工作区按布局格式持久化；兼容的引擎更新不会丢弃用户偏好。
 let lastAutoSave = 0
 // 已经通知引擎的显示比例，用来识别"只换了 DPR、CSS 尺寸没变"的情况。
 let appliedScale = 0
@@ -114,7 +115,7 @@ function resize() {
   if (kind === 'editor') exports().EditorResize(width, height)
   else exports().PlayerResize(width, height)
 }
-const layoutKey = () => `tomcat.web-editor-layout.v1.${engineCommit}`
+const layoutKey = 'tomcat.web-editor-layout.v1'
 /** 上一次落盘的工作区内容，用来判断是否真的变了。 */
 let savedLayout = ''
 /** 退出前把工作区交给宿主存储；玩家会话没有布局，失败也不影响关闭。 */
@@ -123,40 +124,39 @@ function flushLayout() {
   try {
     const result = rpc('editor.saveLayout', {}, '保存工作区') as { settings?: string } | undefined
     const settings = result?.settings
-    if (settings) { localStorage.setItem(layoutKey(), settings); savedLayout = settings }
+    if (settings && settings !== savedLayout) { localStorage.setItem(layoutKey, settings); savedLayout = settings }
   } catch { /* 引擎不可用或存储被禁用。 */ }
 }
 function restoreLayout() {
   if (kind !== 'editor') return
   try {
-    const settings = localStorage.getItem(layoutKey())
-    if (!settings) return
-    // 引擎在数据不可用（版本不符、缺少 ImGui 托管段）时拒绝并沿用默认布局。
-    const result = rpc('editor.loadLayout', { settings }, '恢复工作区') as { applied?: boolean } | undefined
-    if (result?.applied) savedLayout = settings
-    else localStorage.removeItem(layoutKey())
+    const previousKeys = [engineCommit, ...[...engineLock.legacyCommits].reverse()].map(commit => `${layoutKey}.${commit}`)
+    for (const key of [layoutKey, ...previousKeys]) {
+      const settings = localStorage.getItem(key)
+      if (!settings) continue
+      const result = rpc('editor.loadLayout', { settings }, '恢复工作区') as { applied?: boolean } | undefined
+      if (result?.applied) { localStorage.setItem(layoutKey, settings); savedLayout = settings; break }
+    }
   } catch { /* 损坏的数据不应阻止编辑器启动。 */ }
 }
 /**
  * 周期性落盘。引擎不暴露"布局脏了"的标记，所以这里取一次当前工作区与上次落盘的内容比较；
- * 序列化本身只是内存操作（数百字节），10 秒一次的开销可以忽略。真正必要的落盘点是 dispose。
+ * 每两秒比对一次，并在手动保存、隐藏页面及退出前立即落盘。
  */
 function maybeAutoSaveLayout(time: number) {
-  if (kind !== 'editor' || !engine || stopped || time - lastAutoSave < 10000) return
+  if (kind !== 'editor' || !engine || stopped || time - lastAutoSave < 2000) return
   lastAutoSave = time
-  try {
-    const result = rpc('editor.saveLayout', {}, '保存工作区') as { settings?: string } | undefined
-    const settings = result?.settings
-    if (settings && settings !== savedLayout) { localStorage.setItem(layoutKey(), settings); savedLayout = settings }
-  } catch { /* 引擎不可用或存储被禁用。 */ }
+  flushLayout()
 }
 function dispose() {
   if (stopped) return
-  stopped = true; cancelAnimationFrame(frame); observer?.disconnect()
   flushLayout()
+  stopped = true; cancelAnimationFrame(frame); observer?.disconnect()
   try { if (engine) shutdown(engine.web, kind) } finally { engine = undefined; port?.close() }
 }
 addEventListener('pagehide', dispose)
+addEventListener('tomcat-save-layout', flushLayout)
+document.addEventListener('visibilitychange', () => { if (document.hidden) flushLayout() })
 canvas.addEventListener('webglcontextlost', event => { event.preventDefault(); fail(new Error('图形上下文丢失，请重新打开会话')) })
 canvas.addEventListener('pointerdown', () => canvas.focus())
 canvas.addEventListener('contextmenu', event => event.preventDefault())
@@ -223,6 +223,7 @@ function restore(document: EngineDocument) {
   }
 }
 function capture(): EngineDocument {
+  flushLayout()
   const fs = filesystem()
   const snapshot = protocol!.snapshot(state().sceneHandle)
   const files: Record<string, string> = {}

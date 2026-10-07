@@ -15,6 +15,8 @@ const props = defineProps<{ project: Project }>()
 const emit = defineEmits<{ updateProject: [project: Project]; notify: [message: string]; dirtyChange: [dirty: boolean] }>()
 const navigate = useNavigation()
 const surface = ref<InstanceType<typeof EngineSurface>>()
+const scriptPanel = ref<InstanceType<typeof ScriptPanel>>()
+const leaving = ref(false)
 // 重建引擎会话：browser-wasm 无法在同一模块内替换 C# 程序集，改换 key 让宿主 iframe 重新挂载。
 const surfaceKey = ref(0)
 const stored = ref<EngineDocument>()
@@ -68,7 +70,7 @@ async function pollSync() {
       automaticSync.value = (await syncConfiguration()).enabled
       syncConfigLoaded = true
     }
-    if (!gone && automaticSync.value && binding.value && editing.value && !busy.value && !saving.value && !manualSavePending.value) await save(true)
+    if (!gone && !leaving.value && automaticSync.value && binding.value && editing.value && !busy.value && !saving.value && !manualSavePending.value) await save(true)
   } catch (error) { syncMessage.value = error instanceof Error ? error.message : String(error) }
   finally { if (!gone) syncTimer = setTimeout(pollSync, syncConfigLoaded ? 2000 : 10000) }
 }
@@ -219,12 +221,12 @@ async function waitForSave() {
 async function requestSave() {
   if (manualSavePending.value || gone || !surface.value) return
   manualSavePending.value = true
-  try { await waitForSave(); await save() }
+  try { await waitForSave(); await scriptPanel.value?.flushDraft(); await save() }
   catch (error) { if (!gone) report(error) }
   finally { manualSavePending.value = false }
 }
-async function save(automatic = false) {
-  if (saving.value || gone || !surface.value) return
+async function save(automatic = false): Promise<boolean> {
+  if (saving.value || gone || !surface.value) return false
   saving.value = true
   if (!automatic) saveActivity.value = 'manual'
   try {
@@ -237,7 +239,7 @@ async function save(automatic = false) {
         draftDocument = serialized
         needsSave.value = true; emit('dirtyChange', true)
       }
-      return
+      return true
     }
     if (automatic && serialized === syncedDocument) {
       if (binding.value && dirty.value) {
@@ -249,7 +251,7 @@ async function save(automatic = false) {
           syncMessage.value = '已自动保存到数据库'
         }
       }
-      return
+      return true
     }
     if (binding.value) {
       // Polling an unchanged scene is not a save; only announce actual automatic writes.
@@ -263,11 +265,11 @@ async function save(automatic = false) {
       await writeEngineProject(props.project.id, captured.document, { ...binding.value })
     } else throw new Error('编辑器必须关联云端项目后才能保存')
     syncedDocument = serialized
-    if (gone) return
+    if (gone) return false
     stored.value = captured.document
     if (automatic) {
       syncMessage.value = '已同步，等待定期落库'
-      return
+      return true
     }
     syncMessage.value = binding.value ? '已保存到数据库' : ''
     syncBlocked = false
@@ -276,6 +278,7 @@ async function save(automatic = false) {
     needsSave.value = false; snapshot.value = next; updateStatus(next)
     emit('updateProject', { ...props.project, updated: nowLabel() })
     emit('notify', '完整项目已保存到云端')
+    return true
   } catch (error) {
     if (!gone) {
       if (automatic) {
@@ -283,6 +286,7 @@ async function save(automatic = false) {
         if (error instanceof CloudError && [401, 412].includes(error.status)) syncBlocked = true
       } else report(error)
     }
+    return false
   }
   finally { saving.value = false; saveActivity.value = '' }
 }
@@ -310,7 +314,25 @@ async function importImage(event: Event) {
     emit('notify', '图片已导入，请保存项目')
   })
 }
-function beforeUnload(event: BeforeUnloadEvent) { if (dirty.value) { event.preventDefault(); event.returnValue = '' } }
+async function prepareLeave(): Promise<boolean> {
+  surface.value?.saveLayout()
+  if (!status.value || failure.value || !surface.value) return true
+  if (leaving.value || busy.value) return false
+  leaving.value = true
+  try {
+    await waitForSave()
+    await scriptPanel.value?.flushDraft()
+    if (status.value.mode && status.value.mode !== 'edit') await surface.value.call('preview', { command: 'stop' })
+    // Persist an immediate revision, including any pending Redis working state.
+    return await save()
+  } catch (error) { report(error); return false }
+  finally { leaving.value = false }
+}
+function beforeUnload(event: BeforeUnloadEvent) {
+  surface.value?.saveLayout()
+  // Browser shutdown cannot await cloud uploads. Keep the unsaved-change guard.
+  if (dirty.value || saving.value) { event.preventDefault(); event.returnValue = '' }
+}
 function keydown(event: KeyboardEvent) {
   if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 's') { event.preventDefault(); void requestSave() }
 }
@@ -341,11 +363,12 @@ onMounted(async () => {
   } catch (error) { failure.value = error instanceof Error ? error.message : String(error) }
 })
 onBeforeUnmount(() => { gone = true; clearTimeout(syncTimer); clearTimeout(automaticSaveTimer); window.removeEventListener('beforeunload', beforeUnload); window.removeEventListener('keydown', keydown); emit('dirtyChange', false) })
+defineExpose({ prepareLeave })
 </script>
 <template>
   <main id="main-content" class="native-editor">
     <header class="native-toolbar">
-      <button class="button" @click="navigate('/projects')">返回项目</button>
+      <button class="button" :disabled="leaving" @click="navigate('/projects')">返回项目</button>
       <div class="editor-project-info"><strong class="editor-project-name" :title="project.name">{{ project.name }}</strong><span class="editor-save-status" role="status" :title="saveStatus">{{ saveStatus }}</span></div>
       <button class="button" :disabled="!editing || busy" @click="fileInput?.click()">导入图片</button>
       <button class="button" :disabled="!status || busy" @click="exportCurrent">导出项目</button>
@@ -359,14 +382,16 @@ onBeforeUnmount(() => { gone = true; clearTimeout(syncTimer); clearTimeout(autom
     <div class="editor-workspace">
     <EngineSurface v-if="initialized && !failure" :key="surfaceKey" ref="surface" kind="editor" :name="project.name" :template="project.template" :document="stored" :cloud-project-id="binding?.projectId" @ready="ready" @state="updateStatus" @actions="actions" @error="failure = $event" />
     <div v-else-if="!failure" class="native-notice">正在读取项目…</div>
-    <ScriptPanel v-if="scriptVisited && status && !failure" v-show="scriptOpen" class="editor-floating editor-floating-scripts" :visible="scriptOpen" :call="scriptCall" @collapse="collapseScript" @draft-change="scriptDraftDirty = $event" @notify="emit('notify', $event)" @dirty="markDirty" @restart="restartSession" />
+    <ScriptPanel ref="scriptPanel" v-if="scriptVisited && status && !failure" v-show="scriptOpen" class="editor-floating editor-floating-scripts" :visible="scriptOpen" :call="scriptCall" @collapse="collapseScript" @draft-change="scriptDraftDirty = $event" @notify="emit('notify', $event)" @dirty="markDirty" @restart="restartSession" />
     <AgentPanel v-if="status && !failure" v-show="agentOpen" class="editor-floating" :visible="agentOpen" :project-id="binding?.projectId" :call="agentCall" :checkpoint="checkpoint" @state="agentState" @collapse="collapseAgent" />
+    <div v-if="leaving" class="editor-leaving" role="status">正在保存，完成后返回…</div>
     </div>
     <footer>{{ binding ? '已关联云端' : '正在验证云端关联' }} · {{ status?.mode === 'play' ? '运行中' : status?.mode === 'pause' ? '已暂停' : '编辑模式' }} · {{ snapshot?.schemas.length || 0 }} 种组件类型 <span v-if="selected"> · {{ selected.name }}</span><span>预览不会公开发布；停止预览后继续编辑</span></footer>
   </main>
 </template>
 <style scoped>
 .native-editor{height:100dvh;display:flex;flex-direction:column;background:#202329;color:#e8eeee}.native-toolbar{display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:10px 16px;background:#f5f6f2;color:#24322b}.native-toolbar strong{margin-right:auto}.native-toolbar .button{padding:8px 12px;min-height:34px}.native-editor :deep(.engine-surface){flex:1;min-height:0}.native-notice{padding:14px 20px;background:#394039;color:#fff}.native-editor footer{display:flex;gap:10px;flex-wrap:wrap;font-size:12px;padding:8px 16px;color:#bcc7c2}.native-editor footer span:last-child{margin-left:auto}
+.editor-leaving{position:absolute;inset:0;z-index:30;display:grid;place-content:center;background:#202329cc;color:#fff;font-size:14px}
 .editor-workspace{position:relative;display:flex;flex:1;min-height:0;min-width:0;overflow:hidden}.editor-workspace :deep(.engine-surface){min-width:0}.native-toolbar .agent-active{background:#f0e5db;border-color:#b8866b;color:#88412d}
 .editor-workspace>.editor-floating{position:absolute;z-index:10;top:0;right:0;bottom:0;width:390px;max-width:100%;min-width:0;height:auto;border:0;border-left:1px solid #d8d2c8;border-radius:0;box-shadow:-8px 0 24px #0003;overflow:hidden}
 .editor-workspace>.editor-floating-scripts{width:620px}

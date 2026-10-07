@@ -14,7 +14,7 @@ Vue 3 创作工作台，使用固定版本的上游 TomCat Web Editor / Player�
 
 ## 开发与构建
 
-当前浏览器引擎锁定 `2ee941e6`，复用桌面端 Scene 辅助显示、编辑手柄和 Inspector 脚本管理。此次仅调整编辑器交互，TCPAK v8、Scene v11、Project v4、Managed API v5 不变，兼容 `41708b6c` 与 `053fcce4` 项目和游戏包；更旧及未知提交仍拒绝。Railway 打包器保持 `41708b6c`，后端接受这三个已验证的提交，现有项目重开后保存为新版，无需删除重建。详见 [场景视图对齐记录](docs/desktop-scene-parity.md)。
+当前浏览器引擎锁定 `bb692873`，复用桌面端 Scene 辅助显示、编辑手柄和 Inspector 脚本管理。此次仅调整编辑器交互，TCPAK v8、Scene v11、Project v4、Managed API v5 不变，兼容 `41708b6c`、`053fcce4` 与 `2ee941e6` 项目和游戏包；更旧及未知提交仍拒绝。Railway 打包器保持 `41708b6c`，后端接受这四个已验证的提交，现有项目重开后保存为新版，无需删除重建。详见 [场景视图对齐记录](docs/desktop-scene-parity.md)。
 
 该版本恢复了完整托管 Web 构建，并引入分帧场景加载、文字塑形、虚拟列表、2D 光照与后处理等引擎功能。原生 DLL 模块仍不支持 Web；浏览器存档持久化、完整 ICU/IME 和可听音频不因版本升级而自动获得支持。
 
@@ -34,7 +34,7 @@ npm run engine:build
 npm run dev
 ```
 
-`engine.lock.json` 固定引擎提交 `2ee941e6ad50e5797ec91bbfb90d0d29a0ece30e`，并记录 `kind: managed`。构建脚本检出到 `.engine/source`、初始化四个依赖子模块，然后用 **托管（C#）管线** 生成引擎产物：先用 Emscripten 编出 C++ 静态库（`tomcat_managed_web_entrypoints`、`tc_player_core`、`tc_yaml`、`box2d`），再 `dotnet publish -r browser-wasm` 发布 `Managed/TomCat.WebHost`——**最终 `.wasm` 由 .NET 运行时拥有**，C++ 引擎归档被链接进同一块 WebAssembly 内存，原生与托管共享函数表。最后把完整的 `main.js`、`_framework/` 与 C# 编译引用集 `refs/` 复制到 `public/engine/<commit>/`。没有本地 C++ 移植补丁。
+`engine.lock.json` 固定引擎提交 `bb692873f48ec3eff092b1991c693224e5613b4e`，并记录 `kind: managed`。构建脚本检出到 `.engine/source`、初始化四个依赖子模块，然后用 **托管（C#）管线** 生成引擎产物：先用 Emscripten 编出 C++ 静态库（`tomcat_managed_web_entrypoints`、`tc_player_core`、`tc_yaml`、`box2d`），再 `dotnet publish -r browser-wasm` 发布 `Managed/TomCat.WebHost`——**最终 `.wasm` 由 .NET 运行时拥有**，C++ 引擎归档被链接进同一块 WebAssembly 内存，原生与托管共享函数表。最后把完整的 `main.js`、`_framework/` 与 C# 编译引用集 `refs/` 复制到 `public/engine/<commit>/`。没有本地 C++ 移植补丁。
 
 托管模块是单线程构建（`WasmEnableThreads=false`），产物中不含 `SharedArrayBuffer`/pthread，因此**不再要求跨源隔离**；`vite.config.ts` 与 `netlify.toml` 仍保留 COOP/COEP 以便将来启用线程构建。
 
@@ -166,3 +166,9 @@ node tests/realtime-browser.mjs
 浏览器回归：启动 `npm run dev` 后运行 `node tests/email-auth-browser.mjs`（邮箱注册/登录、验证码错误、密码显示与桌面/手机布局），以及 `npm run test:auth`（既有权限与账号隔离）。前者模拟 API 响应；后端邮件验证链由后端 HTTP 集成测试覆盖。
 
 账号弹窗现提供“忘记密码”和“修改密码”。找回需使用已验证的注册邮箱；修改需输入当前密码。改密后所有设备需重新登录，项目归属保持不变。浏览器回归 `tests/email-auth-browser.mjs` 同时覆盖这两个流程、确认密码不一致和当前密码错误提示。
+
+### 工作区布局与退出保存
+
+工作区停靠尺寸、面板显示和 Project 的 One Column / Two Column 属于当前浏览器的编辑器偏好，每 2 秒自动保存到 `tomcat.web-editor-layout.v1`，手动保存、隐藏页面和退出时也立即保存。兼容升级会优先迁移最近一代引擎的旧布局；该布局不作为游戏资源上传云端。
+
+“返回项目”和浏览器后退会先写入 C# 草稿、停止预览，再等待云端修订持久化成功后离开；失败保留编辑器和本地草稿。直接关闭或刷新标签页无法等待异步上传，存在未保存内容时仍使用浏览器离开提示。`node tests/layout-exit-browser.mjs` 覆盖布局自动恢复、退出立即保存、旧版本迁移、上传延迟/失败、源码草稿和后退。

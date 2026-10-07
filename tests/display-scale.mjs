@@ -92,10 +92,10 @@ try {
   const context = await browser.newContext({ deviceScaleFactor: 2, viewport: { width: 1100, height: 760 } })
   const page = await prepare(context, 'local-probe')
   await openEditor(page)
-  // 宿主每 10 秒比对一次工作区并落盘
-  await page.waitForTimeout(13000)
+  // 宿主每 2 秒比对一次工作区并落盘
+  await page.waitForTimeout(3000)
   const stored = await page.evaluate(() => {
-    const key = Object.keys(localStorage).find(k => k.startsWith('tomcat.web-editor-layout.v1.'))
+    const key = Object.keys(localStorage).find(k => k === 'tomcat.web-editor-layout.v1')
     return { key: key ?? null, settings: key ? localStorage.getItem(key) : '' }
   })
   assert.ok(stored.key, '工作区未落盘：localStorage 里没有布局键')
@@ -111,7 +111,7 @@ try {
     const current = JSON.parse(inner.TomCatWeb.engine.EditorRpc(JSON.stringify({
       protocol: 'tomcat.web.v1', requestId: 'save2', type: 'editor.saveLayout', payload: {},
     }))).result.settings
-    const key = Object.keys(localStorage).find(k => k.startsWith('tomcat.web-editor-layout.v1.'))
+    const key = Object.keys(localStorage).find(k => k === 'tomcat.web-editor-layout.v1')
     return { current, stored: key ? localStorage.getItem(key) : '' }
   })
   assert.equal(roundtrip.current, roundtrip.stored, '重载后的工作区与存储内容不一致')

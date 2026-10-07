@@ -24,7 +24,8 @@ import PlayPage from './PlayPage.vue'
 import TopicDetailPage from './TopicDetailPage.vue'
 
 const path = ref(normalizePath(location.pathname))
-const editorDirty = ref(false)
+const editor = ref<InstanceType<typeof EditorPage>>()
+let navigationPending = false
 const account = ref<CloudUser>()
 const accountReady = ref(false)
 const creating = ref(false)
@@ -94,14 +95,17 @@ function normalizePath(value: string) {
   return value.replace(/\/$/, '') || '/'
 }
 
-function navigate(url: string) {
+async function navigate(url: string) {
   accountOpen.value = false
-  if (url === path.value) return
-  if (editorDirty.value && !window.confirm('当前场景有未保存的修改。确定放弃修改并离开编辑器吗？')) return
-  history.pushState({}, '', url)
-  path.value = normalizePath(url)
-  window.scrollTo({ top: 0 })
-  accountOpen.value = false
+  if (url === path.value || navigationPending) return
+  navigationPending = true
+  try {
+    if (editor.value && !await editor.value.prepareLeave()) return
+    history.pushState({}, '', url)
+    path.value = normalizePath(url)
+    window.scrollTo({ top: 0 })
+    accountOpen.value = false
+  } finally { navigationPending = false }
 }
 
 provide(navigationKey, navigate)
@@ -146,13 +150,19 @@ function updateProject(next: Project) {
   projects.value = projects.value.map(project => project.id === next.id ? next : project)
 }
 
-function handlePopState() {
-  if (editorDirty.value && !window.confirm('当前场景有未保存的修改。确定放弃修改并离开编辑器吗？')) {
+async function handlePopState() {
+  const target = normalizePath(location.pathname)
+  if (navigationPending) {
     history.pushState({}, '', path.value)
     return
   }
-  path.value = normalizePath(location.pathname)
-  window.scrollTo({ top: 0 })
+  navigationPending = true
+  try {
+    if (editor.value && !await editor.value.prepareLeave()) { history.pushState({}, '', path.value); return }
+    history.replaceState({}, '', target)
+    path.value = target
+    window.scrollTo({ top: 0 })
+  } finally { navigationPending = false }
 }
 
 watch(toast, value => {
@@ -234,7 +244,7 @@ onBeforeUnmount(() => {
   <ArcadePage v-else-if="path === '/play'" />
   <PlayPage v-else-if="playId" :key="playId" :game-id="playId" @notify="notify" />
   <TopicDetailPage v-else-if="topic" :key="topic.id" :topic="topic" :topics="topics" @update:topics="topics = $event" @notify="notify" />
-  <EditorPage v-else-if="editorProject" :key="`${accountScope}-${editorProject.id}`" :project="editorProject" @dirty-change="editorDirty = $event" @update-project="updateProject" @notify="notify" />
+  <EditorPage v-else-if="editorProject" ref="editor" :key="`${accountScope}-${editorProject.id}`" :project="editorProject" @update-project="updateProject" @notify="notify" />
   <NotFoundPage v-else />
 
   <footer v-if="!isEditor" class="site-footer"><div><AppLink href="/" class="footer-brand">tomcat.</AppLink><span>让好玩的想法发生。</span></div><span>登录创作 · 云端保存</span><span>© 2026 TomCat</span></footer>
