@@ -4,6 +4,7 @@ import { mkdirSync } from 'node:fs'
 import { engineRpc, engineState, waitMode } from './engine-browser-helpers.mjs'
 
 const base = process.env.TEST_BASE_URL || 'http://127.0.0.1:5173'
+assert.ok(['127.0.0.1', 'localhost', '[::1]'].includes(new URL(base).hostname), 'Run publication fixtures against a local development server only')
 const browser = await chromium.launch({ channel: 'chrome', headless: true, args: ['--enable-webgl', '--use-angle=swiftshader', '--enable-unsafe-swiftshader'] })
 const page = await browser.newPage({ viewport: { width: 1440, height: 960 } })
 const errors = []
@@ -91,9 +92,11 @@ try {
   await dialog.getByText('已发布', { exact: true }).waitFor()
   assert.equal(publishRequests, 1)
   await dialog.getByRole('button', { name: '更新发布', exact: true }).click()
+  await page.waitForFunction(() => [...document.querySelectorAll('dialog button')].some(button => button.textContent.trim() === '更新发布' && !button.disabled))
   await dialog.getByText('已发布', { exact: true }).waitFor()
   assert.equal(publishRequests, 2)
   await dialog.getByRole('button', { name: '取消发布', exact: true }).click()
+  await page.getByText('已取消发布', { exact: true }).waitFor()
   assert.equal(withdrawals, 1)
   await button('关闭对话框').click()
   await page.screenshot({ path: '.engine/projects-publish.png' })
