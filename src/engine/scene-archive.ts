@@ -1,7 +1,7 @@
 // 场景归档（SceneArchiveCodec YAML）里的 CSharpScripts 组件是"作者态"数据：
 // 引擎把它注册为 AddableInInspector=false，且没有可 patch 的属性，因此编辑器协议
-// （component.add / component.patch）无法挂载脚本。唯一可行路径是把组件记录注入
-// 归档 YAML 再走 scene.loadArchive —— 上游 Web/tests/managed-browser-smoke.html 同样如此。
+// （component.add / component.patch）无法挂载脚本。AI/宿主 RPC 把组件记录注入
+// 归档 YAML 再走 scene.loadArchive；用户交互则直接使用原生 Inspector 拖拽和移除。
 //
 // 归档由引擎的 YAML::Emitter 生成，格式非常规整（固定 2 空格缩进、无空行、无锚点），
 // 因此这里用行级编辑而不是引入 YAML 依赖。注入结果仍会被引擎的 Decode 校验，
@@ -147,9 +147,12 @@ export function readScripts(archive: string, entityId: string): ScriptAttachment
         const handleMatch = /^\s+ScriptHandle: (\d+)$/.exec(lines[cursor]!)
         const classMatch = /^\s+ClassName: (.+)$/.exec(lines[cursor]!)
         const attachmentMatch = /^\s+- AttachmentID: (\d+)$/.exec(lines[cursor]!)
+        if (attachmentMatch) {
+          if (handle) attachments.push({ handle, className, attachmentId })
+          handle = ''; className = ''; attachmentId = attachmentMatch[1]!
+        }
         if (handleMatch) handle = handleMatch[1]!
         if (classMatch) className = classMatch[1]!.trim()
-        if (attachmentMatch) attachmentId = attachmentMatch[1]!
       }
       if (handle) attachments.push({ handle, className, attachmentId })
       index = end

@@ -359,7 +359,7 @@ onBeforeUnmount(() => { gone = true; clearTimeout(syncTimer); clearTimeout(autom
     <div class="editor-workspace">
     <EngineSurface v-if="initialized && !failure" :key="surfaceKey" ref="surface" kind="editor" :name="project.name" :template="project.template" :document="stored" :cloud-project-id="binding?.projectId" @ready="ready" @state="updateStatus" @actions="actions" @error="failure = $event" />
     <div v-else-if="!failure" class="native-notice">正在读取项目…</div>
-    <ScriptPanel v-if="scriptVisited && status && !failure" v-show="scriptOpen" class="editor-floating editor-floating-scripts" :visible="scriptOpen" :call="scriptCall" :entity-id="status?.selectedEntityId ?? null" :entity-name="selected?.name ?? null" @collapse="collapseScript" @draft-change="scriptDraftDirty = $event" @notify="emit('notify', $event)" @dirty="markDirty" @restart="restartSession" @snapshot="agentState" />
+    <ScriptPanel v-if="scriptVisited && status && !failure" v-show="scriptOpen" class="editor-floating editor-floating-scripts" :visible="scriptOpen" :call="scriptCall" @collapse="collapseScript" @draft-change="scriptDraftDirty = $event" @notify="emit('notify', $event)" @dirty="markDirty" @restart="restartSession" />
     <AgentPanel v-if="status && !failure" v-show="agentOpen" class="editor-floating" :visible="agentOpen" :project-id="binding?.projectId" :call="agentCall" :checkpoint="checkpoint" @state="agentState" @collapse="collapseAgent" />
     </div>
     <footer>{{ binding ? '已关联云端' : '正在验证云端关联' }} · {{ status?.mode === 'play' ? '运行中' : status?.mode === 'pause' ? '已暂停' : '编辑模式' }} · {{ snapshot?.schemas.length || 0 }} 种组件类型 <span v-if="selected"> · {{ selected.name }}</span><span>预览不会公开发布；停止预览后继续编辑</span></footer>

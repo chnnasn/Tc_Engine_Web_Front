@@ -14,7 +14,7 @@ Vue 3 创作工作台，使用固定版本的上游 TomCat Web Editor / Player�
 
 ## 开发与构建
 
-当前浏览器引擎锁定 `053fcce4`，复用桌面端 Scene 辅助显示与编辑手柄。此次仅更新编辑器与 WebGL 清屏，TCPAK v8、Scene v11、Project v4、Managed API v5 不变，因此明确兼容上一版 `41708b6c` 项目和游戏包；更旧及未知提交仍拒绝。Railway 打包器保持 `41708b6c`，后端同时接受这两个已验证的提交，现有项目重开后保存为新版，无需删除重建。详见 [场景视图对齐记录](docs/desktop-scene-parity.md)。
+当前浏览器引擎锁定 `2ee941e6`，复用桌面端 Scene 辅助显示、编辑手柄和 Inspector 脚本管理。此次仅调整编辑器交互，TCPAK v8、Scene v11、Project v4、Managed API v5 不变，兼容 `41708b6c` 与 `053fcce4` 项目和游戏包；更旧及未知提交仍拒绝。Railway 打包器保持 `41708b6c`，后端接受这三个已验证的提交，现有项目重开后保存为新版，无需删除重建。详见 [场景视图对齐记录](docs/desktop-scene-parity.md)。
 
 该版本恢复了完整托管 Web 构建，并引入分帧场景加载、文字塑形、虚拟列表、2D 光照与后处理等引擎功能。原生 DLL 模块仍不支持 Web；浏览器存档持久化、完整 ICU/IME 和可听音频不因版本升级而自动获得支持。
 
@@ -34,7 +34,7 @@ npm run engine:build
 npm run dev
 ```
 
-`engine.lock.json` 固定引擎提交 `41708b6c756d530a1c71f0e0ef2539a1df1bb03e`，并记录 `kind: managed`。构建脚本检出到 `.engine/source`、初始化四个依赖子模块，然后用 **托管（C#）管线** 生成引擎产物：先用 Emscripten 编出 C++ 静态库（`tomcat_managed_web_entrypoints`、`tc_player_core`、`tc_yaml`、`box2d`），再 `dotnet publish -r browser-wasm` 发布 `Managed/TomCat.WebHost`——**最终 `.wasm` 由 .NET 运行时拥有**，C++ 引擎归档被链接进同一块 WebAssembly 内存，原生与托管共享函数表。最后把完整的 `main.js`、`_framework/` 与 C# 编译引用集 `refs/` 复制到 `public/engine/<commit>/`。没有本地 C++ 移植补丁。
+`engine.lock.json` 固定引擎提交 `2ee941e6ad50e5797ec91bbfb90d0d29a0ece30e`，并记录 `kind: managed`。构建脚本检出到 `.engine/source`、初始化四个依赖子模块，然后用 **托管（C#）管线** 生成引擎产物：先用 Emscripten 编出 C++ 静态库（`tomcat_managed_web_entrypoints`、`tc_player_core`、`tc_yaml`、`box2d`），再 `dotnet publish -r browser-wasm` 发布 `Managed/TomCat.WebHost`——**最终 `.wasm` 由 .NET 运行时拥有**，C++ 引擎归档被链接进同一块 WebAssembly 内存，原生与托管共享函数表。最后把完整的 `main.js`、`_framework/` 与 C# 编译引用集 `refs/` 复制到 `public/engine/<commit>/`。没有本地 C++ 移植补丁。
 
 托管模块是单线程构建（`WasmEnableThreads=false`），产物中不含 `SharedArrayBuffer`/pthread，因此**不再要求跨源隔离**；`vite.config.ts` 与 `netlify.toml` 仍保留 COOP/COEP 以便将来启用线程构建。
 
@@ -83,11 +83,13 @@ npm run test:browser
 
 - 每个脚本写入时同步生成 schema v2 `.tcmeta`（`Type: CSharpScript` + 稳定 `Handle`），Handle 与编译清单 `ScriptAssets.json` 一致。
 - “编译并安装”调用 `globalThis.TomCatWeb.compileAndInstall({ sources, references, scriptAssetsJson })`；诊断来自 Roslyn 与 TomCat 源生成器，逐条显示 `severity/code/message/file:line:column`。
-- **挂载**：引擎把 `CSharpScripts` 注册为 `AddableInInspector = false`，`component.add` / `component.patch` 都无法添加，因此面板通过把组件记录注入场景归档再走 `scene.loadArchive` 来挂载（与上游 `Web/tests/managed-browser-smoke.html` 同一路径）。`src/engine/scene-archive.ts` 负责行级注入，注入结果仍由引擎 `Decode` 校验，格式错误会以 `INVALID_SCENE` 拒绝而不是写坏场景。挂载记为可撤销的 “Import scene” 事务。
+- **组件管理**：在原生 Project 的 `Assets/Scripts` 中将脚本拖入实体的 Inspector；通过脚本组件右上角菜单的 `Remove Component` 移除挂载，支持撤销/重做，不删除 `.cs` 文件。C# 面板只负责源文件编辑和编译。原生 Inspector 尚未接入托管字段元数据，字段编辑/重置仍有此限制；缺少元数据不会阻止删除组件。AI 的挂载 RPC 仍通过 `src/engine/scene-archive.ts` 注入归档，由引擎 Decode 校验。
 - 点击“运行预览”时会先自动编译安装含 C# 的场景所需程序集；编译失败或未安装会被引擎以 `SCRIPT_COMPILE_FAILED` / `SCRIPT_ASSEMBLY_REQUIRED` 明确拒绝，不会静默降级。
 - **脚本 Handle 必须精确传递**：Handle 是 uint64，源生成器用 `GetUInt64()` 解析，而 JS 的 `Number` 在 2^53 以上会丢精度，导致引擎报 `Missing C# script asset …the attachment was skipped`。因此 `scriptAssetsJson()` 手工拼接 JSON 保留十进制原文，绝不经过 `Number`。
 - **重新编译需要重建会话**：原生 `WebEditorSession::SetManagedAssembly` 每个模块只接受一代程序集，浏览器 WebAssembly 没有可回收 ALC。脚本改动后面板会提示“重建引擎会话”，点击后宿主先抓取完整项目、重新挂载 iframe，新模块启动时恢复场景再重新编译安装。因此不要期待原地热重载。
 - 脚本文件、`.tcmeta` 与依赖图片都随项目一起保存到云端；前端 `assertDocument` 与后端 `ProjectFiles.TryManifest` 都会校验 `.cs` 必须成对出现 `.tcmeta`。
+
+运行本地 Vite 后，`node tests/inspector-script-browser.mjs` 验证原生拖拽、无元数据时删除组件、多挂载独立删除、撤销/重做及保存重开；`node tests/browser.mjs` 继续验证 Roslyn 编译和原生挂载后的 C# 生命周期。
 
 ## 播放器和生命周期
 

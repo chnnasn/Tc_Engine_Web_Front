@@ -1,4 +1,5 @@
-import { addEntity, preview, waitMode, fillCode } from './engine-browser-helpers.mjs'
+import { addEntity, preview, waitMode, fillCode, openNativeScripts, dragFirstNativeScript, engineRpc, engineState } from './engine-browser-helpers.mjs'
+import { readScripts } from '../src/engine/scene-archive.ts'
 import assert from 'node:assert/strict'
 import { chromium } from 'playwright'
 import { mkdirSync, readFileSync } from 'node:fs'
@@ -95,10 +96,11 @@ try {
     await page.locator('.script-panel .state.ok').waitFor({ timeout: 240000 })
     assert.equal(await page.locator('.script-panel .diagnostics li.error').count(), 0)
     // 挂载到选中实体并运行预览：证明浏览器内 C# 真的被引擎执行（而不只是编译通过）。
-    await addEntity(page)
-    await page.getByRole('button', { name: '挂载当前脚本', exact: true }).click()
-    await page.locator('.script-panel .attach .chips em', { hasText: 'WebSmoke' }).waitFor({ timeout: 30000 })
     await page.getByRole('button', { name: 'C# 脚本', exact: true }).click()
+    await openNativeScripts(page)
+    await dragFirstNativeScript(page)
+    const attached = await engineRpc(page, 'scene.snapshot', { sceneHandle: (await engineState(page)).sceneHandle })
+    assert.equal(readScripts(attached.archive, attached.entities.find(entity => entity.name === 'Player').id)[0]?.className, 'WebSmoke', 'native Project drag attaches the compiled script')
     await preview(page, 'play')
     await waitMode(page, 'play')
     for (let tries = 0; tries < 600 && !logs.some(text => text.includes('WEB_SMOKE_ONCREATE')); tries++) await new Promise(resolve => setTimeout(resolve, 100))

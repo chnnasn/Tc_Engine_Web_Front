@@ -186,6 +186,35 @@ test('re-attaching replaces the record instead of duplicating it, and detach res
   assert.equal(detachScripts(twice, '2539330170089681506'), archiveFixture)
   assert.equal(detachScripts(archiveFixture, '2539330170089681506'), archiveFixture)
 })
+test('readScripts preserves every native attachment, including repeated script assets', () => {
+  const native = `Entities:
+  - Entity: 9001
+    Components:
+      - TypeId: 11457157452030541833
+        StableName: TomCat.CSharpScripts
+        SchemaVersion: 1
+        Properties:
+          Scripts:
+            - AttachmentID: 9000000000000000001
+              Enabled: true
+              ScriptHandle: 5478837881518915558
+              ClassName: Player
+              Fields: []
+            - AttachmentID: 9000000000000000002
+              Enabled: false
+              ScriptHandle: 5478837881518915558
+              ClassName: Player
+              Fields: []
+  - Entity: 9002
+    Components: []
+`
+  assert.deepEqual(readScripts(native, '9001'), [
+    { handle: '5478837881518915558', className: 'Player', attachmentId: '9000000000000000001' },
+    { handle: '5478837881518915558', className: 'Player', attachmentId: '9000000000000000002' },
+  ])
+  assert.deepEqual(readScripts(native, '9002'), [])
+})
+
 test('scene archive injection refuses unknown entities and invalid handles', () => {
   assert.throws(() => attachScripts(archiveFixture, '999', [{ handle: '1', className: 'A' }]), /找不到可挂载脚本的实体/)
   assert.throws(() => attachScripts(archiveFixture, '2539330170089681506', []), /至少需要一个脚本/)
