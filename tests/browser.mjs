@@ -24,7 +24,7 @@ await page.route('**/v1/**', route => {
     if (id === 'desert') return route.fulfill({ status: 200, headers: { 'content-type': 'application/octet-stream' }, body: Buffer.from('not a tcpak') })
     return route.fulfill({ status: 404, json: { error: '没有这个示例游戏包。' } })
   }
-  if (path === '/v1/auth/me') return json({ id: 'engine-test', username: 'engine-test' })
+  if (path === '/v1/auth/me') return json({ id: 'engine-test', email: 'engine-test@example.com', emailVerified: true })
   if (path === '/v1/projects/sync-config') return json({ enabled: false })
   if (path === '/v1/projects' && route.request().method() === 'GET') return json([])
   if (path.includes('/uploads/')) return json({ uploadId: 'a'.repeat(32), contentHash: path.split('/').pop(), size: route.request().postDataBuffer().length })
@@ -194,7 +194,7 @@ try {
     await hidpi.route('**/v1/**', route => {
       const path = new URL(route.request().url()).pathname
       if (path.startsWith('/v1/games/')) return route.fulfill({ status: 200, headers: { 'content-type': 'application/octet-stream' }, body: readFileSync('.engine/games/forest.tcpak') })
-      if (path === '/v1/auth/me') return route.fulfill({ json: { id: 'engine-test', username: 'engine-test' } })
+      if (path === '/v1/auth/me') return route.fulfill({ json: { id: 'engine-test', email: 'engine-test@example.com', emailVerified: true } })
       return route.fulfill({ json: {} })
     })
     try {

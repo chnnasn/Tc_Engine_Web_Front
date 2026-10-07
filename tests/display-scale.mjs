@@ -28,7 +28,7 @@ const prepare = async (context, projectId) => {
   await page.route('**/v1/**', route => {
     const path = new URL(route.request().url()).pathname
     const reply = (body, status = 200) => route.fulfill({ status, json: body })
-    if (path === '/v1/auth/me') return reply({ id: 'engine-test', username: 'engine-test' })
+    if (path === '/v1/auth/me') return reply({ id: 'engine-test', email: 'engine-test@example.com', emailVerified: true })
     if (path === `/v1/projects/${projectId}`) return reply({ id: 'cloud-probe', name: 'probe', description: '', template: '2D', currentRevisionId: null, etag: null })
     if (path === '/v1/projects' && route.request().method() === 'POST') return reply({ id: 'cloud-probe', name: 'probe', description: '', template: '2D', currentRevisionId: null, etag: null }, 201)
     return reply({ enabled: false })

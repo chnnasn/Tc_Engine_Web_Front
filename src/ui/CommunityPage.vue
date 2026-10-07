@@ -28,7 +28,7 @@ async function publish() {
   if (!await requireLogin()) return
   if (!title.value.trim() || !content.value.trim()) return
   const id = uid()
-  emit('update:topics', [{ id, title: title.value.trim(), content: content.value.trim(), category: postCategory.value, author: user.value!.username, avatar: user.value!.username.slice(0, 1), color: '#e5ece4', time: '刚刚', replies: 0 }, ...props.topics])
+  emit('update:topics', [{ id, title: title.value.trim(), content: content.value.trim(), category: postCategory.value, author: '创作者', avatar: user.value!.email.slice(0, 1).toUpperCase(), color: '#e5ece4', time: '刚刚', replies: 0 }, ...props.topics])
   compose.value = false
   emit('notify', '话题已保存在本地')
   navigate(`/community/${id}`)

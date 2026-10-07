@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { onBeforeUnmount, onMounted, ref } from 'vue'
+import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
+import { ArrowRight, ArrowLeft, Mail, LockKeyhole, Eye, EyeOff, Check, ShieldCheck, LogOut, FolderOpen, Cloud, RefreshCw, ChevronRight } from '@lucide/vue'
 import AppModal from './AppModal.vue'
 import { authenticate, forgotPassword, resetPassword, changePassword, requestEmailCode, verifyEmailCode, completeRegistration, currentUser, logout, listCloudProjects, listRevisions, createCloudProject, restoreCloudProject, CloudError, type CloudUser, type CloudProject, type CloudRevision, type RestoredProject } from '../engine/cloud'
 import type { CloudBinding } from '../engine/storage'
@@ -7,14 +8,12 @@ import type { Project } from './data'
 const props = defineProps<{ project?: Project; binding?: CloudBinding; allowRestore?: boolean }>()
 const emit = defineEmits<{ close: []; attach: [binding: CloudBinding]; restored: [restored: RestoredProject] }>()
 const user = ref<CloudUser>()
-const username = ref('')
 const password = ref('')
 const email = ref('')
 const code = ref('')
 const challengeId = ref('')
 const token = ref('')
-const stage = ref<'credentials' | 'verify' | 'username'>('credentials')
-const bindingEmail = ref(false)
+const stage = ref<'credentials' | 'verify'>('credentials')
 const resendAt = ref(0)
 const notice = ref('')
 const resetResendAt = ref(0)
@@ -23,7 +22,7 @@ const newPassword = ref('')
 const confirmPassword = ref('')
 function openPassword(mode: 'none' | 'forgot' | 'change') {
   passwordMode.value = mode; password.value = ''; newPassword.value = ''; confirmPassword.value = ''; code.value = ''
-  error.value = ''; notice.value = ''; challengeId.value = ''; stage.value = 'credentials'; bindingEmail.value = false
+  error.value = ''; notice.value = ''; challengeId.value = ''; stage.value = 'credentials'; token.value = ''
 }
 function clearAccount() {
   user.value = undefined; projects.value = []; selected.value = undefined; revisions.value = []; token.value = ''
@@ -64,28 +63,22 @@ function switchMode() {
 }
 async function sendCode() {
   if (Date.now() < resendAt.value) throw new Error(`请等待 ${Math.ceil((resendAt.value - Date.now()) / 1000)} 秒后重新发送`)
-  const result = await requestEmailCode(email.value, password.value, bindingEmail.value)
+  const result = await requestEmailCode(email.value, password.value)
   challengeId.value = result.challengeId; resendAt.value = Date.now() + result.resendAfter * 1000
-  stage.value = 'verify'; code.value = ''; notice.value = '验证码已发送，请检查邮箱和垃圾邮件。验证码十分钟内有效。'
+  stage.value = 'verify'; code.value = ''; token.value = ''; notice.value = '验证码已发送，请检查邮箱和垃圾邮件。验证码十分钟内有效。'
 }
 function signIn() { void perform(async () => {
   if (stage.value === 'verify') {
-    const result = await verifyEmailCode(challengeId.value, code.value)
-    token.value = result.token; password.value = ''; code.value = ''; notice.value = ''
-    if (result.binding && user.value) {
-      user.value = await completeRegistration(token.value, user.value.username)
-      bindingEmail.value = false; stage.value = 'credentials'; notice.value = '邮箱已绑定，以后请使用邮箱登录。'
-    } else stage.value = 'username'
-  } else if (stage.value === 'username') {
-    user.value = await completeRegistration(token.value, username.value)
-    token.value = ''; stage.value = 'credentials'; await refresh()
-  } else if (mode.value === 'register' || bindingEmail.value) await sendCode()
+    if (!token.value) token.value = (await verifyEmailCode(challengeId.value, code.value)).token
+    user.value = await completeRegistration(token.value)
+    token.value = ''; password.value = ''; code.value = ''; notice.value = ''; stage.value = 'credentials'; await refresh()
+  } else if (mode.value === 'register') await sendCode()
   else {
     try { user.value = await authenticate('login', email.value, password.value); if (!gone) await refresh() }
     finally { password.value = '' }
   }
 }) }
-function signOut() { void perform(async () => { await logout(); bindingEmail.value = false; stage.value = 'credentials'; notice.value = ''; token.value = ''; password.value = ''; user.value = undefined; projects.value = []; selected.value = undefined }) }
+function signOut() { void perform(async () => { await logout(); mode.value = 'login'; stage.value = 'credentials'; notice.value = ''; token.value = ''; password.value = ''; user.value = undefined; projects.value = []; selected.value = undefined }) }
 function create() { void perform(async () => {
   if (!props.project || !user.value) return
   const project = await createCloudProject(props.project)
@@ -101,82 +94,80 @@ onMounted(() => { void perform(async () => {
   try { user.value = await currentUser(); await refresh() }
   catch (cause) { if (!(cause instanceof CloudError && cause.status === 401)) throw cause }
 }) })
-onBeforeUnmount(() => { gone = true })
+onBeforeUnmount(() => { gone = true; window.clearInterval(ticker) })
+const showPassword = ref(false)
+const now = ref(Date.now())
+const ticker = window.setInterval(() => { now.value = Date.now() }, 1000)
+const resendSeconds = computed(() => Math.max(0, Math.ceil((resendAt.value - now.value) / 1000)))
+const resetSeconds = computed(() => Math.max(0, Math.ceil((resetResendAt.value - now.value) / 1000)))
+const title = computed(() => passwordMode.value === 'change' ? '更新你的密码' : passwordMode.value !== 'none' ? '找回你的账号' : user.value ? '我的账号' : stage.value === 'verify' ? '检查你的收件箱' : mode.value === 'login' ? '欢迎回到创作现场。' : '从一个想法开始。')
 </script>
 <template>
-  <AppModal title="云端项目" @close="!busy && emit('close')">
-    <p v-if="error" class="cloud-error" role="alert">{{ error }}</p>
-    <p v-if="notice" class="local-note" role="status">{{ notice }}</p>
-    <form v-if="passwordMode !== 'none'" @submit.prevent="submitPassword">
-      <h3>{{ passwordMode === 'change' ? '修改密码' : '找回密码' }}</h3>
-      <template v-if="passwordMode === 'forgot'">
-        <p class="local-note">输入已绑定并验证的邮箱。尚未绑定邮箱的旧账号需先登录并绑定邮箱。</p>
-        <label class="field-label" for="recovery-email">邮箱</label><input id="recovery-email" v-model="email" class="text-input" type="email" autocomplete="email" required maxlength="254" :disabled="busy" />
-      </template>
-      <template v-else>
-        <template v-if="passwordMode === 'reset'">
-          <p>验证邮箱：{{ email }}</p>
-          <label class="field-label" for="recovery-code">六位验证码</label><input id="recovery-code" v-model="code" class="text-input" inputmode="numeric" autocomplete="one-time-code" pattern="[0-9]{6}" maxlength="6" required :disabled="busy" />
-          <button type="button" class="button" :disabled="busy" @click="passwordMode = 'forgot'; code = ''; newPassword = ''; confirmPassword = ''">重新发送验证码</button>
-        </template>
-        <template v-else>
-          <label class="field-label" for="current-password">当前密码</label><input id="current-password" v-model="password" class="text-input" type="password" autocomplete="current-password" required maxlength="128" :disabled="busy" />
-        </template>
-        <label class="field-label" for="new-password">新密码</label><input id="new-password" v-model="newPassword" class="text-input" type="password" autocomplete="new-password" required minlength="12" maxlength="128" :disabled="busy" />
-        <label class="field-label" for="confirm-password">确认新密码</label><input id="confirm-password" v-model="confirmPassword" class="text-input" type="password" autocomplete="new-password" required minlength="12" maxlength="128" :disabled="busy" />
-        <p class="local-note">密码须为 12–128 个字符，修改后所有设备需重新登录。</p>
-      </template>
-      <div class="dialog-actions"><button type="button" class="button" :disabled="busy" @click="openPassword('none')">返回</button><button class="button button-primary" :disabled="busy">{{ busy ? '处理中…' : passwordMode === 'forgot' ? '发送重置验证码' : passwordMode === 'reset' ? '重置密码' : '确认修改密码' }}</button></div>
-    </form>
-    <form v-else-if="!user || bindingEmail" @submit.prevent="signIn">
-      <div class="auth-intro"><img src="/HubLogo.ico" alt="" /><h3>{{ bindingEmail ? '绑定邮箱' : mode === 'login' ? '欢迎回来' : '创建账号' }}</h3></div>
-      <template v-if="stage === 'credentials'">
-        <p class="local-note">{{ bindingEmail ? '验证邮箱后，原账号与项目将保留。' : mode === 'login' ? '使用邮箱登录；尚未绑定邮箱的旧账号可填写原用户名。' : '验证邮箱后设置用户名，用于展示你的作品。' }}</p>
-        <label class="field-label" for="cloud-username">{{ mode === 'login' && !bindingEmail ? '邮箱 / 旧账号用户名' : '邮箱' }}</label>
-        <input id="cloud-username" v-model="email" class="text-input" :type="mode === 'login' && !bindingEmail ? 'text' : 'email'" autocomplete="username" required maxlength="254" :disabled="busy" />
-        <template v-if="!bindingEmail">
-          <label class="field-label" for="cloud-password">密码</label><input id="cloud-password" v-model="password" class="text-input" type="password" :autocomplete="mode === 'login' ? 'current-password' : 'new-password'" required minlength="12" maxlength="128" :disabled="busy" />
-        </template>
-      </template>
-      <template v-else-if="stage === 'verify'">
-        <p>验证邮箱：{{ email }}</p>
-        <label class="field-label" for="cloud-code">六位验证码</label><input id="cloud-code" v-model="code" class="text-input" inputmode="numeric" autocomplete="one-time-code" required pattern="[0-9]{6}" maxlength="6" :disabled="busy" />
-        <button type="button" class="button" :disabled="busy" @click="perform(sendCode)">重新发送验证码</button>
-      </template>
-      <template v-else>
-        <label class="field-label" for="cloud-display-name">用户名</label><input id="cloud-display-name" v-model="username" class="text-input" autocomplete="nickname" required pattern="[a-zA-Z0-9_]{3,32}" minlength="3" maxlength="32" :disabled="busy" />
-        <p class="local-note">3–32 个字母、数字或下划线；登录时使用邮箱。</p>
-      </template>
-      <div class="dialog-actions">
-        <button v-if="mode === 'login' && !bindingEmail" type="button" class="button" :disabled="busy" @click="openPassword('forgot')">忘记密码</button>
-        <button v-if="!bindingEmail" type="button" class="button" :disabled="busy" @click="switchMode">{{ mode === 'login' ? '切换到注册' : '返回登录' }}</button>
-        <button v-else type="button" class="button" :disabled="busy" @click="bindingEmail = false; stage = 'credentials'; notice = ''; password = ''; token = ''">取消绑定</button>
-        <button class="button button-primary" :disabled="busy">{{ busy ? '处理中…' : stage === 'verify' ? '验证邮箱' : stage === 'username' ? '完成注册' : mode === 'login' && !bindingEmail ? '登录' : '发送验证码' }}</button>
-      </div>
-    </form>
-    <template v-else>
-      <p>当前账号：<strong>{{ user.username }}</strong> <button class="button" :disabled="busy" @click="signOut">退出账号</button></p>
-      <button class="button" :disabled="busy" @click="openPassword('change')">修改密码</button>
-      <p v-if="user.email">邮箱：{{ user.email }}</p>
-      <button v-else class="button" :disabled="busy" @click="bindingEmail = true; email = ''; stage = 'credentials'; notice = ''; resendAt = 0">绑定邮箱</button>
-      <template v-if="project">
-        <p v-if="binding" class="local-note">此项目已关联云端。点击编辑器中的“保存到云端”将同时保存场景、配置和资源。</p>
-        <p v-else class="local-note">关联后，编辑器的保存和 Ctrl / ⌘ + S 会保存到云端。网络失败时保留本地草稿。</p>
-        <div class="dialog-actions"><button class="button button-primary" :disabled="busy" @click="create">{{ binding ? '另建云端项目' : '创建云端项目并关联' }}</button></div>
-        <p class="local-note">已有云端项目可在项目列表的“云端项目”中恢复；不会覆盖当前编辑内容。</p>
-      </template>
-      <template v-if="allowRestore">
-        <p class="local-note">恢复会创建本地副本。最新修订保持云端关联，历史修订会在进入编辑器时创建新的云端项目。</p>
-        <button class="button" :disabled="busy" @click="perform(refresh)">刷新云端列表</button>
-        <ul class="cloud-list"><li v-for="item in projects" :key="item.id"><button class="button" :disabled="busy" @click="choose(item)">{{ item.name }}{{ item.currentRevisionId ? '' : '（尚未保存）' }}</button></li></ul>
-        <p v-if="!projects.length && !busy">暂无云端项目。</p>
-        <div v-if="selected">
-          <label class="field-label" for="cloud-revision">{{ selected.name }} · 恢复版本</label>
-          <select id="cloud-revision" v-model="revision" class="text-input"><option value="">最新修订</option><option v-for="item in revisions" :key="item.revisionId" :value="item.revisionId">{{ new Date(item.createdAt).toLocaleString() }} · {{ item.revisionId.slice(0, 8) }}{{ item.aiCheckpoint ? ` · AI ${item.aiCheckpoint.phase === 'start' ? '开始' : '结束'} · ${item.aiCheckpoint.runId.slice(0, 8)}` : '' }}</option></select>
-          <div class="dialog-actions"><button class="button button-primary" :disabled="busy || !selected.currentRevisionId" @click="restore">{{ busy ? '校验并下载中…' : '恢复为本地副本' }}</button></div>
+  <AppModal :title="title" wide class="account-dialog" @close="!busy && emit('close')">
+    <div class="account-layout" :class="{ 'account-layout-signed': user && passwordMode === 'none' }">
+      <aside class="account-story" aria-hidden="true">
+        <div class="account-wordmark"><img src="/HubLogo.ico" alt="" />tomcat<span>.</span></div>
+        <div class="account-story-copy"><span class="account-eyebrow">A LITTLE SPACE FOR BIG IDEAS</span><h2>好玩的世界，<br />从你开始。</h2><p>收好灵感，搭起场景。<br />让下一个小世界慢慢长出来。</p></div>
+        <div class="account-illustration"><div class="studio-grid"></div><div class="studio-window"><i></i><i></i><i></i><i></i></div><div class="studio-step step-one"></div><div class="studio-step step-two"></div><div class="studio-block"><span>✦</span></div><div class="studio-caption"><span>YOUR NEXT WORLD</span><span>01 — ∞</span></div></div>
+        <div class="account-story-footer"><Cloud :size="16" /><span>你的创作，随时继续。</span></div>
+      </aside>
+      <section class="account-content" :aria-busy="busy">
+        <div class="account-heading"><span class="account-eyebrow">{{ user ? 'YOUR CREATIVE ACCOUNT' : 'WELCOME TO TOMCAT' }}</span><h2>{{ title }}</h2><p>{{ passwordMode === 'change' ? '为你的创作空间换一把新钥匙。' : passwordMode !== 'none' ? '验证邮箱后，就可以设置新密码。' : user ? '管理登录信息，继续你的创作。' : stage === 'verify' ? '最后一步，验证这个邮箱属于你。' : mode === 'login' ? '登录邮箱，接着完成上次的灵感。' : '用邮箱创建账号，开启你的创作空间。' }}</p></div>
+        <div v-if="error" class="account-message account-message-error" role="alert">{{ error }}</div>
+        <div v-if="notice" class="account-message" role="status"><Check :size="16" />{{ notice }}</div>
+
+        <form v-if="passwordMode !== 'none'" class="account-form" @submit.prevent="submitPassword">
+          <template v-if="passwordMode === 'forgot'">
+            <label for="recovery-email">邮箱地址</label><div class="account-input"><Mail :size="18" /><input id="recovery-email" v-model="email" type="email" autocomplete="email" placeholder="you@example.com" required maxlength="254" :disabled="busy" /></div>
+          </template>
+          <template v-else>
+            <template v-if="passwordMode === 'reset'">
+              <div class="verification-address"><Mail :size="18" /><span>{{ email }}</span></div>
+              <label for="recovery-code">六位验证码</label><input id="recovery-code" v-model="code" class="account-code" inputmode="numeric" autocomplete="one-time-code" placeholder="000000" pattern="[0-9]{6}" maxlength="6" required :disabled="busy" />
+              <button type="button" class="account-text-link resend-link" :disabled="busy || resetSeconds > 0" @click="passwordMode = 'forgot'; code = ''; newPassword = ''; confirmPassword = ''">{{ resetSeconds ? `${resetSeconds} 秒后可重发` : '重新发送验证码' }}</button>
+            </template>
+            <template v-else><label for="current-password">当前密码</label><div class="account-input"><LockKeyhole :size="18" /><input id="current-password" v-model="password" type="password" autocomplete="current-password" required maxlength="128" :disabled="busy" /></div></template>
+            <label for="new-password">新密码</label><div class="account-input"><LockKeyhole :size="18" /><input id="new-password" v-model="newPassword" type="password" autocomplete="new-password" required minlength="12" maxlength="128" :disabled="busy" /></div>
+            <label for="confirm-password">确认新密码</label><div class="account-input"><LockKeyhole :size="18" /><input id="confirm-password" v-model="confirmPassword" type="password" autocomplete="new-password" required minlength="12" maxlength="128" :disabled="busy" /></div>
+            <p class="account-hint">至少 12 个字符。更新后，所有设备需要重新登录。</p>
+          </template>
+          <button class="account-submit" :disabled="busy || passwordMode === 'forgot' && resetSeconds > 0">{{ busy ? '处理中…' : passwordMode === 'forgot' ? '发送重置验证码' : passwordMode === 'reset' ? '重置密码' : '确认修改密码' }}<ArrowRight :size="18" /></button>
+          <button type="button" class="account-back" :disabled="busy" @click="openPassword('none')"><ArrowLeft :size="15" />{{ user ? '返回账号' : '返回登录' }}</button>
+        </form>
+
+        <form v-else-if="!user" class="account-form" @submit.prevent="signIn">
+          <template v-if="stage === 'credentials'">
+            <div class="account-tabs" aria-label="选择登录方式"><button type="button" aria-label="切换到登录" :aria-pressed="mode === 'login'" :class="{ selected: mode === 'login' }" :disabled="busy" @click="mode !== 'login' && switchMode()">登录</button><button type="button" aria-label="切换到注册" :aria-pressed="mode === 'register'" :class="{ selected: mode === 'register' }" :disabled="busy" @click="mode !== 'register' && switchMode()">创建账号</button></div>
+            <label for="cloud-email">邮箱地址</label><div class="account-input"><Mail :size="18" /><input id="cloud-email" v-model="email" type="email" autocomplete="email" placeholder="you@example.com" required maxlength="254" :disabled="busy" /></div>
+            <div class="account-label-row"><label for="cloud-password">密码</label><button v-if="mode === 'login'" type="button" class="account-text-link" :disabled="busy" @click="openPassword('forgot')">忘记密码</button></div>
+            <div class="account-input"><LockKeyhole :size="18" /><input id="cloud-password" v-model="password" :type="showPassword ? 'text' : 'password'" :autocomplete="mode === 'login' ? 'current-password' : 'new-password'" :placeholder="mode === 'login' ? '输入你的密码' : '至少 12 个字符'" required :minlength="mode === 'register' ? 12 : undefined" maxlength="128" :disabled="busy" /><button type="button" :aria-label="showPassword ? '隐藏密码' : '显示密码'" :aria-pressed="showPassword" @click="showPassword = !showPassword"><EyeOff v-if="showPassword" :size="17" /><Eye v-else :size="17" /></button></div>
+            <p v-if="mode === 'register'" class="account-hint">我们会发送一封验证邮件，验证后即可开始创作。</p>
+          </template>
+          <template v-else>
+            <div class="verification-address"><Mail :size="18" /><span>{{ email }}</span></div>
+            <label for="cloud-code">六位验证码</label><input id="cloud-code" v-model="code" class="account-code" inputmode="numeric" autocomplete="one-time-code" required placeholder="000000" pattern="[0-9]{6}" maxlength="6" :disabled="busy" />
+            <div class="account-resend"><span>没有收到邮件？</span><button type="button" class="account-text-link" :disabled="busy || resendSeconds > 0" @click="perform(sendCode)">{{ resendSeconds ? `${resendSeconds} 秒后可重发` : '重新发送验证码' }}</button></div>
+          </template>
+          <button class="account-submit" :disabled="busy">{{ busy ? '处理中…' : stage === 'verify' ? '验证邮箱并创建账号' : mode === 'login' ? '登录' : '发送验证码' }}<ArrowRight :size="18" /></button>
+          <button v-if="stage === 'verify'" type="button" class="account-back" :disabled="busy" @click="stage = 'credentials'; token = ''; notice = ''; error = ''"><ArrowLeft :size="15" />修改邮箱</button>
+          <p class="account-form-footer"><ShieldCheck :size="15" />{{ mode === 'login' ? '登录后，即可同步你的创作。' : '邮箱仅用于登录、验证和账号找回。' }}</p>
+        </form>
+
+        <div v-else class="account-dashboard">
+          <div class="account-identity"><span class="account-monogram">{{ user.email.slice(0, 1).toUpperCase() }}</span><div><strong>{{ user.email }}</strong><span><span class="verified-dot"></span>邮箱已验证</span></div></div>
+          <div class="account-section-label">账号与安全</div>
+          <button class="account-setting" aria-label="修改密码" :disabled="busy" @click="openPassword('change')"><span class="setting-icon"><LockKeyhole :size="19" /></span><span><strong>登录密码</strong><small>更新密码，保护你的创作空间</small></span><ChevronRight :size="18" /></button>
+          <template v-if="project"><div class="account-project-card"><FolderOpen :size="22" /><h3>{{ project.name }}</h3><p>{{ binding ? '项目已关联云端，编辑器中可随时保存。' : '关联云端，保存场景、配置和资源。' }}</p><button class="account-submit" :disabled="busy" @click="create">{{ binding ? '另建云端项目' : '创建云端项目并关联' }}<ArrowRight :size="17" /></button></div></template>
+          <template v-if="allowRestore">
+            <div class="account-section-label account-project-heading"><span>云端项目 <span class="account-count">{{ projects.length }}</span></span><button class="account-text-link" :disabled="busy" @click="perform(refresh)"><RefreshCw :size="13" />刷新</button></div>
+            <ul class="account-projects"><li v-for="item in projects" :key="item.id"><button :class="{ selected: selected?.id === item.id }" :disabled="busy" @click="choose(item)"><FolderOpen :size="20" /><span><strong>{{ item.name }}</strong><small>{{ item.currentRevisionId ? '已有云端修订' : '尚未保存' }}</small></span><ChevronRight :size="16" /></button></li></ul>
+            <div v-if="!projects.length && !busy" class="account-empty"><FolderOpen :size="28" /><strong>你的第一个世界，等你开始</strong><p>创建项目后，就能在这里找到云端记录。</p></div>
+            <div v-if="selected" class="account-restore"><label class="field-label" for="cloud-revision">{{ selected.name }} · 恢复版本</label><select id="cloud-revision" v-model="revision" class="text-input"><option value="">最新修订</option><option v-for="item in revisions" :key="item.revisionId" :value="item.revisionId">{{ new Date(item.createdAt).toLocaleString() }}{{ item.aiCheckpoint ? ` · AI ${item.aiCheckpoint.phase === 'start' ? '开始' : '结束'}` : '' }}</option></select><p class="account-hint">恢复为独立副本，不覆盖当前编辑内容。</p><button class="account-submit" :disabled="busy || !selected.currentRevisionId" @click="restore">{{ busy ? '校验并下载中…' : '恢复为本地副本' }}<ArrowRight :size="17" /></button></div>
+          </template>
+          <button class="account-signout" :disabled="busy" @click="signOut"><LogOut :size="16" />退出账号</button>
         </div>
-      </template>
-    </template>
+      </section>
+    </div>
   </AppModal>
 </template>
-<style scoped>.cloud-error{color:#a32e2e;white-space:pre-wrap}.cloud-list{list-style:none;padding:0;max-height:220px;overflow:auto}.cloud-list li{margin:8px 0}.cloud-list .button{width:100%;justify-content:flex-start}</style>
+<style src="./account.css"></style>

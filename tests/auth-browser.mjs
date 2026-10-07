@@ -17,7 +17,7 @@ await page.addInitScript(project => {
 await page.route('**/v1/**', async route => {
   const path = new URL(route.request().url()).pathname
   const reply = (body, status = 200) => route.fulfill({ status, json: body })
-  if (path === '/v1/auth/login') { user = { id: 'alice', username: 'alice' }; return reply(user) }
+  if (path === '/v1/auth/login') { user = { id: 'alice', email: 'alice@example.com', emailVerified: true }; return reply(user) }
   if (path === '/v1/auth/me') return reply(user || {}, user ? 200 : 401)
   if (!user) return reply({}, 401)
   if (path === '/v1/auth/logout') { user = undefined; return reply({}) }
@@ -53,7 +53,7 @@ try {
   assert.equal(engineLoads, 0)
   await page.goto(base + '/community')
   await page.getByRole('button', { name: '发起话题' }).click()
-  await page.locator('#cloud-username').waitFor()
+  await page.locator('#cloud-email').waitFor()
   assert.equal(await page.locator('#topic-title').count(), 0)
   await page.goto(base + '/community/welcome')
   await page.getByRole('button', { name: '登录后参与讨论' }).waitFor()
@@ -62,10 +62,10 @@ try {
   await page.getByRole('button', { name: '登录后参与讨论' }).waitFor()
   assert.equal(await page.locator('#game-comment').count(), 0)
   await page.getByRole('button', { name: '打开游玩预览', exact: true }).click()
-  assert.equal(await page.locator('#cloud-username').count(), 0)
+  assert.equal(await page.locator('#cloud-email').count(), 0)
   await page.goto(base + '/editor/owned')
   await page.getByRole('button', { name: '登录 / 注册', exact: true }).click()
-  await page.locator('#cloud-username').fill('alice')
+  await page.locator('#cloud-email').fill('alice@example.com')
   await page.locator('#cloud-password').fill('test-password-123')
   await page.getByRole('button', { name: '登录', exact: true }).click()
   await page.getByRole('button', { name: '返回项目', exact: true }).waitFor()
@@ -85,9 +85,9 @@ try {
   await page.locator('#game-comment').fill('会话失效后不得写入')
   user = undefined
   await page.getByRole('button', { name: '留下想法', exact: true }).click()
-  await page.locator('#cloud-username').waitFor()
+  await page.locator('#cloud-email').waitFor()
   assert.equal(await page.evaluate(() => localStorage.getItem('tomcat-ui-comments-forest')), null)
-  user = { id: 'bob', username: 'bob' }
+  user = { id: 'bob', email: 'bob@example.com', emailVerified: true }
   await page.goto(base + '/projects')
   await page.getByRole('heading', { name: '我的项目' }).waitFor()
   assert.equal(await page.getByText(project.name, { exact: true }).count(), 0)

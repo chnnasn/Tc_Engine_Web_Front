@@ -1,6 +1,6 @@
 import { assertDocument, engineCommit, validFilePath, requiredFiles, type CloudBinding, type EngineDocument } from './storage.ts'
 
-export interface CloudUser { id: string; username: string; email?: string | null; emailVerified?: boolean }
+export interface CloudUser { id: string; email: string; emailVerified: boolean }
 export interface CloudProject { id: string; name: string; description: string; template: '2D' | '空白'; currentRevisionId: string | null; etag: string | null }
 export interface AiCheckpoint { runId: string; phase: 'start' | 'end'; sceneVersion: string }
 export interface CloudRevision { revisionId: string; etag: string; createdAt: string; aiCheckpoint?: AiCheckpoint }
@@ -20,7 +20,7 @@ async function api(path: string, init: RequestInit = {}) {
     let message = '云端请求失败'
     try { message = (await response.json()).error || message } catch { /* Empty precondition responses. */ }
     if (response.status === 401) {
-      message = path === '/auth/login' ? '邮箱或密码错误；旧账号可使用用户名登录' : '请先登录云端账号'
+      message = path === '/auth/login' ? '邮箱或密码错误' : '请先登录云端账号'
       if (!['/auth/login', '/auth/register'].includes(path) && typeof window !== 'undefined') window.dispatchEvent(new Event('tomcat-auth-expired'))
     }
     if (response.status === 404) message = '云端项目或文件不存在，或当前账号没有访问权限'
@@ -38,12 +38,12 @@ export const authenticate = async (_mode: 'login', login: string, password: stri
   if (typeof window !== 'undefined') window.dispatchEvent(new Event('tomcat-auth-changed'))
   return user
 }
-export const requestEmailCode = async (email: string, password: string, binding = false): Promise<{ challengeId: string; resendAfter: number }> =>
-  (await api(binding ? '/auth/bind-email' : '/auth/register', json('POST', { email, password }))).json()
-export const verifyEmailCode = async (challengeId: string, code: string): Promise<{ token: string; binding: boolean }> =>
+export const requestEmailCode = async (email: string, password: string): Promise<{ challengeId: string; resendAfter: number }> =>
+  (await api('/auth/register', json('POST', { email, password }))).json()
+export const verifyEmailCode = async (challengeId: string, code: string): Promise<{ token: string }> =>
   (await api('/auth/verify-email', json('POST', { challengeId, code }))).json()
-export const completeRegistration = async (token: string, username: string): Promise<CloudUser> => {
-  const user = await (await api('/auth/complete-registration', json('POST', { token, username }))).json()
+export const completeRegistration = async (token: string): Promise<CloudUser> => {
+  const user = await (await api('/auth/complete-registration', json('POST', { token }))).json()
   if (typeof window !== 'undefined') window.dispatchEvent(new Event('tomcat-auth-changed'))
   return user
 }
