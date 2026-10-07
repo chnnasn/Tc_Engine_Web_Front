@@ -1,3 +1,4 @@
+import { addEntity } from './engine-browser-helpers.mjs'
 import assert from 'node:assert/strict'
 import { chromium } from 'playwright'
 import { spawn } from 'node:child_process'
@@ -49,7 +50,7 @@ try {
   await a.getByLabel('项目名称',{exact:true}).fill('我的第一个游戏')
   await a.getByRole('button',{name:'创建项目',exact:true}).click()
   await a.waitForURL('**/editor/**'); await ready(a)
-  await a.getByRole('button',{name:'添加对象',exact:true}).click()
+  await addEntity(a)
   await a.waitForFunction(() => [...document.querySelectorAll('button')].some(b => b.textContent === '导入图片' && !b.disabled))
   await a.locator('input[type=file]').setInputFiles({name:'red.tga',mimeType:'application/octet-stream',buffer:Buffer.from([0,0,2,0,0,0,0,0,0,0,0,0,1,0,1,0,24,0,0,0,255])})
   await a.getByText('图片已导入，请保存项目',{exact:true}).waitFor()
@@ -75,13 +76,13 @@ try {
   // Saving the restored real engine validates that configuration and all resource bytes survived boot.
   await b.getByRole('button',{name:'保存到云端',exact:true}).click(); await b.getByText('完整项目已保存到云端',{exact:true}).waitFor()
   const second=await cached(b); assert.deepEqual(second.document.files,first.document.files)
-  await a.getByRole('button',{name:'添加对象',exact:true}).click(); await a.getByRole('button',{name:'保存到云端',exact:true}).click()
+  await addEntity(a); await a.getByRole('button',{name:'保存到云端',exact:true}).click()
   await a.getByText(/云端已有新修订，本地内容已保留/).waitFor()
   assert.equal(await a.evaluate(() => window.markSavedCalls),1,'conflict must not mark the scene saved')
   const stale=await cached(a); assert.equal(stale.binding.etag,first.binding.etag); assert.equal(stale.binding.pending,true)
   await a.reload(); await ready(a); assert.match(await a.locator('.editor-save-status').textContent(), /未保存/)
   await b.route('**/v1/projects/**/uploads/**',r=>r.abort())
-  await b.getByRole('button',{name:'添加对象',exact:true}).click(); await b.getByRole('button',{name:'保存到云端',exact:true}).click()
+  await addEntity(b); await b.getByRole('button',{name:'保存到云端',exact:true}).click()
   await b.getByText(/无法连接云端，本地内容已保留/).waitFor()
   assert.equal(await b.evaluate(() => window.markSavedCalls),1,'upload failure must not mark the scene saved')
   const offline=await cached(b); assert.equal(offline.binding.pending,true); assert.equal(offline.binding.etag,second.binding.etag)

@@ -49,10 +49,12 @@ try {
     if (path.endsWith('/sync-status')) return route.fulfill({ json: { etag, persisted: true } })
     return route.fulfill({ json: { id: 'cloud-save-test', currentRevisionId: null, etag: null } })
   })
+  const uploadStarted = page.waitForRequest(request => new URL(request.url()).pathname.endsWith('/working-state'), { timeout: 120000 })
   await page.goto(`${base}/editor/save-test`)
+  await uploadStarted
   await page.getByText('自动保存中…', { exact: true }).waitFor({ timeout: 120000 })
   const save = page.getByRole('button', { name: '保存到云端', exact: true })
-  for (const name of ['保存到云端', '运行预览', '云端', '发布']) assert.equal(await page.getByRole('button', { name, exact: true }).isEnabled(), true, `${name} stays enabled during automatic upload`)
+  for (const name of ['保存到云端', '导出项目', 'C# 脚本', 'AI 助手']) assert.equal(await page.getByRole('button', { name, exact: true }).isEnabled(), true, `${name} stays enabled during automatic upload`)
   assert.equal(workingWrites, 1)
   await save.click()
   assert.equal(manualWrites, 0, 'manual save waits rather than overlapping the upload')

@@ -56,7 +56,7 @@ try {
   await page.locator('.page-actions').getByRole('button', { name: '新建项目', exact: true }).click()
   await page.getByLabel('项目名称', { exact: true }).fill('我的第一个游戏')
   await page.getByRole('button', { name: '创建项目', exact: true }).click()
-  await page.waitForFunction(() => [...document.querySelectorAll('button')].some(b => b.textContent === '添加对象' && !b.disabled), null, { timeout: 120000 })
+  await page.waitForFunction(() => [...document.querySelectorAll('button')].some(b => b.textContent === 'AI 助手' && !b.disabled), null, { timeout: 120000 })
   await page.getByRole('button', { name: 'AI 助手', exact: true }).click()
   await page.getByRole('button', { name: '保存到云端', exact: true }).waitFor()
   await page.getByRole('dialog').waitFor({ state: 'hidden' })

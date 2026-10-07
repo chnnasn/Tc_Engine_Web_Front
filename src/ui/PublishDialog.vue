@@ -34,7 +34,7 @@ async function poll(pollRequest: number) {
   pollTimer = setTimeout(() => void poll(pollRequest), 2000)
 }
 async function submit() {
-  if (!props.projectId || submitting.value || !title.value.trim()) return
+  if (!props.projectId || props.dirty || submitting.value || !title.value.trim()) return
   submitting.value = true
   try {
     state.value = await publishProject(props.projectId, title.value.trim(), description.value.trim())
@@ -67,11 +67,11 @@ onBeforeUnmount(() => { request++; stopPolling() })
 <template>
   <AppModal title="发布作品" @close="emit('close')">
     <template v-if="!projectId">
-      <p class="local-note">编辑器尚未关联云端项目，请先保存一次再发布。</p>
+      <p class="local-note">请先打开编辑器，将项目保存到云端后再发布。</p>
       <div class="dialog-actions"><button class="button" @click="emit('close')">知道了</button></div>
     </template>
     <template v-else>
-      <p v-if="dirty && !published" class="local-note">当前场景有未保存的修改。发布使用最近一次“保存到云端”的内容，请先保存再发布以包含最新修改。</p>
+      <p v-if="dirty" class="local-note">项目有尚未同步到云端的内容。请先打开编辑器并“保存到云端”，再回来发布。</p>
       <div v-if="pending" class="publish-state" role="status">
         <LoaderCircle :size="20" class="spin" />
         <div><strong>正在打包作品…</strong><p>服务器正在把你的项目打包成游戏包，通常需要几十秒到几分钟。可以关闭对话框，稍后再回来看结果。</p></div>
@@ -93,7 +93,7 @@ onBeforeUnmount(() => { request++; stopPolling() })
         <div class="dialog-actions">
           <button v-if="published || failed" type="button" class="button" :disabled="withdrawing" @click="withdraw"><Undo2 :size="15" />{{ withdrawing ? '取消中…' : '取消发布' }}</button>
           <AppLink v-if="published" :href="`/play/${projectId}`" class="button button-primary">打开游玩页面<ExternalLink :size="15" /></AppLink>
-          <button v-else type="submit" class="button button-primary" :disabled="submitting || pending || !title.trim()">
+          <button type="submit" class="button button-primary" :disabled="dirty || submitting || pending || !title.trim()">
             <CloudUpload :size="15" />{{ pending ? '打包中…' : failed ? '重新发布' : published ? '更新发布' : '发布' }}
           </button>
         </div>

@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed, onMounted, ref, watch } from 'vue'
+import { Code2, FileCode2, PanelRightClose, Plus, Trash2, Upload } from '@lucide/vue'
 import type { Snapshot } from '../engine/protocol'
 export interface ScriptEntry { path: string; handle: string; className: string; text: string }
 export interface ScriptDiagnostic { severity: string; code: string; message: string; file: string | null; line: number; column: number }
@@ -7,8 +8,8 @@ interface ScriptsReply { scripts: ScriptEntry[]; installed: boolean; assemblyLoa
 interface CompileReply { succeeded: boolean; restartRequired?: boolean; diagnostics: ScriptDiagnostic[]; scripts: number }
 interface Attachment { handle: string; className: string; attachmentId?: string }
 
-const props = defineProps<{ call: <T = any>(type: string, payload?: unknown) => Promise<T>; disabled?: boolean; entityId?: string | null; entityName?: string | null }>()
-const emit = defineEmits<{ notify: [message: string]; dirty: []; restart: []; snapshot: [snapshot: Snapshot] }>()
+const props = defineProps<{ call: <T = any>(type: string, payload?: unknown) => Promise<T>; visible?: boolean; disabled?: boolean; entityId?: string | null; entityName?: string | null }>()
+const emit = defineEmits<{ notify: [message: string]; dirty: []; draftChange: [dirty: boolean]; collapse: []; restart: []; snapshot: [snapshot: Snapshot] }>()
 
 const scripts = ref<ScriptEntry[]>([])
 const selected = ref('')
@@ -42,7 +43,7 @@ function adopt(reply: ScriptsReply) {
   draft.value = current.value?.text ?? ''
 }
 async function refresh() {
-  if (props.disabled) return
+  if (props.disabled || busy.value || dirty.value) return
   try { adopt(await props.call<ScriptsReply>('scripts')); await refreshEntity() }
   catch (error) { message.value = error instanceof Error ? error.message : String(error) }
 }
@@ -61,7 +62,8 @@ async function run(action: () => Promise<void>) {
   finally { busy.value = false }
 }
 function select(path: string) {
-  if (dirty.value) emit('notify', '请先保存当前脚本的修改')
+  if (path === selected.value) return
+  if (dirty.value) { emit('notify', '请先保存当前脚本的修改'); return }
   selected.value = path
   draft.value = scripts.value.find(script => script.path === path)?.text ?? ''
 }
@@ -80,8 +82,10 @@ public sealed class ${name} : TomCatBehaviour
 `
 function create() {
   void run(async () => {
+    if (dirty.value) throw new Error('请先保存当前脚本的修改')
     const name = newName.value.trim().replace(/[^A-Za-z0-9_]/g, '')
     if (!/^[A-Za-z_][A-Za-z0-9_]*$/.test(name)) throw new Error('请输入合法的 C# 类名（字母、数字、下划线）')
+    if (scripts.value.some(script => script.path === `Assets/Scripts/${name}.cs`)) throw new Error('同名脚本已存在，请使用其他名称')
     const reply = await props.call<ScriptsReply>('scriptWrite', { path: `Assets/Scripts/${name}.cs`, text: template(name) })
     adopt(reply)
     selected.value = `Assets/Scripts/${name}.cs`
@@ -95,6 +99,7 @@ async function importFile(event: Event) {
   const file = input.files?.[0]; input.value = ''
   if (!file) return
   await run(async () => {
+    if (dirty.value) throw new Error('请先保存当前脚本的修改')
     if (!/\.cs$/i.test(file.name)) throw new Error('请选择 .cs 文件')
     if (file.size > 512 * 1024) throw new Error('单个脚本不能超过 512 KiB')
     const reply = await props.call<ScriptsReply>('scriptWrite', { path: `Assets/Scripts/${file.name}`, text: await file.text() })
@@ -114,8 +119,9 @@ function save() {
 function remove() {
   void run(async () => {
     if (!current.value) return
+    const name = current.value.className
     const reply = await props.call<ScriptsReply>('scriptDelete', { path: current.value.path })
-    adopt(reply); emit('dirty'); emit('notify', `已删除 ${current.value.className}`)
+    adopt(reply); emit('dirty'); emit('notify', `已删除 ${name}`)
   })
 }
 function compile() {
@@ -134,7 +140,7 @@ function compile() {
 }
 /** 交给宿主页面重建引擎会话：新模块启动时会带上当前项目，重新编译安装最新脚本。 */
 function rebuild() {
-  if (busy.value || props.disabled) return
+  if (busy.value || props.disabled || dirty.value) return
   restartRequired.value = false
   emit('restart')
 }
@@ -160,85 +166,63 @@ function detach() {
 }
 onMounted(refresh)
 watch(() => props.entityId, refreshEntity)
+watch(() => props.visible, visible => { if (visible) void refresh() })
+watch(dirty, value => emit('draftChange', value))
+function sourceKeydown(event: KeyboardEvent) {
+  if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 's') { event.preventDefault(); event.stopPropagation(); save() }
+}
 defineExpose({ refresh })
 </script>
 <template>
-  <section class="script-panel">
-    <header>
-      <strong>C# 脚本</strong>
-      <span class="state" :class="stateClass">{{ state }}</span>
-      <input v-model="newName" placeholder="新脚本类名" :disabled="busy" />
-      <button class="button" :disabled="busy" @click="create">新建</button>
-      <button class="button" :disabled="busy" @click="fileInput?.click()">导入 .cs</button>
-      <button class="button" :disabled="busy || !scripts.length" @click="compile">编译并安装</button>
-      <button class="button" :disabled="busy || !current" @click="save">保存脚本</button>
-      <button class="button" :disabled="busy || !current" @click="remove">删除</button>
-      <input ref="fileInput" hidden type="file" accept=".cs" @change="importFile" />
+  <section id="editor-script-panel" class="script-panel" aria-label="C# 脚本面板">
+    <header class="script-heading">
+      <div><Code2 :size="17" /><strong>C# 脚本</strong><span>当前项目</span></div>
+      <button class="script-icon" aria-label="收起 C# 脚本" title="收起面板，保留草稿" @click="emit('collapse')"><PanelRightClose :size="18" /></button>
     </header>
-    <div v-if="rebuildNeeded" class="rebuild" role="alert">
-      <span>源码编译通过，但当前会话已加载过一代 C# 程序集。浏览器 WebAssembly 不支持热替换，需要重建引擎会话后重新编译安装。</span>
-      <button class="button button-primary" :disabled="busy" @click="rebuild">重建引擎会话</button>
-    </div>
-    <div class="attach">
-      <span class="target">挂载目标：<b>{{ entityName || '未选中实体' }}</b></span>
-      <span v-if="attachedNames.length" class="chips">
-        <em v-for="name in attachedNames" :key="name">{{ name }}</em>
-      </span>
-      <span v-else class="muted">该实体尚未挂载脚本</span>
-      <button class="button" :disabled="busy || !current || !entityId" @click="attach">{{ selectedAttached ? '重新挂载当前脚本' : '挂载当前脚本' }}</button>
-      <button class="button" :disabled="busy || !entityId || !attachedNames.length" @click="detach">移除挂载</button>
-    </div>
-    <div class="body">
-      <ul class="list">
-        <li v-for="script in scripts" :key="script.path" :class="{ active: script.path === selected }" @click="select(script.path)">
-          <span class="class-name">{{ script.className }}</span>
-          <span class="path">{{ script.path.replace('Assets/Scripts/', '') }}</span>
+    <div class="script-content">
+      <form class="script-create" @submit.prevent="create">
+        <label class="sr-only" for="script-name">新脚本类名</label>
+        <input id="script-name" v-model="newName" placeholder="新脚本类名" :disabled="busy || dirty" />
+        <button class="script-icon" :disabled="busy || dirty || !newName.trim()" aria-label="新建" title="新建脚本"><Plus :size="17" /></button>
+        <button type="button" class="script-icon" :disabled="busy || dirty" aria-label="导入 .cs" title="导入 .cs" @click="fileInput?.click()"><Upload :size="16" /></button>
+        <input ref="fileInput" hidden type="file" accept=".cs" @change="importFile" />
+      </form>
+      <ul v-if="scripts.length" class="list" aria-label="项目脚本">
+        <li v-for="script in scripts" :key="script.path">
+          <button :class="{ active: script.path === selected }" :aria-pressed="script.path === selected" :disabled="busy" :title="script.path" @click="select(script.path)"><FileCode2 :size="14" /><span>{{ script.path.replace('Assets/Scripts/', '') }}</span><span v-if="script.path === selected && dirty" class="draft-dot" aria-label="未保存" /></button>
         </li>
-        <li v-if="!scripts.length" class="empty">Assets/Scripts 下还没有脚本。新建或导入一个 .cs 文件即可在浏览器内编译。</li>
       </ul>
-      <textarea v-model="draft" spellcheck="false" :disabled="!current" aria-label="C# 脚本源码" />
+      <div v-if="current" class="source-area">
+        <div class="source-heading"><span>{{ current.className }}<small>{{ dirty ? '未保存' : '已写入项目' }}</small></span><button class="script-icon" :disabled="busy" aria-label="删除" title="删除当前脚本" @click="remove"><Trash2 :size="14" /></button></div>
+        <textarea v-model="draft" spellcheck="false" :disabled="busy" aria-label="C# 脚本源码" @keydown="sourceKeydown" />
+        <div class="source-footer"><span>C#</span><span>Ctrl / ⌘ + S 保存脚本</span></div>
+      </div>
+      <div v-else class="script-empty"><Code2 :size="30" :stroke-width="1.3" /><h2>给场景添一点逻辑。</h2><p>输入类名新建脚本，<br />或导入已有的 .cs 文件。</p></div>
+      <div class="attach">
+        <div class="attach-heading"><span>挂载到</span><strong>{{ entityName || '请先在场景中选择对象' }}</strong></div>
+        <div v-if="attachedNames.length" class="chips"><em v-for="name in attachedNames" :key="name">{{ name }}</em></div>
+        <div class="attach-actions"><button class="button" :disabled="busy || !current || !entityId" @click="attach">{{ selectedAttached ? '重新挂载当前脚本' : '挂载当前脚本' }}</button><button class="script-text-button" :disabled="busy || !entityId || !attachedNames.length" @click="detach">移除挂载</button></div>
+      </div>
+      <div v-if="rebuildNeeded" class="rebuild" role="alert"><p>脚本已修改，需要重建会话后重新编译，才能运行新代码。</p><button class="button" :disabled="busy || dirty" @click="rebuild">重建引擎会话</button><p v-if="dirty">请先保存脚本。</p></div>
+      <p v-if="message" class="message" role="alert">{{ message }}</p>
+      <ul v-if="diagnostics.length" class="diagnostics" aria-label="编译诊断"><li v-for="(diagnostic, index) in diagnostics" :key="index" :class="diagnostic.severity"><b>{{ diagnostic.code }}</b><span>{{ diagnostic.message }}</span><em v-if="diagnostic.file">{{ diagnostic.file }}:{{ diagnostic.line }}:{{ diagnostic.column }}</em></li></ul>
     </div>
-    <p v-if="message" class="message" role="alert">{{ message }}</p>
-    <ul v-if="diagnostics.length" class="diagnostics">
-      <li v-for="(diagnostic, index) in diagnostics" :key="index" :class="diagnostic.severity">
-        <b>{{ diagnostic.code }}</b>
-        <span>{{ diagnostic.message }}</span>
-        <em v-if="diagnostic.file">{{ diagnostic.file }}:{{ diagnostic.line }}:{{ diagnostic.column }}</em>
-      </li>
-    </ul>
-    <p v-else-if="installed" class="ok-note" role="status">编译诊断为空。含 C# 的场景现在可以“运行预览”。</p>
+    <footer class="script-actions">
+      <div class="compile-status"><span class="state" :class="stateClass">{{ state }}</span><span v-if="installed && !dirty" class="ok-note" role="status">可在场景中运行预览</span></div>
+      <div><button class="button" :disabled="busy || !current" @click="save">保存脚本</button><button class="button button-primary" :disabled="busy || !scripts.length" @click="compile">{{ busy ? '处理中…' : '编译并安装' }}</button></div>
+    </footer>
   </section>
 </template>
 <style scoped>
-.script-panel{display:flex;flex-direction:column;gap:8px;padding:10px 16px;background:#26292f;color:#e8eeee;border-bottom:1px solid #34383f}
-.script-panel header{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
-.script-panel header strong{margin-right:4px}
-.script-panel header input{min-height:34px;padding:6px 10px;border-radius:8px;border:1px solid #454a53;background:#1b1e23;color:#e8eeee;width:180px}
-.state{font-size:12px;padding:2px 9px;border-radius:999px;background:#3a3f47;color:#c3ccd4}
-.state.ok{background:#1f4635;color:#8fe0b6}
-.state.stale{background:#4a3a1f;color:#f0c887}
-.rebuild{display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:10px;background:#4a3a1f;color:#f4dcb4;font-size:13px;line-height:1.6}
-.rebuild span{flex:1}
-.rebuild .button{background:#6d5320;color:#fff5e0;border:1px solid #8a6a2c}
-.attach{display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:12.5px;color:#c3ccd4}
-.attach .target b{color:#e8eeee}
-.attach .chips{display:flex;gap:6px;flex-wrap:wrap}
-.attach .chips em{font-style:normal;padding:2px 8px;border-radius:999px;background:#2f3947;color:#a9c6e8}
-.attach .muted{color:#8d97a2}
-.body{display:flex;gap:10px;min-height:220px}
-.list{list-style:none;margin:0;padding:0;width:220px;max-height:320px;overflow:auto;background:#1b1e23;border:1px solid #34383f;border-radius:10px}
-.list li{padding:8px 10px;cursor:pointer;border-bottom:1px solid #2b2f36;display:flex;flex-direction:column}
-.list li:last-child{border-bottom:none}
-.list li.active{background:#2f3947}
-.list li.empty{cursor:default;color:#9aa5b1;font-size:12.5px;line-height:1.6}
-.class-name{font-weight:600}
-.path{font-size:11.5px;color:#9aa5b1}
-textarea{flex:1;min-height:220px;resize:vertical;background:#1b1e23;color:#e8eeee;border:1px solid #34383f;border-radius:10px;padding:10px 12px;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:13px;line-height:1.6}
-.message{margin:0;color:#ffb4b4}
-.diagnostics{list-style:none;margin:0;padding:0;max-height:150px;overflow:auto;font-size:12.5px}
-.diagnostics li{display:flex;gap:8px;padding:4px 0;border-bottom:1px solid #2b2f36;color:#d6dde4}
-.diagnostics li.error b{color:#ff9d9d}
-.diagnostics li.warning b{color:#ffd08a}
-.diagnostics em{color:#9aa5b1;font-style:normal;margin-left:auto}
-.ok-note{margin:0;color:#8fe0b6;font-size:12.5px}
+.script-panel{width:460px;flex:0 0 460px;max-width:46vw;min-width:0;min-height:0;display:flex;flex-direction:column;background:#f7f5ef;color:#39342d;border-left:1px solid #d8d2c8}
+.script-heading{display:flex;align-items:center;justify-content:space-between;padding:13px 17px;border-bottom:1px solid #e4dfd6;gap:8px;flex-shrink:0}.script-heading>div{display:flex;align-items:center;gap:8px}.script-heading strong{font-size:13px;font-weight:550}.script-heading span{font-size:10px;color:#82796d;border-left:1px solid #dcd5ca;padding-left:9px}
+.script-icon{border:0;display:grid;place-items:center;flex-shrink:0;background:transparent;color:#82796d;padding:7px;border-radius:6px}.script-icon:hover:not(:disabled){background:#eae5db}
+.script-content{display:flex;flex-direction:column;flex:1;min-height:0;overflow:auto;overscroll-behavior:contain;padding:16px;gap:14px}.script-create{display:flex;align-items:center;gap:4px;flex-shrink:0;border:1px solid #d9d1c5;border-radius:9px;background:#fffdf9;padding:4px 6px}.script-create:focus-within{border-color:#b5a48e}.script-create input{min-width:0;width:100%;border:0;background:transparent;padding:6px;color:#39342d;font-size:12px;outline:none}
+.list{display:flex;flex-wrap:wrap;gap:5px;list-style:none;margin:0;padding:0;max-height:108px;overflow:auto;flex-shrink:0}.list li{min-width:0;max-width:100%}.list button{display:flex;align-items:center;gap:6px;max-width:100%;border:1px solid transparent;background:transparent;border-radius:6px;padding:7px 9px;color:#857a6e;font-size:11px}.list button.active{background:#ebe4d9;border-color:#dcd0c0;color:#654b37}.list button>span:first-of-type{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.draft-dot{width:5px;height:5px;background:#a65036;border-radius:50%;flex-shrink:0}
+.source-area{flex:1 0 280px;display:flex;flex-direction:column;min-height:280px;border:1px solid #dfd9cf;border-radius:10px;overflow:hidden;background:#fffdf9}.source-heading{display:flex;align-items:center;justify-content:space-between;padding:5px 10px;border-bottom:1px solid #eee8de;font-size:12px}.source-heading>span{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.source-heading small{font-size:10px;color:#998977;margin-left:9px}.source-area textarea{flex:1;min-height:200px;width:100%;resize:none;background:transparent;color:#443c33;border:0;padding:13px;font:12px/1.8 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;tab-size:4;white-space:pre;overflow:auto}.source-area textarea:focus-visible{outline:2px solid #b5a48e;outline-offset:-2px}.source-footer{display:flex;justify-content:space-between;padding:7px 12px;border-top:1px solid #eee8de;font-size:10px;color:#998977}
+.script-empty{flex:1;min-height:200px;padding:28px 8px;color:#857a6e}.script-empty>svg{color:#b46c50}.script-empty h2{font-family:Georgia,'Songti SC',serif;font-size:22px;font-weight:500;color:#39342d;margin:18px 0 10px}.script-empty p{font-size:12px;line-height:1.9}
+.attach{border-top:1px solid #e4dfd6;padding-top:12px;display:flex;flex-direction:column;gap:9px;font-size:11px;flex-shrink:0}.attach-heading{display:flex;align-items:baseline;gap:9px;min-width:0}.attach-heading>span{color:#918577;flex-shrink:0}.attach-heading strong{font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.chips{display:flex;flex-wrap:wrap;gap:5px}.chips em{font-style:normal;padding:3px 7px;background:#e9ede3;color:#657157;border-radius:5px}.attach-actions{display:flex;align-items:center;gap:12px}.script-panel .button{font-size:11px;padding:8px 11px;min-height:32px;border-radius:8px}.script-text-button{border:0;background:transparent;color:#857a6e;font-size:11px;padding:7px 0}
+.rebuild{flex-shrink:0;padding:12px;border-radius:8px;background:#f1e8d7;color:#846339;font-size:12px;line-height:1.7}.rebuild p{margin:0 0 8px}.message{margin:0;color:#9d4131;font-size:12px;line-height:1.7;overflow-wrap:anywhere}.diagnostics{list-style:none;margin:0;padding:0;max-height:180px;overflow:auto;flex-shrink:0;font-size:11px;line-height:1.7}.diagnostics li{display:flex;flex-direction:column;padding:8px 0;border-bottom:1px solid #e4dfd6;overflow-wrap:anywhere}.diagnostics .error b{color:#9d4131}.diagnostics .warning b{color:#846339}.diagnostics em{color:#918577;font-style:normal}
+.script-panel .script-actions{display:block;flex-shrink:0;padding:12px 16px;border-top:1px solid #e4dfd6;color:#39342d}.script-actions>div:last-child{display:flex;gap:8px}.script-actions .button{flex:1}.compile-status{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:10px;font-size:10px}.state{color:#918577}.state.ok{color:#657157}.state.stale{color:#996d3d}.ok-note{color:#918577}
+@media(max-width:760px){.script-panel{width:100%;max-width:100%;height:min(70dvh,700px);flex:0 0 min(70dvh,700px);border-left:0;border-top:1px solid #d8d2c8}.script-content{padding:12px 15px}.source-area{flex-basis:260px;min-height:260px}}
 </style>

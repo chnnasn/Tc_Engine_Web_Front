@@ -1,3 +1,4 @@
+import { addEntity, preview, waitMode } from './engine-browser-helpers.mjs'
 import assert from 'node:assert/strict'
 import { chromium } from 'playwright'
 import { mkdirSync, readFileSync } from 'node:fs'
@@ -57,8 +58,7 @@ try {
     const save = page.getByRole('button', { name: '保存到云端', exact: true })
     await save.waitFor()
     await page.waitForFunction(() => [...document.querySelectorAll('button')].some(b => b.textContent === '保存到云端' && !b.disabled), null, { timeout: 240000 })
-    await page.getByRole('button', { name: '添加对象', exact: true }).click()
-    await page.waitForFunction(() => document.body.textContent.includes('New Entity'))
+    await addEntity(page)
     const tga = Buffer.from([0,0,2,0,0,0,0,0,0,0,0,0,1,0,1,0,24,0,0,0,255])
     await page.locator('input[type=file]').setInputFiles({ name: 'red.tga', mimeType: 'application/octet-stream', buffer: tga })
     await page.getByText('图片已导入，请保存项目', { exact: true }).waitFor()
@@ -75,13 +75,13 @@ try {
     await page.reload()
     await page.waitForFunction(() => [...document.querySelectorAll('button')].some(b => b.textContent === '保存到云端' && !b.disabled), null, { timeout: 240000 })
     assert.equal(await page.getByText('我的第一个游戏 · 未保存', { exact: true }).count(), 0)
-    await page.getByRole('button', { name: '运行预览', exact: true }).click()
-    await page.getByRole('button', { name: '暂停预览', exact: true }).click()
-    await page.getByRole('button', { name: '单步运行', exact: true }).click()
-    assert.equal(await page.getByRole('button', { name: '添加对象', exact: true }).isDisabled(), true)
-    await page.getByRole('button', { name: '继续运行', exact: true }).click()
-    await page.getByRole('button', { name: '停止预览', exact: true }).click()
-    await page.waitForFunction(() => [...document.querySelectorAll('button')].some(b => b.textContent === '添加对象' && !b.disabled))
+    await preview(page, 'play')
+    await preview(page, 'pause')
+    await preview(page, 'step')
+    assert.equal(await page.getByRole('button', { name: '添加对象', exact: true }).count(), 0)
+    await preview(page, 'resume')
+    await preview(page, 'stop')
+    await waitMode(page, 'edit')
     assert.equal(await page.getByText('我的第一个游戏 · 未保存', { exact: true }).count(), 0)
     mkdirSync('.engine', { recursive: true }); await page.screenshot({ path: '.engine/editor-browser.png' })
     // C# 脚本：浏览器内 Roslyn 编译、托管 ABI 安装与诊断回传。
@@ -95,17 +95,16 @@ try {
     await page.locator('.script-panel .state.ok').waitFor({ timeout: 240000 })
     assert.equal(await page.locator('.script-panel .diagnostics li.error').count(), 0)
     // 挂载到选中实体并运行预览：证明浏览器内 C# 真的被引擎执行（而不只是编译通过）。
-    await page.getByRole('button', { name: '添加对象', exact: true }).click()
-    await page.waitForFunction(() => document.body.textContent.includes('New Entity'))
+    await addEntity(page)
     await page.getByRole('button', { name: '挂载当前脚本', exact: true }).click()
     await page.locator('.script-panel .attach .chips em', { hasText: 'WebSmoke' }).waitFor({ timeout: 30000 })
     await page.getByRole('button', { name: 'C# 脚本', exact: true }).click()
-    await page.getByRole('button', { name: '运行预览', exact: true }).click()
-    await page.getByRole('button', { name: '暂停预览', exact: true }).waitFor({ timeout: 240000 })
+    await preview(page, 'play')
+    await waitMode(page, 'play')
     for (let tries = 0; tries < 600 && !logs.some(text => text.includes('WEB_SMOKE_ONCREATE')); tries++) await new Promise(resolve => setTimeout(resolve, 100))
     assert.ok(logs.some(text => text.includes('WEB_SMOKE_ONCREATE')), `expected the C# lifecycle log, got ${JSON.stringify(logs.slice(-25))}`)
-    await page.getByRole('button', { name: '停止预览', exact: true }).click()
-    await page.waitForFunction(() => [...document.querySelectorAll('button')].some(b => b.textContent === '运行预览' && !b.disabled))
+    await preview(page, 'stop')
+    await waitMode(page, 'edit')
     // 重新打开面板：编译过一代程序集后再次编译，必须给出“重建会话”提示而不是静默失效。
     await page.getByRole('button', { name: 'C# 脚本', exact: true }).click()
     // 故意写入语法错误，验证 Roslyn 诊断被回传并渲染。

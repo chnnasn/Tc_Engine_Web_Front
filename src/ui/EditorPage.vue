@@ -3,13 +3,11 @@ import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import EngineSurface from './EngineSurface.vue'
 import { useNavigation } from './navigation'
 import { nowLabel, type Project } from './data'
-import { EngineError, type Snapshot, type SceneState, type Operation } from '../engine/protocol'
+import { EngineError, type Snapshot, type SceneState } from '../engine/protocol'
 import { readEngineProject, writeEngineProject, readCloudBinding, writeCloudBinding, engineCommit, type CloudBinding, type EngineDocument } from '../engine/storage'
 import { currentUser, getCloudProject, createCloudProject, restoreCloudProject, saveCloudProject, syncConfiguration, cloudSyncStatus, CloudError } from '../engine/cloud'
-import CloudProjects from './CloudProjects.vue'
 import AgentPanel from './AgentPanel.vue'
 import ScriptPanel from './ScriptPanel.vue'
-import PublishDialog from './PublishDialog.vue'
 import { describeSync, type CheckpointReceipt } from '../engine/sync-status'
 import { downloadProject } from './project-file'
 
@@ -39,12 +37,22 @@ watch(saveActivity, activity => {
 const legacy = ref(false)
 const fileInput = ref<HTMLInputElement>()
 const busy = ref(false)
-const cloudOpen = ref(false)
 const agentOpen = ref(false)
 const agentTrigger = ref<HTMLButtonElement>()
 function collapseAgent() { agentOpen.value = false; agentTrigger.value?.focus() }
 const scriptOpen = ref(false)
-const publishOpen = ref(false)
+const scriptVisited = ref(false)
+const scriptTrigger = ref<HTMLButtonElement>()
+function toggleScript() {
+  scriptVisited.value = true
+  scriptOpen.value = !scriptOpen.value
+  if (scriptOpen.value) agentOpen.value = false
+}
+function toggleAgent() {
+  agentOpen.value = !agentOpen.value
+  if (agentOpen.value) scriptOpen.value = false
+}
+function collapseScript() { scriptOpen.value = false; scriptTrigger.value?.focus() }
 const binding = ref<CloudBinding>()
 let gone = false
 let syncTimer: ReturnType<typeof setTimeout> | undefined
@@ -65,8 +73,11 @@ async function pollSync() {
   finally { if (!gone) syncTimer = setTimeout(pollSync, syncConfigLoaded ? 2000 : 10000) }
 }
 const needsSave = ref(false)
-const dirty = computed(() => needsSave.value || Boolean(status.value?.dirty))
+const scriptDraftDirty = ref(false)
+const dirty = computed(() => scriptDraftDirty.value || needsSave.value || Boolean(status.value?.dirty))
+watch(dirty, value => emit('dirtyChange', value))
 const saveStatus = computed(() => {
+  if (scriptDraftDirty.value) return '脚本有未保存的修改'
   if (automaticSaveVisible.value) return '自动保存中…'
   if (manualSavePending.value && saveActivity.value !== 'manual') return '等待当前同步完成…'
   if (saveActivity.value === 'manual') return '保存中…'
@@ -76,14 +87,20 @@ const saveStatus = computed(() => {
 })
 const editing = computed(() => Boolean(status.value) && (!status.value?.mode || status.value.mode === 'edit'))
 const selected = computed(() => snapshot.value?.entities.find(entity => entity.id === status.value?.selectedEntityId))
+// Native hierarchy edits do not pass through the webpage's transaction helpers.
+watch([scriptOpen, () => status.value?.revision, () => status.value?.selectedEntityId], async () => {
+  if (scriptOpen.value && surface.value && status.value && !gone) {
+    try { await refresh() } catch { /* The next native state change retries after an active edit. */ }
+  }
+})
 function report(error: unknown) { emit('notify', error instanceof Error ? error.message : String(error)) }
 function updateStatus(next: SceneState) {
-  // scene.snapshot 不返回 mode（只有 EditorState/Status 才有）。preview() 刷新快照后若直接
-  // 覆盖 status，会把 play/pause 模式清掉，播放控制按钮随之消失。保留上一次已知的模式，
+  // scene.snapshot 不返回 mode（只有 EditorState/Status 才有）。刷新快照后若直接
+  // 覆盖 status，会把 play/pause 模式清掉。保留上一次已知的模式，
   // 真正的模式变化由 iframe 每 ~100ms 推送的 state 事件纠正。
   const mode = next.mode ?? status.value?.mode
   status.value = mode ? { ...next, mode } : next
-  emit('dirtyChange', needsSave.value || next.dirty)
+  emit('dirtyChange', dirty.value)
 }
 function agentState(next: Snapshot) { snapshot.value = next; updateStatus(next) }
 async function agentCall<T = any>(type: string, payload?: unknown): Promise<T> {
@@ -184,37 +201,11 @@ async function run(action: () => Promise<unknown>) {
     } else if (error instanceof EngineError && error.code === 'SESSION_RESTART_REQUIRED') {
       // 脚本改过但本会话已装过程序集：引导用户到脚本面板重建会话。
       scriptOpen.value = true
+      scriptVisited.value = true
+      agentOpen.value = false
       emit('notify', error.message)
     } else report(error)
   } finally { busy.value = false }
-}
-async function transaction(label: string, operations: Operation[]) {
-  // Obtain a fresh authoritative snapshot; a native gesture can still reject with EDIT_IN_PROGRESS.
-  await refresh()
-  const next = await surface.value!.call<Snapshot>('transact', { state: snapshot.value, label, operations })
-  snapshot.value = next; updateStatus(next)
-}
-function addEntity() {
-  void run(async () => {
-    const bits = crypto.getRandomValues(new Uint32Array(2))
-    const id = ((BigInt(bits[0]!) << 32n) | BigInt(bits[1]!)).toString()
-    await transaction('添加对象', [{ op: 'entity.create', entityId: id === '0' ? '1' : id, name: 'New Entity' }])
-  })
-}
-function history(direction: 'undo' | 'redo') {
-  void run(async () => {
-    await refresh()
-    const next = await surface.value!.call<Snapshot>('history', { state: snapshot.value, direction })
-    snapshot.value = next; updateStatus(next)
-  })
-}
-function preview(command: 'play' | 'pause' | 'resume' | 'step' | 'stop') {
-  void run(async () => {
-    await waitForSave()
-    await surface.value!.call('preview', { command })
-    await refresh()
-    updateStatus(snapshot.value!)
-  })
 }
 async function waitForSave() {
   const deadline = Date.now() + 65000
@@ -290,22 +281,10 @@ async function save(automatic = false) {
       if (automatic) {
         syncMessage.value = error instanceof Error ? error.message : String(error)
         if (error instanceof CloudError && [401, 412].includes(error.status)) syncBlocked = true
-      } else { report(error); if (error instanceof CloudError && error.status === 401) cloudOpen.value = true }
+      } else report(error)
     }
   }
   finally { saving.value = false; saveActivity.value = '' }
-}
-async function attachCloud(next: CloudBinding) {
-  try { await waitForSave() }
-  catch (error) { if (!gone) report(error); return }
-  saving.value = true
-  try {
-    await writeCloudBinding(props.project.id, next)
-    syncedDocument = ''; syncBlocked = false; syncMessage.value = ''; syncConfigLoaded = false
-    binding.value = next; needsSave.value = true; emit('dirtyChange', true); cloudOpen.value = false; emit('notify', '已关联，请点击“保存到云端”上传完整项目')
-  }
-  catch (error) { report(error) }
-  finally { saving.value = false }
 }
 async function exportCurrent() {
   await run(async () => {
@@ -368,34 +347,22 @@ onBeforeUnmount(() => { gone = true; clearTimeout(syncTimer); clearTimeout(autom
     <header class="native-toolbar">
       <button class="button" @click="navigate('/projects')">返回项目</button>
       <div class="editor-project-info"><strong class="editor-project-name" :title="project.name">{{ project.name }}</strong><span class="editor-save-status" role="status" :title="saveStatus">{{ saveStatus }}</span></div>
-      <button class="button" :disabled="!editing || busy" @click="addEntity">添加对象</button>
-      <button class="button" :disabled="!editing || !status?.canUndo || busy" @click="history('undo')">撤销</button>
-      <button class="button" :disabled="!editing || !status?.canRedo || busy" @click="history('redo')">重做</button>
-      <button v-if="editing" class="button" :disabled="busy || toolbarSaving" @click="preview('play')">运行预览</button>
-      <button v-if="status?.mode === 'play'" class="button" :disabled="busy || toolbarSaving" @click="preview('pause')">暂停预览</button>
-      <button v-if="status?.mode === 'pause'" class="button" :disabled="busy || toolbarSaving" @click="preview('resume')">继续运行</button>
-      <button v-if="status?.mode === 'pause'" class="button" :disabled="busy || toolbarSaving" @click="preview('step')">单步运行</button>
-      <button v-if="status && !editing" class="button" :disabled="busy || toolbarSaving" @click="preview('stop')">停止预览</button>
       <button class="button" :disabled="!editing || busy" @click="fileInput?.click()">导入图片</button>
       <button class="button" :disabled="!status || busy" @click="exportCurrent">导出项目</button>
-      <button class="button" :disabled="toolbarSaving" @click="cloudOpen = true">云端</button>
-      <button class="button" :disabled="!status" @click="scriptOpen = !scriptOpen">C# 脚本</button>
-      <button ref="agentTrigger" class="button" :class="{ 'agent-active': agentOpen }" :disabled="!status" :aria-expanded="agentOpen" aria-controls="editor-agent-panel" @click="agentOpen = !agentOpen">AI 助手</button>
-      <button class="button" :disabled="toolbarSaving" @click="publishOpen = true">发布</button>
+      <button ref="scriptTrigger" class="button" :class="{ 'agent-active': scriptOpen }" :disabled="!status" :aria-expanded="scriptOpen" aria-controls="editor-script-panel" @click="toggleScript">C# 脚本</button>
+      <button ref="agentTrigger" class="button" :class="{ 'agent-active': agentOpen }" :disabled="!status" :aria-expanded="agentOpen" aria-controls="editor-agent-panel" @click="toggleAgent">AI 助手</button>
       <button class="button button-primary editor-save-button" :disabled="!status || toolbarSaving" @click="requestSave()">保存到云端</button>
       <input ref="fileInput" hidden type="file" accept=".png,.jpg,.jpeg,.tga" @change="importImage" />
     </header>
 
-    <ScriptPanel v-if="scriptOpen && status && !failure" :call="scriptCall" :entity-id="status?.selectedEntityId ?? null" :entity-name="selected?.name ?? null" @notify="emit('notify', $event)" @dirty="markDirty" @restart="restartSession" @snapshot="agentState" />
     <div v-if="failure" class="native-notice" role="alert">{{ failure }}</div>
     <div class="editor-workspace">
     <EngineSurface v-if="initialized && !failure" :key="surfaceKey" ref="surface" kind="editor" :name="project.name" :template="project.template" :document="stored" :cloud-project-id="binding?.projectId" @ready="ready" @state="updateStatus" @actions="actions" @error="failure = $event" />
     <div v-else-if="!failure" class="native-notice">正在读取项目…</div>
+    <ScriptPanel v-if="scriptVisited && status && !failure" v-show="scriptOpen" :visible="scriptOpen" :call="scriptCall" :entity-id="status?.selectedEntityId ?? null" :entity-name="selected?.name ?? null" @collapse="collapseScript" @draft-change="scriptDraftDirty = $event" @notify="emit('notify', $event)" @dirty="markDirty" @restart="restartSession" @snapshot="agentState" />
     <AgentPanel v-if="status && !failure" v-show="agentOpen" :visible="agentOpen" :project-id="binding?.projectId" :call="agentCall" :checkpoint="checkpoint" @state="agentState" @collapse="collapseAgent" />
     </div>
     <footer>{{ binding ? '已关联云端' : '正在验证云端关联' }} · {{ status?.mode === 'play' ? '运行中' : status?.mode === 'pause' ? '已暂停' : '编辑模式' }} · {{ snapshot?.schemas.length || 0 }} 种组件类型 <span v-if="selected"> · {{ selected.name }}</span><span>预览不会公开发布；停止预览后继续编辑</span></footer>
-    <CloudProjects v-if="cloudOpen" :project="project" :binding="binding" @close="cloudOpen = false" @attach="attachCloud" />
-    <PublishDialog v-if="publishOpen" :project-id="binding?.projectId" :project-name="project.name" :project-description="project.description" :dirty="dirty" @close="publishOpen = false" @notify="emit('notify', $event)" />
   </main>
 </template>
 <style scoped>

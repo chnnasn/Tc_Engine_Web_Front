@@ -7,6 +7,7 @@ import { readCloudBinding, writeCloudBinding, readEngineProject, writeEngineProj
 import { listCloudProjects, getCloudProject, restoreCloudProject, createCloudProject, updateCloudProject, deleteCloudProject, type RestoredProject } from '../engine/cloud'
 import { useAccess } from './access'
 import CloudProjects from './CloudProjects.vue'
+import PublishDialog from './PublishDialog.vue'
 import { useNavigation } from './navigation'
 import AppLink from './AppLink.vue'
 import AppModal from './AppModal.vue'
@@ -30,6 +31,20 @@ const action = ref<{ type: 'rename' | 'delete'; project: Project } | null>(null)
 const name = ref('')
 const fileInput = ref<HTMLInputElement>()
 const cloudOpen = ref(false)
+const publishing = ref<{ project: Project; projectId?: string; dirty: boolean }>()
+const publishLoading = ref(false)
+async function openPublish(project: Project) {
+  if (publishLoading.value || !await requireLogin()) return
+  publishLoading.value = true
+  const ownerId = user.value?.id
+  try {
+    const binding = await readCloudBinding(project.id)
+    if (gone || ownerId !== user.value?.id) return
+    if (binding && binding.ownerId !== ownerId) throw new Error('此项目属于其他账号，请切换账号后打开')
+    publishing.value = { project, projectId: binding?.projectId, dirty: !binding || binding.pending || !binding.etag }
+  } catch (error) { emit('notify', error instanceof Error ? error.message : '读取项目失败') }
+  finally { publishLoading.value = false }
+}
 const navigate = useNavigation()
 let gone = false
 onBeforeUnmount(() => { gone = true })
@@ -186,7 +201,7 @@ onMounted(async () => {
           <div class="project-card-heading"><AppLink :href="`/editor/${project.id}`"><h3>{{ project.name }}</h3></AppLink><details class="project-menu"><summary class="icon-button" :aria-label="`${project.name}更多操作`"><MoreHorizontal :size="19" /></summary><div class="menu-options"><button @click="beginRename(project)">重命名</button><button @click="duplicate(project)">创建副本</button><button @click="exportItem(project)">导出项目</button><button class="danger-text" @click="action = { type: 'delete', project }">删除项目</button></div></details></div>
           <p class="project-description">{{ project.description || '一个新的好玩想法。' }}</p>
           <div class="project-status-row"><span class="status-pill" :class="{ 'status-published': project.status === 'published' }"><span />{{ project.status === 'published' ? '本地展示草稿' : '草稿' }}</span><span>{{ project.updated }}</span></div>
-          <div class="project-card-footer"><AppLink v-if="project.status === 'published'" class="text-link" :href="`/preview/${project.id}`">查看展示草稿</AppLink><span v-else><FileJson :size="13" />云端项目</span><AppLink :href="`/editor/${project.id}`" class="text-link">打开编辑器<ArrowUpRight :size="15" /></AppLink></div>
+          <div class="project-card-footer"><button class="text-link project-publish" :disabled="publishLoading" @click="openPublish(project)"><Upload :size="14" />发布</button><AppLink :href="`/editor/${project.id}`" class="text-link">打开编辑器<ArrowUpRight :size="15" /></AppLink></div>
         </div>
       </article>
     </div>
@@ -194,9 +209,13 @@ onMounted(async () => {
     <div class="workspace-help"><span><Gamepad2 :size="18" />还不知道从哪里开始？</span><TextLink href="/community">看看大家正在做什么</TextLink></div>
 
     <CloudProjects v-if="cloudOpen" allow-restore @close="cloudOpen = false" @restored="restoreCloud" />
+    <PublishDialog v-if="publishing" :project-id="publishing.projectId" :project-name="publishing.project.name" :project-description="publishing.project.description" :dirty="publishing.dirty" @close="publishing = undefined" @notify="emit('notify', $event)" />
     <AppModal v-if="action" :title="action.type === 'rename' ? '给项目换个名字' : '删除这个项目？'" @close="action = null">
       <form v-if="action.type === 'rename'" @submit.prevent="renameProject"><label class="field-label" for="rename-project">项目名称</label><input id="rename-project" v-model="name" class="text-input" autofocus required maxlength="32" /><div class="dialog-actions"><button type="button" class="button" @click="action = null">取消</button><button class="button button-primary" :disabled="!name.trim()">保存名称</button></div></form>
       <template v-else><p class="dialog-description delete-description">“{{ action.project.name }}”将从云端及此浏览器移除。删除后无法恢复，建议先导出项目备份。</p><div class="dialog-actions"><button class="button" @click="exportItem(action.project)"><Download :size="15" />先导出</button><button class="button" @click="action = null">取消</button><button class="button button-danger" @click="deleteProject">删除项目</button></div></template>
     </AppModal>
   </main>
 </template>
+<style scoped>
+.project-publish{border:0;background:transparent;padding:4px 0;font:inherit;cursor:pointer}
+</style>

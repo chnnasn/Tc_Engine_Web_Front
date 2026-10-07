@@ -150,7 +150,7 @@ onBeforeUnmount(() => { disposed = true; void close() })
       </template>
     </div>
     <div class="agent-compose-area">
-      <p v-if="!projectId" class="agent-connection">请先通过“云端”登录并关联项目，再使用 AI 助手。</p>
+      <p v-if="!projectId" class="agent-connection">正在关联云端项目，完成后即可使用 AI 助手。</p>
       <form class="agent-composer" @submit.prevent="send">
         <label class="sr-only" for="agent-prompt">描述你想修改的场景</label>
         <textarea id="agent-prompt" ref="promptInput" v-model="prompt" maxlength="8000" rows="3" :disabled="running || !projectId" placeholder="想对这个场景做些什么？" @keydown="promptKeydown" />
