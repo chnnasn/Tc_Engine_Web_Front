@@ -288,11 +288,11 @@ function normalizeScriptPath(value: unknown) {
   return relative
 }
 function classNameOf(path: string) { return path.slice(path.lastIndexOf('/') + 1, -3) }
-/** 源码签名：路径 + 内容，用于判断磁盘脚本是否仍与已安装程序集一致。 */
+/** Include identity: deleting/recreating identical source still needs a new assembly manifest. */
 function signatureOf(scripts: ScriptEntry[]) {
   let hash = 0x811c9dc5
   for (const script of scripts) {
-    const text = `${script.path}\u0000${script.text}\u0000`
+    const text = `${script.path}\u0000${script.handle}\u0000${script.text}\u0000`
     for (let index = 0; index < text.length; index += 1) { hash ^= text.charCodeAt(index); hash = Math.imul(hash, 0x01000193) }
   }
   return `${scripts.length}:${(hash >>> 0).toString(16)}`
