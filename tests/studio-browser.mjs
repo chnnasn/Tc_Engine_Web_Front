@@ -17,7 +17,7 @@ await page.addInitScript(({ user, projects }) => localStorage.setItem(`tomcat-ui
 await page.route('**/v1/**', route => {
   const path = new URL(route.request().url()).pathname
   if (path.endsWith('/auth/me')) return route.fulfill({ status: signedIn ? 200 : 401, json: signedIn ? user : {} })
-  if (path.endsWith('/projects') || path.endsWith('/games')) return route.fulfill({ json: [] })
+  if (path.endsWith('/projects') || path.endsWith('/games') || path.endsWith('/games/published')) return route.fulfill({ json: [] })
   return route.fulfill({ json: {} })
 })
 mkdirSync('.engine/studio-design', { recursive: true })

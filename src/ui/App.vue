@@ -230,7 +230,7 @@ onBeforeUnmount(() => {
   <ProfilePage v-else-if="path === '/profile'" :saved="saved" @toggle-save="toggleSave" />
   <PublishedPreviewPage v-else-if="previewProject" :key="previewProject.id" :project="previewProject" />
   <GameDetailPage v-else-if="game" :key="game.id" :game="game" :saved="saved.includes(game.id)" @toggle-save="toggleSave(game.id)" @notify="notify" />
-  <ArcadePage v-else-if="path === '/play'" @notify="notify" />
+  <ArcadePage v-else-if="path === '/play'" />
   <PlayPage v-else-if="playId" :key="playId" :game-id="playId" @notify="notify" />
   <TopicDetailPage v-else-if="topic" :key="topic.id" :topic="topic" :topics="topics" @update:topics="topics = $event" @notify="notify" />
   <EditorPage v-else-if="editorProject" :key="`${accountScope}-${editorProject.id}`" :project="editorProject" @dirty-change="editorDirty = $event" @update-project="updateProject" @notify="notify" />

@@ -12,7 +12,7 @@ const emit = defineEmits<{ toggleSave: [] }>()
   <article class="game-card">
     <AppLink :href="`/games/${game.id}`" class="game-cover" :aria-label="`查看${game.title}`">
       <ArtworkView :src="game.image" :alt="`${game.title}游戏场景`" />
-      <span class="cover-play"><Play :size="17" fill="currentColor" />查看作品</span>
+      <span class="cover-play"><Play :size="17" fill="currentColor" />体验示例</span>
     </AppLink>
     <div class="game-title-row">
       <AppLink :href="`/games/${game.id}`"><h3>{{ game.title }}</h3></AppLink>
@@ -24,8 +24,8 @@ const emit = defineEmits<{ toggleSave: [] }>()
     </div>
     <p class="game-subtitle">{{ game.subtitle }}</p>
     <div class="game-meta">
-      <span>{{ game.author }}<span class="meta-dot">·</span>{{ game.category }}</span>
-      <span><Play :size="12" />{{ game.plays }}</span>
+      <span>内置示例<span class="meta-dot">·</span>{{ game.category }}</span>
+      <span>示例体验</span>
     </div>
   </article>
 </template>

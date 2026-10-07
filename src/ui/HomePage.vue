@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
-import { ArrowRight, ArrowUpRight, ChevronDown, MessageSquare, Sparkles } from '@lucide/vue'
+import { ArrowRight, ArrowUpRight, MessageSquare, Sparkles } from '@lucide/vue'
 import { games, initialTopics } from './data'
 import AppLink from './AppLink.vue'
 import ArtworkView from './ArtworkView.vue'
@@ -8,20 +8,18 @@ import EmptyState from './EmptyState.vue'
 import GameCard from './GameCard.vue'
 import SearchField from './SearchField.vue'
 import TextLink from './TextLink.vue'
+import PublishedGames from './PublishedGames.vue'
 
 const props = defineProps<{ saved: string[] }>()
 const emit = defineEmits<{ toggleSave: [id: string]; create: [] }>()
-const category = ref('全部游戏')
+const category = ref('全部示例')
 const query = ref('')
-const sort = ref('recommended')
-const categories = ['全部游戏', '探索', '解谜', '冒险']
+const categories = ['全部示例', '探索', '解谜', '冒险']
 
 const filtered = computed(() => {
   const result = games.filter(game =>
-    (category.value === '全部游戏' || game.category === category.value) &&
-    `${game.title} ${game.author} ${game.subtitle}`.toLowerCase().includes(query.value.trim().toLowerCase()))
-  if (sort.value === 'newest') return [...result].reverse()
-  if (sort.value === 'popular') return [...result].sort((a, b) => b.likes - a.likes)
+    (category.value === '全部示例' || game.category === category.value) &&
+    `${game.title} ${game.subtitle}`.toLowerCase().includes(query.value.trim().toLowerCase()))
   return result
 })
 </script>
@@ -34,9 +32,18 @@ const filtered = computed(() => {
       <p>打开一个新世界，或者亲手创造下一个。</p>
     </div><div class="editorial-note"><span>为好奇心而造</span><p>即刻游玩 · 自由创作</p><button class="text-link" @click="emit('create')">进入创作工作台 <ArrowUpRight :size="16" /></button></div></div>
 
+    <section class="home-published" aria-labelledby="published-title">
+      <div class="section-index"><span>MADE BY PLAYERS</span><span>创作者发布</span></div>
+      <div class="section-heading"><div><h2 id="published-title">玩家作品</h2><p>最近发布推荐，发现正在发生的新创作。</p></div><TextLink href="/play">查看全部作品</TextLink></div>
+      <PublishedGames :limit="6" />
+    </section>
+
+    <section class="discover-section" aria-labelledby="discover-title">
+      <div class="section-index"><span>TRY THE ENGINE</span><span>{{ games.length }} 个内置示例</span></div>
+      <div class="section-heading"><div><h2 id="discover-title">示例体验<span class="subtle-count">{{ games.length }}</span></h2><p>通过内置场景体验引擎，示例不计入玩家发布作品。</p></div></div>
     <section class="feature" aria-label="内置引擎示例">
       <div class="feature-copy">
-        <div class="feature-label"><span class="feature-badge">精选体验</span><span class="feature-number">01 / 03</span></div>
+        <div class="feature-label"><span class="feature-badge">示例体验</span><span class="feature-number">01 / {{ games.length.toString().padStart(2, '0') }}</span></div>
         <div><span class="feature-genre">探索 · 慢节奏 · 治愈</span><h2>林间来信</h2><p>沿着溪流，穿过森林。<br />把一封信，送到世界的小小角落。</p></div>
         <div class="feature-bottom"><AppLink class="button button-dark" href="/games/forest">探索这个世界<ArrowUpRight :size="17" /></AppLink><span>内置引擎示例</span></div>
       </div>
@@ -46,18 +53,12 @@ const filtered = computed(() => {
       </AppLink>
     </section>
 
-    <section class="discover-section" aria-labelledby="discover-title">
-      <div class="section-index"><span>EXPLORE THE COLLECTION</span><span>03 个内置引擎示例</span></div>
-      <div class="section-heading">
-        <div><h2 id="discover-title">值得一玩<span class="subtle-count">03</span></h2><p>从一场小小的冒险开始。</p></div>
-        <label class="sort-select"><span class="sr-only">游戏排序</span><select v-model="sort"><option value="recommended">编辑推荐</option><option value="newest">最近上架</option><option value="popular">人气优先</option></select><ChevronDown :size="14" /></label>
-      </div>
       <div class="filter-bar">
-        <div class="filter-tabs" aria-label="游戏分类"><button v-for="item in categories" :key="item" :class="{ active: category === item }" :aria-pressed="category === item" @click="category = item">{{ item }}</button></div>
-        <SearchField v-model="query" placeholder="搜索游戏或创作者" />
+        <div class="filter-tabs" aria-label="示例分类"><button v-for="item in categories" :key="item" :class="{ active: category === item }" :aria-pressed="category === item" @click="category = item">{{ item }}</button></div>
+        <SearchField v-model="query" placeholder="搜索示例" />
       </div>
       <div v-if="filtered.length" class="game-grid"><GameCard v-for="game in filtered" :key="game.id" :game="game" :saved="props.saved.includes(game.id)" @toggle-save="emit('toggleSave', game.id)" /></div>
-      <EmptyState v-else title="还没有找到这个世界" text="换个关键词，或看看其他分类吧。"><button class="button" @click="query = ''; category = '全部游戏'">查看全部游戏</button></EmptyState>
+      <EmptyState v-else title="没有找到匹配的示例" text="换个关键词，或看看其他分类吧。"><button class="button" @click="query = ''; category = '全部示例'">查看全部示例</button></EmptyState>
     </section>
 
     <section class="home-bottom">

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useAccess } from './access'
 import { ref } from 'vue'
-import { ArrowLeft, Bookmark, Clock3, Heart, Play, Send } from '@lucide/vue'
+import { ArrowLeft, Bookmark, Gamepad2, Play, Send } from '@lucide/vue'
 import { isComments, uid, type Game, type LocalComment } from './data'
 import { useLocalState } from './local-state'
 import AppLink from './AppLink.vue'
@@ -28,7 +28,7 @@ async function submitComment() {
 <template>
   <main id="main-content" class="page detail-page">
     <AppLink href="/" class="back-link"><ArrowLeft :size="15" />发现游戏</AppLink>
-    <div class="detail-heading"><div><div class="detail-eyebrow"><span class="topic-category">{{ game.category }}</span><span>一个小小的独立游戏</span></div><h1>{{ game.title }}</h1><p>{{ game.subtitle }}</p></div><button class="button" :class="{ 'saved-button': saved }" :aria-pressed="saved" @click="emit('toggleSave')"><Bookmark :size="16" :fill="saved ? 'currentColor' : 'none'" />{{ saved ? '已收藏' : '收藏作品' }}</button></div>
+    <div class="detail-heading"><div><div class="detail-eyebrow"><span class="topic-category">{{ game.category }}</span><span>示例体验 · 内置引擎场景</span></div><h1>{{ game.title }}</h1><p>{{ game.subtitle }}</p></div><button class="button" :class="{ 'saved-button': saved }" :aria-pressed="saved" @click="emit('toggleSave')"><Bookmark :size="16" :fill="saved ? 'currentColor' : 'none'" />{{ saved ? '已收藏' : '收藏作品' }}</button></div>
     <div class="detail-layout">
       <div>
         <div class="detail-cover"><ArtworkView :src="game.image" :alt="`${game.title}完整场景`" eager /><button class="cover-preview-button" @click="player = true"><Play :size="15" />查看游玩界面</button></div>
@@ -42,8 +42,8 @@ async function submitComment() {
         </section>
       </div>
       <aside class="detail-sidebar">
-        <div class="play-panel"><span class="small-tag">作品界面预览</span><h3>准备好出发了吗？</h3><p>打开一个新世界，<br />给自己一点游玩的时间。</p><button class="button button-primary" @click="player = true"><Play :size="16" fill="currentColor" />打开游玩预览</button><span class="play-footnote">游戏包由后端提供，点击即可游玩</span><div class="play-stats"><span><Clock3 :size="15" />{{ game.duration }}</span><span><Heart :size="15" />{{ game.likes }} 人喜欢</span></div></div>
-        <div class="creator-panel"><span class="creator-avatar">{{ game.author.slice(0, 1) }}</span><div><span>由独立创作者带来</span><strong>{{ game.author }}</strong></div><p>做一点小而有趣的东西，<br />慢慢把想法变成世界。</p><TextLink :href="game.id === 'puzzle' ? '/community/first-puzzle' : game.id === 'desert' ? '/community/weekend' : '/community/forest-devlog'">看看创作日常</TextLink></div>
+        <div class="play-panel"><span class="small-tag">内置示例</span><h3>准备好出发了吗？</h3><p>打开一个新世界，<br />给自己一点游玩的时间。</p><button class="button button-primary" @click="player = true"><Play :size="16" fill="currentColor" />打开游玩预览</button><span class="play-footnote">游戏包由后端提供，点击即可游玩</span><div class="play-stats"><span><Gamepad2 :size="15" />{{ game.category }}示例</span><span>浏览器直接体验</span></div></div>
+        <div class="creator-panel"><span class="creator-avatar"><Gamepad2 :size="23" /></span><div><span>内置内容</span><strong>引擎示例体验</strong></div><p>用于体验引擎与游玩流程，<br />不计入玩家发布作品。</p><TextLink :href="game.id === 'puzzle' ? '/community/first-puzzle' : game.id === 'desert' ? '/community/weekend' : '/community/forest-devlog'">查看示例话题</TextLink></div>
         <div class="detail-facts"><div><span>游玩方式</span><span>浏览器</span></div><div><span>支持语言</span><span>简体中文</span></div><div><span>作品状态</span><span>示例作品</span></div></div>
       </aside>
     </div>
