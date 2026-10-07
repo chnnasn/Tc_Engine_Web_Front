@@ -84,7 +84,7 @@ try {
   await page.locator('.attach-heading strong', { hasText: 'Player' }).waitFor()
   const canvas = await page.locator('iframe').boundingBox(), panel = await page.locator('.script-panel').boundingBox()
   assert.deepEqual(canvas, canvasBefore, 'switching panels must preserve engine geometry')
-  assert.ok(panel.x > canvas.x && panel.x + panel.width < canvas.x + canvas.width && panel.y > canvas.y, 'script panel must float over the engine')
+  assert.ok(panel.x > canvas.x && Math.abs(panel.x + panel.width - canvas.x - canvas.width) < 1 && Math.abs(panel.y - canvas.y) < 1 && Math.abs(panel.height - canvas.height) < 1, 'script panel must overlay the engine flush with its top, right and bottom edges')
   assert.ok(await page.locator('.code-editor .line-numbers').count() > 1, 'code editor shows line numbers')
   const colors = await page.locator('.code-editor .view-line span').evaluateAll(spans => [...new Set(spans.filter(span => span.textContent.trim()).map(span => getComputedStyle(span).color))])
   assert.ok(colors.length >= 3, 'keywords, comments and identifiers have distinct highlighting')
