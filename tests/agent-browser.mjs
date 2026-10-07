@@ -5,6 +5,7 @@ import { mkdtemp, rm } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join, resolve } from 'node:path'
 import { createServer } from 'node:net'
+import { signIn } from './email-sign-in.mjs'
 
 const directory = await mkdtemp(join(tmpdir(), 'tomcat-agent-browser-'))
 const children = []
@@ -35,7 +36,7 @@ try {
   }
   const secret = 'integration-test-secret-01234567890123456789'
   const api = await start('dotnet', [join(apiDir, 'bin/Release/net10.0/TomCat.Api.dll'), '--urls', 'http://127.0.0.1:0'], {
-    cwd: apiDir, env: { ...process.env, ASPNETCORE_ENVIRONMENT: 'Development', Storage__Directory: directory, Agent__Url: `http://127.0.0.1:${mcpPort}`, Agent__Secret: secret, Redis__ConnectionString: redisConnection, Redis__FlushIntervalSeconds: '3600' },
+    cwd: apiDir, env: { ...process.env, ASPNETCORE_ENVIRONMENT: 'Development', Storage__Directory: directory, Mail__PickupDirectory: join(directory, 'mail'), Agent__Url: `http://127.0.0.1:${mcpPort}`, Agent__Secret: secret, Redis__ConnectionString: redisConnection, Redis__FlushIntervalSeconds: '3600' },
   }, /Now listening on:\s+(http:\/\/127\.0\.0\.1:\d+)/)
   await start(join(mcpDir, '.venv/Scripts/python.exe'), ['tests/agent_fixture.py'], {
     cwd: mcpDir, env: { ...process.env, PORT: String(mcpPort), TOMCAT_BACKEND_URL: api, TOMCAT_AGENT_SECRET: secret, TOMCAT_MCP_URL: `http://127.0.0.1:${mcpPort}/mcp/`, LANGSMITH_TRACING: 'false', LANGCHAIN_TRACING_V2: 'false' },
@@ -50,11 +51,7 @@ try {
   page.on('request', request => { if (/\/commands\/[^/]+\/result$/.test(request.url())) results.push(request.postDataJSON()) })
   await page.goto(`${base}/projects`)
   await page.getByRole('button', { name: '登录 / 注册', exact: true }).click()
-  await page.getByLabel('用户名', { exact: true }).fill('aitest')
-  await page.getByLabel('密码', { exact: true }).fill('agent-password-12345')
-  await page.getByRole('button', { name: '切换到注册', exact: true }).click()
-  await page.getByRole('button', { name: '注册并登录', exact: true }).click()
-  await page.getByRole('button', { name: '退出账号', exact: true }).waitFor()
+  await signIn(page, directory, 'aitest', 'agent-password-12345', true)
   await page.getByRole('button', { name: '关闭对话框', exact: true }).click()
   await page.locator('.page-actions').getByRole('button', { name: '新建项目', exact: true }).click()
   await page.getByLabel('项目名称', { exact: true }).fill('我的第一个游戏')

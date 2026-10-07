@@ -4,6 +4,7 @@ import { spawn } from 'node:child_process'
 import { mkdtemp, rm } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join, resolve, dirname, basename } from 'node:path'
+import { signIn as emailSignIn } from './email-sign-in.mjs'
 const directory = await mkdtemp(join(tmpdir(), 'tomcat-cloud-browser-'))
 const children = []
 if (!process.env.TEST_REDIS_SERVER) throw new Error('Set TEST_REDIS_SERVER to a Redis server executable')
@@ -20,7 +21,7 @@ let browser
 try {
   await start(process.env.TEST_REDIS_SERVER, ['--bind','127.0.0.1','--port','16389','--appendonly','yes','--appendfsync','always'], {cwd:directory}, /(Ready to accept connections)/i)
   const apiDir = resolve(process.env.TEST_API_DIRECTORY || '../Tc_Engine_Web_backend/TomCat.Api')
-  const api = await start('dotnet', [join(apiDir,'bin/Release/net10.0/TomCat.Api.dll'),'--urls','http://127.0.0.1:0'], {cwd:apiDir,env:{...process.env, ASPNETCORE_ENVIRONMENT:'Development',Storage__Directory:directory,Redis__ConnectionString:'127.0.0.1:16389',Redis__KeyPrefix:'browser:',Redis__FlushIntervalSeconds:'10'}}, /Now listening on:\s+(http:\/\/127\.0\.0\.1:\d+)/)
+  const api = await start('dotnet', [join(apiDir,'bin/Release/net10.0/TomCat.Api.dll'),'--urls','http://127.0.0.1:0'], {cwd:apiDir,env:{...process.env, ASPNETCORE_ENVIRONMENT:'Development',Storage__Directory:directory,Mail__PickupDirectory:join(directory,'mail'),Redis__ConnectionString:'127.0.0.1:16389',Redis__KeyPrefix:'browser:',Redis__FlushIntervalSeconds:'10'}}, /Now listening on:\s+(http:\/\/127\.0\.0\.1:\d+)/)
   const base = await start(process.execPath, ['node_modules/vite/bin/vite.js','--host','127.0.0.1','--port','5193','--strictPort'], {env:{...process.env,TOMCAT_API_PROXY:api,NO_COLOR:'1'}}, /(http:\/\/127\.0\.0\.1:\d+)/)
   browser = await chromium.launch({channel:process.env.TEST_BROWSER_CHANNEL || 'chrome',headless:true,args:['--enable-webgl','--use-angle=swiftshader','--enable-unsafe-swiftshader']})
   const a = await browser.newPage(); const b = await browser.newPage()
@@ -41,11 +42,7 @@ try {
     const result={document:await read('projects'),binding:await read('cloudLinks')};db.close();return result
   })
   async function signIn(p, register=false) {
-    await p.getByLabel('用户名',{exact:true}).fill('cloudtest')
-    await p.getByLabel('密码',{exact:true}).fill('cloud-password-12345')
-    if(register) await p.getByRole('button',{name:'切换到注册',exact:true}).click()
-    await p.getByRole('button',{name:register?'注册并登录':'登录',exact:true}).click()
-    await p.getByRole('button',{name:'退出账号',exact:true}).waitFor()
+    await emailSignIn(p, directory, 'cloudtest', 'cloud-password-12345', register)
   }
   await a.goto(`${base}/projects`)
   await a.getByRole('button',{name:'登录 / 注册',exact:true}).click(); await signIn(a,true)
