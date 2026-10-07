@@ -17,4 +17,13 @@
 
 截图在 `.engine/account-design/`，日志在 `.engine/email-only-*.log`、`.engine/account-design-browser.log` 和 `.engine/account-access-browser.log`。
 
-本轮尚未提交或部署；上线时前后端应同时更新，以匹配新的注册请求及用户资料格式。
+## 生产部署
+
+- 前端代码提交：`f832adf`，已推送到 `main`。
+- 后端代码提交：`a60f9e8769b8a5409c8e522e94f2531b13954b97`，已推送到 `main`。
+- Railway 后端部署：`b8522176-6023-41d1-b997-72f1b6fae3ac`，状态 `SUCCESS`；Redis 服务保持正常。
+- Netlify 正式部署：`6ac5c941c4e702e3b9e691a8`，站点 https://www.tcfun.fun 。先检查预览站点，待后端健康后发布正式站点。
+- 正式站点浏览器检查通过：邮箱登录、注册与找回密码表单、无用户名字段、桌面/手机布局、无页面运行错误。
+- 后端直连及正式站点代理 `/health` 均返回 HTTP 200 和 `{"status":"ok"}`。
+
+生产验证未创建账号或发送邮件；完整注册、验证码和密码流程的验证结果来自上述本地测试。
