@@ -9,6 +9,7 @@ import GameCard from './GameCard.vue'
 import SearchField from './SearchField.vue'
 import TextLink from './TextLink.vue'
 import PublishedGames from './PublishedGames.vue'
+import HomeIntro from './HomeIntro.vue'
 
 const props = defineProps<{ saved: string[] }>()
 const emit = defineEmits<{ toggleSave: [id: string]; create: [] }>()
@@ -26,11 +27,7 @@ const filtered = computed(() => {
 
 <template>
   <main id="main-content" class="page home-page">
-    <div class="editorial-heading"><div class="page-intro">
-      <span class="eyebrow"><span class="live-dot" />TOMCAT / PLAY & CREATE</span>
-      <h1>发现游戏，<br class="mobile-break" />也发现可能<span class="green-dot">.</span></h1>
-      <p>打开一个新世界，或者亲手创造下一个。</p>
-    </div><div class="editorial-note"><span>为好奇心而造</span><p>即刻游玩 · 自由创作</p><button class="text-link" @click="emit('create')">进入创作工作台 <ArrowUpRight :size="16" /></button></div></div>
+    <HomeIntro @create="emit('create')" />
 
     <section class="home-published" aria-labelledby="published-title">
       <div class="section-index"><span>MADE BY PLAYERS</span><span>创作者发布</span></div>
@@ -68,5 +65,17 @@ const filtered = computed(() => {
       </div>
       <aside class="create-aside"><div class="aside-icon"><Sparkles :size="21" :stroke-width="1.5" /></div><h3>不止游玩，也来创造。</h3><p>给那个还没完成的想法，<br />一个开始的地方。</p><button class="text-link" @click="emit('create')">创建我的第一个项目<ArrowRight :size="17" /></button></aside>
     </section>
+    <section class="home-faq" aria-labelledby="faq-title">
+      <div><span class="eyebrow">BEFORE YOU START</span><h2 id="faq-title">开始之前，<br />你可能想知道。</h2></div>
+      <div class="faq-items">
+        <details><summary>需要下载或安装吗？<span>+</span></summary><p>游玩和编辑都在浏览器里完成。首次打开时需要加载引擎，请稍等片刻。可以先打开一个内置示例，看看效果。</p></details>
+        <details><summary>AI 助手可以做些什么？<span>+</span></summary><p>打开自己的项目后，点击编辑器中的“AI 助手”。它可以读取场景、创建对象和修改支持的组件。每次任务会显示执行过程，完成后请检查场景并运行预览。</p></details>
+        <details><summary>我的修改会自动保存吗？<span>+</span></summary><p>登录后，项目与云端关联。请留意编辑器的保存状态；AI 任务开始前和正常结束后会建立检查点。停止任务会保留已执行的修改，需要时可以撤销。</p></details>
+      </div>
+    </section>
   </main>
 </template>
+
+<style scoped>
+.home-faq{display:grid;grid-template-columns:1fr 1.5fr;gap:72px;padding:65px 0 10px;margin-top:35px;border-top:1px solid #dfd8ce}.home-faq h2{font-family:Georgia,'Songti SC','SimSun',serif;font-size:31px;font-weight:500;line-height:1.5;margin-top:14px}.faq-items details{border-bottom:1px solid #dfd8ce}.faq-items summary{display:flex;justify-content:space-between;align-items:center;gap:20px;cursor:pointer;list-style:none;padding:23px 0;font-size:15px}.faq-items summary::-webkit-details-marker{display:none}.faq-items summary span{font-size:24px;font-weight:300;color:#8d8276;transition:transform .15s}.faq-items details[open] summary span{transform:rotate(45deg)}.faq-items p{padding:0 30px 24px 0;font-size:13px;color:#777066;line-height:1.9}.faq-items summary:focus-visible{outline:2px solid #a65036;outline-offset:4px}#discover-title{scroll-margin-top:110px}@media(max-width:700px){.home-faq{grid-template-columns:1fr;gap:18px;padding-top:35px}.home-faq h2{font-size:26px}.home-faq h2 br{display:none}}@media(prefers-reduced-motion:reduce){.faq-items summary span{transition:none}}
+</style>

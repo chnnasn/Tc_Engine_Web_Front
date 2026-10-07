@@ -13,6 +13,7 @@ import CommunityPage from './CommunityPage.vue'
 import EditorPage from './EditorPage.vue'
 import GameDetailPage from './GameDetailPage.vue'
 import HomePage from './HomePage.vue'
+import SiteNavigation from './SiteNavigation.vue'
 import NotFoundPage from './NotFoundPage.vue'
 import ProfilePage from './ProfilePage.vue'
 import ProjectsPage from './ProjectsPage.vue'
@@ -198,7 +199,7 @@ onBeforeUnmount(() => {
   <header v-if="!isEditor" class="site-header">
     <div class="header-inner">
       <AppLink href="/" class="brand" aria-label="TomCat 首页"><span class="brand-mark"><img src="/HubLogo.ico" alt="" /></span><span>tomcat<span class="brand-dot">.</span></span></AppLink>
-      <nav class="main-nav" aria-label="主导航"><AppLink href="/" :aria-current="path === '/' || path.startsWith('/games') ? 'page' : undefined" :class="{ active: path === '/' || path.startsWith('/games') }">发现游戏</AppLink><AppLink href="/play" :aria-current="path === '/play' || playId ? 'page' : undefined" :class="{ active: path === '/play' || Boolean(playId) }">玩家作品</AppLink><AppLink href="/community" :aria-current="path.startsWith('/community') ? 'page' : undefined" :class="{ active: path.startsWith('/community') }">社区</AppLink><AppLink href="/projects" :aria-current="path.startsWith('/projects') ? 'page' : undefined" :class="{ active: path.startsWith('/projects') }">我的项目</AppLink></nav>
+      <SiteNavigation :path="path" @create="openCreate" />
       <div class="header-actions">
         <button class="button button-primary header-create" @click="openCreate"><Plus :size="16" />新建项目</button>
         <div ref="accountArea" class="account-area">

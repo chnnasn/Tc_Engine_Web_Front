@@ -295,3 +295,23 @@
   .studio-site .page-actions { gap: 7px; }
   .studio-site .page-actions .button { padding: 9px 10px; font-size: 11px; }
 }
+
+/* Site navigation stays available without consuming a second row on mobile. */
+.studio-site .site-header { position: sticky; top: 0; z-index: 10; backdrop-filter: blur(14px); }
+.studio-site .header-inner { gap: 28px; }
+@media(max-width:900px) {
+  .studio-site .site-header { height: 68px; }
+  .studio-site .header-inner { flex-wrap: nowrap; padding: 0 20px; gap: 12px; }
+  .studio-site .header-actions { margin-left: auto; gap: 10px; }
+  .studio-site .header-create { display: inline-flex; padding: 8px 11px; font-size: 12px; }
+  .studio-site .brand { font-size: 23px; }
+}
+@media(prefers-reduced-motion:reduce) {
+  .studio-site .game-card { transition: none; }
+}
+@media(max-width:380px) {
+  .studio-site .header-inner { padding: 0 16px; gap: 8px; }
+  .studio-site .brand { font-size: 21px; }
+  .studio-site .header-create { padding: 8px; gap: 5px; }
+  .studio-site .account-trigger > svg { display: none; }
+}

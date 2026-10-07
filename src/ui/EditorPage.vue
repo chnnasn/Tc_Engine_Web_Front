@@ -30,6 +30,8 @@ const fileInput = ref<HTMLInputElement>()
 const busy = ref(false)
 const cloudOpen = ref(false)
 const agentOpen = ref(false)
+const agentTrigger = ref<HTMLButtonElement>()
+function collapseAgent() { agentOpen.value = false; agentTrigger.value?.focus() }
 const scriptOpen = ref(false)
 const publishOpen = ref(false)
 const binding = ref<CloudBinding>()
@@ -332,16 +334,19 @@ onBeforeUnmount(() => { gone = true; clearTimeout(syncTimer); window.removeEvent
       <button class="button" :disabled="!status || busy" @click="exportCurrent">导出项目</button>
       <button class="button" :disabled="saving" @click="cloudOpen = true">云端</button>
       <button class="button" :disabled="!status" @click="scriptOpen = !scriptOpen">C# 脚本</button>
-      <button class="button" :disabled="!status" @click="agentOpen = !agentOpen">AI 助手</button>
+      <button ref="agentTrigger" class="button" :class="{ 'agent-active': agentOpen }" :disabled="!status" :aria-expanded="agentOpen" aria-controls="editor-agent-panel" @click="agentOpen = !agentOpen">AI 助手</button>
       <button class="button" :disabled="saving" @click="publishOpen = true">发布</button>
       <button class="button button-primary" :disabled="!status || saving" @click="save()">{{ saving ? '保存中…' : '保存到云端' }}</button>
       <input ref="fileInput" hidden type="file" accept=".png,.jpg,.jpeg,.tga" @change="importImage" />
     </header>
-    <AgentPanel v-if="agentOpen && status && !failure" :project-id="binding?.projectId" :call="agentCall" :checkpoint="checkpoint" @state="agentState" />
+
     <ScriptPanel v-if="scriptOpen && status && !failure" :call="scriptCall" :entity-id="status?.selectedEntityId ?? null" :entity-name="selected?.name ?? null" @notify="emit('notify', $event)" @dirty="markDirty" @restart="restartSession" @snapshot="agentState" />
     <div v-if="failure" class="native-notice" role="alert">{{ failure }}</div>
+    <div class="editor-workspace">
     <EngineSurface v-if="initialized && !failure" :key="surfaceKey" ref="surface" kind="editor" :name="project.name" :template="project.template" :document="stored" :cloud-project-id="binding?.projectId" @ready="ready" @state="updateStatus" @actions="actions" @error="failure = $event" />
     <div v-else-if="!failure" class="native-notice">正在读取项目…</div>
+    <AgentPanel v-if="status && !failure" v-show="agentOpen" :visible="agentOpen" :project-id="binding?.projectId" :call="agentCall" :checkpoint="checkpoint" @state="agentState" @collapse="collapseAgent" />
+    </div>
     <footer><span v-if="binding && syncMessage" role="status">{{ syncMessage }} · </span>{{ binding ? '已关联云端' : '正在验证云端关联' }} · {{ status?.mode === 'play' ? '运行中' : status?.mode === 'pause' ? '已暂停' : '编辑模式' }} · {{ snapshot?.schemas.length || 0 }} 种组件类型 <span v-if="selected"> · {{ selected.name }}</span><span>预览不会公开发布；停止预览后继续编辑</span></footer>
     <CloudProjects v-if="cloudOpen" :project="project" :binding="binding" @close="cloudOpen = false" @attach="attachCloud" />
     <PublishDialog v-if="publishOpen" :project-id="binding?.projectId" :project-name="project.name" :project-description="project.description" :dirty="dirty" @close="publishOpen = false" @notify="emit('notify', $event)" />
@@ -349,4 +354,5 @@ onBeforeUnmount(() => { gone = true; clearTimeout(syncTimer); window.removeEvent
 </template>
 <style scoped>
 .native-editor{height:100dvh;display:flex;flex-direction:column;background:#202329;color:#e8eeee}.native-toolbar{display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:10px 16px;background:#f5f6f2;color:#24322b}.native-toolbar strong{margin-right:auto}.native-toolbar .button{padding:8px 12px;min-height:34px}.native-editor :deep(.engine-surface){flex:1;min-height:0}.native-notice{padding:14px 20px;background:#394039;color:#fff}.native-editor footer{display:flex;gap:10px;flex-wrap:wrap;font-size:12px;padding:8px 16px;color:#bcc7c2}.native-editor footer span:last-child{margin-left:auto}
+.editor-workspace{display:flex;flex:1;min-height:0;min-width:0}.editor-workspace :deep(.engine-surface){min-width:0}.native-toolbar .agent-active{background:#f0e5db;border-color:#b8866b;color:#88412d}@media(max-width:760px){.editor-workspace{flex-direction:column;overflow:auto}.editor-workspace :deep(.engine-surface){min-height:260px;flex:1 0 260px}}
 </style>

@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict'
 import { chromium } from 'playwright'
 import { spawn } from 'node:child_process'
-import { mkdtemp, rm } from 'node:fs/promises'
+import { mkdir, mkdtemp, rm } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join, resolve } from 'node:path'
 import { createServer } from 'node:net'
@@ -45,7 +45,7 @@ try {
     env: { ...process.env, TOMCAT_API_PROXY: api, NO_COLOR: '1' },
   }, /(http:\/\/127\.0\.0\.1:\d+)/)
   browser = await chromium.launch({ channel: process.env.TEST_BROWSER_CHANNEL || 'chrome', headless: true, args: ['--enable-webgl', '--use-angle=swiftshader', '--enable-unsafe-swiftshader'] })
-  const page = await browser.newPage()
+  const page = await browser.newPage({ viewport: { width: 1440, height: 960 } })
   const results = [], errors = []
   page.on('pageerror', error => errors.push(error.message))
   page.on('request', request => { if (/\/commands\/[^/]+\/result$/.test(request.url())) results.push(request.postDataJSON()) })
@@ -60,11 +60,27 @@ try {
   await page.getByRole('button', { name: 'AI 助手', exact: true }).click()
   await page.getByRole('button', { name: '保存到云端', exact: true }).waitFor()
   await page.getByRole('dialog').waitFor({ state: 'hidden' })
+  await page.getByRole('button', { name: '看看当前场景', exact: true }).click()
+  assert.match(await page.getByLabel('描述你想修改的场景').inputValue(), /先不要修改/)
+  await mkdir('docs/interaction-preview', { recursive: true })
+  await page.screenshot({ path: 'docs/interaction-preview/agent-desktop.png' })
   await page.getByLabel('描述你想修改的场景').fill('创建一个 AI_Player 对象，读取验证，然后撤销并确认移除。')
-  await page.getByRole('button', { name: '执行', exact: true }).click()
+  await page.getByLabel('描述你想修改的场景').press('Control+Enter')
+  await page.getByRole('button', { name: '停止', exact: true }).waitFor()
+  await page.getByRole('button', { name: '收起 AI 助手', exact: true }).click()
+  assert.equal(await page.locator('.agent-panel').isVisible(), false)
+  assert.equal(await page.getByRole('button', { name: 'AI 助手', exact: true }).getAttribute('aria-expanded'), 'false')
+  await page.getByRole('button', { name: 'AI 助手', exact: true }).click()
   await page.getByText('已创建、读取验证并撤销 AI_Player。', { exact: true }).waitFor({ timeout: 90000 })
   await page.getByText(/^结束检查点：/).waitFor({ timeout: 90000 })
   await page.getByRole('button', { name: '执行', exact: true }).waitFor()
+  await page.screenshot({ path: 'docs/interaction-preview/agent-result.png' })
+  await page.setViewportSize({ width: 390, height: 844 })
+  await page.locator('.agent-panel').scrollIntoViewIfNeeded()
+  await page.screenshot({ path: 'docs/interaction-preview/agent-mobile.png' })
+  const agentSize = await page.locator('.agent-panel').boundingBox()
+  assert.ok(agentSize.width <= 390, 'mobile assistant fits the viewport')
+  await page.setViewportSize({ width: 1440, height: 960 })
   assert.equal(results.length, 8)
   assert.ok(results.every(r => r.ok), JSON.stringify(results))
   assert.ok(results[1].data.schemas.length > 0, 'schema comes from real WASM')
