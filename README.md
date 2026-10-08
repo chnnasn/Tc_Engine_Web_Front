@@ -14,7 +14,7 @@ Vue 3 创作工作台，使用固定版本的上游 TomCat Web Editor / Player�
 
 ## 开发与构建
 
-当前浏览器引擎锁定 `331d1e0b`，复用桌面端 Scene 辅助显示、编辑手柄和 Inspector 脚本管理。此次仅调整编辑器交互，TCPAK v8、Scene v11、Project v4、Managed API v5 不变，兼容 `41708b6c`、`053fcce4` 、`2ee941e6` 与 `bb692873` 项目和游戏包；更旧及未知提交仍拒绝。Railway 打包器保持 `41708b6c`，后端接受这五个已验证的提交，现有项目重开后保存为新版，无需删除重建。详见 [场景视图对齐记录](docs/desktop-scene-parity.md)。
+当前浏览器引擎锁定 `5feb6666`，复用桌面端 Scene 辅助显示、编辑手柄和 Inspector 脚本管理。此次仅调整编辑器交互，TCPAK v8、Scene v11、Project v4、Managed API v5 不变，兼容 `41708b6c`、`053fcce4` 、`2ee941e6` 与 `bb692873` 项目和游戏包；更旧及未知提交仍拒绝。Railway 打包器保持 `41708b6c`，后端接受这六个已验证的提交，现有项目重开后保存为新版，无需删除重建。详见 [场景视图对齐记录](docs/desktop-scene-parity.md)。
 
 该版本恢复了完整托管 Web 构建，并引入分帧场景加载、文字塑形、虚拟列表、2D 光照与后处理等引擎功能。原生 DLL 模块仍不支持 Web；浏览器存档持久化、完整 ICU/IME 和可听音频不因版本升级而自动获得支持。
 
@@ -34,7 +34,7 @@ npm run engine:build
 npm run dev
 ```
 
-`engine.lock.json` 固定引擎提交 `331d1e0b15edc202a375e9568b5cefea5821e18c`，并记录 `kind: managed`。构建脚本检出到 `.engine/source`、初始化四个依赖子模块，然后用 **托管（C#）管线** 生成引擎产物：先用 Emscripten 编出 C++ 静态库（`tomcat_managed_web_entrypoints`、`tc_player_core`、`tc_yaml`、`box2d`），再 `dotnet publish -r browser-wasm` 发布 `Managed/TomCat.WebHost`——**最终 `.wasm` 由 .NET 运行时拥有**，C++ 引擎归档被链接进同一块 WebAssembly 内存，原生与托管共享函数表。最后把完整的 `main.js`、`_framework/` 与 C# 编译引用集 `refs/` 复制到 `public/engine/<commit>/`。没有本地 C++ 移植补丁。
+`engine.lock.json` 固定引擎提交 `5feb6666d531864fb22daaadc0aa9bc12b241f84`，并记录 `kind: managed`。构建脚本检出到 `.engine/source`、初始化四个依赖子模块，然后用 **托管（C#）管线** 生成引擎产物：先用 Emscripten 编出 C++ 静态库（`tomcat_managed_web_entrypoints`、`tc_player_core`、`tc_yaml`、`box2d`），再 `dotnet publish -r browser-wasm` 发布 `Managed/TomCat.WebHost`——**最终 `.wasm` 由 .NET 运行时拥有**，C++ 引擎归档被链接进同一块 WebAssembly 内存，原生与托管共享函数表。最后把完整的 `main.js`、`_framework/` 与 C# 编译引用集 `refs/` 复制到 `public/engine/<commit>/`。没有本地 C++ 移植补丁。
 
 托管模块是单线程构建（`WasmEnableThreads=false`），产物中不含 `SharedArrayBuffer`/pthread，因此**不再要求跨源隔离**；`vite.config.ts` 与 `netlify.toml` 仍保留 COOP/COEP 以便将来启用线程构建。
 
@@ -194,3 +194,11 @@ AI 通过 `script_get_api` 获取与当前引擎匹配的 C# API，再使用 `sc
 原生 Project 对项目 Assets 内文件和目录开放右键 Delete，先显示确认；有引用时沿用桌面端提示，强制删除保留缺失引用。Packages 和根目录仍只读。文件删除触发项目脏状态和云端同步；写入源码后立即刷新原生资源登记，避免 Inspector 错报 Missing Script。
 
 `node --experimental-strip-types tests/agent-scripts-browser.mjs` 使用本地临时账号、数据库和确定性模型，验证完整 MCP 编写、Roslyn 编译、挂载、键盘移动、检查点，以及原生删除后的保存重开。该测试不对线上用户项目执行写入，也不等同于远端模型决策质量验收。
+
+### Web Project 文件管理
+
+网页编辑器沿用原生 Project 面板：支持右键 Create → Scene / Folder / C# Script、Rename、Delete，以及资源与文件夹拖动移动。Packages 保持只读。场景使用原生 `.tomcat` 格式；切换场景前保留当前修改，云端保存包含场景文件和空文件夹。中文与带空格的资源路径可保存，C# 面板扫描整个 Assets，并用资源 Handle 跟随重命名或移动后的脚本。
+
+引擎源码固定在 `fix/web-project-authoring` 分支的锁定提交，只基于已验证的旧版添加上述功能，不引入其他上游更改。现有 `331d1e0b` 项目可直接恢复并保存。顶部导出按钮移除，原生 File 菜单的 Open Scene / Export project 保留。
+
+验证：`node tests/project-authoring-browser.mjs`（需运行本地 Vite）覆盖原生新建、改名、拖动、云端恢复、场景切换、Play、移动后 C# 草稿保存与编译；`node tests/viewport-upgrade-browser.mjs` 覆盖上一版本真实 WASM 项目的云端升级。

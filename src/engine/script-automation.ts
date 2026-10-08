@@ -1,4 +1,5 @@
 import { EngineError, type Snapshot } from './protocol.ts'
+import { validFilePath } from './storage.ts'
 import { editScriptAttachment, readScripts } from './scene-archive.ts'
 
 interface Script { path: string; handle: string; className: string; text: string }
@@ -54,7 +55,7 @@ export async function executeScriptTool(name: string, args: Record<string, any>,
   const meta = () => ({ scene_version: version(host.snapshot()), source_version: sourceVersion, installed: host.installed() })
   if (name === 'script_list') return { ...meta(), scripts: host.scripts().map(({ text: _text, ...script }) => script) }
   const path = args.path
-  if (['script_read', 'script_write', 'script_attach'].includes(name) && (typeof path !== 'string' || !/^Assets\/Scripts\/[A-Za-z0-9][A-Za-z0-9_.\-/]*\.cs$/.test(path) || path.includes('..'))) throw new EngineError('INVALID_ARGUMENT', 'Path must be a .cs file inside Assets/Scripts.')
+  if (['script_read', 'script_write', 'script_attach'].includes(name) && (typeof path !== 'string' || !path.startsWith('Assets/') || !path.endsWith('.cs') || !validFilePath(path))) throw new EngineError('INVALID_ARGUMENT', 'Path must be a .cs file inside Assets.')
   const script = host.scripts().find(s => s.path === path)
   if (name === 'script_read') {
     if (!script) throw new EngineError('SCRIPT_NOT_FOUND', path)

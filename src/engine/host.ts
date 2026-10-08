@@ -162,7 +162,7 @@ canvas.addEventListener('pointerdown', () => canvas.focus())
 canvas.addEventListener('contextmenu', event => event.preventDefault())
 canvas.addEventListener('wheel', event => event.preventDefault(), { passive: false })
 addEventListener('keydown', event => {
-  if ([' ', 'Tab', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'Backspace'].includes(event.key) || ((event.ctrlKey || event.metaKey) && ['s', 'z', 'y'].includes(event.key.toLowerCase()))) event.preventDefault()
+  if (['Tab', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'Backspace'].includes(event.key) || ((event.ctrlKey || event.metaKey) && ['s', 'z', 'y'].includes(event.key.toLowerCase()))) event.preventDefault()
 })
 function fail(error: unknown) {
   // 这类失败往往只以退出码的形式出现，所以尽量把原因变成可读的一句话。
@@ -216,6 +216,7 @@ function restore(document: EngineDocument) {
     }
     removeTree(`${projectRoot}/Assets`); removeTree(`${projectRoot}/ProjectSettings`)
   }
+  for (const path of document.directories ?? []) fs.mkdirTree(`${projectRoot}/${path}`)
   for (const [path, data] of Object.entries(document.files)) {
     const full = `${projectRoot}/${path}`
     fs.mkdirTree(full.slice(0, full.lastIndexOf('/')))
@@ -225,7 +226,8 @@ function restore(document: EngineDocument) {
 function capture(): EngineDocument {
   flushLayout()
   const fs = filesystem()
-  const snapshot = protocol!.snapshot(state().sceneHandle)
+  const snapshot = protocol!.request<Snapshot>('scene.persist')
+  const directories: string[] = []
   const files: Record<string, string> = {}
   const encode = (bytes: Uint8Array) => {
     let binary = ''
@@ -235,7 +237,7 @@ function capture(): EngineDocument {
   const collect = (folder: string) => {
     for (const name of fs.readdir(`${projectRoot}/${folder}`).filter(name => name !== '.' && name !== '..')) {
       const relative = `${folder}/${name}`
-      if (fs.isDir(fs.stat(`${projectRoot}/${relative}`).mode)) collect(relative)
+      if (fs.isDir(fs.stat(`${projectRoot}/${relative}`).mode)) { if (relative.startsWith('Assets/')) directories.push(relative); collect(relative) }
       else {
         if (!validFilePath(relative)) throw new Error(`不支持的项目文件路径：${relative}`)
         files[relative] = encode(fs.readFile(`${projectRoot}/${relative}`) as Uint8Array)
@@ -244,7 +246,7 @@ function capture(): EngineDocument {
   }
   collect('ProjectSettings'); collect('Assets')
   files['Project.tcproj'] = encode(fs.readFile(`${projectRoot}/Project.tcproj`) as Uint8Array)
-  const document: EngineDocument = { format: 'tomcat-engine-project', version: 2, engineCommit, sceneHandle: snapshot.sceneHandle, archive: snapshot.archive, files }
+  const document: EngineDocument = { format: 'tomcat-engine-project', version: 2, engineCommit, sceneHandle: snapshot.sceneHandle, archive: snapshot.archive, files, directories }
   assertDocument(document)
   return document
 }
@@ -252,7 +254,6 @@ function capture(): EngineDocument {
 // ---------------------------------------------------------------------------
 // C# 脚本：源文件、元数据、浏览器内编译与安装
 // ---------------------------------------------------------------------------
-const scriptFolder = `${projectRoot}/Assets/Scripts`
 export interface ScriptEntry { path: string; handle: string; className: string; text: string }
 
 function newHandle() {
@@ -282,11 +283,13 @@ function readHandle(metaPath: string): string | undefined {
 function normalizeScriptPath(value: unknown) {
   if (typeof value !== 'string') throw new Error('脚本路径无效')
   const relative = value.replace(/\\/g, '/').replace(/^\.?\//, '')
-  if (!/^Assets\/Scripts\/[A-Za-z0-9][A-Za-z0-9_.\-/]*\.cs$/.test(relative) || relative.includes('..')) throw new Error('脚本路径必须位于 Assets/Scripts 下并以 .cs 结尾')
+  if (!relative.startsWith('Assets/') || !relative.endsWith('.cs')) throw new Error('脚本路径必须位于 Assets 下并以 .cs 结尾')
   if (!validFilePath(relative)) throw new Error('脚本路径不合法')
   return relative
 }
-function classNameOf(path: string) { return path.slice(path.lastIndexOf('/') + 1, -3) }
+function classNameOf(path: string, text: string) {
+  return /\bclass\s+([A-Za-z_]\w*)\s*:\s*(?:TomCat\.)?TomCatBehaviour\b/.exec(text)?.[1] ?? path.slice(path.lastIndexOf('/') + 1, -3)
+}
 /** Include identity: deleting/recreating identical source still needs a new assembly manifest. */
 function signatureOf(scripts: ScriptEntry[]) {
   let hash = 0x811c9dc5
@@ -312,12 +315,12 @@ function listScripts(): ScriptEntry[] {
       results.push({
         path,
         handle: readHandle(`${full}.tcmeta`) ?? '',
-        className: classNameOf(path),
+        className: classNameOf(path, String(fs.readFile(full, { encoding: 'utf8' }))),
         text: String(fs.readFile(full, { encoding: 'utf8' })),
       })
     }
   }
-  walk(scriptFolder)
+  walk(`${projectRoot}/Assets`)
   return results.sort((a, b) => a.path.localeCompare(b.path))
 }
 function writeScript(payload: { path: unknown; text: unknown; handle?: unknown }): ScriptEntry {
@@ -325,14 +328,17 @@ function writeScript(payload: { path: unknown; text: unknown; handle?: unknown }
   if (typeof payload.text !== 'string') throw new Error('脚本内容无效')
   if (payload.text.length > 512 * 1024) throw new Error('单个脚本不能超过 512 KiB')
   const fs = filesystem()
-  const path = normalizeScriptPath(payload.path)
+  const requestedPath = normalizeScriptPath(payload.path)
+  const existing = payload.handle ? listScripts().find(script => script.handle === payload.handle) : undefined
+  if (payload.handle && !existing) throw new Error('脚本已删除，请刷新脚本列表后重试')
+  const path = existing?.path ?? requestedPath
   const full = `${projectRoot}/${path}`
   const handle = (typeof payload.handle === 'string' && /^[1-9]\d*$/.test(payload.handle) ? payload.handle : undefined) ?? readHandle(`${full}.tcmeta`) ?? newHandle()
   fs.mkdirTree(full.slice(0, full.lastIndexOf('/')))
   fs.writeFile(full, payload.text)
   fs.writeFile(`${full}.tcmeta`, scriptMeta(handle))
   protocol!.request('asset.refresh')
-  return { path, handle, className: classNameOf(path), text: payload.text }
+  return { path, handle, className: classNameOf(path, String(fs.readFile(full, { encoding: 'utf8' }))), text: payload.text }
 }
 function deleteScript(payload: { path: unknown }) {
   requireEditMode()
@@ -366,7 +372,7 @@ async function buildCompileRequest(validate?: () => void): Promise<{ request: Co
 }
 export interface CompileOutcome { succeeded: boolean; restartRequired: boolean; diagnostics: CompileDiagnostic[]; scripts: number }
 /**
- * 编译 Assets/Scripts 下的 C# 脚本。
+ * 编译 Assets 下的 C# 脚本。
  * - 本会话尚未安装程序集：直接 compileAndInstall，成功后即可运行预览。
  * - 本会话已安装过一代程序集：原生侧会拒绝替换，改为只编译取诊断；
  *   若源码本身编译通过，则返回 restartRequired，由宿主页面重建引擎会话后恢复项目。
@@ -519,7 +525,7 @@ addEventListener('message', async event => {
       for (const required of ['scene.transact', 'component.schema', 'scene.archive', 'history.undo', 'history.redo']) if (!capabilities.capabilities.includes(required)) throw new Error(`Missing capability: ${required}`)
       const document = event.data.document as EngineDocument | undefined
       if (document) restore(document)
-      snapshot = protocol.request<Snapshot>('project.new', { name: event.data.name, template: event.data.template })
+      snapshot = protocol.request<Snapshot>('project.new', { name: event.data.name, template: event.data.template, ...(document ? { activeSceneHandle: document.sceneHandle } : {}) })
       if (document) {
         snapshot = protocol.request<Snapshot>('scene.loadArchive', { sceneHandle: snapshot.sceneHandle, baseRevision: snapshot.revision, archive: document.archive })
         snapshot = protocol.request<Snapshot>('scene.markSaved', { sceneHandle: snapshot.sceneHandle, baseRevision: snapshot.revision })

@@ -2,7 +2,7 @@ import assert from 'node:assert/strict'
 import { readFileSync } from 'node:fs'
 import { chromium } from 'playwright'
 const lock=JSON.parse(readFileSync('engine.lock.json','utf8'))
-const previous='41708b6c756d530a1c71f0e0ef2539a1df1bb03e'
+const previous='331d1e0b15edc202a375e9568b5cefea5821e18c'
 const base=process.env.TEST_BASE_URL || 'http://127.0.0.1:5173'
 const browser=await chromium.launch({channel:'chrome',headless:true})
 const context=await browser.newContext({viewport:{width:1440,height:960}})
@@ -38,10 +38,15 @@ const rpc=async(page,type,payload)=>page.evaluate(({type,payload})=>{
 try {
   const oldPage=await context.newPage()
   await oldPage.route('**/engine.lock.json*',route=>route.fulfill({contentType:'application/javascript',body:`export default ${JSON.stringify({...lock,commit:previous,legacyCommits:[]})}`}))
+  // The old bundle has no scene.persist RPC; use its original capture behavior for this fixture.
+  await oldPage.route('**/src/engine/host.ts*',async route=>{
+    const response=await route.fetch();const raw=await response.text();const body=raw.replace(/protocol\.request\(["']scene\.persist["']\)/g,'protocol.snapshot(state().sceneHandle)')
+    await route.fulfill({response,body})
+  })
   await ready(oldPage)
   await rpc(oldPage,'scene.transact',{label:'Existing work',operations:[{op:'entity.create',entityId:'7011',name:'Keep this existing entity'}]})
   await oldPage.getByRole('button',{name:'保存到云端',exact:true}).click()
-  await oldPage.getByText('完整项目已保存到云端',{exact:true}).waitFor()
+  await oldPage.getByText('已保存到数据库',{exact:true}).waitFor()
   assert.equal(manifest.engineCommit,previous,'fixture must be authored by the genuine previous WASM bundle')
   const archive=manifest.archive
   await oldPage.evaluate(async()=>{
@@ -54,8 +59,8 @@ try {
   assert.ok(restored.entities.some(e=>e.id==='7011' && e.name==='Keep this existing entity'))
   assert.equal(restored.archive,archive,'cloud restore must preserve the existing scene')
   await newPage.getByRole('button',{name:'保存到云端',exact:true}).click()
-  await newPage.getByText('完整项目已保存到云端',{exact:true}).waitFor()
+  await newPage.getByText('已保存到数据库',{exact:true}).waitFor()
   assert.equal(manifest.engineCommit,lock.commit)
   assert.equal(manifest.archive,archive)
   console.log('PASS: genuine previous WASM project saved, local copy removed, restored from cloud in new engine and saved intact.')
-} finally {await browser.close()}
+} catch(error) {const p=context.pages().at(-1);console.log(await p.locator('body').innerText());throw error} finally {await browser.close()}

@@ -382,7 +382,6 @@ defineExpose({ prepareLeave })
       <button class="button" :disabled="leaving" @click="navigate('/projects')">返回项目</button>
       <div class="editor-project-info"><strong class="editor-project-name" :title="project.name">{{ project.name }}</strong><span class="editor-save-status" role="status" :title="saveStatus">{{ saveStatus }}</span></div>
       <button class="button" :disabled="!editing || busy" @click="fileInput?.click()">导入图片</button>
-      <button class="button" :disabled="!status || busy" @click="exportCurrent">导出项目</button>
       <button ref="scriptTrigger" class="button" :class="{ 'agent-active': scriptOpen }" :disabled="!status" :aria-expanded="scriptOpen" aria-controls="editor-script-panel" @click="toggleScript">C# 脚本</button>
       <button ref="agentTrigger" class="button" :class="{ 'agent-active': agentOpen }" :disabled="!status" :aria-expanded="agentOpen" aria-controls="editor-agent-panel" @click="toggleAgent">AI 助手</button>
       <button class="button button-primary editor-save-button" :disabled="!status || toolbarSaving" @click="requestSave()">保存到云端</button>

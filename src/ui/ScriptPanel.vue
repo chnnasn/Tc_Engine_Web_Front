@@ -31,11 +31,14 @@ const stateClass = computed(() => installed.value ? 'ok' : loaded.value ? 'stale
 const rebuildNeeded = computed(() => restartRequired.value || (loaded.value && !installed.value))
 
 function adopt(reply: ScriptsReply) {
+  const selectedHandle = current.value?.handle
   scripts.value = reply.scripts ?? []
   installed.value = Boolean(reply.installed)
   loaded.value = Boolean(reply.assemblyLoaded)
   diagnostics.value = reply.diagnostics ?? []
-  if (!scripts.value.some(script => script.path === selected.value)) selected.value = scripts.value[0]?.path ?? ''
+  const moved = selectedHandle && scripts.value.find(script => script.handle === selectedHandle)
+  if (moved) selected.value = moved.path
+  else if (!scripts.value.some(script => script.path === selected.value)) selected.value = scripts.value[0]?.path ?? ''
   draft.value = current.value?.text ?? ''
 }
 async function refresh() {

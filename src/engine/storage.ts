@@ -7,6 +7,7 @@ export interface EngineDocument {
   engineCommit: string
   sceneHandle: string
   archive: string
+  directories?: string[] // Preserve empty Project folders.
   files: Record<string, string> // Base64 MEMFS project settings and imported assets (including .tcmeta).
 }
 export const engineCommit = lock.commit
@@ -17,7 +18,7 @@ export interface CloudBinding { ownerId: string; projectId: string; etag: string
 export const requiredFiles = ['Project.tcproj', 'ProjectSettings/BuildSettings.json', 'ProjectSettings/ProjectSettings.json', 'ProjectSettings/PlayerSettings.json']
 export function validFilePath(path: string) {
   return path === 'Project.tcproj' || /^ProjectSettings\/[A-Za-z0-9_-]+\.json$/.test(path) ||
-    (path.length <= 240 && path.startsWith('Assets/') && path.split('/').every(part => /^[A-Za-z0-9][A-Za-z0-9_.-]*$/.test(part) && !part.endsWith('.')))
+    (path.length <= 240 && path.startsWith('Assets/') && path.split('/').every(part => /^[\p{L}\p{N}_][\p{L}\p{N}\p{M}_. -]*$/u.test(part) && !/[. ]$/.test(part)))
 }
 export function assertDocument(value: unknown): asserts value is EngineDocument {
   const d = value as EngineDocument
@@ -26,6 +27,18 @@ export function assertDocument(value: unknown): asserts value is EngineDocument 
       !d.files || typeof d.files !== 'object' || Array.isArray(d.files)) throw new Error('项目格式或引擎版本不兼容')
   if (!compatibleEngineCommit(d.engineCommit)) throw new Error('项目使用了不兼容的引擎版本')
   assertHandle(d.sceneHandle)
+  if (d.directories !== undefined) {
+    if (!Array.isArray(d.directories) || d.directories.length > 512 ||
+        new Set(d.directories.map(path => typeof path === 'string' ? path.toLowerCase() : '')).size !== d.directories.length ||
+        d.directories.some(path => typeof path !== 'string' || !path.startsWith('Assets/') || !validFilePath(path))) throw new Error('无效的项目目录')
+  }
+  const folders = new Set((d.directories ?? []).map(path => path.toLowerCase()))
+  const fileNames = new Set(Object.keys(d.files).map(path => path.toLowerCase()))
+  for (const path of [...fileNames, ...folders]) {
+    if (folders.has(path) && fileNames.has(path)) throw new Error('项目文件与目录冲突')
+    const parts = path.split('/')
+    while (parts.pop() && parts.length) if (fileNames.has(parts.join('/'))) throw new Error('项目文件与目录冲突')
+  }
   let bytes = 0
   const paths = Object.keys(d.files)
   if (paths.length > 512 || new Set(paths.map(path => path.toLowerCase())).size !== paths.length) throw new Error('项目文件过多或路径重复')

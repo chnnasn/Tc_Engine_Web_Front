@@ -5,7 +5,7 @@ export interface CloudProject { id: string; name: string; description: string; t
 export interface AiCheckpoint { runId: string; phase: 'start' | 'end'; sceneVersion: string }
 export interface CloudRevision { revisionId: string; etag: string; createdAt: string; aiCheckpoint?: AiCheckpoint }
 interface FileReference { path: string; uploadId: string; contentHash: string; size: number }
-interface Manifest { schemaVersion: 2; engineCommit: string; sceneHandle: string; archive: string; files: FileReference[]; aiCheckpoint?: AiCheckpoint }
+interface Manifest { schemaVersion: 2; engineCommit: string; sceneHandle: string; archive: string; files: FileReference[]; directories?: string[]; aiCheckpoint?: AiCheckpoint }
 export interface RestoredProject { project: CloudProject; document: EngineDocument; binding?: CloudBinding }
 export class CloudError extends Error {
   status: number
@@ -113,7 +113,7 @@ export async function saveCloudProject(document: EngineDocument, binding: CloudB
     if (!uploaded || uploaded.contentHash !== hash || uploaded.size !== bytes.length || !/^[a-f0-9]{32}$/.test(uploaded.uploadId)) throw new Error('云端上传校验失败')
     files.push({ path, uploadId: uploaded.uploadId, contentHash: hash, size: bytes.length })
   }
-  const manifest: Manifest = { schemaVersion: 2, engineCommit: document.engineCommit, sceneHandle: document.sceneHandle, archive: document.archive, files }
+  const manifest: Manifest = { schemaVersion: 2, engineCommit: document.engineCommit, sceneHandle: document.sceneHandle, archive: document.archive, files, directories: document.directories }
   if (options.checkpoint) manifest.aiCheckpoint = options.checkpoint
   const headers = binding.etag === null ? { 'If-None-Match': '*' } : { 'If-Match': binding.etag }
   const response = await api(`${idPath(binding.projectId)}/${options.automatic ? 'working-state' : 'revisions'}`, json(options.automatic ? 'PUT' : 'POST', manifest, headers))
@@ -145,7 +145,7 @@ export async function restoreCloudProject(projectId: string, revisionId?: string
     if (bytes.length !== file.size || await contentHash(bytes) !== file.contentHash) throw new Error(`文件完整性校验失败：${file.path}`)
     files[file.path] = encodeFile(bytes)
   }
-  const document: EngineDocument = { format: 'tomcat-engine-project', version: 2, engineCommit: manifest.engineCommit, sceneHandle: manifest.sceneHandle, archive: manifest.archive, files }
+  const document: EngineDocument = { format: 'tomcat-engine-project', version: 2, engineCommit: manifest.engineCommit, sceneHandle: manifest.sceneHandle, archive: manifest.archive, files, directories: manifest.directories }
   assertDocument(document)
   const etag = response.headers.get('etag')
   if (!etag || !/^"[a-f0-9]{32}"$/.test(etag) || (revisionId && etag !== `"${revisionId}"`)) throw new Error('云端修订凭据不一致')

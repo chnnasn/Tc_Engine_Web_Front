@@ -66,3 +66,12 @@ test('automatic sync reuses uploaded bytes and submits a conditional working sna
     assert.equal(binding.etag, '"previous"')
   } finally { globalThis.fetch = original }
 })
+
+test('Project authoring preserves empty folders and accepts native asset names safely', () => {
+  const changed = { ...document, directories: ['Assets/空目录', 'Assets/New Folder'], files: { ...document.files, 'Assets/New Folder/场景.tcscene': btoa('scene') } }
+  assertDocument(changed)
+  for (const directories of [['Assets/../bad'], ['Assets/bad\\name'], ['Assets/with.'], [3], ['Assets/New Folder', 'Assets/new folder'], ['Assets/New Folder/场景.tcscene']]) {
+    assert.throws(() => assertDocument({ ...changed, directories }))
+  }
+  assert.throws(() => assertDocument({ ...changed, files: { ...changed.files, 'Assets/New Folder': btoa('file') } }))
+})
