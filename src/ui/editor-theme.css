@@ -1,0 +1,70 @@
+/* Match the embedded editor's ImGuiLayer palette. Website pages keep their own theme. */
+.native-editor {
+  color-scheme: dark;
+  --editor-panel: #383838;
+  --editor-panel-alt: #3c3c3c;
+  --editor-toolbar: #282828;
+  --editor-field: #2b2b2b;
+  --editor-button: #505050;
+  --editor-hover: #5f5f5f;
+  --editor-border: #191919;
+  --editor-line: #555;
+  --editor-text: #c4c4c4;
+  --editor-bright: #f3f3f3;
+  --editor-muted: #aaa;
+  --editor-selection: #2c5d87;
+  --editor-selection-hover: #3a709d;
+  --editor-focus: #76b9ec;
+  --editor-success: #acd39c;
+  --editor-warning: #e1bd7a;
+  --editor-error: #f0aaaa;
+  font-family: 'Segoe UI', 'Microsoft YaHei UI', 'Microsoft YaHei', sans-serif;
+}
+.studio-app .native-editor .button {
+  min-height: 30px;
+  padding: 5px 10px;
+  border: 1px solid var(--editor-border);
+  border-radius: 3px;
+  background: var(--editor-button);
+  color: var(--editor-bright);
+  font-size: 12px;
+  font-weight: 400;
+  box-shadow: none;
+}
+.studio-app .native-editor .button:hover:not(:disabled) {
+  background: var(--editor-hover);
+  border-color: var(--editor-line);
+}
+.studio-app .native-editor .button-primary,
+.studio-app .native-editor .button.agent-active {
+  background: var(--editor-selection);
+  border-color: var(--editor-selection-hover);
+  color: var(--editor-bright);
+}
+.studio-app .native-editor .button-primary:hover:not(:disabled),
+.studio-app .native-editor .button.agent-active:hover:not(:disabled) {
+  background: var(--editor-selection-hover);
+  border-color: var(--editor-focus);
+}
+.native-editor button:disabled { opacity: .5; }
+.studio-app .native-editor :is(button, a, input, textarea, select):focus-visible {
+  outline: 2px solid var(--editor-focus);
+  outline-offset: 2px;
+}
+/* The composer provides one focus border around the entire input group. */
+.studio-app .native-editor .agent-composer textarea:focus-visible {
+  outline: none;
+}
+.native-editor :is(.agent-panel, .script-panel) {
+  scrollbar-color: #737373 var(--editor-panel);
+  scrollbar-width: thin;
+}
+.native-editor :is(.agent-panel, .script-panel) ::selection {
+  background: var(--editor-selection);
+  color: var(--editor-bright);
+}
+@media (max-width: 760px) {
+  .studio-app .native-editor .native-toolbar .button {
+    padding-inline: 7px;
+  }
+}

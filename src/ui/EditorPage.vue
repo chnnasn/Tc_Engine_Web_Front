@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
+import './editor-theme.css'
 import EngineSurface from './EngineSurface.vue'
 import { useNavigation } from './navigation'
 import { nowLabel, type Project } from './data'
@@ -400,15 +401,19 @@ defineExpose({ prepareLeave })
   </main>
 </template>
 <style scoped>
-.native-editor{height:100dvh;display:flex;flex-direction:column;background:#202329;color:#e8eeee}.native-toolbar{display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:10px 16px;background:#f5f6f2;color:#24322b}.native-toolbar strong{margin-right:auto}.native-toolbar .button{padding:8px 12px;min-height:34px}.native-editor :deep(.engine-surface){flex:1;min-height:0}.native-notice{padding:14px 20px;background:#394039;color:#fff}.native-editor footer{display:flex;gap:10px;flex-wrap:wrap;font-size:12px;padding:8px 16px;color:#bcc7c2}.native-editor footer span:last-child{margin-left:auto}
-.editor-leaving{position:absolute;inset:0;z-index:30;display:grid;place-content:center;background:#202329cc;color:#fff;font-size:14px}
-.editor-workspace{position:relative;display:flex;flex:1;min-height:0;min-width:0;overflow:hidden}.editor-workspace :deep(.engine-surface){min-width:0}.native-toolbar .agent-active{background:#f0e5db;border-color:#b8866b;color:#88412d}
-.editor-workspace>.editor-floating{position:absolute;z-index:10;top:0;right:0;bottom:0;width:390px;max-width:100%;min-width:0;height:auto;border:0;border-left:1px solid #d8d2c8;border-radius:0;box-shadow:-8px 0 24px #0003;overflow:hidden}
+.native-editor{height:100dvh;display:flex;flex-direction:column;background:var(--editor-panel);color:var(--editor-text)}
+.native-toolbar{display:flex;align-items:center;gap:6px;flex-wrap:wrap;min-height:54px;padding:8px 12px;background:var(--editor-toolbar);border-bottom:1px solid var(--editor-border);color:var(--editor-text)}
+.native-toolbar strong{margin-right:auto}.native-editor :deep(.engine-surface){flex:1;min-height:0}
+.native-notice{padding:14px 20px;background:var(--editor-panel-alt);color:var(--editor-bright)}
+.native-editor>footer{display:flex;gap:10px;flex-wrap:wrap;font-size:11px;padding:5px 12px;border-top:1px solid var(--editor-border);background:var(--editor-toolbar);color:var(--editor-muted)}
+.native-editor>footer span:last-child{margin-left:auto}
+.editor-leaving{position:absolute;inset:0;z-index:30;display:grid;place-content:center;background:#282828dd;color:var(--editor-bright);font-size:14px}
+.editor-workspace{position:relative;display:flex;flex:1;min-height:0;min-width:0;overflow:hidden}.editor-workspace :deep(.engine-surface){min-width:0}
+.editor-workspace>.editor-floating{position:absolute;z-index:10;top:0;right:0;bottom:0;width:390px;max-width:100%;min-width:0;height:auto;border:0;border-left:1px solid var(--editor-border);border-radius:0;box-shadow:-4px 0 12px #0003;overflow:hidden}
 .editor-workspace>.editor-floating-scripts{width:620px}
-</style>
-<style scoped>
 .editor-project-info{display:flex;align-items:center;gap:10px;flex:0 0 270px;max-width:calc(100% - 95px);min-width:0;margin-right:auto}
-.native-toolbar .editor-project-name{flex:1;min-width:0;margin:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.editor-save-status{flex:0 0 155px;min-width:0;color:#82796d;font-size:11px;font-weight:400;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.native-toolbar .editor-project-name{flex:1;min-width:0;margin:0;color:var(--editor-bright);font-size:13px;font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.editor-save-status{flex:0 0 155px;min-width:0;color:var(--editor-muted);font-size:11px;font-weight:400;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .native-toolbar .editor-save-button{width:100px;flex:0 0 100px}
+@media(max-width:760px){.native-toolbar{padding:6px 8px;gap:5px}.editor-project-info{flex:1 1 calc(100% - 95px)}.native-editor>footer{font-size:10px;padding:4px 8px}.native-editor>footer span:last-child{display:none}}
 </style>

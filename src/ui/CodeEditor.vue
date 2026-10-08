@@ -18,10 +18,22 @@ let layoutFrame = 0
 
 self.MonacoEnvironment = { ...self.MonacoEnvironment, getWorker: () => new EditorWorker() }
 onMounted(() => {
+  monaco.editor.defineTheme('tomcat-editor', {
+    base: 'vs-dark', inherit: true, rules: [],
+    colors: {
+      'editor.background': '#2b2b2b', 'editor.foreground': '#d4d4d4',
+      'editorGutter.background': '#2b2b2b', 'editorLineNumber.foreground': '#929292',
+      'editorLineNumber.activeForeground': '#f3f3f3', 'editor.lineHighlightBackground': '#353535',
+      'editor.selectionBackground': '#2c5d87', 'editor.inactiveSelectionBackground': '#3b4d5d',
+      'editorWidget.background': '#383838', 'editorWidget.border': '#555555',
+      'input.background': '#282828', 'input.foreground': '#f3f3f3', 'input.border': '#555555',
+      'focusBorder': '#76b9ec', 'scrollbarSlider.background': '#73737380',
+    },
+  })
   model = monaco.editor.createModel(props.modelValue, 'csharp')
   model.updateOptions({ tabSize: 4, insertSpaces: true })
   editor = monaco.editor.create(container.value!, {
-    model, theme: 'vs-dark', ariaLabel: 'C# 脚本源码',
+    model, theme: 'tomcat-editor', ariaLabel: 'C# 脚本源码',
     readOnly: props.disabled, automaticLayout: true,
     fontFamily: 'Consolas, "Cascadia Code", monospace', fontSize: 13, lineHeight: 22,
     minimap: { enabled: false }, lineNumbers: 'on', lineNumbersMinChars: 3,
@@ -58,5 +70,5 @@ onBeforeUnmount(() => {
 </script>
 <template><div ref="container" class="code-editor" @keydown.stop /></template>
 <style scoped>
-.code-editor{position:relative;flex:1;min-width:0;min-height:200px;overflow:hidden;background:#1e1e1e}
+.code-editor{position:relative;flex:1;min-width:0;min-height:200px;overflow:hidden;background:var(--editor-field,#2b2b2b)}
 </style>
