@@ -57,7 +57,7 @@ try {
   await page.getByPlaceholder('新脚本类名').fill('PlayerMovement')
   await button('新建').click()
   await page.locator('.script-panel .list button', { hasText: 'PlayerMovement.cs' }).waitFor()
-  const source = 'using TomCat;\n\npublic sealed class PlayerMovement : TomCatBehaviour\n{\n    protected override void OnUpdate(float deltaTime)\n    {\n        // 在这里编写角色的移动逻辑\n    }\n}\n'
+  const source = 'using TomCat;\n\npublic sealed class PlayerMovement : MonoBehaviour\n{\n    private void Update()\n    {\n        // 在这里编写角色的移动逻辑\n    }\n}\n'
   await fillCode(page, source)
   const codeInput = page.getByRole('textbox', { name: 'C# 脚本源码', exact: true })
   await codeInput.press('Control+Home')
@@ -98,7 +98,7 @@ try {
   await page.getByLabel('C# 脚本源码').press('Control+s')
   await page.getByText('脚本已写入项目文件，请编译并保存项目', { exact: true }).waitFor()
   await button('保存到云端').click()
-  await page.getByText('完整项目已保存到云端', { exact: true }).waitFor()
+  await page.getByText('已保存到数据库', { exact: true }).waitFor()
   await button('返回项目').click()
   await page.getByRole('heading', { name: '我的项目' }).waitFor()
   await page.locator('.project-card').getByRole('button', { name: '发布', exact: true }).click()

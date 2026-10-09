@@ -33,7 +33,7 @@ try {
  await page.getByRole('button',{name:'C# 脚本',exact:true}).click()
  await page.getByPlaceholder('新脚本类名').fill('PlayerMove');await page.getByRole('button',{name:'新建',exact:true}).click()
  await page.locator('.script-panel .list li').first().waitFor()
- await fillCode(page,'using TomCat;\npublic sealed class PlayerMove : TomCatBehaviour { public float Speed = 5f; protected override void OnCreate() { Log.Info("FIELD_VALUE:" + Speed); } }')
+ await fillCode(page,'using TomCat;\npublic sealed class PlayerMove : MonoBehaviour { public float Speed = 5f; private void Awake() { Log.Info("FIELD_VALUE:" + Speed); } }')
  await page.getByRole('button',{name:'编译并安装',exact:true}).click();await page.locator('.script-panel .state.ok').waitFor({timeout:120000})
  await page.getByRole('button',{name:'收起 C# 脚本',exact:true}).click()
  let snap=await snapshot();const player=snap.entities.find(e=>e.name==='Player');const assets=await engineRpc(page,'asset.list');const script=assets.assets.find(a=>a.pathHint==='Scripts/PlayerMove.cs')

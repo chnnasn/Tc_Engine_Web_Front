@@ -1,3 +1,4 @@
+import { readFileSync } from 'node:fs'
 import assert from 'node:assert/strict'
 import { chromium } from 'playwright'
 import { mkdirSync } from 'node:fs'
@@ -18,6 +19,7 @@ await page.route('**/v1/**', async route => {
   const request = route.request(), path = new URL(request.url()).pathname
   if (path === '/v1/auth/me') return route.fulfill({ json: { id: 'sidebar-test', email: 'test@example.com', emailVerified: true } })
   if (path.endsWith('/sync-config')) return route.fulfill({ json: { enabled: false } })
+  if (path.endsWith('/ai-sessions/')) return route.fulfill({ json: [] })
   if (path === '/v1/projects' && request.method() === 'GET') return route.fulfill({ json: [] })
   if (path.includes('/uploads/')) return route.fulfill({ json: { uploadId: 'a'.repeat(32), contentHash: path.split('/').pop(), size: request.postDataBuffer().length } })
   if (path.endsWith('/revisions')) {
@@ -49,7 +51,7 @@ try {
   // Move the dock splitter and switch back; return immediately, without waiting for the periodic flush.
   await page.mouse.move(979,400); await page.waitForTimeout(180); await page.mouse.down(); await page.mouse.move(900,400,{steps:12}); await page.mouse.up(); await page.waitForTimeout(200)
   const resized = await layout()
-  assert.match(resized, /SizeRef=5\d\d,866/, 'Inspector width changed')
+  assert.match(resized, /DockNode +ID=0x00000004[^\n]+SizeRef=5\d\d,\d+/, 'Inspector width changed')
   await engineRpc(page, 'editor.loadLayout', { settings: resized.replace('Layout=OneColumn', 'Layout=TwoColumn') })
   await page.waitForTimeout(100)
   await addEntity(page)
@@ -72,10 +74,11 @@ try {
   await page.evaluate(() => document.querySelector('iframe').contentWindow.dispatchEvent(new Event('pagehide')))
   assert.match(await storedLayout(), /Layout=OneColumn/, 'shutdown flush occurs before the engine stops')
   await page.reload(); await ready()
-  // Existing layout keys migrate across a format-compatible engine upgrade.
+  // Per-engine layout keys still migrate to the stable layout key.
   const current = await storedLayout()
   await page.goto(`${base}/projects`)
-  await page.evaluate(({key, current}) => { localStorage.removeItem(key); localStorage.setItem(`${key}.41708b6c756d530a1c71f0e0ef2539a1df1bb03e`, current.replace('OneColumn', 'TwoColumn')); localStorage.setItem(`${key}.2ee941e6ad50e5797ec91bbfb90d0d29a0ece30e`, current) }, { key: layoutKey, current })
+  const { commit } = JSON.parse(readFileSync('engine.lock.json', 'utf8'))
+  await page.evaluate(({key, current, commit}) => { localStorage.removeItem(key); localStorage.setItem(`${key}.${commit}`, current) }, { key: layoutKey, current, commit })
   await reopen()
   assert.match(await layout(), /Layout=OneColumn/)
   assert.ok(await storedLayout(), 'legacy layout migrated to the stable key')
@@ -84,7 +87,7 @@ try {
   await page.getByPlaceholder('新脚本类名').fill('LeaveSmoke')
   await button('新建').click()
   await page.locator('.script-panel .list button', {hasText:'LeaveSmoke.cs'}).waitFor()
-  const source = 'using TomCat;\npublic sealed class LeaveSmoke : TomCatBehaviour { /* EXIT_DRAFT */ }'
+  const source = 'using TomCat;\npublic sealed class LeaveSmoke : MonoBehaviour { /* EXIT_DRAFT */ }'
   await fillCode(page, source)
   rejectSave = true
   await button('返回项目').click()

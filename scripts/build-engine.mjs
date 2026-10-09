@@ -212,7 +212,7 @@ for (const name of referenceAssemblies) {
   if (!existsSync(from)) { console.warn(`跳过缺失的引用程序集：${name}`); continue }
   copyFileSync(from, join(refsDirectory, name)); refsList.push(name)
 }
-// TomCat.Managed.dll 是脚本 API 面（TomCatBehaviour / Log / 组件代理）。
+// TomCat.Managed.dll 是脚本 API 面（MonoBehaviour / Log / 组件代理）。
 const managedDll = [
   join(source, 'Managed/TomCat.Managed/bin/Release/net10.0/TomCat.Managed.dll'),
   join(source, 'Managed/TomCat.WebHost/bin/Release/net10.0/browser-wasm/TomCat.Managed.dll'),

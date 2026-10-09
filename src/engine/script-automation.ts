@@ -16,23 +16,27 @@ const sourceText = (host: ScriptHost) => JSON.stringify(host.scripts())
 const readTools = new Set(['script_list', 'script_read'])
 export const scriptExample = `using TomCat;
 
-public sealed class PlayerMovement : TomCatBehaviour
+public sealed class PlayerMovement : MonoBehaviour
 {
     public float Speed = 5f;
-    protected override void OnUpdate(float deltaTime)
+    private void Update()
     {
         float axis = 0f;
         if (Input.IsKeyHeld(KeyCode.A) || Input.IsKeyHeld(KeyCode.Left)) axis -= 1f;
         if (Input.IsKeyHeld(KeyCode.D) || Input.IsKeyHeld(KeyCode.Right)) axis += 1f;
         var position = Transform.Position;
-        position.X += axis * Speed * deltaTime;
+        position.X += axis * Speed * Time.deltaTime;
         Transform.Position = position;
     }
 }
 `
 export const scriptApi = {
-  namespace: 'TomCat', base_class: 'TomCatBehaviour',
-  callbacks: ['protected override void OnCreate()', 'protected override void OnUpdate(float deltaTime)', 'protected override void OnFixedUpdate(float fixedDeltaTime)', 'protected override void OnDestroy()'],
+  namespace: 'TomCat', base_class: 'MonoBehaviour',
+  managed_api: 6,
+  callbacks: ['private void Awake()', 'private void Start()', 'private void OnEnable()', 'private void Update()', 'private void LateUpdate()', 'private void FixedUpdate()', 'private void OnDisable()', 'private void OnDestroy()'],
+  time: 'Update uses Time.deltaTime; FixedUpdate uses Time.fixedDeltaTime. Lifecycle callbacks take no time parameter and do not use override.',
+  tasks: 'Start asynchronous work inside a lifecycle callback with Tasks.Run(async token => { await Tasks.NextFrame(token); /* engine access */ }). NextFixedStep waits for physics. After external background work, await Tasks.MainThread(token) before engine access. Tasks are cancelled when the script is destroyed; pass the token to external operations. Never use async void lifecycle callbacks.',
+  coroutines: 'StartCoroutine(Routine()) runs System.Collections.IEnumerator. Yield null, Yield.Frames(n), Yield.Seconds(seconds), Yield.Until(predicate), Yield.While(predicate), or Yield.FixedStep. StopCoroutine(handle) / StopAllCoroutines() cancel owned routines; use finally for cleanup.',
   input: 'Input.IsKeyHeld(KeyCode.A), KeyCode.D, KeyCode.Left, KeyCode.Right, KeyCode.W, KeyCode.S, KeyCode.Up, KeyCode.Down',
   transform: 'Transform.Position (world) and Transform.LocalPosition are writable TomCat.Vector3 values. Copy, change X/Y/Z, then assign back.',
   logging: 'Log.Info(string message)',

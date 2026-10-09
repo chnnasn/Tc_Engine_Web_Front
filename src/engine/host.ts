@@ -288,7 +288,7 @@ function normalizeScriptPath(value: unknown) {
   return relative
 }
 function classNameOf(path: string, text: string) {
-  return /\bclass\s+([A-Za-z_]\w*)\s*:\s*(?:TomCat\.)?TomCatBehaviour\b/.exec(text)?.[1] ?? path.slice(path.lastIndexOf('/') + 1, -3)
+  return /\bclass\s+([A-Za-z_]\w*)\s*:\s*(?:TomCat\.)?MonoBehaviour\b/.exec(text)?.[1] ?? path.slice(path.lastIndexOf('/') + 1, -3)
 }
 /** Include identity: deleting/recreating identical source still needs a new assembly manifest. */
 function signatureOf(scripts: ScriptEntry[]) {

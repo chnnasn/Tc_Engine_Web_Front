@@ -28,6 +28,7 @@ await page.route('**/v1/**', route => {
   }
   if (path === '/v1/auth/me') return json({ id: 'engine-test', email: 'engine-test@example.com', emailVerified: true })
   if (path === '/v1/projects/sync-config') return json({ enabled: false })
+  if (path.endsWith('/ai-sessions/')) return json([])
   if (path === '/v1/projects' && route.request().method() === 'GET') return json([])
   if (path.includes('/uploads/')) return json({ uploadId: 'a'.repeat(32), contentHash: path.split('/').pop(), size: route.request().postDataBuffer().length })
   if (path.endsWith('/revisions')) return json({ etag: '"' + 'b'.repeat(32) + '"' }, { etag: '"' + 'b'.repeat(32) + '"' })
@@ -64,7 +65,7 @@ try {
     await page.locator('input[type=file]').setInputFiles({ name: 'red.tga', mimeType: 'application/octet-stream', buffer: tga })
     await page.getByText('图片已导入，请保存项目', { exact: true }).waitFor()
     await save.click()
-    await page.getByText('完整项目已保存到云端', { exact: true }).waitFor()
+    await page.getByText('已保存到数据库', { exact: true }).waitFor()
     const saved = await page.evaluate(async () => {
       const db = await new Promise((resolve, reject) => { const r = indexedDB.open('tomcat-engine-v1'); r.onsuccess = () => resolve(r.result); r.onerror = () => reject(r.error) })
       const value = await new Promise(resolve => { const r = db.transaction('projects').objectStore('projects').get('my-first-game'); r.onsuccess = () => resolve(r.result) })
@@ -86,7 +87,39 @@ try {
     assert.equal(await page.getByText('我的第一个游戏 · 未保存', { exact: true }).count(), 0)
     mkdirSync('.engine', { recursive: true }); await page.screenshot({ path: '.engine/editor-browser.png' })
     // C# 脚本：浏览器内 Roslyn 编译、托管 ABI 安装与诊断回传。
-    const scriptSource = 'using TomCat;\npublic sealed class WebSmoke : TomCatBehaviour\n{\n    protected override void OnCreate() { Log.Info("WEB_SMOKE_ONCREATE"); }\n    protected override void OnUpdate(float deltaTime) { }\n}\n'
+    const scriptSource = `using TomCat;
+public sealed class WebSmoke : MonoBehaviour
+{
+    private void Awake()
+    {
+        Log.Info("WEB_SMOKE_ONCREATE");
+        Tasks.Run(async token => {
+            try {
+                await Tasks.NextFrame(token);
+                Log.Info("WEB_TASK_FRAME");
+                await Tasks.NextFixedStep(token);
+                Log.Info("WEB_TASK_FIXED");
+                while (true) await Tasks.NextFrame(token);
+            } finally { Log.Info("WEB_TASK_CANCELLED"); }
+        });
+        StartCoroutine(Routine());
+    }
+    private void Start() { Log.Info("WEB_START"); }
+    private void Update() { }
+    private System.Collections.IEnumerator Routine()
+    {
+        try {
+            yield return Yield.Frames(2);
+            yield return Yield.Seconds(0);
+            yield return Yield.Until(() => true);
+            yield return Yield.FixedStep;
+            Log.Info("WEB_COROUTINE_READY");
+            while (true) yield return null;
+        } finally { Log.Info("WEB_COROUTINE_CANCELLED"); }
+    }
+    private void OnDestroy() { Log.Info("WEB_DESTROY"); }
+}
+`
     await page.getByRole('button', { name: 'C# 脚本', exact: true }).click()
     await page.getByPlaceholder('新脚本类名').fill('WebSmoke')
     await page.getByRole('button', { name: '新建', exact: true }).click()
@@ -105,12 +138,20 @@ try {
     await waitMode(page, 'play')
     for (let tries = 0; tries < 600 && !logs.some(text => text.includes('WEB_SMOKE_ONCREATE')); tries++) await new Promise(resolve => setTimeout(resolve, 100))
     assert.ok(logs.some(text => text.includes('WEB_SMOKE_ONCREATE')), `expected the C# lifecycle log, got ${JSON.stringify(logs.slice(-25))}`)
+    const asyncMarkers = ['WEB_START', 'WEB_TASK_FRAME', 'WEB_TASK_FIXED', 'WEB_COROUTINE_READY']
+    for (let tries = 0; tries < 300 && !asyncMarkers.every(marker => logs.some(text => text.includes(marker))); tries++) await new Promise(resolve => setTimeout(resolve, 100))
+    for (const marker of asyncMarkers) assert.ok(logs.some(text => text.includes(marker)), `missing ${marker}: ${JSON.stringify(logs.slice(-30))}`)
     await preview(page, 'stop')
     await waitMode(page, 'edit')
+    for (const marker of ['WEB_TASK_CANCELLED', 'WEB_COROUTINE_CANCELLED']) {
+      const cleanup = logs.findIndex(text => text.includes(marker))
+      const destroy = logs.findIndex(text => text.includes('WEB_DESTROY'))
+      assert.ok(cleanup >= 0 && destroy > cleanup, `${marker} must precede destruction`)
+    }
     // 重新打开面板：编译过一代程序集后再次编译，必须给出“重建会话”提示而不是静默失效。
     await page.getByRole('button', { name: 'C# 脚本', exact: true }).click()
     // 故意写入语法错误，验证 Roslyn 诊断被回传并渲染。
-    await fillCode(page, 'using TomCat;\npublic sealed class WebSmoke : TomCatBehaviour { protected override void OnCreate() { int broken = ; } }')
+    await fillCode(page, 'using TomCat;\npublic sealed class WebSmoke : MonoBehaviour { private void Awake() { int broken = ; } }')
     await page.getByRole('button', { name: '编译并安装', exact: true }).click()
     await page.locator('.script-panel .diagnostics li.error').first().waitFor({ timeout: 240000 })
     assert.match(await page.locator('.script-panel .diagnostics li.error').first().textContent(), /CS\d{4}/)
@@ -122,7 +163,7 @@ try {
     await page.getByRole('button', { name: '保存脚本', exact: true }).click()
     await page.getByRole('button', { name: 'C# 脚本', exact: true }).click()
     await save.click()
-    await page.getByText('完整项目已保存到云端', { exact: true }).waitFor({ timeout: 240000 })
+    await page.getByText('已保存到数据库', { exact: true }).waitFor({ timeout: 240000 })
     const withScript = await page.evaluate(async () => {
       const db = await new Promise((resolve, reject) => { const r = indexedDB.open('tomcat-engine-v1'); r.onsuccess = () => resolve(r.result); r.onerror = () => reject(r.error) })
       const value = await new Promise(resolve => { const r = db.transaction('projects').objectStore('projects').get('my-first-game'); r.onsuccess = () => resolve(r.result) })

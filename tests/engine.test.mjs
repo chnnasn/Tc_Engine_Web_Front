@@ -92,9 +92,11 @@ test('old engine projects are rejected', () => {
   assert.throws(() => assertDocument(document), /不兼容的引擎版本/)
 })
 
-test('desktop viewport update accepts the previous format-compatible engine', () => {
-  assertDocument({ format: 'tomcat-engine-project', version: 1,
-    engineCommit: '41708b6c756d530a1c71f0e0ef2539a1df1bb03e', sceneHandle: '1', archive: 'scene', files: {} })
+test('Managed API v6 rejects previous script ABIs even when scene formats match', () => {
+  for (const commit of ['41708b6c756d530a1c71f0e0ef2539a1df1bb03e', 'b0002beabdb2d4b0e7e2c64603f8c284436cf4db']) {
+    assert.throws(() => assertDocument({ format: 'tomcat-engine-project', version: 1,
+      engineCommit: commit, sceneHandle: '1', archive: 'scene', files: {} }), /不兼容的引擎版本/)
+  }
 })
 test('version 2 projects require .tcmeta beside scripts and images', () => {
   const base = {

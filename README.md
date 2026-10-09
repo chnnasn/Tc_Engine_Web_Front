@@ -14,7 +14,7 @@ Vue 3 创作工作台，使用固定版本的上游 TomCat Web Editor / Player�
 
 ## 开发与构建
 
-当前浏览器引擎锁定 `b0002bea`，复用桌面端 Scene 辅助显示、编辑手柄和 Inspector 脚本管理。此次仅调整编辑器交互，TCPAK v8、Scene v11、Project v4、Managed API v5 不变，兼容 `41708b6c`、`053fcce4` 、`2ee941e6`、`bb692873`、`331d1e0b` 与 `5feb6666` 项目和游戏包；更旧及未知提交仍拒绝。Railway 打包器保持 `41708b6c`，后端接受这八个已验证的提交，现有项目重开后保存为新版，无需删除重建。详见 [场景视图对齐记录](docs/desktop-scene-parity.md)。
+当前浏览器引擎与 Railway 编译打包器统一锁定 `0b8829a8`（上游 [PR #29](https://github.com/chnnasn/TomCat_Engine/pull/29)）。基于 `d6c8261b` 的新脚本系统整合原生 Project 文件管理、场景保存保护和 Inspector 脚本元数据。Managed API 升为 v6，TCPAK v8、Scene v11、Project v4 不变。旧 Managed API v5 项目与作品不再作为兼容版本打开，历史云端数据保留。
 
 该版本恢复了完整托管 Web 构建，并引入分帧场景加载、文字塑形、虚拟列表、2D 光照与后处理等引擎功能。原生 DLL 模块仍不支持 Web；浏览器存档持久化、完整 ICU/IME 和可听音频不因版本升级而自动获得支持。
 
@@ -34,7 +34,7 @@ npm run engine:build
 npm run dev
 ```
 
-`engine.lock.json` 固定引擎提交 `b0002beabdb2d4b0e7e2c64603f8c284436cf4db`，并记录 `kind: managed`。构建脚本检出到 `.engine/source`、初始化四个依赖子模块，然后用 **托管（C#）管线** 生成引擎产物：先用 Emscripten 编出 C++ 静态库（`tomcat_managed_web_entrypoints`、`tc_player_core`、`tc_yaml`、`box2d`），再 `dotnet publish -r browser-wasm` 发布 `Managed/TomCat.WebHost`——**最终 `.wasm` 由 .NET 运行时拥有**，C++ 引擎归档被链接进同一块 WebAssembly 内存，原生与托管共享函数表。最后把完整的 `main.js`、`_framework/` 与 C# 编译引用集 `refs/` 复制到 `public/engine/<commit>/`。没有本地 C++ 移植补丁。
+`engine.lock.json` 固定引擎提交 `0b8829a864ff53ad0ad2c7ded56ef433325a836a`，并记录 `kind: managed`。构建脚本检出到 `.engine/source`、初始化四个依赖子模块，然后用 **托管（C#）管线** 生成引擎产物：先用 Emscripten 编出 C++ 静态库（`tomcat_managed_web_entrypoints`、`tc_player_core`、`tc_yaml`、`box2d`），再 `dotnet publish -r browser-wasm` 发布 `Managed/TomCat.WebHost`——**最终 `.wasm` 由 .NET 运行时拥有**，C++ 引擎归档被链接进同一块 WebAssembly 内存，原生与托管共享函数表。最后把完整的 `main.js`、`_framework/` 与 C# 编译引用集 `refs/` 复制到 `public/engine/<commit>/`。没有本地 C++ 移植补丁。
 
 托管模块是单线程构建（`WasmEnableThreads=false`），产物中不含 `SharedArrayBuffer`/pthread，因此**不再要求跨源隔离**；`vite.config.ts` 与 `netlify.toml` 仍保留 COOP/COEP 以便将来启用线程构建。
 
@@ -199,9 +199,9 @@ AI 通过 `script_get_api` 获取与当前引擎匹配的 C# API，再使用 `sc
 
 网页编辑器沿用原生 Project 面板：支持右键 Create → Scene / Folder / C# Script、Rename、Delete，以及资源与文件夹拖动移动。Packages 保持只读。场景使用原生 `.tomcat` 格式；切换场景前保留当前修改，云端保存包含场景文件和空文件夹。中文与带空格的资源路径可保存，C# 面板扫描整个 Assets，并用资源 Handle 跟随重命名或移动后的脚本。
 
-引擎源码固定在 `fix/web-project-authoring` 分支的锁定提交，只基于已验证的旧版添加上述功能，不引入其他上游更改。现有 `331d1e0b` 项目可直接恢复并保存。顶部导出按钮移除，原生 File 菜单的 Open Scene / Export project 保留。
+引擎源码固定在 `fix/web-authoring-mono-lifecycle` 分支的锁定提交，上游 PR #29 跟踪合入。顶部导出按钮移除，原生 File 菜单的 Open Scene / Export project 保留。
 
-验证：`node tests/project-authoring-browser.mjs`（需运行本地 Vite）覆盖原生新建、改名、拖动、云端恢复、场景切换、Play、移动后 C# 草稿保存与编译；`node tests/viewport-upgrade-browser.mjs` 覆盖上一版本真实 WASM 项目的云端升级。
+验证：`node tests/project-authoring-browser.mjs`（需运行本地 Vite）覆盖原生新建、改名、拖动、云端恢复、场景切换、Play、移动后 C# 草稿保存与编译。API v6 不支持原 API v5 项目直接升级；`tests/viewport-upgrade-browser.mjs` 是之前仅改变编辑器的历史版本回归。
 
 ### 场景文件归属与自动保存
 
@@ -210,3 +210,13 @@ AI 通过 `script_get_api` 获取与当前引擎匹配的 C# API，再使用 `sc
 验证：`node tests/scene-ownership-browser.mjs`（真实 WASM、原生菜单和隔离的云端恢复）。
 
 Web Inspector 复用桌面端脚本字段元数据缓存，成功编译后显示可编辑的 public/序列化字段。项目重开时重新安装脚本元数据，已有字段覆盖值继续从场景恢复；编译错误不会阻止编辑项目。验证：`node tests/inspector-metadata-browser.mjs`。
+
+### MonoBehaviour 脚本（Managed API v6）
+
+新建脚本和 AI `script_get_api` 使用 `MonoBehaviour`，生命周期为无参同步 `Awake / Start / OnEnable / Update / LateUpdate / FixedUpdate / OnDisable / OnDestroy`，不写 `override`。原 `TomCatBehaviour / OnCreate / OnUpdate(float)` 已移除。帧步长使用 `Time.deltaTime`，物理步长使用 `Time.fixedDeltaTime`。
+
+异步逻辑从生命周期中调用 `Tasks.Run(async token => { await Tasks.NextFrame(token); ... })`；`NextFixedStep` 等待物理帧，外部异步工作后用 `Tasks.MainThread(token)` 恢复引擎访问。协程使用 `StartCoroutine(IEnumerator)`，可 yield `null`、`Yield.Frames(n)`、`Yield.Seconds(t)`、`Yield.Until/While(...)` 或 `Yield.FixedStep`。销毁脚本会取消其任务与协程，可用 `finally` 清理，生命周期不能声明 `async void`。
+
+验证：`tests/browser.mjs` 在真实 WASM 中编译并执行任务与协程，验证取消先于 OnDestroy；`tests/inspector-metadata-browser.mjs`、`tests/project-authoring-browser.mjs`、`tests/scene-ownership-browser.mjs` 验证三项 Web 修复。先用后端 `cook/worker.mjs` 和同版本 DLL 编译打包上游 CoinRunner，再设置 `TEST_COOKED_PACKAGE` 运行 `tests/server-cooked-browser.mjs`，验证服务端编译出的脚本在浏览器播放器执行。
+
+本次集成还修复 Web Player 多纹理预加载阻塞、托管函数指针调用签名缺失，以及发布裁剪后 JSON 无法序列化的问题。播放器在脚本 Awake 前发布按游戏隔离的存档目录；目录位于 MEMFS，目前只在当前播放器会话内保存，刷新后的持久化尚未接入。

@@ -64,7 +64,7 @@ try{
  const restored=await engineRpc(page,'scene.snapshot',{sceneHandle:original.sceneHandle});assert.ok(restored.entities.some(e=>e.id==='7011'))
  await engineRpc(page,'scene.openAsset',{handle})
  await page.getByRole('button',{name:'保存到云端',exact:true}).click()
- await page.getByText('完整项目已保存到云端',{exact:true}).waitFor()
+ await page.getByText('已保存到数据库',{exact:true}).waitFor()
  const saved=await page.evaluate(async()=>{const db=await new Promise(resolve=>{const r=indexedDB.open('tomcat-engine-v1');r.onsuccess=()=>resolve(r.result)});return new Promise(resolve=>{const r=db.transaction('projects').objectStore('projects').get('my-first-game');r.onsuccess=()=>{db.close();resolve(r.result)}})})
  assert.ok(saved.directories.includes('Assets/Empty Folder'))
  assert.ok(saved.files['Assets/Scene/Level Two.tomcat'])
@@ -81,7 +81,7 @@ try{
  await page.getByPlaceholder('新脚本类名').fill('Movement')
  await page.getByRole('button',{name:'新建',exact:true}).click()
  await page.locator('.script-panel .list li').first().waitFor()
- await fillCode(page,'using TomCat;\npublic sealed class Movement : TomCatBehaviour { protected override void OnCreate() { Log.Info("MOVED_SCRIPT"); } }')
+ await fillCode(page,'using TomCat;\npublic sealed class Movement : MonoBehaviour { private void Awake() { Log.Info("MOVED_SCRIPT"); } }')
  // Model a native rename while the sidebar has an unsaved draft. Identity must follow .tcmeta.
  await page.locator('iframe').evaluate(el=>{
    const fs=el.contentWindow.TomCatWeb.runtime.Module.FS,root='/Samples/PhysicsPlayground/Assets'

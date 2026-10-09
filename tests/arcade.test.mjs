@@ -12,6 +12,7 @@ test('published game ids are enforced as opaque paths and errors carry statuses'
 
 test('engine compatibility distinguishes the locked commit from legacy and unknown ones', () => {
   assert.equal(engineCompatibility(engineCommit), 'match')
-  assert.equal(engineCompatibility('41708b6c756d530a1c71f0e0ef2539a1df1bb03e'), 'match')
+  assert.equal(engineCompatibility('41708b6c756d530a1c71f0e0ef2539a1df1bb03e'), 'mismatch')
+  assert.equal(engineCompatibility('b0002beabdb2d4b0e7e2c64603f8c284436cf4db'), 'mismatch')
   assert.equal(engineCompatibility('1223a9610066d420485fa7f273b0eeca34835bbf'), 'mismatch')
 })

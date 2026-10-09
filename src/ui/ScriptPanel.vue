@@ -61,13 +61,13 @@ function select(path: string) {
 }
 const template = (name: string) => `using TomCat;
 
-public sealed class ${name} : TomCatBehaviour
+public sealed class ${name} : MonoBehaviour
 {
-    protected override void OnCreate()
+    private void Awake()
     {
     }
 
-    protected override void OnUpdate(float deltaTime)
+    private void Update()
     {
     }
 }
