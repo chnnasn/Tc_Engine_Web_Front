@@ -99,14 +99,14 @@ try {
   await page.mouse.move(620, 810); await page.waitForTimeout(200)
   await page.mouse.click(620, 810, { button: 'right', delay: 100 }); await page.waitForTimeout(300)
   await page.screenshot({ path: '.engine/native-delete-menu.png' })
-  await nativeClick(page, 649, 849)
+  await nativeClick(page, 649, 865)
   await page.screenshot({ path: '.engine/native-delete-confirm.png' })
   const scriptExists = () => page.evaluate(() => document.querySelector('iframe').contentWindow.TomCatWeb.runtime.Module.FS.analyzePath('/Samples/PhysicsPlayground/Assets/Scripts/PlayerMovement.cs').exists)
   await nativeClick(page, 548, 534) // Cancel the referenced-asset deletion.
   assert.equal(await scriptExists(), true)
   await page.mouse.move(620, 810); await page.waitForTimeout(200)
   await page.mouse.click(620, 810, { button: 'right', delay: 100 }); await page.waitForTimeout(250)
-  await nativeClick(page, 649, 849)
+  await nativeClick(page, 649, 865)
   await nativeClick(page, 470, 534) // Delete Anyway, preserving missing references.
   assert.equal(await scriptExists(), false)
   assert.equal(await page.evaluate(() => document.querySelector('iframe').contentWindow.TomCatWeb.runtime.Module.FS.analyzePath('/Samples/PhysicsPlayground/Assets/Scripts/PlayerMovement.cs.tcmeta').exists), false)

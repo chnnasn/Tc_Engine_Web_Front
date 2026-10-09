@@ -1,6 +1,6 @@
 {
   "repository": "https://github.com/chnnasn/TomCat_Engine.git",
-  "commit": "9f27888c2869493503a210235d77d1247a308f1e",
+  "commit": "b0002beabdb2d4b0e7e2c64603f8c284436cf4db",
   "kind": "managed",
   "protocol": "tomcat.web.v1",
   "legacyCommits": [
@@ -9,7 +9,8 @@
     "2ee941e6ad50e5797ec91bbfb90d0d29a0ece30e",
     "bb692873f48ec3eff092b1991c693224e5613b4e",
     "331d1e0b15edc202a375e9568b5cefea5821e18c",
-    "5feb6666d531864fb22daaadc0aa9bc12b241f84"
+    "5feb6666d531864fb22daaadc0aa9bc12b241f84",
+    "9f27888c2869493503a210235d77d1247a308f1e"
   ],
   "toolchain": {
     "dotnet": "10.0",

@@ -532,6 +532,12 @@ addEventListener('message', async event => {
       }
       // 工作区必须在引擎启动后、第一次绘制前恢复：载入会重置停靠树，晚于首帧就会闪一下默认布局。
       restoreLayout()
+      // Restore editor metadata as well as source files. Compilation failure
+      // leaves the project editable so diagnostics can be fixed in the C# panel.
+      if (listScripts().length) {
+        try { await compileScripts() }
+        catch (error) { scriptDiagnostics = [{ severity: 'error', code: 'SCRIPT_RESTORE_FAILED', file: null, line: 0, column: 0, message: error instanceof Error ? error.message : String(error) }] }
+      }
     } else {
       bootPlayer(loaded.web, event.data.bytes, width, height)
     }

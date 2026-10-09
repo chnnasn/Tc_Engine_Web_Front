@@ -14,7 +14,7 @@ Vue 3 创作工作台，使用固定版本的上游 TomCat Web Editor / Player�
 
 ## 开发与构建
 
-当前浏览器引擎锁定 `9f27888c`，复用桌面端 Scene 辅助显示、编辑手柄和 Inspector 脚本管理。此次仅调整编辑器交互，TCPAK v8、Scene v11、Project v4、Managed API v5 不变，兼容 `41708b6c`、`053fcce4` 、`2ee941e6`、`bb692873`、`331d1e0b` 与 `5feb6666` 项目和游戏包；更旧及未知提交仍拒绝。Railway 打包器保持 `41708b6c`，后端接受这七个已验证的提交，现有项目重开后保存为新版，无需删除重建。详见 [场景视图对齐记录](docs/desktop-scene-parity.md)。
+当前浏览器引擎锁定 `b0002bea`，复用桌面端 Scene 辅助显示、编辑手柄和 Inspector 脚本管理。此次仅调整编辑器交互，TCPAK v8、Scene v11、Project v4、Managed API v5 不变，兼容 `41708b6c`、`053fcce4` 、`2ee941e6`、`bb692873`、`331d1e0b` 与 `5feb6666` 项目和游戏包；更旧及未知提交仍拒绝。Railway 打包器保持 `41708b6c`，后端接受这八个已验证的提交，现有项目重开后保存为新版，无需删除重建。详见 [场景视图对齐记录](docs/desktop-scene-parity.md)。
 
 该版本恢复了完整托管 Web 构建，并引入分帧场景加载、文字塑形、虚拟列表、2D 光照与后处理等引擎功能。原生 DLL 模块仍不支持 Web；浏览器存档持久化、完整 ICU/IME 和可听音频不因版本升级而自动获得支持。
 
@@ -34,7 +34,7 @@ npm run engine:build
 npm run dev
 ```
 
-`engine.lock.json` 固定引擎提交 `9f27888c2869493503a210235d77d1247a308f1e`，并记录 `kind: managed`。构建脚本检出到 `.engine/source`、初始化四个依赖子模块，然后用 **托管（C#）管线** 生成引擎产物：先用 Emscripten 编出 C++ 静态库（`tomcat_managed_web_entrypoints`、`tc_player_core`、`tc_yaml`、`box2d`），再 `dotnet publish -r browser-wasm` 发布 `Managed/TomCat.WebHost`——**最终 `.wasm` 由 .NET 运行时拥有**，C++ 引擎归档被链接进同一块 WebAssembly 内存，原生与托管共享函数表。最后把完整的 `main.js`、`_framework/` 与 C# 编译引用集 `refs/` 复制到 `public/engine/<commit>/`。没有本地 C++ 移植补丁。
+`engine.lock.json` 固定引擎提交 `b0002beabdb2d4b0e7e2c64603f8c284436cf4db`，并记录 `kind: managed`。构建脚本检出到 `.engine/source`、初始化四个依赖子模块，然后用 **托管（C#）管线** 生成引擎产物：先用 Emscripten 编出 C++ 静态库（`tomcat_managed_web_entrypoints`、`tc_player_core`、`tc_yaml`、`box2d`），再 `dotnet publish -r browser-wasm` 发布 `Managed/TomCat.WebHost`——**最终 `.wasm` 由 .NET 运行时拥有**，C++ 引擎归档被链接进同一块 WebAssembly 内存，原生与托管共享函数表。最后把完整的 `main.js`、`_framework/` 与 C# 编译引用集 `refs/` 复制到 `public/engine/<commit>/`。没有本地 C++ 移植补丁。
 
 托管模块是单线程构建（`WasmEnableThreads=false`），产物中不含 `SharedArrayBuffer`/pthread，因此**不再要求跨源隔离**；`vite.config.ts` 与 `netlify.toml` 仍保留 COOP/COEP 以便将来启用线程构建。
 
@@ -208,3 +208,5 @@ AI 通过 `script_get_api` 获取与当前引擎匹配的 C# API，再使用 `sc
 新项目只在显式创建时生成 `Assets/Scene.tomcat`。自动保存仅更新仍存在的当前场景文件，不创建 `Scenes`，不恢复用户删除的场景或文件夹。没有资源文件的当前场景继续保存在项目快照中；切换到其他场景前需确认放弃内存内容。场景文件重命名后，Hierarchy 名称按资源 ID 同步。Assets 根目录可直接创建场景和文件夹。
 
 验证：`node tests/scene-ownership-browser.mjs`（真实 WASM、原生菜单和隔离的云端恢复）。
+
+Web Inspector 复用桌面端脚本字段元数据缓存，成功编译后显示可编辑的 public/序列化字段。项目重开时重新安装脚本元数据，已有字段覆盖值继续从场景恢复；编译错误不会阻止编辑项目。验证：`node tests/inspector-metadata-browser.mjs`。
