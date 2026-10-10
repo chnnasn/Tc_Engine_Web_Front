@@ -149,6 +149,12 @@ async function createProject() {
 function updateProject(next: Project) {
   projects.value = projects.value.map(project => project.id === next.id ? next : project)
 }
+async function openExperiment(project: Project) {
+  projects.value = [project, ...projects.value]
+  await nextTick()
+  notify('试验副本已保存，正在打开独立引擎会话。')
+  await navigate(`/editor/${project.id}`)
+}
 
 async function handlePopState() {
   const target = normalizePath(location.pathname)
@@ -244,7 +250,7 @@ onBeforeUnmount(() => {
   <ArcadePage v-else-if="path === '/play'" />
   <PlayPage v-else-if="playId" :key="playId" :game-id="playId" @notify="notify" />
   <TopicDetailPage v-else-if="topic" :key="topic.id" :topic="topic" :topics="topics" @update:topics="topics = $event" @notify="notify" />
-  <EditorPage v-else-if="editorProject" ref="editor" :key="`${accountScope}-${editorProject.id}`" :project="editorProject" @update-project="updateProject" @notify="notify" />
+  <EditorPage v-else-if="editorProject" ref="editor" :key="`${accountScope}-${editorProject.id}`" :project="editorProject" @update-project="updateProject" @forked="openExperiment" @notify="notify" />
   <NotFoundPage v-else />
 
   <footer v-if="!isEditor" class="site-footer"><div><AppLink href="/" class="footer-brand">tomcat.</AppLink><span>让好玩的想法发生。</span></div><span>登录创作 · 云端保存</span><span>© 2026 TomCat</span></footer>

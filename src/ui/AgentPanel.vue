@@ -5,9 +5,10 @@ import { executeTool, type AutomationCommand, type EngineCall } from '../engine/
 import { engineCommit } from '../engine/storage'
 import type { Snapshot } from '../engine/protocol'
 import type { CheckpointReceipt } from '../engine/sync-status'
+import TaskEvidence from './TaskEvidence.vue'
 
 const props = defineProps<{ projectId?: string; visible?: boolean; call: EngineCall; checkpoint: (runId: string, phase: 'start' | 'end', signal: AbortSignal) => Promise<CheckpointReceipt> }>()
-const emit = defineEmits<{ state: [snapshot: Snapshot]; collapse: [] }>()
+const emit = defineEmits<{ state: [snapshot: Snapshot]; collapse: []; busyChange: [busy: boolean] }>()
 const prompt = ref('')
 const submittedPrompt = ref('')
 const promptInput = ref<HTMLTextAreaElement>()
@@ -26,6 +27,7 @@ watch(() => props.visible, value => { if (value) void nextTick(() => promptInput
 const answer = ref('')
 const error = ref('')
 const running = ref(false)
+watch(running, value => emit('busyChange', value), { flush: 'sync' })
 const events = ref<string[]>([])
 const checkpoints = ref<CheckpointReceipt[]>([])
 interface Conversation { sessionId: string; projectId: string; title: string; updatedAt: string }
@@ -135,13 +137,14 @@ async function close() {
   if (old) await api(`/${old}`, { method: 'DELETE', keepalive: true, signal: AbortSignal.timeout(5000) }).catch(() => {})
 }
 async function poll(id: string, signal: AbortSignal) {
+  const context: { baseline?: Snapshot } = {}
   try {
     while (!signal.aborted && id === sessionId) {
       const command = await api(`/${id}/commands`, { signal }) as AutomationCommand | undefined
       if (!command) continue
       if (signal.aborted || id !== sessionId) return
       events.value = [...events.value.slice(-19), `执行 ${command.name}`]
-      const result = await executeTool(command, props.call, next => emit('state', next))
+      const result = await executeTool(command, props.call, next => emit('state', next), context)
       if (signal.aborted || id !== sessionId) return
       await api(`/${id}/commands/${command.requestId}/result`, { method: 'POST', body: JSON.stringify(result), signal })
       events.value = [...events.value.slice(-19), result.ok ? `${command.name} 完成` : `${command.name}: ${result.error?.message}`]
@@ -253,6 +256,7 @@ onBeforeUnmount(() => { disposed = true; projectGeneration++; clearTimeout(histo
       <p v-if="historyLoading && !turns.length && !submittedPrompt" class="agent-history-status" role="status">正在加载对话…</p>
       <article v-for="turn in previousTurns" :key="turn.runId" class="agent-history-turn">
         <p class="agent-user-message">{{ turn.prompt }}</p>
+        <TaskEvidence v-if="projectId" :key="projectId + turn.runId" :project-id="projectId" :run-id="turn.runId" />
         <div class="agent-response"><div class="agent-response-label"><span aria-hidden="true">✳</span> TC Fun</div><p v-if="turn.output" class="answer">{{ turn.output }}</p><p v-if="turn.state === 'running'" class="agent-history-status">任务仍在执行，正在同步结果…</p><p v-if="turn.error" class="agent-error">{{ turn.error }}</p></div>
       </article>
       <div v-if="!submittedPrompt && !turns.length && !historyLoading" class="agent-welcome"><span class="agent-emblem" aria-hidden="true">✳</span><h2>一起把想法<br />做出来。</h2><p>从一个小改动开始。<br />描述你的想法，修改会直接出现在场景中。</p><div class="agent-suggestions"><button v-for="item in suggestions" :key="item.title" :disabled="!projectId || busy" @click="useSuggestion(item.prompt)">{{ item.title }} <ArrowUp :size="14" /></button></div></div>
@@ -263,6 +267,7 @@ onBeforeUnmount(() => { disposed = true; projectGeneration++; clearTimeout(histo
           <div v-if="events.length" class="agent-progress"><button :aria-expanded="detailsOpen" aria-controls="agent-event-list" @click="detailsOpen = !detailsOpen"><span>{{ running ? events[events.length - 1] : error ? '查看执行记录' : '执行完成' }}</span><ChevronDown :size="14" /></button><ol v-show="detailsOpen" id="agent-event-list"><li v-for="(event, index) in events" :key="index">{{ event }}</li></ol></div>
           <p class="sr-only" role="status">{{ running ? 'AI 正在执行任务' : answer ? 'AI 已完成任务' : '' }}</p>
           <div class="agent-output" aria-live="polite"><p v-if="answer" class="answer">{{ answer }}</p></div>
+          <TaskEvidence v-if="projectId && currentRunId && !running" :key="projectId + currentRunId" :project-id="projectId" :run-id="currentRunId" />
           <div v-if="checkpoints.length" class="agent-checkpoints"><p v-for="item in checkpoints" :key="item.phase" :title="item.revisionId"><Check :size="13" />{{ item.phase === 'start' ? '开始' : '结束' }}检查点：已落库</p></div>
           <p v-if="error" class="agent-error" role="alert">{{ error }}</p>
         </div>

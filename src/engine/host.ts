@@ -1,5 +1,6 @@
 import { currentUser, getCloudProject } from './cloud'
 import { PROTOCOL, EditorProtocol, EngineError, type SceneState, type Snapshot, type Operation } from './protocol'
+import { runFixedValidation, validateRuntimeRequest } from './runtime-validation'
 import { assertDocument, engineCommit, projectRoot, validFilePath, type EngineDocument } from './storage'
 import engineLock from '../../engine.lock.json'
 import { executeScriptTool } from './script-automation'
@@ -490,6 +491,17 @@ addEventListener('message', async event => {
     const { id, type, payload } = message.data
     if (type === 'dispose') { dispose(); return }
     try {
+      if (type === 'runtimeValidate') {
+        validateRuntimeRequest(payload)
+        requireEditMode()
+        const sources = signatureOf(listScripts())
+        await ensureScriptsInstalled()
+        requireEditMode()
+        const current = state()
+        if (`${current.sceneHandle}:${current.revision}` !== payload.scene_version || signatureOf(listScripts()) !== sources) throw new EngineError('SCENE_CHANGED', 'Project changed before validation; inspect again.')
+        const result = runFixedValidation(payload, (type, args = {}) => protocol!.request(type, args))
+        send({ id, result: { ...result, engineCommit } }); return
+      }
       if (type === 'automationScript') {
         const result = await executeScriptTool(payload.name, payload.arguments, {
           snapshot: () => ({ ...protocol!.snapshot(state().sceneHandle), mode: state().mode || 'edit' }),

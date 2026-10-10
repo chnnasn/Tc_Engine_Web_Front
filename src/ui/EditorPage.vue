@@ -3,17 +3,18 @@ import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import './editor-theme.css'
 import EngineSurface from './EngineSurface.vue'
 import { useNavigation } from './navigation'
-import { nowLabel, type Project } from './data'
+import { nowLabel, uid, type Project } from './data'
 import { EngineError, type Snapshot, type SceneState } from '../engine/protocol'
 import { readEngineProject, writeEngineProject, readCloudBinding, writeCloudBinding, engineCommit, type CloudBinding, type EngineDocument } from '../engine/storage'
-import { currentUser, getCloudProject, createCloudProject, restoreCloudProject, saveCloudProject, syncConfiguration, cloudSyncStatus, CloudError } from '../engine/cloud'
+import { currentUser, getCloudProject, createCloudProject, createExperiment, restoreCloudProject, saveCloudProject, syncConfiguration, cloudSyncStatus, CloudError } from '../engine/cloud'
 import AgentPanel from './AgentPanel.vue'
 import ScriptPanel from './ScriptPanel.vue'
+import WorkspacePanel from './WorkspacePanel.vue'
 import { describeSync, type CheckpointReceipt } from '../engine/sync-status'
 import { downloadProject } from './project-file'
 
 const props = defineProps<{ project: Project }>()
-const emit = defineEmits<{ updateProject: [project: Project]; notify: [message: string]; dirtyChange: [dirty: boolean] }>()
+const emit = defineEmits<{ updateProject: [project: Project]; forked: [project: Project]; notify: [message: string]; dirtyChange: [dirty: boolean] }>()
 const navigate = useNavigation()
 const surface = ref<InstanceType<typeof EngineSurface>>()
 const scriptPanel = ref<InstanceType<typeof ScriptPanel>>()
@@ -41,17 +42,23 @@ const legacy = ref(false)
 const fileInput = ref<HTMLInputElement>()
 const busy = ref(false)
 const agentOpen = ref(false)
+const agentRunning = ref(false)
+const workspaceOpen = ref(false)
+const baseline = ref<Snapshot>()
+const baselineDocument = ref<EngineDocument>()
 const agentTrigger = ref<HTMLButtonElement>()
 function collapseAgent() { agentOpen.value = false; agentTrigger.value?.focus() }
 const scriptOpen = ref(false)
 const scriptVisited = ref(false)
 const scriptTrigger = ref<HTMLButtonElement>()
 function toggleScript() {
+  workspaceOpen.value = false
   scriptVisited.value = true
   scriptOpen.value = !scriptOpen.value
   if (scriptOpen.value) agentOpen.value = false
 }
 function toggleAgent() {
+  workspaceOpen.value = false
   agentOpen.value = !agentOpen.value
   if (agentOpen.value) scriptOpen.value = false
 }
@@ -108,6 +115,7 @@ function updateStatus(next: SceneState) {
 function agentState(next: Snapshot) { snapshot.value = next; updateStatus(next) }
 async function agentCall<T = any>(type: string, payload?: unknown): Promise<T> {
   if (!surface.value || gone) throw new Error('编辑器尚未就绪')
+  if (type === 'runtimeValidate' && scriptDraftDirty.value) throw new EngineError('UNSAVED_SCRIPT_DRAFT', '请先保存 C# 面板中的修改，再运行验收。')
   if (type === 'projectSyncStatus') {
     if (!binding.value) throw new Error('请先关联云端项目')
     if (saving.value) throw new EngineError('SAVE_IN_PROGRESS', '正在同步，请稍后重新查询')
@@ -201,6 +209,33 @@ async function refresh() {
 async function ready(next?: Snapshot) {
   if (!next) return
   snapshot.value = next; needsSave.value = !stored.value || Boolean(binding.value?.pending); updateStatus(next)
+  if (!baseline.value) {
+    baseline.value = JSON.parse(JSON.stringify(next))
+    try { baselineDocument.value = (await surface.value!.call<{ document: EngineDocument }>('capture')).document }
+    catch { emit('notify', '文件差异基线读取失败，场景编辑仍可继续。') }
+  }
+}
+async function forkExperiment() {
+  if (!surface.value || !binding.value || busy.value || agentRunning.value) return
+  let project: Project | undefined
+  await run(async () => {
+    if (scriptDraftDirty.value) throw new Error('请先保存 C# 面板中的修改，再创建试验副本。')
+    if (!editing.value) throw new Error('请先停止预览。')
+    await waitForSave()
+    if (!await save()) throw new Error('原项目未确认保存，未创建试验副本。')
+    const source = { ...binding.value! }
+    if (!source.etag) throw new Error('缺少已保存的基线版本。')
+    const revision = source.etag.slice(1, -1)
+    const restored = await restoreCloudProject(source.projectId, revision)
+    const name = `${props.project.name.slice(0, 54)} · 试验副本`
+    const cloud = await createExperiment(source.projectId, name, revision)
+    try {
+      const link = await saveCloudProject(restored.document, { ownerId: source.ownerId, projectId: cloud.id, etag: null }, { reuseUploads: true })
+      project = { ...props.project, id: uid(), name, status: 'draft', description: cloud.description, updated: nowLabel() }
+      await writeEngineProject(project.id, restored.document, link)
+    } catch (error) { throw new Error(`副本 ${cloud.id} 已创建，但内容保存未完成；原项目已保留。${error instanceof Error ? error.message : error}`) }
+  })
+  if (project && !gone) emit('forked', project)
 }
 async function run(action: () => Promise<unknown>) {
   if (busy.value || gone) return
@@ -384,6 +419,7 @@ defineExpose({ prepareLeave })
       <button class="button" :disabled="!editing || busy" @click="fileInput?.click()">导入图片</button>
       <button ref="scriptTrigger" class="button" :class="{ 'agent-active': scriptOpen }" :disabled="!status" :aria-expanded="scriptOpen" aria-controls="editor-script-panel" @click="toggleScript">C# 脚本</button>
       <button ref="agentTrigger" class="button" :class="{ 'agent-active': agentOpen }" :disabled="!status" :aria-expanded="agentOpen" aria-controls="editor-agent-panel" @click="toggleAgent">AI 助手</button>
+      <button class="button" :disabled="!status" :aria-expanded="workspaceOpen" @click="workspaceOpen = !workspaceOpen; agentOpen = false; scriptOpen = false">项目工具</button>
       <button class="button button-primary editor-save-button" :disabled="!status || toolbarSaving" @click="requestSave()">保存到云端</button>
       <input ref="fileInput" hidden type="file" accept=".png,.jpg,.jpeg,.tga" @change="importImage" />
     </header>
@@ -393,7 +429,8 @@ defineExpose({ prepareLeave })
     <EngineSurface v-if="initialized && !failure" :key="surfaceKey" ref="surface" kind="editor" :name="project.name" :template="project.template" :document="stored" :cloud-project-id="binding?.projectId" @ready="ready" @state="updateStatus" @actions="actions" @error="failure = $event" />
     <div v-else-if="!failure" class="native-notice">正在读取项目…</div>
     <ScriptPanel ref="scriptPanel" v-if="scriptVisited && status && !failure" v-show="scriptOpen" class="editor-floating editor-floating-scripts" :visible="scriptOpen" :call="scriptCall" @collapse="collapseScript" @draft-change="scriptDraftDirty = $event" @notify="emit('notify', $event)" @dirty="markDirty" @restart="restartSession" />
-    <AgentPanel v-if="status && !failure" v-show="agentOpen" class="editor-floating" :visible="agentOpen" :project-id="binding?.projectId" :call="agentCall" :checkpoint="checkpoint" @state="agentState" @collapse="collapseAgent" />
+    <AgentPanel v-if="status && !failure" v-show="agentOpen" class="editor-floating" :visible="agentOpen" :project-id="binding?.projectId" :call="agentCall" :checkpoint="checkpoint" @state="agentState" @collapse="collapseAgent" @busy-change="agentRunning = $event" />
+    <WorkspacePanel v-if="workspaceOpen && baseline && binding && !failure" class="editor-floating" :project-id="binding.projectId" :call="agentCall" :baseline="baseline" :baseline-document="baselineDocument" :disabled="busy || agentRunning" @close="workspaceOpen = false" @fork="forkExperiment" />
     <div v-if="leaving" class="editor-leaving" role="status">正在保存，完成后返回…</div>
     </div>
     <footer>{{ binding ? '已关联云端' : '正在验证云端关联' }} · {{ status?.mode === 'play' ? '运行中' : status?.mode === 'pause' ? '已暂停' : '编辑模式' }} · {{ snapshot?.schemas.length || 0 }} 种组件类型 <span v-if="selected"> · {{ selected.name }}</span><span>预览不会公开发布；停止预览后继续编辑</span></footer>

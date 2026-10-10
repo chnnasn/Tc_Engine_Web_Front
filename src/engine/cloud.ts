@@ -66,6 +66,8 @@ export const listCloudProjects = async (): Promise<CloudProject[]> => (await api
 export const createCloudProject = async (project: { name: string; description: string; template: string }): Promise<CloudProject> => (await api('/projects', json('POST', project))).json()
 export const updateCloudProject = async (id: string, project: { name: string; description: string; template: string }) => { await api(idPath(id), json('PUT', project)) }
 export const deleteCloudProject = async (id: string) => { await api(idPath(id), { method: 'DELETE' }) }
+export const createExperiment = async (sourceId: string, name: string, baseRevisionId: string): Promise<CloudProject> =>
+  (await api(`${idPath(sourceId)}/experiments`, json('POST', { name, baseRevisionId }))).json()
 export const listRevisions = async (id: string): Promise<CloudRevision[]> => (await api(`${idPath(id)}/revisions`)).json()
 export function decodeFile(base64: string): Uint8Array { return Uint8Array.from(atob(base64), char => char.charCodeAt(0)) }
 function encodeFile(bytes: Uint8Array) {
