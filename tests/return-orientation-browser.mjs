@@ -216,7 +216,7 @@ try {
   await page.getByRole('button', { name: '开始游玩', exact: true }).first().click()
   await page.locator('.player-status').filter({ hasText: '已就绪' }).waitFor({ timeout: 180000 })
   await logAfter('[Return] ready')
-  frame = page.frames().find(candidate => candidate !== page.mainFrame()); assert.ok(frame)
+  frame = page.frames().find(candidate => candidate.url() === new URL('/engine-host.html', base).href); assert.ok(frame)
   canvas = frame.locator('canvas')
   provenance.loadedEngine = await readLoadedEngine(frame)
   provenance.loadedPackage = await page.evaluate(() => top.__returnPackage)

@@ -221,7 +221,7 @@ try {
   await page.getByRole('button', { name: '开始游玩', exact: true }).first().click()
   await page.locator('.player-status').filter({ hasText: '已就绪' }).waitFor({ timeout: Number(process.env.TEST_BOOT_TIMEOUT || 180000) })
   await logAfter('[Return] ready')
-  frame = page.frames().find(value => value !== page.mainFrame())
+  frame = page.frames().find(value => value.url() === new URL('/engine-host.html', base).href)
   assert.ok(frame, 'native engine iframe must exist')
   canvas = frame.locator('canvas')
   await wait(1000)
@@ -361,9 +361,9 @@ try {
   }
   await page.evaluate(() => document.exitFullscreen())
   await page.getByRole('button', { name: '关闭播放器', exact: true }).click()
-  assert.equal(await page.locator('iframe').count(), 0, 'closing removes the runtime iframe')
+  assert.equal(await page.locator('iframe[title="TomCat 游戏播放器"]').count(), 0, 'closing removes the runtime iframe')
   await page.waitForFunction(() => top.__returnContexts.every(({ context }) => context.state === 'closed'))
-  cleanup = await page.evaluate(() => ({ iframes: document.querySelectorAll('iframe').length, audioContexts: top.__returnContexts.map(({ context }) => context.state) }))
+  cleanup = await page.evaluate(() => ({ iframes: document.querySelectorAll('iframe[title="TomCat 游戏播放器"]').length, audioContexts: top.__returnContexts.map(({ context }) => context.state) }))
   if (process.env.TEST_RETURN_REOPEN !== '0') {
     let engineDownloads = 0
     const observe = request => { if (/\/engine\/.*\.gz(?:\?|$)/.test(request.url())) engineDownloads++ }
@@ -376,7 +376,7 @@ try {
     assert.equal(engineDownloads, 0, 'warm reopen must reuse the verified engine cache')
     await page.getByRole('button', { name: '关闭播放器', exact: true }).click()
     await page.waitForFunction(() => top.__returnContexts.every(({ context }) => context.state === 'closed'))
-    warmReopen = await page.evaluate(() => ({ iframes: document.querySelectorAll('iframe').length, audioContexts: top.__returnContexts.map(({ context }) => context.state) }))
+    warmReopen = await page.evaluate(() => ({ iframes: document.querySelectorAll('iframe[title="TomCat 游戏播放器"]').length, audioContexts: top.__returnContexts.map(({ context }) => context.state) }))
     warmReopen.engineDownloads = engineDownloads
     assert.equal(warmReopen.iframes, 0, 'reopened runtime must also be fully removed')
   }
