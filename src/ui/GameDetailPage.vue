@@ -46,15 +46,20 @@ async function submitComment() {
         </section>
       </div>
       <aside class="detail-sidebar">
-        <div class="play-panel"><span class="small-tag">内置示例</span><h3>{{ game.controls ? '准备迎接下一波？' : '准备好出发了吗？' }}</h3><p>{{ game.controls ? '走进竞技场，试试你的反应与选择。' : '打开一个新世界，给自己一点游玩的时间。' }}</p><button class="button button-primary" @click="player = true"><Play :size="16" fill="currentColor" />{{ game.packageUrl ? '开始游玩' : '打开游玩预览' }}</button><span class="play-footnote">{{ game.controls ? '桌面键盘 / 鼠标 · 首次加载请稍候' : '点击即可游玩，首次加载请稍候' }}</span><div class="play-stats"><span><Gamepad2 :size="15" />{{ game.category }}示例</span><span>浏览器直接体验</span></div></div>
+        <div class="play-panel">
+          <span class="small-tag">内置示例</span><h3>{{ game.controls ? '准备迎接下一波？' : '准备好出发了吗？' }}</h3><p>{{ game.controls ? '走进竞技场，试试你的反应与选择。' : '打开一个新世界，给自己一点游玩的时间。' }}</p>
+          <button class="button button-primary" @click="player = true"><Play :size="16" fill="currentColor" />{{ game.packageUrl ? '开始游玩' : '打开游玩预览' }}</button>
+          <a v-if="game.sourceUrl" class="button sample-download" :href="game.sourceUrl" download>下载示例工程</a>
+          <span class="play-footnote">{{ game.controls ? '桌面键盘 / 鼠标 · 首次加载请稍候' : '点击即可游玩，首次加载请稍候' }}</span><div class="play-stats"><span><Gamepad2 :size="15" />{{ game.category }}示例</span><span>浏览器直接体验</span></div>
+        </div>
         <div class="creator-panel"><span class="creator-avatar"><Gamepad2 :size="23" /></span><div><span>内置内容</span><strong>{{ game.packageUrl ? 'Tc 引擎复原示例' : '引擎示例体验' }}</strong></div><p>用于体验引擎与游玩流程，<br />不计入玩家发布作品。</p><TextLink v-if="!game.packageUrl" :href="game.id === 'puzzle' ? '/community/first-puzzle' : game.id === 'desert' ? '/community/weekend' : '/community/forest-devlog'">查看示例话题</TextLink></div>
         <div class="detail-facts"><div><span>游玩方式</span><span>{{ game.controls ? '桌面浏览器 · 键鼠' : '浏览器' }}</span></div><div><span>支持语言</span><span>简体中文</span></div><div><span>作品状态</span><span>示例作品</span></div></div>
-        <a v-if="game.sourceUrl" class="button" :href="game.sourceUrl" download>下载 Tc 示例工程</a>
       </aside>
     </div>
     <PlayerPreview v-if="player" :game="game" @close="player = false" />
   </main>
 </template>
 <style scoped>
+.play-panel > .sample-download{margin-top:4px}
 .game-controls{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px 22px;margin-top:20px}.game-controls>div{display:flex;align-items:center;gap:10px;font-size:12px}.game-controls dt{flex-shrink:0}.game-controls dd{margin:0;color:#756d63}.game-controls kbd{display:inline-block;padding:5px 8px;border:1px solid #e2ddd5;border-radius:5px;background:#faf8f4;font:11px ui-monospace,monospace;color:#514b43}@media(max-width:700px){.game-controls{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}}
 </style>
