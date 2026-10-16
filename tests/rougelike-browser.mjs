@@ -166,6 +166,19 @@ try {
   if (process.env.TEST_REQUIRE_AUDIO === '1') {
     await page.waitForFunction(() => top.__rougelikeAudio.every(({ context }) => context.state === 'closed'))
   }
+  if(process.env.TEST_REOPEN==='1') {
+    let downloads=0
+    const observe=request=>{if(/\/engine\/.*\.gz(?:\?|$)/.test(request.url()))downloads++}
+    page.on('request',observe)
+    await page.getByRole('button',{name:'开始游玩',exact:true}).first().click()
+    await page.waitForFunction(()=>document.body.innerText.includes('Rougelike · 几何竞技场 已就绪'),null,{timeout:60000})
+    assert.equal(downloads,0,'reopening should reuse the verified engine cache')
+    page.off('request',observe)
+    await page.getByRole('button',{name:'关闭播放器',exact:true}).click()
+    assert.equal(await page.locator('iframe').count(),0)
+    if(process.env.TEST_REQUIRE_AUDIO==='1')await page.waitForFunction(()=>top.__rougelikeAudio.every(({context})=>context.state==='closed'))
+    console.log('PASS: warm reopen without downloading engine resources')
+  }
   assert.deepEqual(errors,[])
   assert.ok(!logs.some(text => /callback \w+ threw|MissingMethodException|aborted before live mutation/.test(text)), logs.slice(-40).join('\n'))
   console.log('PASS: anonymous static package, C# lifecycle/start, fullscreen, and teardown; movement/pause inputs sent'+(process.env.TEST_MENU_SLASH==='1'?'; menu slashed':'')+(process.env.TEST_COMBAT==='1'?'; first wave and upgrade reached':'')+(process.env.TEST_DEATH==='1'?'; contact death, menu return and retry verified':'')+(process.env.TEST_REQUIRE_AUDIO==='1'?'; real audio output and disposal verified':''))

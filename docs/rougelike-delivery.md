@@ -2,7 +2,7 @@
 
 记录日期：2026-10-16。用户提供的 Godot Demo 已重建为 Tc 原生 C# 示例，并接入主页首屏、精选卡片与详情页。
 
-**生产部署正在进行，线上结果待验证。** 目标地址为 [Rougelike · 几何竞技场](https://www.tcfun.fun/games/rougelike)。本文记录代码、本地构建与已完成的验收，不将目标链接视为已经发布成功的证据；最终部署版本、资源与线上检查结果由后续发布记录补齐。
+**已发布，并通过正式域名验收。** 入口为 [Rougelike · 几何竞技场](https://www.tcfun.fun/games/rougelike)，[主页](https://www.tcfun.fun) 已将其放在首屏和精选示例位置。可直接下载 [Tc 原生工程 ZIP](https://www.tcfun.fun/samples/rougelike/rougelike-source.zip)。
 
 ## 交付内容
 
@@ -25,7 +25,7 @@
 
 候选 `e1a430e549c002241c0480d704180fc0300c6ade` 与正式合并提交的 Git 文件树一致。上游 Windows 回归和 browser-wasm CI 均已通过；浏览器回归包含动态 BCL、两套真实字体的画面像素、真实 AudioSource 非零信号和关闭清理，以及各 PCM 格式和音频控制检查。
 
-本地配置已将浏览器引擎、后端 Cooker、托管 API 和源生成器统一固定到正式提交，详见 [engine.lock.json](../engine.lock.json) 与 [仓库 README](../README.md)。继续使用 Managed API v6、TCPAK v8、Scene v11 和 Project v4。上一版 `0b8829a864ff53ad0ad2c7ded56ef433325a836a` 经真实旧作品播放及云端归档恢复回归后进入明确兼容列表；这不是对未知提交或旧 Managed API v5 的通用放行。生产端是否已经运行这套工具链仍属于发布待验证项。
+浏览器引擎、后端 Cooker、托管 API 和源生成器已统一固定并部署到正式提交，详见 [engine.lock.json](../engine.lock.json) 与 [仓库 README](../README.md)。继续使用 Managed API v6、TCPAK v8、Scene v11 和 Project v4。上一版 `0b8829a864ff53ad0ad2c7ded56ef433325a836a` 经真实旧作品播放及云端归档恢复回归后进入明确兼容列表；这不是对未知提交或旧 Managed API v5 的通用放行。
 
 ## 已完成的验证与边界
 
@@ -42,6 +42,12 @@
 
 最终前端构建通过类型检查及 49 项测试。后端构建为零警告/零错误，38 项测试通过、1 项 Redis 环境测试跳过；Redis 配置未修改。正式版本再次通过上一版 TCPAK 播放与云端工程归档恢复检查。可复用引擎产物发布于 [web-engine-5734c56a](https://github.com/chnnasn/Tc_Engine_Web_Front/releases/tag/web-engine-5734c56a)，归档 SHA-256 为 `e9a3de28da09c2dfc5a6b24f01c5719429760b2dd17cd8ee694d68322cc5b2c7`。
 
-## 生产发布待补齐
+## 生产发布与验收
 
-后续应记录实际部署版本，并在线核对主页入口、详情页、游戏包与源码下载、正式引擎提交、匿名启动及音频/关闭行为。完成前，本简报的线上状态保持“待验证”。
+- 前端应用提交：[`909d1fd`](https://github.com/chnnasn/Tc_Engine_Web_Front/commit/909d1fd65e08e784336868c0e0629485e8450271)。Netlify 正式部署为 `6ad24384d7acd1d9a490161b`；发布前预览部署为 `6ad24092196311780527fc29`，两次使用相同应用产物。
+- 后端提交：[`48413a3`](https://github.com/chnnasn/Tc_Engine_Web_backend/commit/48413a3)。Railway 生产部署 `78e98bf6-aab8-4a4f-a1d1-f7b8691a017c` 成功，构建日志确认检出正式引擎提交；直连和网站代理 `/health` 均返回 `200`、`{"status":"ok"}`。Redis、MCP 与数据卷设置未修改。
+- 2026-10-16 23:36（北京时间），正式域名的匿名浏览器检查通过：真实包启动与首波、WebAudio 非零输出、全屏尺寸、关闭 iframe 与音频上下文、再次打开时无需下载引擎压缩资源。此次使用真实后端，没有替换 API 响应；未登录接口的 `401` 为预期行为。
+- 正式域名的引擎清单包含 190 个资源，提交为 `5734c56a`。游戏包、源码 ZIP、封面逐字节哈希均与本地发布文件相同。ZIP SHA-256：`3a42335260c7501d49ddd081afccd19cff4631e13c5531064c0925b016009be4`；封面 SHA-256：`b18900ed3d1fc0139d9ce50bbac51172f51cd0589b7e84062e70945e885d6a4b`。
+- 首次下载取决于网络情况；本次跨境冷启动约两分钟，页面显示逐项校验进度。完成后缓存可复用，已经实际验证再次打开没有重新下载引擎。
+
+上游 Windows/Web CI 和本地发布检查均已通过；前端完整托管构建工作流在记录时仍运行，不能把本地或线上验收写成该次远程 CI 已完成。
