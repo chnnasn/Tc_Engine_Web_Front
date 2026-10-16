@@ -1,29 +1,58 @@
 name: Web engine
 on: [push, pull_request, workflow_dispatch]
+permissions:
+  contents: read
 jobs:
   build:
     runs-on: ubuntu-latest
+    timeout-minutes: 45
+    defaults:
+      run:
+        shell: bash
+    env:
+      CMAKE_BUILD_PARALLEL_LEVEL: 2
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
           cache: npm
-      - uses: mymindstorm/setup-emsdk@v14
+      - uses: actions/setup-dotnet@v4
         with:
-          version: '4.0.15'
-          actions-cache-folder: emsdk-cache
+          dotnet-version: '10.0.x'
+      - name: Install managed Web toolchain
+        run: |
+          dotnet workload install wasm-tools
+          sudo apt-get update
+          sudo apt-get install -y ninja-build cmake python3
       - run: npm ci
       - run: npm test
-      - run: npm run engine:build
+      - name: Build locked managed engine
+        run: |
+          mkdir -p .engine
+          npm run engine:build 2>&1 | tee .engine/ci-engine-build.log
       - run: npm run build
       - run: npx playwright install --with-deps chromium
       - name: Browser regression
+        env:
+          TEST_BASE_URL: http://127.0.0.1:4173
+          TEST_BROWSER_CHANNEL: chromium
         run: |
-          npm run preview -- --host 127.0.0.1 &
+          npm run preview -- --host 127.0.0.1 --port 4173 --strictPort > .engine/ci-preview.log 2>&1 &
           server_pid=$!
           trap 'kill "$server_pid"' EXIT
-          TEST_BASE_URL=http://127.0.0.1:4173 TEST_BROWSER_CHANNEL=chromium npm run test:browser
+          for suite in browser inspector-metadata-browser project-authoring-browser scene-ownership-browser layout-exit-browser; do
+            echo "::group::$suite"
+            node --experimental-strip-types "tests/$suite.mjs" 2>&1 | tee ".engine/ci-$suite.log"
+            echo '::endgroup::'
+          done
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: web-engine-evidence
+          path: |
+            .engine/ci-*.log
+            .engine/*.png
       - uses: actions/upload-artifact@v4
         with:
           name: tomcat-web-with-engine

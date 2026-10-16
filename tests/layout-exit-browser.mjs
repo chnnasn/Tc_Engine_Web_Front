@@ -6,7 +6,7 @@ import { engineRpc, engineState, nativeClick, addEntity, fillCode, visibleCode }
 
 const base = process.env.TEST_BASE_URL || 'http://127.0.0.1:5173'
 assert.ok(['127.0.0.1', 'localhost', '[::1]'].includes(new URL(base).hostname), 'Run script fixtures against a local development server only')
-const browser = await chromium.launch({ channel: 'chrome', headless: true, args: ['--enable-webgl', '--use-angle=swiftshader', '--enable-unsafe-swiftshader'] })
+const browser = await chromium.launch({ channel: process.env.TEST_BROWSER_CHANNEL || 'chrome', headless: true, args: ['--enable-webgl', '--use-angle=swiftshader', '--enable-unsafe-swiftshader'] })
 const page = await browser.newPage({ viewport: { width: 1440, height: 960 } })
 const errors = []
 page.on('pageerror', error => errors.push(error.message))

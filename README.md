@@ -224,3 +224,9 @@ Web Inspector 复用桌面端脚本字段元数据缓存，成功编译后显示
 验证：`tests/browser.mjs` 在真实 WASM 中编译并执行任务与协程，验证取消先于 OnDestroy；`tests/inspector-metadata-browser.mjs`、`tests/project-authoring-browser.mjs`、`tests/scene-ownership-browser.mjs` 验证三项 Web 修复。先用后端 `cook/worker.mjs` 和同版本 DLL 编译打包上游 CoinRunner，再设置 `TEST_COOKED_PACKAGE` 运行 `tests/server-cooked-browser.mjs`，验证服务端编译出的脚本在浏览器播放器执行。
 
 本次集成还修复 Web Player 多纹理预加载阻塞、托管函数指针调用签名缺失，以及发布裁剪后 JSON 无法序列化的问题。播放器在脚本 Awake 前发布按游戏隔离的存档目录；目录位于 MEMFS，目前只在当前播放器会话内保存，刷新后的持久化尚未接入。
+
+### 前端集成 CI
+
+`Web engine` 在 Ubuntu 上安装 .NET 10、`wasm-tools`、CMake、Ninja 和 Python 3，使用工作负载自带的 Emscripten 从源码构建 `engine.lock.json` 锁定提交，再构建前端并以生产预览运行 Chromium 回归。回归依次覆盖编辑器/C# 生命周期与播放器、Inspector 字段、Project 文件管理、场景文件归属，以及布局与退出保存。云端 API 使用隔离夹具，因此本流程不代表 Railway、Redis、邮件服务或真实模型服务的线上端到端验收。
+
+失败时从 Actions 的 `web-engine-evidence` 下载构建/浏览器日志与截图；`tomcat-web-with-engine` 仅在所有前置步骤成功后上传。上游 `Managed Web` 通过只能证明引擎自身回归通过，不能替代这里的前端集成 CI。Linux 使用系统 Python 3，SDK 路径解析跟随 `dotnet` 符号链接；无需另装独立 Emscripten。

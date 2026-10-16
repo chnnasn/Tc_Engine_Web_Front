@@ -2,7 +2,7 @@
 import { chromium } from 'playwright'
 import assert from 'node:assert/strict'
 import { fillCode } from './engine-browser-helpers.mjs'
-const browser = await chromium.launch({channel:'chrome',headless:true,args:['--enable-webgl','--use-angle=swiftshader','--enable-unsafe-swiftshader']})
+const browser = await chromium.launch({channel:process.env.TEST_BROWSER_CHANNEL || 'chrome',headless:true,args:['--enable-webgl','--use-angle=swiftshader','--enable-unsafe-swiftshader']})
 const page=await browser.newPage({viewport:{width:1440,height:960}})
 const logs=[];page.on('console',m=>{if(!m.text().includes('GL_INVALID_OPERATION')) logs.push(m.text())});const errors=[];page.on('pageerror',e=>errors.push(e.message));page.on('dialog',d=>d.accept())
 await page.addInitScript(()=>localStorage.setItem('tomcat-ui-projects-v2-engine-test',JSON.stringify([{id:'my-first-game',name:'我的第一个游戏',description:'',template:'2D',image:'',status:'draft',updated:'今天'}])))

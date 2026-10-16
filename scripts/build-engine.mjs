@@ -6,8 +6,8 @@
 // 前置：.NET 10 SDK + wasm-tools 工作负载、CMake 3.20+、Ninja。
 // Emscripten 默认取自 wasm-tools 工作负载自带的 pack；也可设置 EMSDK 使用独立 emsdk。
 import { spawnSync } from 'node:child_process'
-import { mkdirSync, readFileSync, readdirSync, copyFileSync, writeFileSync, existsSync, statSync } from 'node:fs'
-import { resolve, dirname, join, basename, sep } from 'node:path'
+import { mkdirSync, readFileSync, readdirSync, copyFileSync, writeFileSync, existsSync, statSync, realpathSync } from 'node:fs'
+import { resolve, dirname, join, basename, sep, delimiter } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..')
@@ -19,7 +19,7 @@ function run(command, args, options = {}) {
   const result = spawnSync(command, args, {
     cwd: options.cwd || root,
     encoding: 'utf8',
-    stdio: options.capture ? ['ignore', 'pipe', 'pipe'] : ['ignore', 'pipe', 'inherit'],
+    stdio: options.capture ? ['ignore', 'pipe', 'pipe'] : ['ignore', 'inherit', 'inherit'],
     env: options.env || process.env,
   })
   if (result.error) throw result.error
@@ -84,6 +84,8 @@ run('git', ['submodule', 'update', '--init', 'TomCat/vendor/Box2D', 'TomCat/vend
 const dotnet = process.env.DOTNET || 'dotnet'
 const dotnetVersion = run(dotnet, ['--version'], { capture: true })
 if (!/^10\./.test(dotnetVersion)) throw new Error(`托管 Web 构建需要 .NET 10 SDK，当前解析到 ${dotnetVersion}`)
+// Linux 的 /usr/bin/dotnet 通常是符号链接，packs 位于真实安装目录。
+const dotnetRoot = dirname(realpathSync(locate(dotnet) || resolve(dotnet)))
 const workloads = run(dotnet, ['workload', 'list'], { capture: true })
 if (!/^wasm-tools\s/m.test(workloads)) throw new Error('缺少 .NET wasm-tools 工作负载，请先运行：dotnet workload install wasm-tools（浏览器用户无需安装）')
 
@@ -101,8 +103,8 @@ if (!ninja && isWindows) {
 }
 if (!ninja) throw new Error('构建环境需要 Ninja（可安装 Ninja，或安装带 CMake 组件的 Visual Studio）')
 
-const env = { ...process.env, PATH: `${dirname(ninja)}${sep}${process.env.PATH}` }
-let python = process.env.EMSDK_PYTHON || 'python'
+const env = { ...process.env, PATH: `${dirname(ninja)}${delimiter}${process.env.PATH}` }
+let python = process.env.EMSDK_PYTHON || locate(isWindows ? 'python' : 'python3')
 let emcmake
 if (process.env.EMSDK) {
   // 独立 emsdk。
@@ -110,7 +112,6 @@ if (process.env.EMSDK) {
   if (!existsSync(emcmake)) throw new Error(`EMSDK 中找不到 emcmake.py：${emcmake}`)
 } else {
   // 使用 wasm-tools 工作负载自带的 Emscripten pack。
-  const dotnetRoot = dirname(resolve(locate(dotnet) || dotnet))
   const packs = join(dotnetRoot, 'packs')
   const pickPack = (suffix) => newestByVersion(subdirectories(packs).filter(directory =>
     /^Microsoft\.NET\.Runtime\.Emscripten\./.test(basename(directory)) && basename(directory).endsWith(suffix)))
@@ -118,13 +119,14 @@ if (process.env.EMSDK) {
   const nodePack = pickPack('.Node.' + rid)
   const pythonPack = pickPack('.Python.' + rid)
   const cachePack = pickPack('.Cache.' + rid)
-  if (!sdkPack || !nodePack || !pythonPack || !cachePack) {
+  if (!sdkPack || !nodePack || !cachePack || (isWindows && !pythonPack)) {
     throw new Error(`wasm-tools 工作负载未提供 Emscripten pack（${rid}）。请运行 dotnet workload install wasm-tools，或设置 EMSDK 指向独立 emsdk。`)
   }
   const tools = join(newestByVersion(subdirectories(sdkPack)), 'tools')
   emcmake = join(tools, 'emscripten', 'emcmake.py')
   if (!existsSync(emcmake)) throw new Error(`wasm-tools 的 Emscripten 启动器缺失：${emcmake}`)
-  python = join(newestByVersion(subdirectories(pythonPack)), 'tools', isWindows ? 'python.exe' : 'bin/python3')
+  // Linux 的 wasm-tools 不附带 Python pack，使用系统 Python 3。
+  if (pythonPack) python = join(newestByVersion(subdirectories(pythonPack)), 'tools', isWindows ? 'python.exe' : 'bin/python3')
   env.EMSDK_PATH = tools.endsWith(sep) ? tools : tools + sep
   env.EMSDK_PYTHON = python
   env.DOTNET_EMSCRIPTEN_LLVM_ROOT = join(tools, 'bin')
@@ -133,7 +135,7 @@ if (process.env.EMSDK) {
   env.EM_CACHE = join(newestByVersion(subdirectories(cachePack)), 'tools', 'emscripten', 'cache')
   env.FROZEN_CACHE = 'true'
 }
-if (!existsSync(python)) python = process.env.EMSDK_PYTHON || 'python'
+if (!python) throw new Error('构建环境需要 Python 3')
 
 // ---------------------------------------------------------------------------
 // 3. 只构建托管入口所需的原生静态库
@@ -196,7 +198,6 @@ const referenceAssemblies = [
   'System.Threading.Tasks.dll', 'System.Text.Encoding.dll', 'System.Text.Encoding.Extensions.dll',
   'System.Text.Json.dll', 'System.ComponentModel.Primitives.dll',
 ]
-const dotnetRoot = dirname(resolve(locate(dotnet) || dotnet))
 // 结构：packs/Microsoft.NETCore.App.Ref/<版本>/ref/<目标框架>/<程序集>.dll
 const refPackRoot = join(dotnetRoot, 'packs', 'Microsoft.NETCore.App.Ref')
 if (!existsSync(refPackRoot)) throw new Error('找不到 Microsoft.NETCore.App.Ref 引用包，无法生成 C# 编译引用集')
