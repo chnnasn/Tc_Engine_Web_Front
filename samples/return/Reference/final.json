@@ -1,0 +1,667 @@
+{
+  "source": "Assets/Scenes/final.unity",
+  "tilemaps": [
+    {
+      "name": "Life And Death/Tilemap",
+      "active": true,
+      "tileCount": 60,
+      "collide": true,
+      "tiles": [
+        {
+          "x": -8,
+          "y": -8,
+          "sprite": "sprite-industrial.v2_14",
+          "colliderType": 1
+        },
+        {
+          "x": -7,
+          "y": -8,
+          "sprite": "sprite-industrial.v2_14",
+          "colliderType": 1
+        },
+        {
+          "x": -6,
+          "y": -8,
+          "sprite": "sprite-industrial.v2_14",
+          "colliderType": 1
+        },
+        {
+          "x": -5,
+          "y": -8,
+          "sprite": "sprite-industrial.v2_14",
+          "colliderType": 1
+        },
+        {
+          "x": -4,
+          "y": -8,
+          "sprite": "sprite-industrial.v2_14",
+          "colliderType": 1
+        },
+        {
+          "x": -3,
+          "y": -8,
+          "sprite": "sprite-industrial.v2_14",
+          "colliderType": 1
+        },
+        {
+          "x": -2,
+          "y": -8,
+          "sprite": "sprite-industrial.v2_14",
+          "colliderType": 1
+        },
+        {
+          "x": -1,
+          "y": -8,
+          "sprite": "sprite-industrial.v2_14",
+          "colliderType": 1
+        },
+        {
+          "x": 0,
+          "y": -8,
+          "sprite": "sprite-industrial.v2_14",
+          "colliderType": 1
+        },
+        {
+          "x": 1,
+          "y": -8,
+          "sprite": "sprite-industrial.v2_14",
+          "colliderType": 1
+        },
+        {
+          "x": 2,
+          "y": -8,
+          "sprite": "sprite-industrial.v2_14",
+          "colliderType": 1
+        },
+        {
+          "x": 3,
+          "y": -8,
+          "sprite": "sprite-industrial.v2_14",
+          "colliderType": 1
+        },
+        {
+          "x": 4,
+          "y": -8,
+          "sprite": "sprite-industrial.v2_14",
+          "colliderType": 1
+        },
+        {
+          "x": 5,
+          "y": -8,
+          "sprite": "sprite-industrial.v2_14",
+          "colliderType": 1
+        },
+        {
+          "x": 6,
+          "y": -8,
+          "sprite": "sprite-industrial.v2_14",
+          "colliderType": 1
+        },
+        {
+          "x": 7,
+          "y": -8,
+          "sprite": "sprite-industrial.v2_14",
+          "colliderType": 1
+        },
+        {
+          "x": -8,
+          "y": -7,
+          "sprite": "sprite-industrial.v2_14",
+          "colliderType": 1
+        },
+        {
+          "x": 7,
+          "y": -7,
+          "sprite": "sprite-industrial.v2_14",
+          "colliderType": 1
+        },
+        {
+          "x": -8,
+          "y": -6,
+          "sprite": "sprite-industrial.v2_14",
+          "colliderType": 1
+        },
+        {
+          "x": 7,
+          "y": -6,
+          "sprite": "sprite-industrial.v2_14",
+          "colliderType": 1
+        },
+        {
+          "x": -8,
+          "y": -5,
+          "sprite": "sprite-industrial.v2_14",
+          "colliderType": 1
+        },
+        {
+          "x": 7,
+          "y": -5,
+          "sprite": "sprite-industrial.v2_14",
+          "colliderType": 1
+        },
+        {
+          "x": -8,
+          "y": -4,
+          "sprite": "sprite-industrial.v2_14",
+          "colliderType": 1
+        },
+        {
+          "x": 7,
+          "y": -4,
+          "sprite": "sprite-industrial.v2_14",
+          "colliderType": 1
+        },
+        {
+          "x": -8,
+          "y": -3,
+          "sprite": "sprite-industrial.v2_14",
+          "colliderType": 1
+        },
+        {
+          "x": 7,
+          "y": -3,
+          "sprite": "sprite-industrial.v2_14",
+          "colliderType": 1
+        },
+        {
+          "x": -8,
+          "y": -2,
+          "sprite": "sprite-industrial.v2_14",
+          "colliderType": 1
+        },
+        {
+          "x": 7,
+          "y": -2,
+          "sprite": "sprite-industrial.v2_14",
+          "colliderType": 1
+        },
+        {
+          "x": -8,
+          "y": -1,
+          "sprite": "sprite-industrial.v2_14",
+          "colliderType": 1
+        },
+        {
+          "x": 7,
+          "y": -1,
+          "sprite": "sprite-industrial.v2_14",
+          "colliderType": 1
+        },
+        {
+          "x": -8,
+          "y": 0,
+          "sprite": "sprite-industrial.v2_14",
+          "colliderType": 1
+        },
+        {
+          "x": 7,
+          "y": 0,
+          "sprite": "sprite-industrial.v2_14",
+          "colliderType": 1
+        },
+        {
+          "x": -8,
+          "y": 1,
+          "sprite": "sprite-industrial.v2_14",
+          "colliderType": 1
+        },
+        {
+          "x": 7,
+          "y": 1,
+          "sprite": "sprite-industrial.v2_14",
+          "colliderType": 1
+        },
+        {
+          "x": -8,
+          "y": 2,
+          "sprite": "sprite-industrial.v2_14",
+          "colliderType": 1
+        },
+        {
+          "x": 7,
+          "y": 2,
+          "sprite": "sprite-industrial.v2_14",
+          "colliderType": 1
+        },
+        {
+          "x": -8,
+          "y": 3,
+          "sprite": "sprite-industrial.v2_14",
+          "colliderType": 1
+        },
+        {
+          "x": 7,
+          "y": 3,
+          "sprite": "sprite-industrial.v2_14",
+          "colliderType": 1
+        },
+        {
+          "x": -8,
+          "y": 4,
+          "sprite": "sprite-industrial.v2_14",
+          "colliderType": 1
+        },
+        {
+          "x": 7,
+          "y": 4,
+          "sprite": "sprite-industrial.v2_14",
+          "colliderType": 1
+        },
+        {
+          "x": -8,
+          "y": 5,
+          "sprite": "sprite-industrial.v2_14",
+          "colliderType": 1
+        },
+        {
+          "x": 7,
+          "y": 5,
+          "sprite": "sprite-industrial.v2_14",
+          "colliderType": 1
+        },
+        {
+          "x": -8,
+          "y": 6,
+          "sprite": "sprite-industrial.v2_14",
+          "colliderType": 1
+        },
+        {
+          "x": 7,
+          "y": 6,
+          "sprite": "sprite-industrial.v2_14",
+          "colliderType": 1
+        },
+        {
+          "x": -8,
+          "y": 7,
+          "sprite": "sprite-industrial.v2_14",
+          "colliderType": 1
+        },
+        {
+          "x": -7,
+          "y": 7,
+          "sprite": "sprite-industrial.v2_14",
+          "colliderType": 1
+        },
+        {
+          "x": -6,
+          "y": 7,
+          "sprite": "sprite-industrial.v2_14",
+          "colliderType": 1
+        },
+        {
+          "x": -5,
+          "y": 7,
+          "sprite": "sprite-industrial.v2_14",
+          "colliderType": 1
+        },
+        {
+          "x": -4,
+          "y": 7,
+          "sprite": "sprite-industrial.v2_14",
+          "colliderType": 1
+        },
+        {
+          "x": -3,
+          "y": 7,
+          "sprite": "sprite-industrial.v2_14",
+          "colliderType": 1
+        },
+        {
+          "x": -2,
+          "y": 7,
+          "sprite": "sprite-industrial.v2_14",
+          "colliderType": 1
+        },
+        {
+          "x": -1,
+          "y": 7,
+          "sprite": "sprite-industrial.v2_14",
+          "colliderType": 1
+        },
+        {
+          "x": 0,
+          "y": 7,
+          "sprite": "sprite-industrial.v2_14",
+          "colliderType": 1
+        },
+        {
+          "x": 1,
+          "y": 7,
+          "sprite": "sprite-industrial.v2_14",
+          "colliderType": 1
+        },
+        {
+          "x": 2,
+          "y": 7,
+          "sprite": "sprite-industrial.v2_14",
+          "colliderType": 1
+        },
+        {
+          "x": 3,
+          "y": 7,
+          "sprite": "sprite-industrial.v2_14",
+          "colliderType": 1
+        },
+        {
+          "x": 4,
+          "y": 7,
+          "sprite": "sprite-industrial.v2_14",
+          "colliderType": 1
+        },
+        {
+          "x": 5,
+          "y": 7,
+          "sprite": "sprite-industrial.v2_14",
+          "colliderType": 1
+        },
+        {
+          "x": 6,
+          "y": 7,
+          "sprite": "sprite-industrial.v2_14",
+          "colliderType": 1
+        },
+        {
+          "x": 7,
+          "y": 7,
+          "sprite": "sprite-industrial.v2_14",
+          "colliderType": 1
+        }
+      ],
+      "sourceCompositePaths": [
+        [
+          {
+            "x": 7.99997,
+            "y": -8
+          },
+          {
+            "x": 7.99997,
+            "y": 8
+          },
+          {
+            "x": -8,
+            "y": 7.99997
+          },
+          {
+            "x": -7.99997,
+            "y": -8
+          }
+        ],
+        [
+          {
+            "x": 7.000009,
+            "y": -6.999974
+          },
+          {
+            "x": -7.000009,
+            "y": -6.999974
+          },
+          {
+            "x": -6.99997,
+            "y": 7
+          },
+          {
+            "x": 7,
+            "y": 6.99997
+          }
+        ]
+      ],
+      "Realm": -1,
+      "Texture": 6200000000000010117,
+      "X": 0.0,
+      "Y": 0.0,
+      "W": 16.0,
+      "H": 16.0,
+      "Order": 0,
+      "Solids": [
+        {
+          "X": 0.0,
+          "Y": -7.5,
+          "W": 16.0,
+          "H": 1.0
+        },
+        {
+          "X": -7.5,
+          "Y": 0.0,
+          "W": 1.0,
+          "H": 14.0
+        },
+        {
+          "X": 7.5,
+          "Y": 0.0,
+          "W": 1.0,
+          "H": 14.0
+        },
+        {
+          "X": 0.0,
+          "Y": 7.5,
+          "W": 16.0,
+          "H": 1.0
+        }
+      ]
+    },
+    {
+      "name": "Life/Tilemap",
+      "active": true,
+      "tileCount": 2,
+      "collide": true,
+      "tiles": [
+        {
+          "x": -1,
+          "y": -1,
+          "sprite": "sprite-industrial.v2_5",
+          "colliderType": 1
+        },
+        {
+          "x": 0,
+          "y": -1,
+          "sprite": "sprite-industrial.v2_5",
+          "colliderType": 1
+        }
+      ],
+      "sourceCompositePaths": [
+        [
+          {
+            "x": 0.999975,
+            "y": -1.00001
+          },
+          {
+            "x": 0.999975,
+            "y": 1e-05
+          },
+          {
+            "x": -1.00001,
+            "y": -2.5e-05
+          },
+          {
+            "x": -0.999975,
+            "y": -1.00001
+          }
+        ]
+      ],
+      "Realm": 0,
+      "Texture": 6200000000000010118,
+      "X": 0.0,
+      "Y": -0.5,
+      "W": 2.0,
+      "H": 1.0,
+      "Order": 0,
+      "Solids": [
+        {
+          "X": 0.0,
+          "Y": -0.5,
+          "W": 2.0,
+          "H": 1.0
+        }
+      ]
+    }
+  ],
+  "objects": [
+    {
+      "path": "Player",
+      "Id": "1075273165",
+      "Name": "Player",
+      "Kind": "player",
+      "Realm": -1,
+      "X": 0.12,
+      "Y": 0.55,
+      "ScaleX": 1.0,
+      "ScaleY": 1.0,
+      "Texture": 6200000000000010003,
+      "Width": 1.0,
+      "Height": 1.0,
+      "Angle": 0.0,
+      "OffsetX": 0.0,
+      "OffsetY": -0.1,
+      "ColliderW": 0.5,
+      "ColliderH": 0.8,
+      "Collide": true,
+      "Trigger": false,
+      "TargetId": "0",
+      "DisableWhenOn": true,
+      "Order": 100,
+      "Active": true,
+      "FlipX": false,
+      "FlipY": false,
+      "Color": {
+        "r": 1,
+        "g": 1,
+        "b": 1,
+        "a": 1
+      }
+    },
+    {
+      "path": "Death/Continue",
+      "Id": "1961478910",
+      "Name": "Continue",
+      "Kind": "continue",
+      "Realm": 1,
+      "X": -2.9,
+      "Y": -4.37,
+      "ScaleX": 1.0,
+      "ScaleY": 1.0,
+      "Texture": 6200000000000010010,
+      "Width": 2.0,
+      "Height": 2.0,
+      "Angle": 0.0,
+      "OffsetX": 0.0,
+      "OffsetY": 0.0,
+      "ColliderW": 1.4,
+      "ColliderH": 1.4,
+      "Collide": true,
+      "Trigger": true,
+      "TargetId": "0",
+      "DisableWhenOn": true,
+      "Order": 0,
+      "Active": true,
+      "FlipX": false,
+      "FlipY": false,
+      "Color": {
+        "r": 1,
+        "g": 1,
+        "b": 1,
+        "a": 1
+      }
+    },
+    {
+      "path": "Death/quat",
+      "Id": "1260578945233628700",
+      "Name": "quat",
+      "Kind": "exit",
+      "Realm": 1,
+      "X": 3.0,
+      "Y": -4.37,
+      "ScaleX": 1.0,
+      "ScaleY": 1.0,
+      "Texture": 6200000000000010010,
+      "Width": 2.0,
+      "Height": 2.0,
+      "Angle": 0.0,
+      "OffsetX": 0.0,
+      "OffsetY": 0.0,
+      "ColliderW": 1.4,
+      "ColliderH": 1.4,
+      "Collide": true,
+      "Trigger": true,
+      "TargetId": "0",
+      "DisableWhenOn": true,
+      "Order": 0,
+      "Active": true,
+      "FlipX": false,
+      "FlipY": false,
+      "Color": {
+        "r": 1,
+        "g": 1,
+        "b": 1,
+        "a": 1
+      }
+    },
+    {
+      "path": "Life/Trap",
+      "Id": "1627718916:6184818826013422140",
+      "Name": "Trap",
+      "Kind": "trap",
+      "Realm": 0,
+      "X": 0.0,
+      "Y": -6.5,
+      "ScaleX": 1.0,
+      "ScaleY": 1.0,
+      "Texture": 6200000000000010119,
+      "Width": 14.0,
+      "Height": 1.0,
+      "Angle": 0.0,
+      "OffsetX": 0.0,
+      "OffsetY": -0.4,
+      "ColliderW": 14.0,
+      "ColliderH": 0.2,
+      "Collide": true,
+      "Trigger": true,
+      "TargetId": "0",
+      "DisableWhenOn": true,
+      "Order": 0,
+      "Active": true,
+      "FlipX": false,
+      "FlipY": false,
+      "Color": {
+        "r": 1,
+        "g": 1,
+        "b": 1,
+        "a": 1
+      }
+    }
+  ],
+  "texts": [
+    {
+      "Text": "谢谢游玩",
+      "X": 0.0,
+      "Y": 0.0,
+      "Realm": 1,
+      "Size": 14,
+      "Path": "Death/thx/Canvas (1)/ContinueText"
+    },
+    {
+      "Text": "谢谢游玩",
+      "X": 0.0,
+      "Y": 0.0,
+      "Realm": 1,
+      "Size": 25,
+      "Path": "Death/thx"
+    },
+    {
+      "Text": "重新开始",
+      "X": -2.9,
+      "Y": -4.37,
+      "Realm": 1,
+      "Size": 14,
+      "Path": "Death/Continue/Canvas/ContinueText"
+    },
+    {
+      "Text": "退出",
+      "X": 3.0,
+      "Y": -4.37,
+      "Realm": 1,
+      "Size": 14,
+      "Path": "Death/quat/Canvas/ContinueText"
+    }
+  ]
+}

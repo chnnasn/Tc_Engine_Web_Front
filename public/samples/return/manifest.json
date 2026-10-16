@@ -1,0 +1,12 @@
+{
+  "id": "return",
+  "title": "Return",
+  "engine": "TomCat",
+  "engineCommit": "9a0ccad79bb4ec33225bd8210fe9b47438bb06bc",
+  "packageVersion": 8,
+  "byteLength": 15191027,
+  "sha256": "5f147302510cbaf21cc8cf9db766c22a411cff38ab670aa5d7528b7749a771dc",
+  "entries": 129,
+  "packageUrl": "/samples/return/return.tcpak",
+  "sourceUrl": "/samples/return/return-source.zip"
+}

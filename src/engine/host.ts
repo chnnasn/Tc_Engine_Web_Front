@@ -6,7 +6,7 @@ import engineLock from '../../engine.lock.json'
 import { executeScriptTool } from './script-automation'
 import { attachScripts, detachScripts, readScripts } from './scene-archive'
 import {
-  loadEngine, engineFilesystem, bootPlayer, shutdown, compileAndInstall, compileOnly, needsRuntimeRebuild, scriptAssetsJson,
+  loadEngine, engineFilesystem, bootPlayer, shutdown, compileAndInstall, compileOnly, needsRuntimeRebuild, scriptAssetsJson, FrameClock,
   type CompileDiagnostic, type CompileRequest, type LoadedEngine, type RuntimeKind,
 } from './runtime'
 
@@ -23,7 +23,7 @@ let stopped = false
 let frame = 0
 let observer: ResizeObserver | undefined
 let previousState = ''
-let lastTime = 0
+const frameClock = new FrameClock()
 let lastPoll = 0
 let width = 0, height = 0
 // 工作区按布局格式持久化；兼容的引擎更新不会丢弃用户偏好。
@@ -157,7 +157,12 @@ function dispose() {
 }
 addEventListener('pagehide', dispose)
 addEventListener('tomcat-save-layout', flushLayout)
-document.addEventListener('visibilitychange', () => { if (document.hidden) flushLayout() })
+document.addEventListener('visibilitychange', () => {
+  if (document.hidden) flushLayout()
+  // rAF normally stops in background tabs. Resume from a fresh timestamp so
+  // returning to the game cannot inject a 100 ms physics/input catch-up step.
+  frameClock.reset()
+})
 canvas.addEventListener('webglcontextlost', event => { event.preventDefault(); fail(new Error('图形上下文丢失，请重新打开会话')) })
 canvas.addEventListener('pointerdown', () => canvas.focus())
 canvas.addEventListener('contextmenu', event => event.preventDefault())
@@ -181,8 +186,7 @@ function tick(time: number) {
   try {
     resize()
     maybeAutoSaveLayout(time)
-    const delta = lastTime ? Math.min((time - lastTime) / 1000, .1) : 0
-    lastTime = time
+    const delta = frameClock.step(time)
     if (kind === 'editor') exports().EditorFrame(delta)
     else exports().PlayerFrame(delta)
     const error = kind === 'editor' ? exports().EditorError() : exports().PlayerError()

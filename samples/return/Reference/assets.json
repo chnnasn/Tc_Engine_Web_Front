@@ -1,0 +1,1452 @@
+{
+  "assets": [
+    {
+      "name": "sprite-industrial.v2_14",
+      "path": "Assets/Art/sprite-industrial.v2_14.png",
+      "handle": "6200000000000010001",
+      "width": 16,
+      "height": 16,
+      "source": "Assets/Spritesheet/industrial.v2.png",
+      "unityFileId": 2122637043,
+      "pixelsPerUnit": 16
+    },
+    {
+      "name": "map-default-0",
+      "path": "Assets/Art/map-default-0.png",
+      "handle": "6200000000000010002",
+      "width": 256,
+      "height": 256,
+      "source": "Assets/Scenes/default.unity"
+    },
+    {
+      "name": "sprite-industrial.v2_322",
+      "path": "Assets/Art/sprite-industrial.v2_322.png",
+      "handle": "6200000000000010003",
+      "width": 16,
+      "height": 16,
+      "source": "Assets/Spritesheet/industrial.v2.png",
+      "unityFileId": -1099370031,
+      "pixelsPerUnit": 16
+    },
+    {
+      "name": "sprite-industrial.v2_57",
+      "path": "Assets/Art/sprite-industrial.v2_57.png",
+      "handle": "6200000000000010004",
+      "width": 16,
+      "height": 16,
+      "source": "Assets/Spritesheet/industrial.v2.png",
+      "unityFileId": -689839224,
+      "pixelsPerUnit": 16
+    },
+    {
+      "name": "tiled-sprite-industrial.v2_57-32x16",
+      "path": "Assets/Art/tiled-sprite-industrial.v2_57-32x16.png",
+      "handle": "6200000000000010005",
+      "width": 32,
+      "height": 16,
+      "source": "Assets/Spritesheet/industrial.v2.png"
+    },
+    {
+      "name": "sprite-industrial.v2_245",
+      "path": "Assets/Art/sprite-industrial.v2_245.png",
+      "handle": "6200000000000010006",
+      "width": 16,
+      "height": 16,
+      "source": "Assets/Spritesheet/industrial.v2.png",
+      "unityFileId": 1040130677,
+      "pixelsPerUnit": 16
+    },
+    {
+      "name": "sprite-industrial.v2_212",
+      "path": "Assets/Art/sprite-industrial.v2_212.png",
+      "handle": "6200000000000010007",
+      "width": 16,
+      "height": 16,
+      "source": "Assets/Spritesheet/industrial.v2.png",
+      "unityFileId": 930400413,
+      "pixelsPerUnit": 16
+    },
+    {
+      "name": "sprite-industrial.v2_5",
+      "path": "Assets/Art/sprite-industrial.v2_5.png",
+      "handle": "6200000000000010008",
+      "width": 16,
+      "height": 16,
+      "source": "Assets/Spritesheet/industrial.v2.png",
+      "unityFileId": -224555681,
+      "pixelsPerUnit": 16
+    },
+    {
+      "name": "sprite-industrial.v2_177",
+      "path": "Assets/Art/sprite-industrial.v2_177.png",
+      "handle": "6200000000000010009",
+      "width": 16,
+      "height": 16,
+      "source": "Assets/Spritesheet/industrial.v2.png",
+      "unityFileId": 537827751,
+      "pixelsPerUnit": 16
+    },
+    {
+      "name": "sprite-industrial.v2_249",
+      "path": "Assets/Art/sprite-industrial.v2_249.png",
+      "handle": "6200000000000010010",
+      "width": 32,
+      "height": 32,
+      "source": "Assets/Spritesheet/industrial.v2.png",
+      "unityFileId": -2000967925,
+      "pixelsPerUnit": 16
+    },
+    {
+      "name": "sprite-industrial.v2_6",
+      "path": "Assets/Art/sprite-industrial.v2_6.png",
+      "handle": "6200000000000010011",
+      "width": 16,
+      "height": 16,
+      "source": "Assets/Spritesheet/industrial.v2.png",
+      "unityFileId": -1980666120,
+      "pixelsPerUnit": 16
+    },
+    {
+      "name": "sprite-industrial.v2_280",
+      "path": "Assets/Art/sprite-industrial.v2_280.png",
+      "handle": "6200000000000010012",
+      "width": 16,
+      "height": 16,
+      "source": "Assets/Spritesheet/industrial.v2.png",
+      "unityFileId": -1767834626,
+      "pixelsPerUnit": 16
+    },
+    {
+      "name": "sprite-industrial.v2_281",
+      "path": "Assets/Art/sprite-industrial.v2_281.png",
+      "handle": "6200000000000010013",
+      "width": 16,
+      "height": 16,
+      "source": "Assets/Spritesheet/industrial.v2.png",
+      "unityFileId": 2124504786,
+      "pixelsPerUnit": 16
+    },
+    {
+      "name": "sprite-industrial.v2_72",
+      "path": "Assets/Art/sprite-industrial.v2_72.png",
+      "handle": "6200000000000010014",
+      "width": 16,
+      "height": 16,
+      "source": "Assets/Spritesheet/industrial.v2.png",
+      "unityFileId": 1894601792,
+      "pixelsPerUnit": 16
+    },
+    {
+      "name": "sprite-industrial.v2_73",
+      "path": "Assets/Art/sprite-industrial.v2_73.png",
+      "handle": "6200000000000010015",
+      "width": 16,
+      "height": 16,
+      "source": "Assets/Spritesheet/industrial.v2.png",
+      "unityFileId": 753811559,
+      "pixelsPerUnit": 16
+    },
+    {
+      "name": "sprite-industrial.v2_261",
+      "path": "Assets/Art/sprite-industrial.v2_261.png",
+      "handle": "6200000000000010016",
+      "width": 16,
+      "height": 16,
+      "source": "Assets/Spritesheet/industrial.v2.png",
+      "unityFileId": 454086625,
+      "pixelsPerUnit": 16
+    },
+    {
+      "name": "sprite-industrial.v2_262",
+      "path": "Assets/Art/sprite-industrial.v2_262.png",
+      "handle": "6200000000000010017",
+      "width": 16,
+      "height": 16,
+      "source": "Assets/Spritesheet/industrial.v2.png",
+      "unityFileId": 1419164963,
+      "pixelsPerUnit": 16
+    },
+    {
+      "name": "sprite-industrial.v2_263",
+      "path": "Assets/Art/sprite-industrial.v2_263.png",
+      "handle": "6200000000000010018",
+      "width": 16,
+      "height": 16,
+      "source": "Assets/Spritesheet/industrial.v2.png",
+      "unityFileId": -1512635328,
+      "pixelsPerUnit": 16
+    },
+    {
+      "name": "sprite-industrial.v2_264",
+      "path": "Assets/Art/sprite-industrial.v2_264.png",
+      "handle": "6200000000000010019",
+      "width": 16,
+      "height": 16,
+      "source": "Assets/Spritesheet/industrial.v2.png",
+      "unityFileId": 175002593,
+      "pixelsPerUnit": 16
+    },
+    {
+      "name": "sprite-industrial.v2_69",
+      "path": "Assets/Art/sprite-industrial.v2_69.png",
+      "handle": "6200000000000010020",
+      "width": 16,
+      "height": 16,
+      "source": "Assets/Spritesheet/industrial.v2.png",
+      "unityFileId": -1108137786,
+      "pixelsPerUnit": 16
+    },
+    {
+      "name": "sprite-industrial.v2_49",
+      "path": "Assets/Art/sprite-industrial.v2_49.png",
+      "handle": "6200000000000010021",
+      "width": 16,
+      "height": 16,
+      "source": "Assets/Spritesheet/industrial.v2.png",
+      "unityFileId": 1619670629,
+      "pixelsPerUnit": 16
+    },
+    {
+      "name": "sprite-industrial.v2_50",
+      "path": "Assets/Art/sprite-industrial.v2_50.png",
+      "handle": "6200000000000010022",
+      "width": 16,
+      "height": 16,
+      "source": "Assets/Spritesheet/industrial.v2.png",
+      "unityFileId": 683841227,
+      "pixelsPerUnit": 16
+    },
+    {
+      "name": "sprite-industrial.v2_31",
+      "path": "Assets/Art/sprite-industrial.v2_31.png",
+      "handle": "6200000000000010023",
+      "width": 16,
+      "height": 16,
+      "source": "Assets/Spritesheet/industrial.v2.png",
+      "unityFileId": -133509074,
+      "pixelsPerUnit": 16
+    },
+    {
+      "name": "sprite-industrial.v2_32",
+      "path": "Assets/Art/sprite-industrial.v2_32.png",
+      "handle": "6200000000000010024",
+      "width": 16,
+      "height": 16,
+      "source": "Assets/Spritesheet/industrial.v2.png",
+      "unityFileId": -1501299421,
+      "pixelsPerUnit": 16
+    },
+    {
+      "name": "sprite-industrial.v2_33",
+      "path": "Assets/Art/sprite-industrial.v2_33.png",
+      "handle": "6200000000000010025",
+      "width": 16,
+      "height": 16,
+      "source": "Assets/Spritesheet/industrial.v2.png",
+      "unityFileId": 941120527,
+      "pixelsPerUnit": 16
+    },
+    {
+      "name": "sprite-industrial.v2_34",
+      "path": "Assets/Art/sprite-industrial.v2_34.png",
+      "handle": "6200000000000010026",
+      "width": 16,
+      "height": 16,
+      "source": "Assets/Spritesheet/industrial.v2.png",
+      "unityFileId": -2135953536,
+      "pixelsPerUnit": 16
+    },
+    {
+      "name": "sprite-industrial.v2_35",
+      "path": "Assets/Art/sprite-industrial.v2_35.png",
+      "handle": "6200000000000010027",
+      "width": 16,
+      "height": 16,
+      "source": "Assets/Spritesheet/industrial.v2.png",
+      "unityFileId": 1012205514,
+      "pixelsPerUnit": 16
+    },
+    {
+      "name": "sprite-industrial.v2_36",
+      "path": "Assets/Art/sprite-industrial.v2_36.png",
+      "handle": "6200000000000010028",
+      "width": 16,
+      "height": 16,
+      "source": "Assets/Spritesheet/industrial.v2.png",
+      "unityFileId": -1326595690,
+      "pixelsPerUnit": 16
+    },
+    {
+      "name": "sprite-industrial.v2_101",
+      "path": "Assets/Art/sprite-industrial.v2_101.png",
+      "handle": "6200000000000010029",
+      "width": 16,
+      "height": 16,
+      "source": "Assets/Spritesheet/industrial.v2.png",
+      "unityFileId": -1751967749,
+      "pixelsPerUnit": 16
+    },
+    {
+      "name": "sprite-industrial.v2_70",
+      "path": "Assets/Art/sprite-industrial.v2_70.png",
+      "handle": "6200000000000010030",
+      "width": 16,
+      "height": 16,
+      "source": "Assets/Spritesheet/industrial.v2.png",
+      "unityFileId": 561926378,
+      "pixelsPerUnit": 16
+    },
+    {
+      "name": "sprite-industrial.v2_98",
+      "path": "Assets/Art/sprite-industrial.v2_98.png",
+      "handle": "6200000000000010031",
+      "width": 16,
+      "height": 16,
+      "source": "Assets/Spritesheet/industrial.v2.png",
+      "unityFileId": 1559124317,
+      "pixelsPerUnit": 16
+    },
+    {
+      "name": "sprite-industrial.v2_78",
+      "path": "Assets/Art/sprite-industrial.v2_78.png",
+      "handle": "6200000000000010032",
+      "width": 16,
+      "height": 16,
+      "source": "Assets/Spritesheet/industrial.v2.png",
+      "unityFileId": 1170451774,
+      "pixelsPerUnit": 16
+    },
+    {
+      "name": "sprite-industrial.v2_100",
+      "path": "Assets/Art/sprite-industrial.v2_100.png",
+      "handle": "6200000000000010033",
+      "width": 16,
+      "height": 16,
+      "source": "Assets/Spritesheet/industrial.v2.png",
+      "unityFileId": -1115158453,
+      "pixelsPerUnit": 16
+    },
+    {
+      "name": "sprite-industrial.v2_53",
+      "path": "Assets/Art/sprite-industrial.v2_53.png",
+      "handle": "6200000000000010034",
+      "width": 16,
+      "height": 16,
+      "source": "Assets/Spritesheet/industrial.v2.png",
+      "unityFileId": 1623807082,
+      "pixelsPerUnit": 16
+    },
+    {
+      "name": "sprite-industrial.v2_55",
+      "path": "Assets/Art/sprite-industrial.v2_55.png",
+      "handle": "6200000000000010035",
+      "width": 16,
+      "height": 16,
+      "source": "Assets/Spritesheet/industrial.v2.png",
+      "unityFileId": 232884474,
+      "pixelsPerUnit": 16
+    },
+    {
+      "name": "sprite-industrial.v2_56",
+      "path": "Assets/Art/sprite-industrial.v2_56.png",
+      "handle": "6200000000000010036",
+      "width": 16,
+      "height": 16,
+      "source": "Assets/Spritesheet/industrial.v2.png",
+      "unityFileId": -1461235303,
+      "pixelsPerUnit": 16
+    },
+    {
+      "name": "map-Level1-0",
+      "path": "Assets/Art/map-Level1-0.png",
+      "handle": "6200000000000010037",
+      "width": 224,
+      "height": 224,
+      "source": "Assets/Scenes/Level1.unity"
+    },
+    {
+      "name": "sprite-industrial.v2_271",
+      "path": "Assets/Art/sprite-industrial.v2_271.png",
+      "handle": "6200000000000010038",
+      "width": 16,
+      "height": 16,
+      "source": "Assets/Spritesheet/industrial.v2.png",
+      "unityFileId": 2146319118,
+      "pixelsPerUnit": 16
+    },
+    {
+      "name": "sprite-industrial.v2_272",
+      "path": "Assets/Art/sprite-industrial.v2_272.png",
+      "handle": "6200000000000010039",
+      "width": 16,
+      "height": 16,
+      "source": "Assets/Spritesheet/industrial.v2.png",
+      "unityFileId": 292164358,
+      "pixelsPerUnit": 16
+    },
+    {
+      "name": "sprite-industrial.v2_273",
+      "path": "Assets/Art/sprite-industrial.v2_273.png",
+      "handle": "6200000000000010040",
+      "width": 16,
+      "height": 16,
+      "source": "Assets/Spritesheet/industrial.v2.png",
+      "unityFileId": 206692352,
+      "pixelsPerUnit": 16
+    },
+    {
+      "name": "sprite-industrial.v2_251",
+      "path": "Assets/Art/sprite-industrial.v2_251.png",
+      "handle": "6200000000000010041",
+      "width": 16,
+      "height": 16,
+      "source": "Assets/Spritesheet/industrial.v2.png",
+      "unityFileId": 1922012325,
+      "pixelsPerUnit": 16
+    },
+    {
+      "name": "sprite-industrial.v2_252",
+      "path": "Assets/Art/sprite-industrial.v2_252.png",
+      "handle": "6200000000000010042",
+      "width": 16,
+      "height": 16,
+      "source": "Assets/Spritesheet/industrial.v2.png",
+      "unityFileId": 112602965,
+      "pixelsPerUnit": 16
+    },
+    {
+      "name": "sprite-industrial.v2_253",
+      "path": "Assets/Art/sprite-industrial.v2_253.png",
+      "handle": "6200000000000010043",
+      "width": 16,
+      "height": 16,
+      "source": "Assets/Spritesheet/industrial.v2.png",
+      "unityFileId": 1391706159,
+      "pixelsPerUnit": 16
+    },
+    {
+      "name": "sprite-industrial.v2_162",
+      "path": "Assets/Art/sprite-industrial.v2_162.png",
+      "handle": "6200000000000010044",
+      "width": 16,
+      "height": 16,
+      "source": "Assets/Spritesheet/industrial.v2.png",
+      "unityFileId": -1250873233,
+      "pixelsPerUnit": 16
+    },
+    {
+      "name": "sprite-industrial.v2_185",
+      "path": "Assets/Art/sprite-industrial.v2_185.png",
+      "handle": "6200000000000010045",
+      "width": 16,
+      "height": 16,
+      "source": "Assets/Spritesheet/industrial.v2.png",
+      "unityFileId": 1414615378,
+      "pixelsPerUnit": 16
+    },
+    {
+      "name": "sprite-industrial.v2_230",
+      "path": "Assets/Art/sprite-industrial.v2_230.png",
+      "handle": "6200000000000010046",
+      "width": 16,
+      "height": 16,
+      "source": "Assets/Spritesheet/industrial.v2.png",
+      "unityFileId": -1965645782,
+      "pixelsPerUnit": 16
+    },
+    {
+      "name": "sprite-industrial.v2_231",
+      "path": "Assets/Art/sprite-industrial.v2_231.png",
+      "handle": "6200000000000010047",
+      "width": 16,
+      "height": 16,
+      "source": "Assets/Spritesheet/industrial.v2.png",
+      "unityFileId": 1313126134,
+      "pixelsPerUnit": 16
+    },
+    {
+      "name": "sprite-industrial.v2_232",
+      "path": "Assets/Art/sprite-industrial.v2_232.png",
+      "handle": "6200000000000010048",
+      "width": 16,
+      "height": 16,
+      "source": "Assets/Spritesheet/industrial.v2.png",
+      "unityFileId": -1283789391,
+      "pixelsPerUnit": 16
+    },
+    {
+      "name": "sprite-industrial.v2_45",
+      "path": "Assets/Art/sprite-industrial.v2_45.png",
+      "handle": "6200000000000010049",
+      "width": 16,
+      "height": 16,
+      "source": "Assets/Spritesheet/industrial.v2.png",
+      "unityFileId": -887490519,
+      "pixelsPerUnit": 16
+    },
+    {
+      "name": "sprite-industrial.v2_46",
+      "path": "Assets/Art/sprite-industrial.v2_46.png",
+      "handle": "6200000000000010050",
+      "width": 16,
+      "height": 16,
+      "source": "Assets/Spritesheet/industrial.v2.png",
+      "unityFileId": -1699618234,
+      "pixelsPerUnit": 16
+    },
+    {
+      "name": "sprite-industrial.v2_47",
+      "path": "Assets/Art/sprite-industrial.v2_47.png",
+      "handle": "6200000000000010051",
+      "width": 16,
+      "height": 16,
+      "source": "Assets/Spritesheet/industrial.v2.png",
+      "unityFileId": 677918909,
+      "pixelsPerUnit": 16
+    },
+    {
+      "name": "sprite-industrial.v2_183",
+      "path": "Assets/Art/sprite-industrial.v2_183.png",
+      "handle": "6200000000000010052",
+      "width": 16,
+      "height": 16,
+      "source": "Assets/Spritesheet/industrial.v2.png",
+      "unityFileId": 1353171007,
+      "pixelsPerUnit": 16
+    },
+    {
+      "name": "sprite-industrial.v2_184",
+      "path": "Assets/Art/sprite-industrial.v2_184.png",
+      "handle": "6200000000000010053",
+      "width": 16,
+      "height": 16,
+      "source": "Assets/Spritesheet/industrial.v2.png",
+      "unityFileId": -1517255833,
+      "pixelsPerUnit": 16
+    },
+    {
+      "name": "sprite-industrial.v2_209",
+      "path": "Assets/Art/sprite-industrial.v2_209.png",
+      "handle": "6200000000000010054",
+      "width": 16,
+      "height": 16,
+      "source": "Assets/Spritesheet/industrial.v2.png",
+      "unityFileId": 291804462,
+      "pixelsPerUnit": 16
+    },
+    {
+      "name": "sprite-industrial.v2_22",
+      "path": "Assets/Art/sprite-industrial.v2_22.png",
+      "handle": "6200000000000010055",
+      "width": 16,
+      "height": 16,
+      "source": "Assets/Spritesheet/industrial.v2.png",
+      "unityFileId": -149988939,
+      "pixelsPerUnit": 16
+    },
+    {
+      "name": "sprite-industrial.v2_23",
+      "path": "Assets/Art/sprite-industrial.v2_23.png",
+      "handle": "6200000000000010056",
+      "width": 16,
+      "height": 16,
+      "source": "Assets/Spritesheet/industrial.v2.png",
+      "unityFileId": -2019947769,
+      "pixelsPerUnit": 16
+    },
+    {
+      "name": "sprite-industrial.v2_24",
+      "path": "Assets/Art/sprite-industrial.v2_24.png",
+      "handle": "6200000000000010057",
+      "width": 16,
+      "height": 16,
+      "source": "Assets/Spritesheet/industrial.v2.png",
+      "unityFileId": 1253221837,
+      "pixelsPerUnit": 16
+    },
+    {
+      "name": "sprite-industrial.v2_8",
+      "path": "Assets/Art/sprite-industrial.v2_8.png",
+      "handle": "6200000000000010058",
+      "width": 16,
+      "height": 16,
+      "source": "Assets/Spritesheet/industrial.v2.png",
+      "unityFileId": 831790755,
+      "pixelsPerUnit": 16
+    },
+    {
+      "name": "sprite-industrial.v2_206",
+      "path": "Assets/Art/sprite-industrial.v2_206.png",
+      "handle": "6200000000000010059",
+      "width": 16,
+      "height": 16,
+      "source": "Assets/Spritesheet/industrial.v2.png",
+      "unityFileId": 733968540,
+      "pixelsPerUnit": 16
+    },
+    {
+      "name": "sprite-industrial.v2_207",
+      "path": "Assets/Art/sprite-industrial.v2_207.png",
+      "handle": "6200000000000010060",
+      "width": 16,
+      "height": 16,
+      "source": "Assets/Spritesheet/industrial.v2.png",
+      "unityFileId": -703757457,
+      "pixelsPerUnit": 16
+    },
+    {
+      "name": "sprite-industrial.v2_163",
+      "path": "Assets/Art/sprite-industrial.v2_163.png",
+      "handle": "6200000000000010061",
+      "width": 16,
+      "height": 16,
+      "source": "Assets/Spritesheet/industrial.v2.png",
+      "unityFileId": -1462308633,
+      "pixelsPerUnit": 16
+    },
+    {
+      "name": "sprite-industrial.v2_126",
+      "path": "Assets/Art/sprite-industrial.v2_126.png",
+      "handle": "6200000000000010062",
+      "width": 16,
+      "height": 16,
+      "source": "Assets/Spritesheet/industrial.v2.png",
+      "unityFileId": 1734862941,
+      "pixelsPerUnit": 16
+    },
+    {
+      "name": "sprite-industrial.v2_193",
+      "path": "Assets/Art/sprite-industrial.v2_193.png",
+      "handle": "6200000000000010063",
+      "width": 16,
+      "height": 16,
+      "source": "Assets/Spritesheet/industrial.v2.png",
+      "unityFileId": 1496380393,
+      "pixelsPerUnit": 16
+    },
+    {
+      "name": "sprite-industrial.v2_194",
+      "path": "Assets/Art/sprite-industrial.v2_194.png",
+      "handle": "6200000000000010064",
+      "width": 16,
+      "height": 16,
+      "source": "Assets/Spritesheet/industrial.v2.png",
+      "unityFileId": 1041479857,
+      "pixelsPerUnit": 16
+    },
+    {
+      "name": "sprite-industrial.v2_87",
+      "path": "Assets/Art/sprite-industrial.v2_87.png",
+      "handle": "6200000000000010065",
+      "width": 16,
+      "height": 16,
+      "source": "Assets/Spritesheet/industrial.v2.png",
+      "unityFileId": -540350927,
+      "pixelsPerUnit": 16
+    },
+    {
+      "name": "sprite-industrial.v2_171",
+      "path": "Assets/Art/sprite-industrial.v2_171.png",
+      "handle": "6200000000000010066",
+      "width": 16,
+      "height": 16,
+      "source": "Assets/Spritesheet/industrial.v2.png",
+      "unityFileId": -995979093,
+      "pixelsPerUnit": 16
+    },
+    {
+      "name": "sprite-industrial.v2_172",
+      "path": "Assets/Art/sprite-industrial.v2_172.png",
+      "handle": "6200000000000010067",
+      "width": 16,
+      "height": 16,
+      "source": "Assets/Spritesheet/industrial.v2.png",
+      "unityFileId": -1230319032,
+      "pixelsPerUnit": 16
+    },
+    {
+      "name": "sprite-industrial.v2_107",
+      "path": "Assets/Art/sprite-industrial.v2_107.png",
+      "handle": "6200000000000010068",
+      "width": 16,
+      "height": 16,
+      "source": "Assets/Spritesheet/industrial.v2.png",
+      "unityFileId": 1786109280,
+      "pixelsPerUnit": 16
+    },
+    {
+      "name": "sprite-industrial.v2_64",
+      "path": "Assets/Art/sprite-industrial.v2_64.png",
+      "handle": "6200000000000010069",
+      "width": 16,
+      "height": 16,
+      "source": "Assets/Spritesheet/industrial.v2.png",
+      "unityFileId": -779979346,
+      "pixelsPerUnit": 16
+    },
+    {
+      "name": "sprite-industrial.v2_148",
+      "path": "Assets/Art/sprite-industrial.v2_148.png",
+      "handle": "6200000000000010070",
+      "width": 16,
+      "height": 16,
+      "source": "Assets/Spritesheet/industrial.v2.png",
+      "unityFileId": 15671791,
+      "pixelsPerUnit": 16
+    },
+    {
+      "name": "sprite-industrial.v2_149",
+      "path": "Assets/Art/sprite-industrial.v2_149.png",
+      "handle": "6200000000000010071",
+      "width": 16,
+      "height": 16,
+      "source": "Assets/Spritesheet/industrial.v2.png",
+      "unityFileId": -1064671147,
+      "pixelsPerUnit": 16
+    },
+    {
+      "name": "sprite-industrial.v2_128",
+      "path": "Assets/Art/sprite-industrial.v2_128.png",
+      "handle": "6200000000000010072",
+      "width": 16,
+      "height": 16,
+      "source": "Assets/Spritesheet/industrial.v2.png",
+      "unityFileId": 1086032803,
+      "pixelsPerUnit": 16
+    },
+    {
+      "name": "sprite-industrial.v2_129",
+      "path": "Assets/Art/sprite-industrial.v2_129.png",
+      "handle": "6200000000000010073",
+      "width": 16,
+      "height": 16,
+      "source": "Assets/Spritesheet/industrial.v2.png",
+      "unityFileId": -347201816,
+      "pixelsPerUnit": 16
+    },
+    {
+      "name": "sprite-industrial.v2_111",
+      "path": "Assets/Art/sprite-industrial.v2_111.png",
+      "handle": "6200000000000010074",
+      "width": 16,
+      "height": 16,
+      "source": "Assets/Spritesheet/industrial.v2.png",
+      "unityFileId": -1933908962,
+      "pixelsPerUnit": 16
+    },
+    {
+      "name": "sprite-industrial.v2_112",
+      "path": "Assets/Art/sprite-industrial.v2_112.png",
+      "handle": "6200000000000010075",
+      "width": 16,
+      "height": 16,
+      "source": "Assets/Spritesheet/industrial.v2.png",
+      "unityFileId": 1892525753,
+      "pixelsPerUnit": 16
+    },
+    {
+      "name": "map-Level1-1",
+      "path": "Assets/Art/map-Level1-1.png",
+      "handle": "6200000000000010076",
+      "width": 224,
+      "height": 224,
+      "source": "Assets/Scenes/Level1.unity"
+    },
+    {
+      "name": "sprite-industrial.v2_15",
+      "path": "Assets/Art/sprite-industrial.v2_15.png",
+      "handle": "6200000000000010077",
+      "width": 16,
+      "height": 16,
+      "source": "Assets/Spritesheet/industrial.v2.png",
+      "unityFileId": 2036878527,
+      "pixelsPerUnit": 16
+    },
+    {
+      "name": "map-Level1-2",
+      "path": "Assets/Art/map-Level1-2.png",
+      "handle": "6200000000000010078",
+      "width": 256,
+      "height": 256,
+      "source": "Assets/Scenes/Level1.unity"
+    },
+    {
+      "name": "map-Level1-3",
+      "path": "Assets/Art/map-Level1-3.png",
+      "handle": "6200000000000010079",
+      "width": 224,
+      "height": 208,
+      "source": "Assets/Scenes/Level1.unity"
+    },
+    {
+      "name": "map-Level1-4",
+      "path": "Assets/Art/map-Level1-4.png",
+      "handle": "6200000000000010080",
+      "width": 160,
+      "height": 208,
+      "source": "Assets/Scenes/Level1.unity"
+    },
+    {
+      "name": "map-Level2-0",
+      "path": "Assets/Art/map-Level2-0.png",
+      "handle": "6200000000000010081",
+      "width": 192,
+      "height": 224,
+      "source": "Assets/Scenes/Level2.unity"
+    },
+    {
+      "name": "sprite-industrial.v2_76",
+      "path": "Assets/Art/sprite-industrial.v2_76.png",
+      "handle": "6200000000000010082",
+      "width": 16,
+      "height": 16,
+      "source": "Assets/Spritesheet/industrial.v2.png",
+      "unityFileId": -306606235,
+      "pixelsPerUnit": 16
+    },
+    {
+      "name": "map-Level2-1",
+      "path": "Assets/Art/map-Level2-1.png",
+      "handle": "6200000000000010083",
+      "width": 192,
+      "height": 48,
+      "source": "Assets/Scenes/Level2.unity"
+    },
+    {
+      "name": "sprite-industrial.v2_12",
+      "path": "Assets/Art/sprite-industrial.v2_12.png",
+      "handle": "6200000000000010084",
+      "width": 16,
+      "height": 16,
+      "source": "Assets/Spritesheet/industrial.v2.png",
+      "unityFileId": 1867891154,
+      "pixelsPerUnit": 16
+    },
+    {
+      "name": "sprite-industrial.v2_13",
+      "path": "Assets/Art/sprite-industrial.v2_13.png",
+      "handle": "6200000000000010085",
+      "width": 16,
+      "height": 16,
+      "source": "Assets/Spritesheet/industrial.v2.png",
+      "unityFileId": 1660639259,
+      "pixelsPerUnit": 16
+    },
+    {
+      "name": "map-Level2-2",
+      "path": "Assets/Art/map-Level2-2.png",
+      "handle": "6200000000000010086",
+      "width": 256,
+      "height": 256,
+      "source": "Assets/Scenes/Level2.unity"
+    },
+    {
+      "name": "map-Level2-3",
+      "path": "Assets/Art/map-Level2-3.png",
+      "handle": "6200000000000010087",
+      "width": 192,
+      "height": 208,
+      "source": "Assets/Scenes/Level2.unity"
+    },
+    {
+      "name": "sprite-industrial.v2_92",
+      "path": "Assets/Art/sprite-industrial.v2_92.png",
+      "handle": "6200000000000010088",
+      "width": 16,
+      "height": 16,
+      "source": "Assets/Spritesheet/industrial.v2.png",
+      "unityFileId": 517673232,
+      "pixelsPerUnit": 16
+    },
+    {
+      "name": "sprite-industrial.v2_93",
+      "path": "Assets/Art/sprite-industrial.v2_93.png",
+      "handle": "6200000000000010089",
+      "width": 16,
+      "height": 16,
+      "source": "Assets/Spritesheet/industrial.v2.png",
+      "unityFileId": 1017703921,
+      "pixelsPerUnit": 16
+    },
+    {
+      "name": "map-Level2-4",
+      "path": "Assets/Art/map-Level2-4.png",
+      "handle": "6200000000000010090",
+      "width": 192,
+      "height": 160,
+      "source": "Assets/Scenes/Level2.unity"
+    },
+    {
+      "name": "sprite-industrial.v2_54",
+      "path": "Assets/Art/sprite-industrial.v2_54.png",
+      "handle": "6200000000000010091",
+      "width": 16,
+      "height": 16,
+      "source": "Assets/Spritesheet/industrial.v2.png",
+      "unityFileId": 1385444648,
+      "pixelsPerUnit": 16
+    },
+    {
+      "name": "map-Level3-0",
+      "path": "Assets/Art/map-Level3-0.png",
+      "handle": "6200000000000010092",
+      "width": 96,
+      "height": 80,
+      "source": "Assets/Scenes/Level3.unity"
+    },
+    {
+      "name": "map-Level3-1",
+      "path": "Assets/Art/map-Level3-1.png",
+      "handle": "6200000000000010093",
+      "width": 16,
+      "height": 224,
+      "source": "Assets/Scenes/Level3.unity"
+    },
+    {
+      "name": "map-Level3-2",
+      "path": "Assets/Art/map-Level3-2.png",
+      "handle": "6200000000000010094",
+      "width": 256,
+      "height": 256,
+      "source": "Assets/Scenes/Level3.unity"
+    },
+    {
+      "name": "sprite-industrial.v2_67",
+      "path": "Assets/Art/sprite-industrial.v2_67.png",
+      "handle": "6200000000000010095",
+      "width": 16,
+      "height": 16,
+      "source": "Assets/Spritesheet/industrial.v2.png",
+      "unityFileId": 1509961657,
+      "pixelsPerUnit": 16
+    },
+    {
+      "name": "sprite-industrial.v2_68",
+      "path": "Assets/Art/sprite-industrial.v2_68.png",
+      "handle": "6200000000000010096",
+      "width": 16,
+      "height": 16,
+      "source": "Assets/Spritesheet/industrial.v2.png",
+      "unityFileId": 1625390958,
+      "pixelsPerUnit": 16
+    },
+    {
+      "name": "map-Level3-3",
+      "path": "Assets/Art/map-Level3-3.png",
+      "handle": "6200000000000010097",
+      "width": 96,
+      "height": 160,
+      "source": "Assets/Scenes/Level3.unity"
+    },
+    {
+      "name": "sprite-industrial.v2_173",
+      "path": "Assets/Art/sprite-industrial.v2_173.png",
+      "handle": "6200000000000010098",
+      "width": 16,
+      "height": 16,
+      "source": "Assets/Spritesheet/industrial.v2.png",
+      "unityFileId": -1419219996,
+      "pixelsPerUnit": 16
+    },
+    {
+      "name": "sprite-industrial.v2_174",
+      "path": "Assets/Art/sprite-industrial.v2_174.png",
+      "handle": "6200000000000010099",
+      "width": 16,
+      "height": 16,
+      "source": "Assets/Spritesheet/industrial.v2.png",
+      "unityFileId": -1341986830,
+      "pixelsPerUnit": 16
+    },
+    {
+      "name": "sprite-industrial.v2_175",
+      "path": "Assets/Art/sprite-industrial.v2_175.png",
+      "handle": "6200000000000010100",
+      "width": 16,
+      "height": 16,
+      "source": "Assets/Spritesheet/industrial.v2.png",
+      "unityFileId": 1104759406,
+      "pixelsPerUnit": 16
+    },
+    {
+      "name": "sprite-industrial.v2_176",
+      "path": "Assets/Art/sprite-industrial.v2_176.png",
+      "handle": "6200000000000010101",
+      "width": 16,
+      "height": 16,
+      "source": "Assets/Spritesheet/industrial.v2.png",
+      "unityFileId": 1673665464,
+      "pixelsPerUnit": 16
+    },
+    {
+      "name": "map-Level4-0",
+      "path": "Assets/Art/map-Level4-0.png",
+      "handle": "6200000000000010102",
+      "width": 224,
+      "height": 16,
+      "source": "Assets/Scenes/Level4.unity"
+    },
+    {
+      "name": "map-Level4-1",
+      "path": "Assets/Art/map-Level4-1.png",
+      "handle": "6200000000000010103",
+      "width": 32,
+      "height": 32,
+      "source": "Assets/Scenes/Level4.unity"
+    },
+    {
+      "name": "map-Level4-2",
+      "path": "Assets/Art/map-Level4-2.png",
+      "handle": "6200000000000010104",
+      "width": 256,
+      "height": 256,
+      "source": "Assets/Scenes/Level4.unity"
+    },
+    {
+      "name": "map-Level4-3",
+      "path": "Assets/Art/map-Level4-3.png",
+      "handle": "6200000000000010105",
+      "width": 176,
+      "height": 32,
+      "source": "Assets/Scenes/Level4.unity"
+    },
+    {
+      "name": "map-Level4-4",
+      "path": "Assets/Art/map-Level4-4.png",
+      "handle": "6200000000000010106",
+      "width": 16,
+      "height": 16,
+      "source": "Assets/Scenes/Level4.unity"
+    },
+    {
+      "name": "sprite-industrial.v2_142",
+      "path": "Assets/Art/sprite-industrial.v2_142.png",
+      "handle": "6200000000000010107",
+      "width": 16,
+      "height": 16,
+      "source": "Assets/Spritesheet/industrial.v2.png",
+      "unityFileId": -423946032,
+      "pixelsPerUnit": 16
+    },
+    {
+      "name": "sprite-industrial.v2_143",
+      "path": "Assets/Art/sprite-industrial.v2_143.png",
+      "handle": "6200000000000010108",
+      "width": 16,
+      "height": 16,
+      "source": "Assets/Spritesheet/industrial.v2.png",
+      "unityFileId": 1795644413,
+      "pixelsPerUnit": 16
+    },
+    {
+      "name": "sprite-industrial.v2_124",
+      "path": "Assets/Art/sprite-industrial.v2_124.png",
+      "handle": "6200000000000010109",
+      "width": 16,
+      "height": 16,
+      "source": "Assets/Spritesheet/industrial.v2.png",
+      "unityFileId": 447593082,
+      "pixelsPerUnit": 16
+    },
+    {
+      "name": "sprite-industrial.v2_102",
+      "path": "Assets/Art/sprite-industrial.v2_102.png",
+      "handle": "6200000000000010110",
+      "width": 16,
+      "height": 16,
+      "source": "Assets/Spritesheet/industrial.v2.png",
+      "unityFileId": -1609793970,
+      "pixelsPerUnit": 16
+    },
+    {
+      "name": "sprite-industrial.v2_103",
+      "path": "Assets/Art/sprite-industrial.v2_103.png",
+      "handle": "6200000000000010111",
+      "width": 16,
+      "height": 16,
+      "source": "Assets/Spritesheet/industrial.v2.png",
+      "unityFileId": -1090479607,
+      "pixelsPerUnit": 16
+    },
+    {
+      "name": "map-Level5-0",
+      "path": "Assets/Art/map-Level5-0.png",
+      "handle": "6200000000000010112",
+      "width": 32,
+      "height": 80,
+      "source": "Assets/Scenes/Level5.unity"
+    },
+    {
+      "name": "map-Level5-1",
+      "path": "Assets/Art/map-Level5-1.png",
+      "handle": "6200000000000010113",
+      "width": 224,
+      "height": 128,
+      "source": "Assets/Scenes/Level5.unity"
+    },
+    {
+      "name": "map-Level5-2",
+      "path": "Assets/Art/map-Level5-2.png",
+      "handle": "6200000000000010114",
+      "width": 256,
+      "height": 256,
+      "source": "Assets/Scenes/Level5.unity"
+    },
+    {
+      "name": "map-Level5-3",
+      "path": "Assets/Art/map-Level5-3.png",
+      "handle": "6200000000000010115",
+      "width": 224,
+      "height": 176,
+      "source": "Assets/Scenes/Level5.unity"
+    },
+    {
+      "name": "map-Level5-4",
+      "path": "Assets/Art/map-Level5-4.png",
+      "handle": "6200000000000010116",
+      "width": 144,
+      "height": 192,
+      "source": "Assets/Scenes/Level5.unity"
+    },
+    {
+      "name": "map-final-0",
+      "path": "Assets/Art/map-final-0.png",
+      "handle": "6200000000000010117",
+      "width": 256,
+      "height": 256,
+      "source": "Assets/Scenes/final.unity"
+    },
+    {
+      "name": "map-final-1",
+      "path": "Assets/Art/map-final-1.png",
+      "handle": "6200000000000010118",
+      "width": 32,
+      "height": 16,
+      "source": "Assets/Scenes/final.unity"
+    },
+    {
+      "name": "tiled-sprite-industrial.v2_57-224x16",
+      "path": "Assets/Art/tiled-sprite-industrial.v2_57-224x16.png",
+      "handle": "6200000000000010119",
+      "width": 224,
+      "height": 16,
+      "source": "Assets/Spritesheet/industrial.v2.png"
+    },
+    {
+      "name": "sprite-industrial.v2_306",
+      "path": "Assets/Art/sprite-industrial.v2_306.png",
+      "handle": "6200000000000010120",
+      "width": 16,
+      "height": 16,
+      "source": "Assets/Spritesheet/industrial.v2.png",
+      "unityFileId": -1641242784,
+      "pixelsPerUnit": 16
+    },
+    {
+      "name": "sprite-industrial.v2_307",
+      "path": "Assets/Art/sprite-industrial.v2_307.png",
+      "handle": "6200000000000010121",
+      "width": 16,
+      "height": 16,
+      "source": "Assets/Spritesheet/industrial.v2.png",
+      "unityFileId": -1826445781,
+      "pixelsPerUnit": 16
+    },
+    {
+      "name": "sprite-industrial.v2_308",
+      "path": "Assets/Art/sprite-industrial.v2_308.png",
+      "handle": "6200000000000010122",
+      "width": 16,
+      "height": 16,
+      "source": "Assets/Spritesheet/industrial.v2.png",
+      "unityFileId": 18608645,
+      "pixelsPerUnit": 16
+    },
+    {
+      "name": "sprite-industrial.v2_309",
+      "path": "Assets/Art/sprite-industrial.v2_309.png",
+      "handle": "6200000000000010123",
+      "width": 16,
+      "height": 16,
+      "source": "Assets/Spritesheet/industrial.v2.png",
+      "unityFileId": 1801753388,
+      "pixelsPerUnit": 16
+    },
+    {
+      "name": "sprite-industrial.v2_323",
+      "path": "Assets/Art/sprite-industrial.v2_323.png",
+      "handle": "6200000000000010124",
+      "width": 16,
+      "height": 16,
+      "source": "Assets/Spritesheet/industrial.v2.png",
+      "unityFileId": -537568377,
+      "pixelsPerUnit": 16
+    },
+    {
+      "name": "sprite-industrial.v2_324",
+      "path": "Assets/Art/sprite-industrial.v2_324.png",
+      "handle": "6200000000000010125",
+      "width": 16,
+      "height": 16,
+      "source": "Assets/Spritesheet/industrial.v2.png",
+      "unityFileId": 263747065,
+      "pixelsPerUnit": 16
+    },
+    {
+      "name": "sprite-industrial.v2_325",
+      "path": "Assets/Art/sprite-industrial.v2_325.png",
+      "handle": "6200000000000010126",
+      "width": 16,
+      "height": 16,
+      "source": "Assets/Spritesheet/industrial.v2.png",
+      "unityFileId": -1003832635,
+      "pixelsPerUnit": 16
+    },
+    {
+      "name": "sprite-industrial.v2_326",
+      "path": "Assets/Art/sprite-industrial.v2_326.png",
+      "handle": "6200000000000010127",
+      "width": 16,
+      "height": 16,
+      "source": "Assets/Spritesheet/industrial.v2.png",
+      "unityFileId": 1088389957,
+      "pixelsPerUnit": 16
+    },
+    {
+      "name": "sprite-industrial.v2_327",
+      "path": "Assets/Art/sprite-industrial.v2_327.png",
+      "handle": "6200000000000010128",
+      "width": 16,
+      "height": 16,
+      "source": "Assets/Spritesheet/industrial.v2.png",
+      "unityFileId": -482348659,
+      "pixelsPerUnit": 16
+    },
+    {
+      "name": "sprite-industrial.v2_328",
+      "path": "Assets/Art/sprite-industrial.v2_328.png",
+      "handle": "6200000000000010129",
+      "width": 16,
+      "height": 16,
+      "source": "Assets/Spritesheet/industrial.v2.png",
+      "unityFileId": 59980101,
+      "pixelsPerUnit": 16
+    },
+    {
+      "name": "sprite-industrial.v2_329",
+      "path": "Assets/Art/sprite-industrial.v2_329.png",
+      "handle": "6200000000000010130",
+      "width": 16,
+      "height": 16,
+      "source": "Assets/Spritesheet/industrial.v2.png",
+      "unityFileId": -1653852392,
+      "pixelsPerUnit": 16
+    },
+    {
+      "name": "sprite-industrial.v2_310",
+      "path": "Assets/Art/sprite-industrial.v2_310.png",
+      "handle": "6200000000000010131",
+      "width": 16,
+      "height": 16,
+      "source": "Assets/Spritesheet/industrial.v2.png",
+      "unityFileId": 1117820206,
+      "pixelsPerUnit": 16
+    },
+    {
+      "name": "sprite-industrial.v2_311",
+      "path": "Assets/Art/sprite-industrial.v2_311.png",
+      "handle": "6200000000000010132",
+      "width": 16,
+      "height": 16,
+      "source": "Assets/Spritesheet/industrial.v2.png",
+      "unityFileId": -521289476,
+      "pixelsPerUnit": 16
+    },
+    {
+      "name": "sprite-industrial.v2_312",
+      "path": "Assets/Art/sprite-industrial.v2_312.png",
+      "handle": "6200000000000010133",
+      "width": 16,
+      "height": 16,
+      "source": "Assets/Spritesheet/industrial.v2.png",
+      "unityFileId": 1537410434,
+      "pixelsPerUnit": 16
+    },
+    {
+      "name": "sprite-industrial.v2_313",
+      "path": "Assets/Art/sprite-industrial.v2_313.png",
+      "handle": "6200000000000010134",
+      "width": 16,
+      "height": 16,
+      "source": "Assets/Spritesheet/industrial.v2.png",
+      "unityFileId": -523879205,
+      "pixelsPerUnit": 16
+    },
+    {
+      "name": "sprite-industrial.v2_332",
+      "path": "Assets/Art/sprite-industrial.v2_332.png",
+      "handle": "6200000000000010135",
+      "width": 16,
+      "height": 16,
+      "source": "Assets/Spritesheet/industrial.v2.png",
+      "unityFileId": -1677774871,
+      "pixelsPerUnit": 16
+    },
+    {
+      "name": "sprite-industrial.v2_246",
+      "path": "Assets/Art/sprite-industrial.v2_246.png",
+      "handle": "6200000000000010136",
+      "width": 16,
+      "height": 16,
+      "source": "Assets/Spritesheet/industrial.v2.png",
+      "unityFileId": -1540832215,
+      "pixelsPerUnit": 16
+    },
+    {
+      "name": "sprite-industrial.v2_213",
+      "path": "Assets/Art/sprite-industrial.v2_213.png",
+      "handle": "6200000000000010137",
+      "width": 16,
+      "height": 16,
+      "source": "Assets/Spritesheet/industrial.v2.png",
+      "unityFileId": 934682981,
+      "pixelsPerUnit": 16
+    },
+    {
+      "name": "sprite-industrial.v2_214",
+      "path": "Assets/Art/sprite-industrial.v2_214.png",
+      "handle": "6200000000000010138",
+      "width": 16,
+      "height": 16,
+      "source": "Assets/Spritesheet/industrial.v2.png",
+      "unityFileId": -213054251,
+      "pixelsPerUnit": 16
+    },
+    {
+      "name": "sprite-industrial.v2_215",
+      "path": "Assets/Art/sprite-industrial.v2_215.png",
+      "handle": "6200000000000010139",
+      "width": 16,
+      "height": 16,
+      "source": "Assets/Spritesheet/industrial.v2.png",
+      "unityFileId": 773380578,
+      "pixelsPerUnit": 16
+    },
+    {
+      "name": "sprite-industrial.v2_216",
+      "path": "Assets/Art/sprite-industrial.v2_216.png",
+      "handle": "6200000000000010140",
+      "width": 16,
+      "height": 16,
+      "source": "Assets/Spritesheet/industrial.v2.png",
+      "unityFileId": 1770029273,
+      "pixelsPerUnit": 16
+    },
+    {
+      "name": "sprite-industrial.v2_217",
+      "path": "Assets/Art/sprite-industrial.v2_217.png",
+      "handle": "6200000000000010141",
+      "width": 16,
+      "height": 16,
+      "source": "Assets/Spritesheet/industrial.v2.png",
+      "unityFileId": 733975924,
+      "pixelsPerUnit": 16
+    },
+    {
+      "name": "sprite-industrial.v2_218",
+      "path": "Assets/Art/sprite-industrial.v2_218.png",
+      "handle": "6200000000000010142",
+      "width": 16,
+      "height": 16,
+      "source": "Assets/Spritesheet/industrial.v2.png",
+      "unityFileId": 1349893608,
+      "pixelsPerUnit": 16
+    },
+    {
+      "name": "sprite-pixel--1-_0",
+      "path": "Assets/Art/sprite-pixel--1-_0.png",
+      "handle": "6200000000000010143",
+      "width": 490,
+      "height": 120,
+      "source": "Assets/Scenes/Title.png",
+      "unityFileId": -681564848453251676,
+      "pixelsPerUnit": 100
+    },
+    {
+      "name": "sprite-pixel--2-_0",
+      "path": "Assets/Art/sprite-pixel--2-_0.png",
+      "handle": "6200000000000010144",
+      "width": 485,
+      "height": 120,
+      "source": "Assets/Scenes/Start.png",
+      "unityFileId": -3650637318166952343,
+      "pixelsPerUnit": 100
+    },
+    {
+      "name": "sprite-pixel_0",
+      "path": "Assets/Art/sprite-pixel_0.png",
+      "handle": "6200000000000010145",
+      "width": 240,
+      "height": 120,
+      "source": "Assets/Scenes/Quat.png",
+      "unityFileId": -5483215198695101708,
+      "pixelsPerUnit": 100
+    },
+    {
+      "name": "sprite-thx",
+      "path": "Assets/Art/sprite-thx.png",
+      "handle": "6200000000000010146",
+      "width": 256,
+      "height": 64,
+      "source": "Assets/Spritesheet/thx.png",
+      "unityFileId": 21300000,
+      "pixelsPerUnit": 100
+    }
+  ],
+  "animations": {
+    "Idle": [
+      "6200000000000010120",
+      "6200000000000010121",
+      "6200000000000010122",
+      "6200000000000010123"
+    ],
+    "Run": [
+      "6200000000000010003",
+      "6200000000000010124",
+      "6200000000000010125",
+      "6200000000000010126",
+      "6200000000000010127",
+      "6200000000000010128",
+      "6200000000000010129",
+      "6200000000000010130"
+    ],
+    "Fall": [
+      "6200000000000010131",
+      "6200000000000010132",
+      "6200000000000010133",
+      "6200000000000010134"
+    ],
+    "Dead": "6200000000000010135",
+    "ButtonOn": [
+      "6200000000000010136"
+    ],
+    "BulbOn": [
+      "6200000000000010137",
+      "6200000000000010138",
+      "6200000000000010139",
+      "6200000000000010140",
+      "6200000000000010141",
+      "6200000000000010142"
+    ],
+    "ButtonOff": [
+      "6200000000000010006"
+    ],
+    "BulbOff": [
+      "6200000000000010007"
+    ],
+    "Title": "6200000000000010143",
+    "Start": "6200000000000010144",
+    "Quit": "6200000000000010145",
+    "Thanks": "6200000000000010146"
+  }
+}

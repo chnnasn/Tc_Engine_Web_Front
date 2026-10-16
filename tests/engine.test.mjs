@@ -1,9 +1,22 @@
 import { test } from 'node:test'
 import assert from 'node:assert/strict'
 import { EditorProtocol, EngineError, assertHandle } from '../src/engine/protocol.ts'
-import { bootPlayer, shutdown, compileAndInstall, bytesToBase64, capabilityErrors, scriptAssetsJson } from '../src/engine/runtime.ts'
+import { bootPlayer, shutdown, compileAndInstall, bytesToBase64, capabilityErrors, scriptAssetsJson, FrameClock } from '../src/engine/runtime.ts'
 import { assertDocument, engineCommit, validFilePath } from '../src/engine/storage.ts'
 import { attachScripts, detachScripts, readScripts } from '../src/engine/scene-archive.ts'
+
+test('frame clock resumes without simulating time spent in a hidden tab', () => {
+  const clock = new FrameClock()
+  assert.equal(clock.step(0), 0)
+  assert.equal(clock.step(16), .016)
+  assert.equal(clock.step(32), .016)
+  clock.reset() // visibilitychange: hidden
+  clock.reset() // visibilitychange: visible
+  assert.equal(clock.step(60000), 0)
+  assert.equal(clock.step(60016), .016)
+  assert.equal(clock.step(60516), .1, 'visible stalls retain the bounded update')
+  assert.equal(clock.step(60515), 0, 'a non-increasing timestamp cannot run physics backwards')
+})
 
 test('uint64 boundaries remain exact strings through transactions and schemas', () => {
   const max = '18446744073709551615'
@@ -77,7 +90,9 @@ test('capability probe never requires cross-origin isolation for the single-thre
 test('project document validates pinned engine, uint64, base64 and file paths', () => {
   const document = { format: 'tomcat-engine-project', version: 1, engineCommit, sceneHandle: '18446744073709551615', archive: 'scene', files: { 'ProjectSettings/PlayerSettings.json': 'e30=' } }
   assertDocument(document)
-  assert.throws(() => assertDocument({ ...document, engineCommit: 'old' }))
+  for (const commit of ['5734c56ae05241b01a684afb8e62f2b164c69ba2', '0b8829a864ff53ad0ad2c7ded56ef433325a836a']) {
+    assertDocument({ ...document, engineCommit: commit })
+  }
   assert.throws(() => assertDocument({ ...document, engineCommit: 'old' }))
   assert.throws(() => assertDocument({ ...document, sceneHandle: 12 }))
   assert.throws(() => assertDocument({ ...document, files: { '../Project.tcproj': 'e30=' } }))
@@ -90,6 +105,14 @@ test('project document validates pinned engine, uint64, base64 and file paths', 
 test('old engine projects are rejected', () => {
   const document = { format: 'tomcat-engine-project', version: 2, engineCommit: '1223a9610066d420485fa7f273b0eeca34835bbf', sceneHandle: '1', archive: 'scene', files: {} }
   assert.throws(() => assertDocument(document), /不兼容的引擎版本/)
+})
+test('project validation accepts multi-MiB assets without overflowing the regexp stack', () => {
+  const document = { format: 'tomcat-engine-project', version: 1, engineCommit, sceneHandle: '1', archive: 'scene', files: {} }
+  const validate = encoded => assertDocument({ ...document, files: { 'Assets/large-font.ttf': encoded } })
+  validate(Buffer.alloc(4 * 1024 * 1024, 255).toString('base64'))
+  for (const encoded of ['', 'AA==', 'AAA=', 'AAAA']) validate(encoded)
+  for (const encoded of ['A===', 'AA=A', 'AAA', 'AAA\n', 'AAA\r', 'AAAA\n', '====']) assert.throws(() => validate(encoded), /无效的项目文件/)
+  assert.throws(() => validate('A'.repeat(Math.ceil(8 * 1024 * 1024 / 3) * 4 + 4)), /8 MiB/)
 })
 
 test('Managed API v6 rejects previous script ABIs even when scene formats match', () => {

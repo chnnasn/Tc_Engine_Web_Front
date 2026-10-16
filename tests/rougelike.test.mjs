@@ -5,7 +5,7 @@ import { readFileSync } from 'node:fs'
 import { validatePackage, handles } from '../scripts/build-rougelike.mjs'
 import { games } from '../src/ui/data.ts'
 
-test('homepage Rougelike ships a complete verified native Tc package for the pinned engine', () => {
+test('homepage Rougelike ships a complete verified native Tc package for a supported engine', () => {
   const game = games.find(game => game.id === 'rougelike')
   assert.ok(game?.packageUrl && game.sourceUrl)
   const bytes = readFileSync(new URL(`../public${game.packageUrl}`, import.meta.url))
@@ -14,7 +14,8 @@ test('homepage Rougelike ships a complete verified native Tc package for the pin
   assert.equal(validatePackage(bytes), manifest.entries)
   assert.equal(bytes.length, manifest.byteLength)
   assert.equal(createHash('sha256').update(bytes).digest('hex'), manifest.sha256)
-  assert.equal(manifest.engineCommit, lock.commit)
+  assert.ok([lock.commit, ...(lock.legacyCommits || [])].includes(manifest.engineCommit),
+    'The published sample must use the pinned engine or an explicitly supported previous engine')
   // Audio and both source fonts must be in the shipped bundle, not only on disk.
   assert.ok(manifest.entries >= Object.keys(handles).length - 1)
   const corrupt = Buffer.from(bytes)

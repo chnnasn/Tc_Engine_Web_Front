@@ -2,3 +2,6 @@
 # Binary images, audio, fonts and archives retain their original bytes.
 samples/rougelike/** text=auto eol=lf
 public/samples/rougelike/manifest.json text eol=lf
+# Return's native editor sources have mixed line endings. Preserve their
+# validated bytes so a checkout and the downloadable archive stay identical.
+samples/return/** -text whitespace=cr-at-eol,-blank-at-eof
