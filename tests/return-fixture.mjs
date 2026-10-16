@@ -27,6 +27,7 @@ export function productionReceipt() {
   return hash(JSON.stringify(files))
 }
 const diagnostics = `
+    bool qaSelectionApplied,qaNavigationReady;
     // QA COPY ONLY: F8 reads managed state after a real update, without mutation.
     static string QaNumber(float value)=>value.ToString("R",System.Globalization.CultureInfo.InvariantCulture);
     void QaDump()
@@ -106,13 +107,34 @@ export function buildFixture({ stage = 0, realm = 0, directory, mode = 'navigati
       for (const marker of ['        Load(0);', '        Flush();', '    void OnDestroy()=>audio?.Stop();']) {
         assert.equal(original.split(marker).length, 2, `Fixture source anchor changed: ${marker}`)
       }
-      modified = original.replace('        Load(0);', `        ${initialization}`)
-        .replace('        Flush();', `        Flush();
-        // QA COPY ONLY: stage/realm selection is never compiled into production.
-        if(Input.WasKeyPressed(KeyCode.F9))Load(stage==7?1:stage+1);
-        if(Input.WasKeyPressed(KeyCode.F10)&&stage>0){realm=1-realm;RefreshRealm();if(stage==1&&realm==1)player.Reset(4.8f,-6.45f);if(stage==3&&realm==1)player.Reset(2.5f,-6.45f);Log.Info("[ReturnQA] realm:"+realm);}
-        if(Input.WasKeyPressed(KeyCode.F8))QaDump();`)
+      // Keep the real Awake Load(0): menu-only font/audio warmup must complete
+      // before selecting a test stage. This hook precedes production's ready
+      // assignment, so selection cannot happen in the tick that first sets it.
+      modified = original.replace('        Flush();', `        Flush();
+        // QA COPY ONLY: preserve production menu warmup before stage selection.
+        if(ready&&!qaNavigationReady)
+        {
+            if(!qaSelectionApplied)
+            {
+                ${initialization}
+                qaSelectionApplied=true;
+                Log.Info("[ReturnQA] selected:${stage}:${realm} after-menu-ready");
+            }
+            else
+            {
+                // This tick has now flushed the selected stage's visuals.
+                qaNavigationReady=true;
+                Log.Info("[ReturnQA] initialized:${stage}:${realm}");
+            }
+        }
+        if(qaNavigationReady)
+        {
+            if(Input.WasKeyPressed(KeyCode.F9))Load(stage==7?1:stage+1);
+            if(Input.WasKeyPressed(KeyCode.F10)&&stage>0){realm=1-realm;RefreshRealm();if(stage==1&&realm==1)player.Reset(4.8f,-6.45f);if(stage==3&&realm==1)player.Reset(2.5f,-6.45f);Log.Info("[ReturnQA] realm:"+realm);}
+            if(Input.WasKeyPressed(KeyCode.F8))QaDump();
+        }`)
         .replace('    void OnDestroy()=>audio?.Stop();', diagnostics + '\n    void OnDestroy()=>audio?.Stop();')
+      assert.equal(modified.split('        Load(0);').length, 2, 'Navigation must retain the production menu boot')
     }
     writeFileSync(join(copy, 'Assets/Scripts/ReturnGame.cs'), modified)
     const cooked = spawnSync(process.execPath, [worker, join(copy, 'Project.tcproj'), packagePath], {
@@ -120,8 +142,9 @@ export function buildFixture({ stage = 0, realm = 0, directory, mode = 'navigati
     })
     assert.equal(cooked.status, 0, `QA cook failed: ${cooked.error?.message || cooked.signal || cooked.status}`)
     const bytes = readFileSync(packagePath)
-    manifest = { purpose: mode === 'legacy-flip' ? 'QA only: original negative XY scale and Z-only rotation through actual managed Transform setters. Normal production menu/input; no QA keys or state mutations.' : 'QA only: initial stage/realm, F9 stage navigation, F10 realm selection, read-only F8 diagnostics. Not a natural playthrough.',
+    manifest = { purpose: mode === 'legacy-flip' ? 'QA only: original negative XY scale and Z-only rotation through actual managed Transform setters. Normal production menu/input; no QA keys or state mutations.' : 'QA only: real production menu warmup, then initial stage/realm after ready and one visual flush; F9 stage navigation, F10 realm selection, read-only F8 diagnostics. Not a natural playthrough.',
       mode, stage, realm, engineCommit: lock.commit, productionTreeSha256, fixtureBuilderSha256, toolchainHashes, initialization,
+      ...(mode === 'navigation' ? { startup: 'production-menu-ready-then-selection-flush', initializedMarker: `[ReturnQA] initialized:${stage}:${realm}` } : {}),
       fixtureSourceSha256: hash(modified), packageSha256: hash(bytes), packageBytes: bytes.length, entries: validatePackage(bytes) }
     writeFileSync(manifestPath, JSON.stringify(manifest, null, 2) + '\n')
   }

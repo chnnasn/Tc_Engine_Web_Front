@@ -148,13 +148,30 @@ async function measure(label, action = () => wait(seconds * 1000)) {
   assertRuntimeHealthy()
   await checkpoint(`${label}:before`)
   await frame.evaluate(() => { const state = window.__returnObservation; state.samples = []; state.dropped = 0; state.recording = true })
-  try { await action() } finally { await frame.evaluate(() => { window.__returnObservation.recording = false }) }
+  const actionStartedAt = Date.now()
+  let actionDurationMs, samplingExtensionMs = 0
+  try {
+    await action()
+    actionDurationMs = Date.now() - actionStartedAt
+    // SwiftShader can deliver fewer than ten frames during a short transition.
+    // Keep collecting actual PlayerFrame calls, with a bound that still fails
+    // a stalled runtime. Record this extension separately from the action.
+    const extensionStartedAt = Date.now(), deadline = extensionStartedAt + 5000
+    let count = await frame.evaluate(() => window.__returnObservation.samples.filter(sample => sample.engineCalls > 0).length)
+    while (count < 10 && Date.now() < deadline) {
+      assertRuntimeHealthy()
+      await wait(50)
+      count = await frame.evaluate(() => window.__returnObservation.samples.filter(sample => sample.engineCalls > 0).length)
+    }
+    samplingExtensionMs = Date.now() - extensionStartedAt
+  } finally { await frame.evaluate(() => { window.__returnObservation.recording = false }) }
   const observed = await frame.evaluate(() => ({ samples: window.__returnObservation.samples, dropped: window.__returnObservation.dropped }))
   const engine = observed.samples.filter(sample => sample.engineCalls > 0)
   assert.equal(observed.dropped, 0, `${label}: observation capacity must not be exceeded`)
-  assert.ok(engine.length >= 10, `${label}: actual PlayerFrame calls must be measured`)
+  assert.ok(engine.length >= 10, `${label}: expected at least 10 actual PlayerFrame calls, observed ${engine.length}`)
   const intervals = engine.slice(1).map((sample, index) => sample.timestamp - engine[index].timestamp)
-  const phase = { label, callbackCpu: stats(engine.map(sample => sample.callbackMs)), playerFrameCpu: stats(engine.map(sample => sample.engineMs)),
+  const phase = { label, actionDurationMs, samplingExtensionMs,
+    callbackCpu: stats(engine.map(sample => sample.callbackMs)), playerFrameCpu: stats(engine.map(sample => sample.engineMs)),
     animationFrameIntervals: stats(intervals), callbackCadenceHz: intervals.length * 1000 / intervals.reduce((a, b) => a + b, 0), samples: observed.samples }
   phases.push(phase)
   assertRuntimeHealthy()

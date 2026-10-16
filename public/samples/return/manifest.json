@@ -4,8 +4,8 @@
   "engine": "TomCat",
   "engineCommit": "9a0ccad79bb4ec33225bd8210fe9b47438bb06bc",
   "packageVersion": 8,
-  "byteLength": 15191027,
-  "sha256": "5f147302510cbaf21cc8cf9db766c22a411cff38ab670aa5d7528b7749a771dc",
+  "byteLength": 15192735,
+  "sha256": "f93ddc5c83c5130a025430bff6723ed9f7368ccc404fe2fb4a16f940e4fc7d54",
   "entries": 129,
   "packageUrl": "/samples/return/return.tcpak",
   "sourceUrl": "/samples/return/return-source.zip"

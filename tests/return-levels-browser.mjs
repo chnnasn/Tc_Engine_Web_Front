@@ -10,6 +10,33 @@ import { chromium } from 'playwright'
 import { buildFixture, productionReceipt, root } from './return-fixture.mjs'
 import { readLoadedEngine } from './engine-provenance.mjs'
 
+function assertLevel3Boxes(state, settled = false) {
+  if (state.stage !== 3) return
+  assert.equal(state.boxes.length, 2, 'Level3 must retain both authored puzzle boxes')
+  for (const box of state.boxes) {
+    assert.ok(box.enabled && Number.isFinite(box.x) && Number.isFinite(box.y), `Level3 box ${box.index} must stay enabled with finite coordinates`)
+    // Authored common floor top=-7, collider offsetY=.06 and H=.96.
+    // The box origin must remain at/above -6.58 after overlap resolution.
+    assert.ok(box.y >= -6.60 && box.y < 7.6 && box.x > -8 && box.x < 8, `Level3 box ${box.index} escaped the authored room: (${box.x}, ${box.y})`)
+  }
+  if (settled) {
+    const lower = state.boxes.find(box => box.index === 1), upper = state.boxes.find(box => box.index === 5)
+    assert.ok(lower && Math.abs(lower.y + 6.58) < .02, 'Level3 lower box must settle on the common floor at origin Y=-6.58')
+    assert.ok(upper && Math.abs(upper.y + .58) < .02, 'Level3 upper box must remain on the central platform at origin Y=-0.58')
+  }
+}
+// Read-only negative-control path: apply the same assertions to retained raw
+// evidence without cooking, launching a browser or touching production assets.
+const boxEvidence = process.argv.find(value => value.startsWith('--check-box-evidence='))?.slice('--check-box-evidence='.length)
+if (boxEvidence) {
+  const saved = JSON.parse(readFileSync(boxEvidence, 'utf8'))
+  const states = saved.runs.filter(run => run.selection.stage === 3).flatMap(run => run.snapshots)
+  assert.ok(states.length >= 2, 'Evidence must include Level3 box snapshots')
+  for (const state of states) assertLevel3Boxes(state, ['initial', 'after-idle'].includes(state.label))
+  console.log(`Level3 box evidence passed: ${states.length} snapshots`)
+  process.exit(0)
+}
+
 const startedAt = new Date().toISOString()
 const testSha256 = createHash('sha256').update(readFileSync(fileURLToPath(import.meta.url))).digest('hex')
 const output = resolve(process.env.TEST_RETURN_LEVELS_OUTPUT || `${root}/.engine/return-levels-qa/${startedAt.replace(/[:.]/g, '-')}-${process.pid}`)
@@ -24,6 +51,11 @@ const selections = (process.env.TEST_RETURN_LEVELS || Array.from({ length: 7 }, 
 assert.ok(selections.length >= 1 && selections.length <= 14)
 for (const selection of selections) assert.ok(Number.isInteger(selection.stage) && selection.stage >= 0 && selection.stage <= 6 && [0, 1].includes(selection.realm))
 const sourceReceipt = productionReceipt()
+const publishedReceipt = () => Object.fromEntries(['return.tcpak', 'return-source.zip', 'manifest.json'].map(name => {
+  const bytes = readFileSync(`${root}/public/samples/return/${name}`)
+  return [name, { bytes: bytes.length, sha256: createHash('sha256').update(bytes).digest('hex') }]
+}))
+const publishedBefore = publishedReceipt()
 const reuse = process.env.TEST_RETURN_FIXTURES ? JSON.parse(readFileSync(process.env.TEST_RETURN_FIXTURES, 'utf8')) : []
 const previous = reuse.find(value => value.manifest?.stage === 0 && value.manifest?.realm === 0)
 const fixture = buildFixture({ stage: 0, realm: 0, directory: previous?.directory }), fixtures = [fixture]
@@ -45,7 +77,7 @@ page.setDefaultTimeout(30000)
 page.on('pageerror', error => errors.push(error.message))
 page.on('console', message => { const value = message.text(); logs.push(value); if (value.includes('[Return]')) console.log(value) })
 await page.route('**/v1/**', route => route.fulfill({ status: route.request().url().includes('/auth/me') ? 401 : 200, json: [] }))
-let activePackage, failure, frame, canvas, renderer, receipt, loadedEngine, cover
+let activePackage, failure, frame, canvas, renderer, receipt, loadedEngine, cover, startup
 await page.route(url => new URL(url).pathname === '/samples/return/return.tcpak', route => route.fulfill({ status: 200, contentType: 'application/octet-stream', body: activePackage }))
 await page.addInitScript(() => {
   if (window === top) { window.__returnQaContexts = []; return }
@@ -87,10 +119,11 @@ await page.addInitScript(() => {
 })
 const wait = milliseconds => page.waitForTimeout(milliseconds)
 async function press(key) { await page.keyboard.press(key, { delay: 80 }); await wait(100) }
-async function snapshot(label) {
+async function snapshot(label, quick = false) {
   assertRuntimeHealthy()
   const begin = logs.length
-  await press('F8')
+  if (quick) await page.keyboard.press('F8', { delay: 10 })
+  else await press('F8')
   const deadline = Date.now() + 10000
   while (!logs.slice(begin).some(value => value.includes('[ReturnQA] end')) && Date.now() < deadline) await wait(50)
   const lines = logs.slice(begin).filter(value => value.includes('[ReturnQA] ')).map(value => value.split('[ReturnQA] ')[1])
@@ -163,6 +196,106 @@ async function tutorialMechanics() {
   assert.equal(states.at(-1).stage, 1, 'tutorial completion must load Level1')
   return states
 }
+async function level3Mechanics(run) {
+  const states = [], startLog = logs.length
+  run.level3Mechanics = { method: 'QA navigation selects Level3 before this route. F8 only reads state. R/A/D/Space/P are the only gameplay mutations; real spikes, boxes, stairs and goal are used.', states }
+  const observe = async label => {
+    const state = await snapshot(label, true); states.push(state)
+    assertLevel3Boxes(state)
+    return state
+  }
+  let state
+  async function walkTo(x, label, continuous = false) {
+    const deadline = Date.now() + 9000
+    if (continuous) {
+      const sign = Math.sign(x - state.x), key = sign > 0 ? 'd' : 'a'
+      await page.keyboard.down(key)
+      try {
+        do { await wait(20); state = await observe(label) }
+        while (state.stage === 3 && sign * (x - state.x) > .1 && Date.now() < deadline)
+      } finally { await page.keyboard.up(key) }
+      return
+    }
+    // Release between bounded pulses: a diagnostic round trip while holding a
+    // key can otherwise carry the player beyond a narrow stair's edge.
+    while (state.stage === 3 && Math.abs(x - state.x) > .06 && Date.now() < deadline) {
+      const distance = Math.abs(x - state.x)
+      await move(x > state.x ? 'd' : 'a', Math.max(10, Math.min(distance < .6 ? 20 : 80, distance / 5 * 1000 - 8)))
+      await wait(15); state = await observe(label)
+    }
+    assert.ok(state.stage !== 3 || Math.abs(x - state.x) < .3, `${label}: ordinary walking must reach X=${x}; got (${state.x},${state.y})`)
+  }
+  async function jumpTo(x, label, stationaryStartMs = 0) {
+    assert.ok(state.grounded, `${label}: jump starts grounded`)
+    const sign = Math.sign(x - state.x), key = sign > 0 ? 'd' : 'a', deadline = Date.now() + 2500
+    let moving = true, airborne = false
+    await page.keyboard.down('Space')
+    if (stationaryStartMs) await wait(stationaryStartMs)
+    await page.keyboard.down(key)
+    try {
+      do {
+        await wait(20); state = await observe(label)
+        airborne ||= !state.grounded
+        if (moving && sign * (x - state.x) <= .13) { await page.keyboard.up(key); moving = false }
+      } while (state.stage === 3 && !(airborne && state.grounded && !moving) && Date.now() < deadline)
+    } finally { await page.keyboard.up(key); await page.keyboard.up('Space') }
+    assert.ok(state.stage !== 3 || (airborne && state.grounded && Math.abs(x - state.x) < .6), `${label}: normal jump must land near X=${x}; got (${state.x},${state.y})`)
+  }
+  async function settle(label) { await wait(650); state = await observe(label) }
+  // F8 is observation only. All mutations below use ordinary R/A/D/Space input;
+  // no F9/F10 navigation, teleport, realm assignment or collision bypass.
+  await press('r'); await wait(300); state = await observe('level3-restart')
+  if (state.paused) { await press('p'); state = await observe('level3-resumed') }
+  assert.equal(state.stage, 3); assert.equal(state.realm, 0); assertLevel3Boxes(state, true)
+  await walkTo(1.6, 'approach-lower-box')
+  await jumpTo(3.65, 'jump-over-lower-box')
+  await walkTo(-2.31, 'place-lower-box-for-upper-box-drop')
+  let lower = state.boxes.find(box => box.index === 1)
+  assert.ok(Math.abs(lower.x + 3) < .2, 'Player contact must place the lower box for the upper box drop')
+  await jumpTo(-4.5, 'cross-life-spikes', 120)
+  await settle('death-realm-entry'); assert.equal(state.realm, 1, 'Original life spikes must reveal the death stairs')
+  await jumpTo(-3, 'jump-on-lower-box')
+  await jumpTo(-.35, 'jump-off-lower-box')
+  await jumpTo(1.1, 'first-death-step')
+  assert.ok(Math.abs(state.y + 5.5) < .03, 'First stair must support the player')
+  await walkTo(2.05, 'first-step-edge')
+  await jumpTo(4.1, 'second-death-step')
+  assert.ok(Math.abs(state.y + 3.5) < .03, 'Second stair must support the player')
+  await walkTo(3.9, 'second-step-edge')
+  await jumpTo(1.85, 'third-death-step')
+  assert.ok(Math.abs(state.y + 1.5) < .03, 'Third stair must support the player')
+  await jumpTo(1.05, 'central-platform-right')
+  if (state.y > .3) { await walkTo(1.05, 'step-off-upper-box-to-platform'); await settle('central-platform-settled') }
+  assert.ok(Math.abs(state.y + .5) < .03, 'Central platform must support the player beside the upper box')
+  await walkTo(-4.3, 'push-upper-box-off-central-left-edge', true)
+  await settle('upper-box-lands-on-lower')
+  lower = state.boxes.find(box => box.index === 1)
+  let upper = state.boxes.find(box => box.index === 5)
+  assert.ok(Math.abs(upper.x - lower.x) < .65 && Math.abs(upper.y - lower.y - .96) < .03, 'The real falling upper box must stack on the lower box')
+  await canvas.screenshot({ path: `${output}/level3-boxes-stacked.png` })
+  await jumpTo(-1.6, 'clear-stacked-boxes-to-the-right')
+  await walkTo(.5, 'approach-bottom-death-step')
+  await jumpTo(3, 'cross-bottom-death-step')
+  await walkTo(6.05, 'return-via-death-spikes')
+  await settle('life-realm-with-stacked-boxes'); assert.equal(state.realm, 0)
+  await walkTo(-1.8, 'approach-stack-without-touching-spikes')
+  await jumpTo(upper.x - .15, 'jump-on-stacked-boxes', 225)
+  assert.ok(state.y > -4.7, 'Both boxes must provide the height needed for the left ledge')
+  await canvas.screenshot({ path: `${output}/level3-standing-on-stack.png` })
+  // Stay just inside the box's left collider edge. The player collider still
+  // has ample support while the remaining ledge gap is within jump range.
+  await walkTo(upper.x - .5, 'upper-box-left-edge')
+  await settle('upper-box-takeoff-ready')
+  upper = state.boxes.find(box => box.index === 5)
+  assert.ok(state.grounded && Math.abs(state.y - (upper.y + 1.04)) < .03, 'Last jump must start stably supported by the upper box')
+  await jumpTo(-5.1, 'jump-to-original-life-goal')
+  const deadline = Date.now() + 5000
+  while (!logs.slice(startLog).some(line => line.includes('[Return] win:3')) && Date.now() < deadline) await wait(50)
+  assert.ok(logs.slice(startLog).some(line => line.includes('[Return] win:3')), 'Ordinary Level3 puzzle inputs must reach its original goal')
+  await wait(1700); state = await observe('level3-completed')
+  assert.equal(state.stage, 4, 'Level3 completion must advance to Level4')
+  return run.level3Mechanics
+}
 try {
   await page.goto(`${base}/games/return`)
   activePackage = readFileSync(fixture.packagePath)
@@ -171,6 +304,15 @@ try {
   const ready = Date.now() + 30000
   while (!logs.some(value => value.includes('[Return] ready')) && Date.now() < ready) await wait(100)
   assert.ok(logs.some(value => value.includes('[Return] ready')))
+  assert.equal(fixture.manifest.startup, 'production-menu-ready-then-selection-flush', 'Performance fixture must preserve real menu warmup')
+  const initialized = Date.now() + 30000
+  while (!logs.some(value => value.includes(fixture.manifest.initializedMarker)) && Date.now() < initialized) await wait(50)
+  const readyLog = logs.findIndex(value => value.includes('[Return] ready'))
+  const selectedLog = logs.findIndex(value => value.includes(`[ReturnQA] selected:${fixture.manifest.stage}:${fixture.manifest.realm} after-menu-ready`))
+  const initializedLog = logs.findIndex(value => value.includes(fixture.manifest.initializedMarker))
+  assert.ok(readyLog >= 0 && selectedLog > readyLog && initializedLog > selectedLog, 'Production menu ready must precede QA selection and selected-stage visual flush')
+  startup = { mode: fixture.manifest.startup, readyLogIndex: readyLog, selectedLogIndex: selectedLog, initializedLogIndex: initializedLog,
+    markers: [logs[readyLog], logs[selectedLog], logs[initializedLog]] }
   receipt = await page.evaluate(() => window.__returnQaReceipt)
   assert.equal(receipt?.sha256, fixture.manifest.packageSha256)
   assert.equal(receipt.bytes, fixture.manifest.packageBytes)
@@ -207,10 +349,13 @@ try {
     assert.equal(initial.corpses, 0, 'restart must reset the corpse pool')
     assert.ok(initial.maps.length > 0 && initial.maps.every(map => map.native), 'every rendered source map must be a native Tilemap2D entity')
     assert.ok(initial.maps.some(map => map.visible), 'current realm must have visible native maps')
+    assertLevel3Boxes(initial, true)
     run.snapshots.push(initial)
     const prefix = `${selection.stage}-${selection.realm}`
     await canvas.screenshot({ path: `${output}/${prefix}-initial.png` })
     run.phases.push(await measure('idle', () => wait(seconds * 1000)))
+    const idle = await snapshot('after-idle'); run.snapshots.push(idle)
+    assertLevel3Boxes(idle, true)
     run.phases.push(await measure('ordinary-movement', async () => {
       for (const key of ['d', 'a']) {
         await page.keyboard.down(key)
@@ -218,10 +363,12 @@ try {
       }
     }))
     const moved = await snapshot('after-movement'); run.snapshots.push(moved)
+    assertLevel3Boxes(moved)
     if (moved.grounded && moved.stage !== 6) {
       const jumpLog = logs.length
       await press('Space')
       const jumping = await snapshot('jump'); run.snapshots.push(jumping)
+      assertLevel3Boxes(jumping)
       assert.ok(logs.slice(jumpLog).some(value => value.includes('[Return] jump')), 'grounded jump must be accepted')
       assert.ok(jumping.y > moved.y + .05 || jumping.stage !== moved.stage, 'grounded jump must raise the player or finish the stage')
       await wait(700)
@@ -230,6 +377,10 @@ try {
     if (selection.stage === 0 && selection.realm === 0) {
       run.tutorialMechanics = await tutorialMechanics()
       await canvas.screenshot({ path: `${output}/tutorial-completed.png` })
+    }
+    if (selection.stage === 3 && selection.realm === 0 && process.env.TEST_RETURN_LEVEL3_COMPLETE === '1') {
+      run.level3Mechanics = await level3Mechanics(run)
+      await canvas.screenshot({ path: `${output}/level3-completed.png` })
     }
     run.logs = logs.slice(logStart).filter(value => value.includes('[Return]'))
     console.log(JSON.stringify({ ...selection, phases: run.phases.map(({ samples, ...summary }) => summary) }))
@@ -258,14 +409,15 @@ try {
   await page.waitForFunction(() => top.__returnQaContexts.every(value => value.state === 'closed'))
   assertRuntimeHealthy()
   assert.equal(productionReceipt(), sourceReceipt, 'QA must never mutate the production project')
+  assert.deepEqual(publishedReceipt(), publishedBefore, 'QA must never mutate the published ZIP, package or manifest')
 } catch (error) {
   failure = error
   if (canvas && frame && !frame.isDetached()) { try { await canvas.screenshot({ path: `${output}/failure.png` }) } catch {} }
 } finally {
   const evidence = { schema: 1, startedAt, finishedAt: new Date().toISOString(), status: failure ? 'failed' : 'passed', failure: failure?.stack, testSha256,
     concurrencyNote: process.env.TEST_PERFORMANCE_CONCURRENCY_NOTE || null,
-    renderer, browser: browser.version(), softwareGPURequested: softwareGPU, base, productionTreeSha256: sourceReceipt, fixture: fixture.manifest, receipt, loadedEngine, coverOnly, selections: coverOnly ? [] : selections, runs, errors, logs, cover,
-    measurement: coverOnly ? 'Cover capture only. A temporary cooked copy with QA-only F9 navigation selects Level3; real R resets the stage before the screenshot. No performance or full-stage coverage is claimed.' : 'One temporary cooked fixture selects stages/realms with QA-only F9/F10. F8 reads state outside timing intervals. These keys and diagnostics are absent from production. Every selection uses the real R restart and normal movement/jump input. Measured CPU is synchronous update/render submission; rAF timestamps show callback cadence, not GPU/display presentation. This suite is not a natural full-game playthrough.' }
+    renderer, browser: browser.version(), softwareGPURequested: softwareGPU, base, productionTreeSha256: sourceReceipt, publishedBefore, publishedAfter: publishedReceipt(), fixture: fixture.manifest, receipt, loadedEngine, startup, coverOnly, selections: coverOnly ? [] : selections, runs, errors, logs, cover,
+    measurement: coverOnly ? 'Cover capture only. A temporary cooked copy with QA-only F9 navigation selects Level3; real R resets the stage before the screenshot. No performance or full-stage coverage is claimed.' : 'One temporary cooked fixture retains real Awake Load(0) and menu font/audio warmup. Explicit ordered ready/selected/initialized markers precede measurement. QA-only F9/F10 select stages/realms; F8 reads state outside timing intervals. These keys and diagnostics are absent from production. Every selection uses the real R restart and normal movement/jump input. Measured CPU is synchronous update/render submission; rAF timestamps show callback cadence, not GPU/display presentation. This suite is not a natural full-game playthrough.' }
   writeFileSync(`${output}/evidence.json`, JSON.stringify(evidence, null, 2))
   console.log(`Return stage QA ${evidence.status}: ${output}`)
   await browser.close()

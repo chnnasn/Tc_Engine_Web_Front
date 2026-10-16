@@ -12,6 +12,7 @@ mkdirSync(generated, { recursive: true })
 const directory = mkdtempSync(join(generated, 'return-physics-'))
 const xml = value => value.replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('"', '&quot;')
 const source = join(root, 'samples/return/Assets/Scripts/ReturnPhysics.cs')
+const levels = join(root, 'samples/return/Assets/Scripts/ReturnLevels.cs')
 writeFileSync(join(directory, 'ReturnPhysics.Tests.csproj'), `<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>Exe</OutputType><TargetFramework>net10.0</TargetFramework>
@@ -19,7 +20,7 @@ writeFileSync(join(directory, 'ReturnPhysics.Tests.csproj'), `<Project Sdk="Micr
     <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
     <NuGetAudit>false</NuGetAudit>
   </PropertyGroup>
-  <ItemGroup><Compile Include="Program.cs"/><Compile Include="${xml(source)}" Link="ReturnPhysics.cs"/></ItemGroup>
+  <ItemGroup><Compile Include="Program.cs"/><Compile Include="${xml(source)}" Link="ReturnPhysics.cs"/><Compile Include="${xml(levels)}" Link="ReturnLevels.cs"/></ItemGroup>
 </Project>
 `)
 writeFileSync(join(directory, 'NuGet.Config'), '<configuration><packageSources><clear /></packageSources></configuration>\n')
@@ -56,6 +57,81 @@ static class PhysicsTests
     {
         try
         {
+            Check("authored Level3 embedded box separates and remains usable after restart", () => {
+                var level = ReturnLevels.All.Single(value => value.Name=="Level3");
+                var source = level.Objects.Single(value => value.Id=="1449523891:1951573150192399104");
+                var box = new ReturnBody(source.X,source.Y,source.ColliderW,source.ColliderH,source.OffsetX,source.OffsetY);
+                Near(box.Bounds.Bottom,-7.08f,"source collider must retain the original embedded position");
+                foreach(int realm in new[] {0,1})
+                {
+                    var solids = level.Maps.Where(map => map.Realm<0||map.Realm==realm)
+                        .SelectMany(map => map.Solids).Select(rect => new ReturnBounds(rect.X,rect.Y,rect.W,rect.H)).ToArray();
+                    for(int restart=0;restart<3;restart++)
+                    {
+                        box.Reset(source.X,source.Y);
+                        ReturnPhysics.ResolveStaticOverlaps(box,solids,solids.Length);
+                        Near(box.X,2.73f,"separation must preserve authored horizontal position");
+                        Near(box.Y,-6.58f,"floor separates the initial 0.08 penetration");
+                        Near(box.PreviousY,box.Y,"interpolation must not retain embedded pose");
+                        for(int i=0;i<1200;i++)Tick(box,solids:solids);
+                        Near(box.Y,-6.58f,"box must remain on the floor after ten seconds");
+                        Require(box.Grounded,"box must remain grounded");
+                    }
+                }
+            });
+            Check("newly enabled geometry separates bodies without changing unobstructed motion", () => {
+                ReturnBounds[] solids = [new(0,-.5f,10,1),new(2,2,1,4)];
+                var body = new ReturnBody(1.1f,.45f,1,1) { VY=-3 };
+                ReturnPhysics.ResolveStaticOverlaps(body,solids,solids.Length);
+                Near(body.X,1,"new wall separates sideways");Near(body.Y,.5f,"new floor separates upwards");
+                Near(body.VY,0,"opposed vertical velocity must clear");
+                foreach(var solid in solids)Require(!body.Bounds.Overlaps(solid,.0001f),"corner separation left penetration");
+                body.Reset(-2,4);body.VY=3;
+                ReturnPhysics.ResolveStaticOverlaps(body,solids,solids.Length);
+                Near(body.Y,4,"clear body was moved");Near(body.VY,3,"clear velocity was changed");
+                body.Reset(0,-.2f);body.Enabled=false;
+                ReturnPhysics.ResolveStaticOverlaps(body,solids,solids.Length);
+                Near(body.Y,-.2f,"inactive body should keep its position");
+            });
+            Check("repeated geometry overlap recovery allocates zero managed bytes", () => {
+                var body = new ReturnBody(0,.4f,1,1);
+                for(int i=0;i<20000;i++){body.Reset(0,.4f);ReturnPhysics.ResolveStaticOverlaps(body,Floor,1);}
+                long before=GC.GetAllocatedBytesForCurrentThread();
+                for(int i=0;i<100000;i++){body.Reset(0,.4f);ReturnPhysics.ResolveStaticOverlaps(body,Floor,1);}
+                Require(GC.GetAllocatedBytesForCurrentThread()==before,"overlap recovery allocated managed bytes");
+            });
+            Check("realm platform beside the floor cannot oscillate a box into the floor", () => {
+                foreach(string name in new[] {"Level4","Level5"})
+                {
+                    var level=ReturnLevels.All.Single(value=>value.Name==name);
+                    var solids=level.Maps.Where(map=>map.Realm<0||map.Realm==0).SelectMany(map=>map.Solids)
+                        .Select(rect=>new ReturnBounds(rect.X,rect.Y,rect.W,rect.H)).ToArray();
+                    var body=new ReturnBody(5.625f,-6.5f,.96f,.96f,-.042f,.06f);
+                    ReturnPhysics.ResolveStaticOverlaps(body,solids,solids.Length);
+                    foreach(var solid in solids)Require(!body.Bounds.Overlaps(solid,.0001f),$"{name} realm change left a static overlap");
+                    Require(body.Bounds.Bottom>=-7.0001f,"realm separation must not push the box under the floor");
+                    Require(Math.Abs(body.X-5.625f)<1.2f&&Math.Abs(body.Y+6.5f)<.01f,"nearest free position should be beside the activated platform");
+                }
+            });
+            Check("all authored box spawns separate from maps and initially closed doors", () => {
+                foreach(var level in ReturnLevels.All)
+                foreach(int realm in new[] {0,1})
+                {
+                    var mapSolids=level.Maps.Where(map=>map.Realm<0||map.Realm==realm).SelectMany(map=>map.Solids)
+                        .Select(rect=>new ReturnBounds(rect.X,rect.Y,rect.W,rect.H));
+                    var objectSolids=level.Objects.Where(item=>item.Active&&(item.Realm<0||item.Realm==realm)&&item.Collide&&!item.Trigger
+                        &&item.Kind is not "box" and not "player"&&(item.Kind!="door"||item.DisableWhenOn))
+                        .Select(item=>new ReturnBounds(item.X+item.OffsetX,item.Y+item.OffsetY,item.ColliderW,item.ColliderH));
+                    var solids=mapSolids.Concat(objectSolids).ToArray();
+                    foreach(var item in level.Objects.Where(item=>item.Kind=="box"&&item.Active&&(item.Realm<0||item.Realm==realm)))
+                    {
+                        var body=new ReturnBody(item.X,item.Y,item.ColliderW,item.ColliderH,item.OffsetX,item.OffsetY);
+                        ReturnPhysics.ResolveStaticOverlaps(body,solids,solids.Length);
+                        foreach(var solid in solids)Require(!body.Bounds.Overlaps(solid,.0001f),$"{level.Name}/{realm}: authored box remains embedded");
+                        Require(body.Bounds.Bottom>=-7.0001f&&body.Bounds.Top<=7.0001f,"authored box separated outside the room");
+                    }
+                }
+            });
             Check("gravity lands and rests without drift", () => {
                 var body = new ReturnBody(0, 10, 1, 1);
                 Tick(body);
@@ -229,4 +305,4 @@ if (result.stdout) process.stdout.write(result.stdout)
 if (result.stderr) process.stderr.write(result.stderr)
 if (result.error) throw result.error
 assert.equal(result.status, 0, `Return physics harness failed (generated project: ${directory})`)
-assert.match(result.stdout, /Return physics: 13 scenarios passed\./)
+assert.match(result.stdout, /Return physics: 18 scenarios passed\./)
