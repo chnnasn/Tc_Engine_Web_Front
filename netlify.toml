@@ -4,7 +4,7 @@
 
 [build.environment]
   NODE_VERSION = "22"
-  ENGINE_ARTIFACT_URL = "https://github.com/chnnasn/Tc_Engine_Web_Front/releases/download/web-engine-5734c56a/tomcat-web-5734c56a.tar.gz"
+  ENGINE_ARTIFACT_URL = "https://github.com/chnnasn/Tc_Engine_Web_Front/releases/download/web-engine-c2848721/tomcat-web-c2848721.tar.gz"
 
 [[headers]]
   for = "/*"

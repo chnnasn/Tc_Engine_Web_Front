@@ -10,6 +10,8 @@ namespace TomCatGame;
 public sealed class RougelikeGame : MonoBehaviour
 {
     const ulong Hex = 6100000000000000015UL, Circle = 6100000000000000011UL;
+    const ulong CircleLeft = 6100000000000000016UL, CircleRight = 6100000000000000017UL;
+    const ulong HexLeft = 6100000000000000018UL, HexRight = 6100000000000000019UL;
     const ulong Square = 6100000000000000012UL, Triangle = 6100000000000000013UL;
     const ulong MonoFont = 6100000000000000020UL, ChineseFont = 6100000000000000021UL;
     static readonly Color Ink = new(.221f, .221f, .221f), Paper = new(.9682644f, .9684492f, .8876525f);
@@ -23,7 +25,7 @@ public sealed class RougelikeGame : MonoBehaviour
         public SpriteRenderer? Sprite;
         public TextRenderer? Label;
         public ulong Texture;
-        public bool Initialized, Hidden;
+        public bool Initialized, Hidden, Removed;
         public Vector2 Position, Size = Vector2.One;
         public float Angle, FontSize, Opacity = 1, Scale = 1;
         public int Order;
@@ -94,6 +96,7 @@ public sealed class RougelikeGame : MonoBehaviour
     }
     readonly Random random = new();
     readonly List<Visual> visuals = [];
+    bool removedVisuals;
     readonly List<Enemy> enemies = [];
     readonly List<Particle> particles = [];
     readonly List<Slash> slashes = [];
@@ -111,6 +114,8 @@ public sealed class RougelikeGame : MonoBehaviour
     Breakable hpControl = null!, energyControl = null!, waveControl = null!, comboControl = null!;
     Camera camera = null!;
     Transform cameraTransform = null!;
+    float lastOrthographicSize = float.NaN, lastVignette = float.NaN;
+    Vector3 lastCameraPosition;
     Entity? viewportEntity;
     RectTransform? viewportRect;
     RougelikeAudio audio = null!;
@@ -133,7 +138,8 @@ public sealed class RougelikeGame : MonoBehaviour
         audio=new RougelikeAudio();
         camera = World.Find("MainCamera")!.GetComponent<Camera>();
         cameraTransform = camera.Entity.GetComponent<Transform>();
-        cameraTransform.Position=new(0,0,-10);
+        lastCameraPosition=new(0,0,-10);
+        cameraTransform.Position=lastCameraPosition;
         // A stretched, non-interactive native UI rect measures the actual viewport.
         var canvas = World.CreateEntity("ViewportMetrics");
         var rootCanvas = canvas.AddComponent<Canvas>();
@@ -149,18 +155,18 @@ public sealed class RougelikeGame : MonoBehaviour
     Visual Sprite(string name, ulong texture, float x, float y, float w, float h, Color color, int order=0)
     {
         var e=World.CreateEntity(name, new Vector3(10000,10000,0));
-        e.AddComponent<SpriteRenderer>();
-        var v=new Visual {Entity=e,Texture=texture,Position=new(x,y),Size=new(w,h),Color=color,Order=order};
+        var sprite=e.AddComponent<SpriteRenderer>();
+        var v=new Visual {Entity=e,Sprite=sprite,Texture=texture,Position=new(x,y),Size=new(w,h),Color=color,Order=order};
         visuals.Add(v); return v;
     }
     Visual Text(string name,string text,float x,float y,float size,Color color,bool chinese=false)
     {
         var e=World.CreateEntity(name,new Vector3(10000,10000,0));
-        e.AddComponent<TextRenderer>();
-        var v=new Visual {Entity=e,Text=text,Texture=chinese?ChineseFont:MonoFont,Position=new(x,y),FontSize=size,Color=color,Order=100};
+        var label=e.AddComponent<TextRenderer>();
+        var v=new Visual {Entity=e,Label=label,Text=text,Texture=chinese?ChineseFont:MonoFont,Position=new(x,y),FontSize=size,Color=color,Order=100};
         visuals.Add(v); return v;
     }
-    void Remove(Visual v) { v.Entity.Destroy(); visuals.Remove(v); }
+    void Remove(Visual v) { v.Entity.Destroy(); v.Removed=true; removedVisuals=true; }
     void ClearPanel()
     {
         controls.RemoveAll(c=>c.Parts.Count>0&&panel.Contains(c.Parts[0]));
@@ -207,6 +213,7 @@ public sealed class RougelikeGame : MonoBehaviour
         // Subtle scanlines are native geometry, independent of a browser overlay.
         for(int y=1;y<648;y+=3) Sprite("CRT scanline",Square,576,y,1152,.6f,new(.1f,.1f,.1f,.035f),90);
         camera.Vignette=.35f;
+        lastVignette=.35f;
         player=Sprite("Player",Hex,300,470,52,52,Ink,50);
         knife=Sprite("Knife",Square,340,470,5,28,Ink,52);
         nose=Sprite("Aim",Triangle,332,470,8,8,Ink,51);
@@ -298,7 +305,7 @@ public sealed class RougelikeGame : MonoBehaviour
         if(viewportEntity is {IsValid:true})viewportRect??=viewportEntity.GetComponent<RectTransform>();
         if(viewportRect is not null){var r=viewportRect.RuntimeRect;if(r.Height>0){viewportWidth=r.Width;viewportHeight=r.Height;}}
         worldHeight=Math.Max(648,1152*viewportHeight/Math.Max(viewportWidth,1));
-        camera.OrthographicSize=worldHeight;
+        if(worldHeight!=lastOrthographicSize){camera.OrthographicSize=worldHeight;lastOrthographicSize=worldHeight;}
         mouse=new(576+(Input.MousePosition.X-viewportWidth*.5f)*worldHeight/viewportHeight,324+(Input.MousePosition.Y-viewportHeight*.5f)*worldHeight/viewportHeight);
         if(Input.WasKeyPressed(KeyCode.P)&&phase is Phase.Playing or Phase.Upgrade) paused=!paused;
         // Losing focus cannot leave the player taking damage in the background.
@@ -389,7 +396,7 @@ public sealed class RougelikeGame : MonoBehaviour
         float sign=atOrigin?-1:1;
         knifeFrom=-tripSpan*.5f*sign+(back?MathF.PI:0);knifeTo=knifeFrom+tripSpan*sign;knifeTime=0;atOrigin=!atOrigin;
         int segments=random.Next(3,7);
-        var s=new Slash{Position=position,Angle=facing+(back?MathF.PI:0),Radius=tripRadius,Span=tripSpan,Direction=sign,Back=back,Width=52*Range(.86f,1.14f),Alpha=Range(.82f,1.18f),Jitter=new float[segments+1]};
+        var s=new Slash{Position=position,Angle=facing+(back?MathF.PI:0),Radius=tripRadius,Span=tripSpan,Direction=sign,Back=back,Width=52*Range(.86f,1.14f),Alpha=Range(.82f,1.18f),Jitter=new float[segments+1],Polygon=new Vector2[(segments+1)*2]};
         for(int i=0;i<s.Jitter.Length;i++)s.Jitter[i]=Range(-1,1);
         s.Pieces=new Visual[30];
         for(int i=0;i<s.Pieces.Length;i++)s.Pieces[i]=Sprite("Slash arc",Square,position.X,position.Y,1,1,Ink,48);
@@ -467,30 +474,33 @@ public sealed class RougelikeGame : MonoBehaviour
             s.Position=position+Direction(facing+(s.Back?MathF.PI:0))*5*fade;
             s.Angle=facing+(s.Back?MathF.PI:0)+MathF.PI/30*s.Direction*fade;
             float from=-s.Span*.5f*s.Direction,to=from+s.Span*s.Direction*fraction;
-            int count=s.Jitter.Length;s.Polygon=new Vector2[count*2];
+            int count=s.Jitter.Length;
             for(int i=0;i<count;i++)
             {
                 float t=i/(float)(count-1),a=from+(to-from)*t,shape=1+s.Jitter[i]*.12f;
-                s.Polygon[i]=Direction(a)*(radius+width*.5f)*shape;
-                s.Polygon[count*2-1-i]=Direction(a)*Math.Max(0,radius-width*.5f)*shape;
+                var direction=Direction(a);
+                s.Polygon[i]=direction*(radius+width*.5f)*shape;
+                s.Polygon[count*2-1-i]=direction*Math.Max(0,radius-width*.5f)*shape;
             }
             float alpha=.3f*s.Alpha*MathF.Pow(1-fade,1.15f)*(s.Age>=.09f&&s.Age<.12f?1+.45f*MathF.Sin((s.Age-.09f)/.03f*MathF.PI):1);
+            float cosAngle=MathF.Cos(s.Angle),sinAngle=MathF.Sin(s.Angle);
             for(int i=0;i<s.Pieces.Length;i++)
             {
                 float t=(i+.5f)/s.Pieces.Length,segment=t*(count-1);int j=Math.Min(count-2,(int)segment);float between=segment-j;
                 Vector2 outer=s.Polygon[j]+(s.Polygon[j+1]-s.Polygon[j])*between;
                 Vector2 inner=s.Polygon[count*2-1-j]+(s.Polygon[count*2-2-j]-s.Polygon[count*2-1-j])*between;
                 var v=s.Pieces[i];var mid=(outer+inner)*.5f;v.Hidden=fraction<.005f;
-                v.Position=s.Position+Rotate(mid,s.Angle);v.Angle=s.Angle+MathF.Atan2((outer-inner).Y,(outer-inner).X)+MathF.PI*.5f;
+                v.Position=s.Position+RotateWithBasis(mid,cosAngle,sinAngle);v.Angle=s.Angle+MathF.Atan2((outer-inner).Y,(outer-inner).X)+MathF.PI*.5f;
                 v.Size=new(Math.Max(.1f,radius*s.Span*fraction/s.Pieces.Length+.5f),Length(outer-inner));v.Color=new(0,0,0,alpha);
             }
             if(phase==Phase.Dying||s.Age>.12f||fraction<.005f)continue;
-            CheckControls((at,r)=>CirclePolygon(Rotate(at-s.Position,-s.Angle),r,s.Polygon),s.HitControls);
+            float inverseCos=MathF.Cos(-s.Angle),inverseSin=MathF.Sin(-s.Angle);
+            CheckControls((at,r)=>CirclePolygon(RotateWithBasis(at-s.Position,inverseCos,inverseSin),r,s.Polygon),s.HitControls);
             if(phase!=Phase.Playing)continue;
             foreach(var e in enemies.ToArray())
             {
                 var delta=e.Position-s.Position;
-                if(CirclePolygon(Rotate(delta,-s.Angle),25.63f,s.Polygon)&&s.Hit.Add(e))Hit(e,Normal(delta));
+                if(CirclePolygon(RotateWithBasis(delta,inverseCos,inverseSin),25.63f,s.Polygon)&&s.Hit.Add(e))Hit(e,Normal(delta));
             }
         }
     }
@@ -587,14 +597,10 @@ public sealed class RougelikeGame : MonoBehaviour
         for(int side=-1;side<=1;side+=2)
         {
             var shard=new Shard{Start=center,Side=side,Duration=.5f,Distance=72,Fall=240,Spin=55*MathF.PI/180,Shrink=.72f};
-            const int rows=18;float height=hex?radius*MathF.Sqrt(3):radius*2,step=height/rows;
-            for(int j=0;j<rows;j++)
-            {
-                float y=-height*.5f+(j+.5f)*step;
-                float extent=hex?radius-MathF.Abs(y)/MathF.Sqrt(3):MathF.Sqrt(Math.Max(0,radius*radius-y*y));
-                var offset=new Vector2(side*extent*.5f,y);
-                shard.Parts.Add(Sprite("Split half",Square,center.X+offset.X,center.Y+offset.Y,extent,step+.15f,color,55));shard.Offsets.Add(offset);shard.Angles.Add(0);
-            }
+            // Atlas pivots keep each original texture half rotating about the full shape's center.
+            ulong texture=hex?(side<0?HexLeft:HexRight):(side<0?CircleLeft:CircleRight);
+            shard.Parts.Add(Sprite("Split half",texture,center.X,center.Y,radius*2,radius*2,color,55));
+            shard.Offsets.Add(Vector2.Zero);shard.Angles.Add(0);
             shards.Add(shard);
         }
     }
@@ -678,8 +684,9 @@ public sealed class RougelikeGame : MonoBehaviour
             var s=shards[i];s.Age+=dt;float t=Math.Clamp(s.Age/s.Duration,0,1);
             if(t>=1){foreach(var p in s.Parts)Remove(p);shards.RemoveAt(i);continue;}
             float angle=s.Side*s.Spin*Math.Min(1,s.Age/.2f),scale=1+(s.Shrink-1)*t;
+            float cosine=MathF.Cos(angle),sine=MathF.Sin(angle);
             Vector2 at=s.Start+new Vector2(s.Side*s.Distance*(1-(1-t)*(1-t)),-s.Distance*.35f+(s.Fall+s.Distance*.35f)*t*t);
-            for(int j=0;j<s.Parts.Count;j++){var p=s.Parts[j];p.Position=at+Rotate(s.Offsets[j]*scale,angle);p.Angle=s.Angles[j]+angle;p.Opacity=1-t;p.Scale=scale;}
+            for(int j=0;j<s.Parts.Count;j++){var p=s.Parts[j];p.Position=at+RotateWithBasis(s.Offsets[j]*scale,cosine,sine);p.Angle=s.Angles[j]+angle;p.Opacity=1-t;p.Scale=scale;}
         }
     }
     void TickParticles(float dt)
@@ -814,19 +821,27 @@ public sealed class RougelikeGame : MonoBehaviour
             var v=glitch[i];v.Hidden=!dying||phaseTime>1.42f;
             if(dying){v.Position=new(576+Range(-35,35),i*54+Range(-8,8));v.Size.Y=Range(1,8);v.Color=Alpha(i%3==0?Paper:Ink,Math.Min(1,phaseTime/.12f)*Range(.06f,.28f));}
         }
-        camera.Vignette=.35f+Math.Clamp(hurtTime/.34f,0,1)*.35f;
-        if(!paused)cameraTransform.Position=new(shake>0?Range(-shake,shake):0,shake>0?Range(-shake,shake):0,-10);
+        float vignette=.35f+Math.Clamp(hurtTime/.34f,0,1)*.35f;
+        if(vignette!=lastVignette){camera.Vignette=vignette;lastVignette=vignette;}
+        if(!paused)
+        {
+            Vector3 cameraPosition=new(shake>0?Range(-shake,shake):0,shake>0?Range(-shake,shake):0,-10);
+            if(!cameraPosition.Equals(lastCameraPosition)){cameraTransform.Position=cameraPosition;lastCameraPosition=cameraPosition;}
+        }
     }
     void Flush()
     {
+        // Native destruction is still queued at Remove. Compact this bookkeeping
+        // list once before rendering updates, preserving the surviving order.
+        if(removedVisuals){visuals.RemoveAll(static v=>v.Removed);removedVisuals=false;}
         foreach(var v in visuals)
         {
             if(!v.Initialized)
             {
                 if(!v.Entity.IsValid)continue;
                 v.Transform=v.Entity.GetComponent<Transform>();
-                if(v.Text is not null){v.Label=v.Entity.GetComponent<TextRenderer>();v.Label.Font=new(v.Texture);v.Label.FontSize=v.FontSize;v.Label.MaxWidth=0;v.Label.LineSpacing=1;}
-                else{v.Sprite=v.Entity.GetComponent<SpriteRenderer>();v.Sprite.Sprite=new(v.Texture);v.Sprite.OrderInLayer=v.Order;}
+                if(v.Text is not null){var label=v.Label!;label.Font=new(v.Texture);label.FontSize=v.FontSize;label.MaxWidth=0;label.LineSpacing=1;}
+                else{var sprite=v.Sprite!;sprite.Sprite=new(v.Texture);sprite.OrderInLayer=v.Order;}
                 v.Initialized=true;
             }
             // Tc world text starts at the bottom of its line box. Our authored
@@ -859,6 +874,7 @@ public sealed class RougelikeGame : MonoBehaviour
     static float Dot(Vector2 a,Vector2 b)=>a.X*b.X+a.Y*b.Y;
     static float EaseQuint(float t){float rest=1-Math.Clamp(t,0,1);return 1-rest*rest*rest*rest*rest;}
     static Vector2 Rotate(Vector2 v,float angle){float c=MathF.Cos(angle),s=MathF.Sin(angle);return new(v.X*c-v.Y*s,v.X*s+v.Y*c);}
+    static Vector2 RotateWithBasis(Vector2 v,float c,float s)=>new(v.X*c-v.Y*s,v.X*s+v.Y*c);
     static float MoveToward(float value,float target,float amount)=>value<target?Math.Min(target,value+amount):Math.Max(target,value-amount);
     static Color Mix(Color a,Color b,float t)=>new(a.R+(b.R-a.R)*t,a.G+(b.G-a.G)*t,a.B+(b.B-a.B)*t,a.A+(b.A-a.A)*t);
     static bool CirclePolygon(Vector2 center,float radius,Vector2[] poly)

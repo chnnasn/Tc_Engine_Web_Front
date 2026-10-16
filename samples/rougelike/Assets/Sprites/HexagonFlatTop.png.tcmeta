@@ -4,4 +4,48 @@ Asset:
   Type: Texture2D
   ImportSettings:
     Usage: Sprite
-  SubAssets: []
+    SpriteMode: Multiple
+    SpriteAtlasSchema: "2"
+    Sprite.left.Name: Hexagon Left
+    Sprite.left.Rect: "0,0,128,256"
+    Sprite.left.Pivot: "1,0.5"
+    Sprite.left.PixelsPerUnit: "256"
+    Sprite.left.Border: "0,0,0,0"
+    Sprite.right.Name: Hexagon Right
+    Sprite.right.Rect: "128,0,128,256"
+    Sprite.right.Pivot: "0,0.5"
+    Sprite.right.PixelsPerUnit: "256"
+    Sprite.right.Border: "0,0,0,0"
+  SubAssets:
+    - Handle: 6100000000000000018
+      PersistentID: sprite:left
+      Name: Hexagon Left
+      Type: Texture2D
+      Sprite:
+        X: 0
+        Y: 0
+        Width: 128
+        Height: 256
+        PivotX: 1
+        PivotY: 0.5
+        PixelsPerUnit: 256
+        BorderLeft: 0
+        BorderBottom: 0
+        BorderRight: 0
+        BorderTop: 0
+    - Handle: 6100000000000000019
+      PersistentID: sprite:right
+      Name: Hexagon Right
+      Type: Texture2D
+      Sprite:
+        X: 128
+        Y: 0
+        Width: 128
+        Height: 256
+        PivotX: 0
+        PivotY: 0.5
+        PixelsPerUnit: 256
+        BorderLeft: 0
+        BorderBottom: 0
+        BorderRight: 0
+        BorderTop: 0

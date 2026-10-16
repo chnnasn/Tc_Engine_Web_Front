@@ -1,15 +1,16 @@
 // Opt-in native-player QA. This is deliberately NOT a natural ten-wave run.
 // A copy of the production Tc project starts at wave 10 with all three skills
-// unlocked and 100 HP. Only that copy's Awake receives the initialization below.
+// unlocked and 100 HP (TEST_FIXTURE_HEALTH may raise this for long stress runs).
+// Only that copy's Awake receives the initialization below.
 // The production project, public package and source ZIP are never modified.
 // Run with a website server already listening (default http://127.0.0.1:5185):
 //   node tests/rougelike-skills-browser.mjs
 // --build-only cooks without launching Chrome; --fixture=<absolute directory>
-// reuses a previously built fixture after verifying source/toolchain/package hashes.
+// reuses a previously built fixture after verifying project/toolchain/package hashes.
 import assert from 'node:assert/strict'
 import { createHash } from 'node:crypto'
 import { spawnSync } from 'node:child_process'
-import { cpSync, mkdirSync, mkdtempSync, readFileSync, writeFileSync } from 'node:fs'
+import { cpSync, mkdirSync, mkdtempSync, readdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { dirname, join, relative, resolve, sep } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { chromium } from 'playwright'
@@ -22,7 +23,30 @@ const scratch = join(root, '.engine')
 const lock = JSON.parse(readFileSync(join(root, 'engine.lock.json'), 'utf8'))
 const hash = bytes => createHash('sha256').update(bytes).digest('hex')
 const productionHash = hash(readFileSync(sourcePath))
-const initialization = '\n        Begin();\n        slowUnlocked = holeUnlocked = chargeUnlocked = true;\n        health = maxHealth = 100;\n        wave = 9;\n        StartWave(1.5f);'
+const includedProjectPath = (directory, path) =>
+  !relative(directory, path).split(sep).some(part => ['Library', 'bin', 'obj', '.git'].includes(part))
+function projectInputHashes(directory) {
+  const entries = []
+  const walk = path => {
+    for (const entry of readdirSync(path, { withFileTypes: true }).sort((a, b) => a.name < b.name ? -1 : a.name > b.name ? 1 : 0)) {
+      const target = join(path, entry.name)
+      if (!includedProjectPath(directory, target)) continue
+      if (entry.isDirectory()) walk(target)
+      else {
+        assert.ok(entry.isFile(), `Unsupported QA project input: ${target}`)
+        entries.push([relative(directory, target).replaceAll('\\', '/'), hash(readFileSync(target))])
+      }
+    }
+  }
+  walk(directory)
+  return Object.fromEntries(entries)
+}
+// Fingerprint every copied file, including scenes, PNGs, .tcmeta, Project.tcproj
+// and ProjectSettings. Added/deleted inputs invalidate reuse too; caches do not.
+const productionInputHashes = projectInputHashes(production)
+const fixtureHealth = Number(process.env.TEST_FIXTURE_HEALTH || 100)
+assert.ok(Number.isInteger(fixtureHealth) && fixtureHealth >= 100 && fixtureHealth <= 10000, 'TEST_FIXTURE_HEALTH must be an integer from 100 to 10000')
+const initialization = `\n        Begin();\n        slowUnlocked = holeUnlocked = chargeUnlocked = true;\n        health = maxHealth = ${fixtureHealth};\n        wave = 9;\n        StartWave(1.5f);`
 const player = resolve(process.env.TOMCAT_PLAYER_DIR || join(scratch, 'player-fixture'))
 const managed = resolve(process.env.TOMCAT_MANAGED_DIR || join(scratch, 'upgrade-managed'))
 const worker = resolve(process.env.TOMCAT_COOK_WORKER || join(root, '../Tc_Engine_Web_backend/cook/worker.mjs'))
@@ -44,6 +68,8 @@ const manifestPath = join(directory, 'fixture.json')
 let manifest
 if (existing) {
   manifest = JSON.parse(readFileSync(manifestPath, 'utf8'))
+  assert.ok(manifest.productionInputHashes, 'Old QA fixture lacks project input hashes; recook the fixture')
+  assert.deepEqual(manifest.productionInputHashes, productionInputHashes, 'Production project inputs changed; recook the QA fixture')
   assert.equal(manifest.productionSourceSha256, productionHash, 'Production changed; recook the QA fixture')
   assert.equal(manifest.engineCommit, lock.commit)
   assert.deepEqual(manifest.toolchainHashes, toolchainHashes)
@@ -51,8 +77,8 @@ if (existing) {
   assert.equal(manifest.packageSha256, hash(readFileSync(packagePath)))
 } else {
   const copy = join(directory, 'project')
-  cpSync(production, copy, { recursive: true, filter: path =>
-    !relative(production, path).split(sep).some(part => ['Library', 'bin', 'obj', '.git'].includes(part)) })
+  cpSync(production, copy, { recursive: true, filter: path => includedProjectPath(production, path) })
+  assert.deepEqual(projectInputHashes(copy), productionInputHashes, 'Project inputs changed while copying the QA fixture')
   const original = readFileSync(sourcePath, 'utf8')
   // Anchor the end of the real Awake; fail rather than silently patch another method.
   const marker = '        Log.Info("[Rougelike] ready: Tc C# arena, 10 waves, native sprites and text");'
@@ -68,12 +94,13 @@ if (existing) {
   assert.equal(cooked.status, 0, `Native Tc fixture cook failed: ${cooked.error?.message || cooked.signal || cooked.status}`)
   const bytes = readFileSync(packagePath)
   manifest = { purpose: 'QA only: unlocked skills and wave-10 stress, not a natural playthrough',
-    engineCommit: lock.commit, toolchainHashes, productionSourceSha256: productionHash,
+    engineCommit: lock.commit, toolchainHashes, productionSourceSha256: productionHash, productionInputHashes,
     fixtureSourceSha256: hash(Buffer.from(modified)), initialization,
     packageSha256: hash(bytes), packageBytes: bytes.length, entries: validatePackage(bytes) }
   writeFileSync(manifestPath, JSON.stringify(manifest, null, 2) + '\n')
 }
 assert.equal(hash(readFileSync(sourcePath)), productionHash, 'Production source was modified')
+assert.deepEqual(projectInputHashes(production), productionInputHashes, 'Production project inputs changed during QA fixture preparation')
 console.log(`QA fixture (never published): ${directory}`)
 if (process.argv.includes('--build-only')) process.exit(0)
 
@@ -271,7 +298,7 @@ try {
   const crowdPixels = await pixels(crowd, [100, 100, 952, 448])
   assert.ok(crowdPixels.dark > 9000, `Expected a visible multi-enemy wave-10 crowd: ${JSON.stringify(crowdPixels)}`)
   await logContaining('[Rougelike] hurt hp:')
-  assert.ok(!logs.some(text => text.includes('[Rougelike] dying')), '100-HP pressure fixture unexpectedly died')
+  assert.ok(!logs.some(text => text.includes('[Rougelike] dying')), `${fixtureHealth}-HP pressure fixture unexpectedly died`)
   const audible = await audioSnapshot()
   assert.ok(audible.some(a => a.state === 'running' && a.peak > .0001), 'Native AudioContext output is silent')
   evidence.assertions.push(`${stressSeconds}s real-browser wave-10 pressure with visible enemy crowd and native contact-damage logs; no claim that all 60 spawned`)

@@ -24,7 +24,7 @@ Vue 3 创作工作台，使用固定版本的上游 TomCat Web Editor / Player�
 
 ## 开发与构建
 
-当前浏览器引擎与 Railway 编译打包器统一锁定 `5734c56a`（上游 [PR #30](https://github.com/chnnasn/TomCat_Engine/pull/30)）。该版本补齐 WebAudio、动态脚本 BCL 和浏览器多字体加载支持，继续使用 Managed API v6、TCPAK v8、Scene v11、Project v4。上一版 `0b8829a864ff53ad0ad2c7ded56ef433325a836a` 已通过真实作品播放与云端归档恢复回归，保留在明确兼容列表中；旧 Managed API v5 项目与作品不再作为兼容版本打开，历史云端数据保留。
+当前浏览器引擎与 Railway 编译打包器统一锁定 `c2848721`（上游 [PR #36](https://github.com/chnnasn/TomCat_Engine/pull/36)，包含 [PR #31](https://github.com/chnnasn/TomCat_Engine/pull/31)、[PR #33](https://github.com/chnnasn/TomCat_Engine/pull/33)）。该版本优化频繁创建/销毁实体、延迟命令投影、名称查重、Web 渲染状态查询及字体源复用；保留已有 WebAudio、动态脚本 BCL 和多字体能力，继续使用 Managed API v6、TCPAK v8、Scene v11、Project v4。`5734c56ae05241b01a684afb8e62f2b164c69ba2` 与 `0b8829a864ff53ad0ad2c7ded56ef433325a836a` 保留在明确兼容列表中；未知提交和旧 Managed API v5 不通用放行，历史云端数据保留。性能测量方法、结果和边界见 [Rougelike 性能回归](docs/rougelike-performance.md)。
 
 托管 Web 构建支持分帧场景加载、文字塑形、虚拟列表、2D 光照与后处理。浏览器 AudioSource 通过 WebAudio 播放驻留音频，首次用户操作后解锁声音，并在退出运行时关闭音频上下文；流式音频仍不支持。动态 C# 脚本的常用 BCL 实现与类型转发元数据会保留，多字体在浏览器单线程中依次完成准备和上传。原生 DLL 模块、浏览器存档持久化和完整 ICU/IME 的既有限制仍然适用。
 
@@ -44,7 +44,7 @@ npm run engine:build
 npm run dev
 ```
 
-`engine.lock.json` 固定引擎提交 `5734c56ae05241b01a684afb8e62f2b164c69ba2`，并记录 `kind: managed`。构建脚本检出到 `.engine/source`、初始化四个依赖子模块，然后用 **托管（C#）管线** 生成引擎产物：先用 Emscripten 编出 C++ 静态库（`tomcat_managed_web_entrypoints`、`tc_player_core`、`tc_yaml`、`box2d`），再 `dotnet publish -r browser-wasm` 发布 `Managed/TomCat.WebHost`——**最终 `.wasm` 由 .NET 运行时拥有**，C++ 引擎归档被链接进同一块 WebAssembly 内存，原生与托管共享函数表。最后把完整的 `main.js`、`_framework/` 与 C# 编译引用集 `refs/` 复制到 `public/engine/<commit>/`。没有本地 C++ 移植补丁。
+`engine.lock.json` 固定引擎提交 `c28487215bd5df89b35c1d68252ba240231d9c4f`，并记录 `kind: managed`。构建脚本检出到 `.engine/source`、初始化四个依赖子模块，然后用 **托管（C#）管线** 生成引擎产物：先用 Emscripten 编出 C++ 静态库（`tomcat_managed_web_entrypoints`、`tc_player_core`、`tc_yaml`、`box2d`），再 `dotnet publish -r browser-wasm` 发布 `Managed/TomCat.WebHost`——**最终 `.wasm` 由 .NET 运行时拥有**，C++ 引擎归档被链接进同一块 WebAssembly 内存，原生与托管共享函数表。最后把完整的 `main.js`、`_framework/` 与 C# 编译引用集 `refs/` 复制到 `public/engine/<commit>/`。没有本地 C++ 移植补丁。
 
 托管模块是单线程构建（`WasmEnableThreads=false`），产物中不含 `SharedArrayBuffer`/pthread，因此**不再要求跨源隔离**；`vite.config.ts` 与 `netlify.toml` 仍保留 COOP/COEP 以便将来启用线程构建。
 
