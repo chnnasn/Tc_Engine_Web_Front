@@ -4,11 +4,13 @@ permissions:
   contents: read
 jobs:
   build:
-    runs-on: ubuntu-latest
+    # Match the locked engine's Managed Web workflow. Its include paths still
+    # require Windows casing; the Railway cooker has a separate Linux patch.
+    runs-on: windows-latest
     timeout-minutes: 45
     defaults:
       run:
-        shell: bash
+        shell: pwsh
     env:
       CMAKE_BUILD_PARALLEL_LEVEL: 2
     steps:
@@ -23,29 +25,35 @@ jobs:
       - name: Install managed Web toolchain
         run: |
           dotnet workload install wasm-tools
-          sudo apt-get update
-          sudo apt-get install -y ninja-build cmake python3
       - run: npm ci
       - run: npm test
       - name: Build locked managed engine
         run: |
-          mkdir -p .engine
-          npm run engine:build 2>&1 | tee .engine/ci-engine-build.log
+          New-Item -ItemType Directory -Force .engine | Out-Null
+          npm run engine:build *> .engine/ci-engine-build.log
+          $buildExitCode = $LASTEXITCODE
+          Get-Content .engine/ci-engine-build.log -Tail 80
+          exit $buildExitCode
       - run: npm run build
-      - run: npx playwright install --with-deps chromium
+      - run: npx playwright install chromium
       - name: Browser regression
         env:
           TEST_BASE_URL: http://127.0.0.1:4173
           TEST_BROWSER_CHANNEL: chromium
         run: |
-          npm run preview -- --host 127.0.0.1 --port 4173 --strictPort > .engine/ci-preview.log 2>&1 &
-          server_pid=$!
-          trap 'kill "$server_pid"' EXIT
-          for suite in browser inspector-metadata-browser project-authoring-browser scene-ownership-browser layout-exit-browser; do
-            echo "::group::$suite"
-            node --experimental-strip-types "tests/$suite.mjs" 2>&1 | tee ".engine/ci-$suite.log"
-            echo '::endgroup::'
-          done
+          $preview = Start-Process node -ArgumentList 'node_modules/vite/bin/vite.js', 'preview', '--host', '127.0.0.1', '--port', '4173', '--strictPort' -PassThru -WindowStyle Hidden -RedirectStandardOutput .engine/ci-preview.log -RedirectStandardError .engine/ci-preview-error.log
+          try {
+            foreach ($suite in @('browser', 'inspector-metadata-browser', 'project-authoring-browser', 'scene-ownership-browser', 'layout-exit-browser')) {
+              Write-Output "::group::$suite"
+              node --experimental-strip-types "tests/$suite.mjs" *> ".engine/ci-$suite.log"
+              $testExitCode = $LASTEXITCODE
+              Get-Content ".engine/ci-$suite.log"
+              Write-Output '::endgroup::'
+              if ($testExitCode -ne 0) { exit $testExitCode }
+            }
+          } finally {
+            Stop-Process -Id $preview.Id -ErrorAction SilentlyContinue
+          }
       - uses: actions/upload-artifact@v4
         if: always()
         with:

@@ -43,7 +43,15 @@ function adopt(reply: ScriptsReply) {
 }
 async function refresh() {
   if (props.disabled || busy.value || dirty.value) return
-  try { adopt(await props.call<ScriptsReply>('scripts')) }
+  const selection = selected.value
+  const text = draft.value
+  try {
+    const reply = await props.call<ScriptsReply>('scripts')
+    // A panel-open/native-change refresh can finish after the user starts
+    // typing or compiling. Never replace a newer draft with that old reply.
+    if (props.disabled || busy.value || dirty.value || selected.value !== selection || draft.value !== text) return
+    adopt(reply)
+  }
   catch (error) { message.value = error instanceof Error ? error.message : String(error) }
 }
 async function run(action: () => Promise<void>) {

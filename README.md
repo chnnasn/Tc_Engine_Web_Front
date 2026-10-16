@@ -227,6 +227,6 @@ Web Inspector 复用桌面端脚本字段元数据缓存，成功编译后显示
 
 ### 前端集成 CI
 
-`Web engine` 在 Ubuntu 上安装 .NET 10、`wasm-tools`、CMake、Ninja 和 Python 3，使用工作负载自带的 Emscripten 从源码构建 `engine.lock.json` 锁定提交，再构建前端并以生产预览运行 Chromium 回归。回归依次覆盖编辑器/C# 生命周期与播放器、Inspector 字段、Project 文件管理、场景文件归属，以及布局与退出保存。云端 API 使用隔离夹具，因此本流程不代表 Railway、Redis、邮件服务或真实模型服务的线上端到端验收。
+`Web engine` 对齐上游 `Managed Web` 的 Windows runner，安装 .NET 10 和 `wasm-tools`，使用工作负载自带的 Emscripten、runner 的 CMake 和 Visual Studio Ninja 从源码构建 `engine.lock.json` 锁定提交，再构建前端并以生产预览运行 Chromium 回归。回归依次覆盖编辑器/C# 生命周期与播放器、Inspector 字段、Project 文件管理、场景文件归属，以及布局与退出保存。云端 API 使用隔离夹具，因此本流程不代表 Railway、Redis、邮件服务或真实模型服务的线上端到端验收。
 
-失败时从 Actions 的 `web-engine-evidence` 下载构建/浏览器日志与截图；`tomcat-web-with-engine` 仅在所有前置步骤成功后上传。上游 `Managed Web` 通过只能证明引擎自身回归通过，不能替代这里的前端集成 CI。Linux 使用系统 Python 3，SDK 路径解析跟随 `dotnet` 符号链接；无需另装独立 Emscripten。
+失败时从 Actions 的 `web-engine-evidence` 下载构建/浏览器日志与截图；`tomcat-web-with-engine` 仅在所有前置步骤成功后上传。上游 `Managed Web` 通过只能证明引擎自身回归通过，不能替代这里的前端集成 CI。锁定源码仍有 `Timestep.h` / `TimeStep.h` 等头文件大小写差异，原样源码在 Linux 上构建尚不支持；Railway Dockerfile 自带相关修正，其构建与此 CI 分开验证。Windows 生成的 WebAssembly 可在网站浏览器中运行，与网站托管服务器的操作系统无关。

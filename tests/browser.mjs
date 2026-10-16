@@ -153,6 +153,11 @@ public sealed class WebSmoke : MonoBehaviour
     // 故意写入语法错误，验证 Roslyn 诊断被回传并渲染。
     await fillCode(page, 'using TomCat;\npublic sealed class WebSmoke : MonoBehaviour { private void Awake() { int broken = ; } }')
     await page.getByRole('button', { name: '编译并安装', exact: true }).click()
+    if (process.env.TEST_DEBUG) {
+      await page.waitForTimeout(2000)
+      console.log('Diagnostic panel:', await page.locator('.script-panel').innerText())
+      console.log('Script on disk:', await page.locator('iframe').evaluate(el => el.contentWindow.TomCatWeb.runtime.Module.FS.readFile('/Samples/PhysicsPlayground/Assets/Scripts/WebSmoke.cs', { encoding: 'utf8' })))
+    }
     await page.locator('.script-panel .diagnostics li.error').first().waitFor({ timeout: 240000 })
     assert.match(await page.locator('.script-panel .diagnostics li.error').first().textContent(), /CS\d{4}/)
     assert.equal(await page.locator('.script-panel .state.ok').count(), 0)
@@ -285,4 +290,10 @@ public sealed class WebSmoke : MonoBehaviour
   }
   assert.deepEqual(errors, [])
   console.log(process.argv.includes('--missing') ? 'PASS: isolation, missing-engine diagnostic and route cleanup' : 'PASS: real managed editor, in-browser C# compile + lifecycle execution, archive persistence, repeated cleanup, uint64, undo/redo, preview, save conflict, backend-served game packages, HiDPI viewport')
+} catch (error) {
+  mkdirSync('.engine', { recursive: true })
+  await page.screenshot({ path: '.engine/browser-failure.png' }).catch(() => {})
+  console.error('Browser errors:', errors)
+  console.error('Recent browser console:', logs.slice(-80))
+  throw error
 } finally { await browser.close() }
