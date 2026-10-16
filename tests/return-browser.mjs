@@ -148,13 +148,30 @@ async function measure(label, action = () => wait(seconds * 1000)) {
   assertRuntimeHealthy()
   await checkpoint(`${label}:before`)
   await frame.evaluate(() => { const state = window.__returnObservation; state.samples = []; state.dropped = 0; state.recording = true })
-  try { await action() } finally { await frame.evaluate(() => { window.__returnObservation.recording = false }) }
+  const actionStartedAt = Date.now()
+  let actionDurationMs, samplingExtensionMs = 0
+  try {
+    await action()
+    actionDurationMs = Date.now() - actionStartedAt
+    // SwiftShader can deliver fewer than ten frames during a short transition.
+    // Keep collecting actual PlayerFrame calls, with a bound that still fails
+    // a stalled runtime. Record this extension separately from the action.
+    const extensionStartedAt = Date.now(), deadline = extensionStartedAt + 5000
+    let count = await frame.evaluate(() => window.__returnObservation.samples.filter(sample => sample.engineCalls > 0).length)
+    while (count < 10 && Date.now() < deadline) {
+      assertRuntimeHealthy()
+      await wait(50)
+      count = await frame.evaluate(() => window.__returnObservation.samples.filter(sample => sample.engineCalls > 0).length)
+    }
+    samplingExtensionMs = Date.now() - extensionStartedAt
+  } finally { await frame.evaluate(() => { window.__returnObservation.recording = false }) }
   const observed = await frame.evaluate(() => ({ samples: window.__returnObservation.samples, dropped: window.__returnObservation.dropped }))
   const engine = observed.samples.filter(sample => sample.engineCalls > 0)
   assert.equal(observed.dropped, 0, `${label}: observation capacity must not be exceeded`)
-  assert.ok(engine.length >= 10, `${label}: actual PlayerFrame calls must be measured`)
+  assert.ok(engine.length >= 10, `${label}: expected at least 10 actual PlayerFrame calls, observed ${engine.length}`)
   const intervals = engine.slice(1).map((sample, index) => sample.timestamp - engine[index].timestamp)
-  const phase = { label, callbackCpu: stats(engine.map(sample => sample.callbackMs)), playerFrameCpu: stats(engine.map(sample => sample.engineMs)),
+  const phase = { label, actionDurationMs, samplingExtensionMs,
+    callbackCpu: stats(engine.map(sample => sample.callbackMs)), playerFrameCpu: stats(engine.map(sample => sample.engineMs)),
     animationFrameIntervals: stats(intervals), callbackCadenceHz: intervals.length * 1000 / intervals.reduce((a, b) => a + b, 0), samples: observed.samples }
   phases.push(phase)
   assertRuntimeHealthy()
@@ -204,7 +221,7 @@ try {
   await page.getByRole('button', { name: '开始游玩', exact: true }).first().click()
   await page.locator('.player-status').filter({ hasText: '已就绪' }).waitFor({ timeout: Number(process.env.TEST_BOOT_TIMEOUT || 180000) })
   await logAfter('[Return] ready')
-  frame = page.frames().find(value => value !== page.mainFrame())
+  frame = page.frames().find(value => value.url() === new URL('/engine-host.html', base).href)
   assert.ok(frame, 'native engine iframe must exist')
   canvas = frame.locator('canvas')
   await wait(1000)
@@ -344,9 +361,9 @@ try {
   }
   await page.evaluate(() => document.exitFullscreen())
   await page.getByRole('button', { name: '关闭播放器', exact: true }).click()
-  assert.equal(await page.locator('iframe').count(), 0, 'closing removes the runtime iframe')
+  assert.equal(await page.locator('iframe[title="TomCat 游戏播放器"]').count(), 0, 'closing removes the runtime iframe')
   await page.waitForFunction(() => top.__returnContexts.every(({ context }) => context.state === 'closed'))
-  cleanup = await page.evaluate(() => ({ iframes: document.querySelectorAll('iframe').length, audioContexts: top.__returnContexts.map(({ context }) => context.state) }))
+  cleanup = await page.evaluate(() => ({ iframes: document.querySelectorAll('iframe[title="TomCat 游戏播放器"]').length, audioContexts: top.__returnContexts.map(({ context }) => context.state) }))
   if (process.env.TEST_RETURN_REOPEN !== '0') {
     let engineDownloads = 0
     const observe = request => { if (/\/engine\/.*\.gz(?:\?|$)/.test(request.url())) engineDownloads++ }
@@ -359,7 +376,7 @@ try {
     assert.equal(engineDownloads, 0, 'warm reopen must reuse the verified engine cache')
     await page.getByRole('button', { name: '关闭播放器', exact: true }).click()
     await page.waitForFunction(() => top.__returnContexts.every(({ context }) => context.state === 'closed'))
-    warmReopen = await page.evaluate(() => ({ iframes: document.querySelectorAll('iframe').length, audioContexts: top.__returnContexts.map(({ context }) => context.state) }))
+    warmReopen = await page.evaluate(() => ({ iframes: document.querySelectorAll('iframe[title="TomCat 游戏播放器"]').length, audioContexts: top.__returnContexts.map(({ context }) => context.state) }))
     warmReopen.engineDownloads = engineDownloads
     assert.equal(warmReopen.iframes, 0, 'reopened runtime must also be fully removed')
   }

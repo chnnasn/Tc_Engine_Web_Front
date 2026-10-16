@@ -332,7 +332,12 @@ public sealed class ReturnGame : MonoBehaviour
     {
         var current=stages[stage];float dt=ReturnPhysics.Step;
         player.PreviousX=player.X;player.PreviousY=player.Y;
-        if(solidsDirty)RebuildSolids();
+        if(solidsDirty)
+        {
+            RebuildSolids();
+            foreach(var box in current.Boxes)ReturnPhysics.ResolveStaticOverlaps(box,solids,solidCount);
+            ReturnPhysics.ResolveStaticOverlaps(player,solids,solidCount);
+        }
         for(int i=0;i<current.Boxes.Length;i++)
         {
             var box=current.Boxes[i];box.PreviousX=box.X;box.PreviousY=box.Y;

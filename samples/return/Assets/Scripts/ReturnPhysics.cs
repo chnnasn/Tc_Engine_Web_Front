@@ -25,6 +25,42 @@ public sealed class ReturnBody
 public static class ReturnPhysics
 {
     public const float Step=1f/120, Gravity=49.05f, Speed=5, Jump=15;
+    // Scene loading and realm changes can activate geometry already overlapping
+    // a body. Sweeps only prevent new intersections; separate these existing
+    // contacts once when the solid set changes, preserving the authored spawn.
+    public static void ResolveStaticOverlaps(ReturnBody body,ReturnBounds[] solids,int solidCount)
+    {
+        if(!body.Enabled)return;
+        var original=body.Bounds;
+        if(!OverlapsSolids(original,solids,solidCount))return;
+        float bestDistance=float.PositiveInfinity,bestX=0,bestY=0;
+        // The nearest free AABB touches one or more obstacle edges. Test their
+        // X/Y boundary combinations against the whole solid set. This handles
+        // corners without alternating between a platform and the floor below.
+        // Distance pruning keeps the common shallow-contact case small.
+        for(int xi=0;xi<=solidCount*2;xi++)
+        {
+            float x=xi==0?0:xi%2==1?solids[(xi-1)/2].Left-original.Right:solids[(xi-1)/2].Right-original.Left;
+            if(x*x>=bestDistance)continue;
+            for(int yi=0;yi<=solidCount*2;yi++)
+            {
+                float y=yi==0?0:yi%2==1?solids[(yi-1)/2].Bottom-original.Top:solids[(yi-1)/2].Top-original.Bottom;
+                float distance=x*x+y*y;
+                if(distance>=bestDistance)continue;
+                var candidate=new ReturnBounds(original.X+x,original.Y+y,original.W,original.H);
+                if(OverlapsSolids(candidate,solids,solidCount))continue;
+                bestX=x;bestY=y;bestDistance=distance;
+            }
+        }
+        body.X+=bestX;body.Y+=bestY;
+        if(bestY*body.VY<0)body.VY=0;
+        if(bestY!=0)body.Grounded=bestY>0;
+        // A correction is discontinuous, so interpolation must start outside
+        // the solid instead of briefly drawing the original embedded position.
+        body.PreviousX=body.X;body.PreviousY=body.Y;
+    }
+    static bool OverlapsSolids(ReturnBounds body,ReturnBounds[] solids,int count)
+    { for(int i=0;i<count;i++)if(body.Overlaps(solids[i],.00001f))return true;return false; }
     public static void Move(ReturnBody body,float dx,float dy,ReturnBounds[] solids,int solidCount,ReturnBody[] boxes,int boxCount,int self=-1,bool push=false,ReturnBody? verticalObstacle=null)
     {
         if(dx!=0)
