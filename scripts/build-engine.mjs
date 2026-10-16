@@ -201,9 +201,11 @@ const referenceAssemblies = [
 // 结构：packs/Microsoft.NETCore.App.Ref/<版本>/ref/<目标框架>/<程序集>.dll
 const refPackRoot = join(dotnetRoot, 'packs', 'Microsoft.NETCore.App.Ref')
 if (!existsSync(refPackRoot)) throw new Error('找不到 Microsoft.NETCore.App.Ref 引用包，无法生成 C# 编译引用集')
-const refVersion = newestByVersion(subdirectories(refPackRoot))
-const refSource = refVersion ? newestByVersion(subdirectories(join(refVersion, 'ref'))) : undefined
-if (!refSource) throw new Error(`引用包中没有 ref 目录：${refPackRoot}`)
+// Hosted runners may also have newer SDKs installed; browser scripts target
+// the locked engine's net10.0 API, not the machine's newest reference pack.
+const refVersion = newestByVersion(subdirectories(refPackRoot).filter(directory => basename(directory).startsWith('10.')))
+const refSource = refVersion ? join(refVersion, 'ref', 'net10.0') : undefined
+if (!refSource || !existsSync(refSource)) throw new Error(`引用包中没有 net10.0 ref 目录：${refPackRoot}`)
 
 const refsDirectory = join(bundle, 'refs')
 mkdirSync(refsDirectory, { recursive: true })
