@@ -16,7 +16,7 @@ const emit = defineEmits<{ toggleSave: [id: string]; create: [] }>()
 const category = ref('全部示例')
 const query = ref('')
 const categories = ['全部示例', ...new Set(games.map(game => game.category))]
-const featured = games.find(game => game.id === 'rougelike')!
+const featured = games.find(game => game.id === 'return')!
 
 const filtered = computed(() => {
   const result = games.filter(game =>
@@ -39,15 +39,15 @@ const filtered = computed(() => {
     <section class="discover-section" aria-labelledby="discover-title">
       <div class="section-index"><span>TRY THE ENGINE</span><span>{{ games.length }} 个内置示例</span></div>
       <div class="section-heading"><div><h2 id="discover-title">示例体验<span class="subtle-count">{{ games.length }}</span></h2><p>通过内置场景体验引擎，示例不计入玩家发布作品。</p></div></div>
-    <section class="feature arena-feature" aria-label="精选引擎示例：Rougelike 几何竞技场">
+    <section class="feature return-feature" aria-label="精选引擎示例：Return 归途">
       <div class="feature-copy">
         <div class="feature-label"><span class="feature-badge">新示例 · Tc 引擎复原</span><span class="feature-number">01 / {{ games.length.toString().padStart(2, '0') }}</span></div>
-        <div><span class="feature-genre">动作 · 随机升级 · 十波挑战</span><h2>Rougelike<span class="arena-title">几何竞技场</span></h2><p>穿过围攻，挥出下一道刀光。<br />用慢时间与黑洞，把战局握在手里。</p></div>
-        <div class="feature-bottom"><AppLink class="button button-dark" :href="`/games/${featured.id}`">进入竞技场<ArrowUpRight :size="17" /></AppLink><span>桌面键盘 / 鼠标</span></div>
+        <div><span class="feature-genre">像素平台 · 生死切换 · 机关解谜</span><h2>Return<span class="return-title">归途</span></h2><p>观察两侧的地形，解开箱子与按钮的机关。<br />穿过两个世界，寻找归途。</p></div>
+        <div class="feature-bottom"><AppLink class="button button-dark" :href="`/games/${featured.id}`">踏上归途<ArrowUpRight :size="17" /></AppLink><span>桌面键盘操作</span></div>
       </div>
-      <AppLink :href="`/games/${featured.id}`" class="feature-art" aria-label="体验 Rougelike 几何竞技场">
-        <ArtworkView :src="featured.image" alt="Rougelike 几何竞技场实际游戏画面" eager />
-        <span class="image-label"><span />近战、生存，再来一局</span>
+      <AppLink :href="`/games/${featured.id}`" class="feature-art" aria-label="体验 Return 归途">
+        <ArtworkView :src="featured.image" alt="Return 归途游戏场景" eager />
+        <span class="image-label"><span />在生与死之间，寻找通路</span>
       </AppLink>
     </section>
 
@@ -78,6 +78,6 @@ const filtered = computed(() => {
 </template>
 
 <style scoped>
-.arena-title{display:block;margin-top:8px;font-size:.72em;letter-spacing:.05em}.arena-feature .feature-art{background:#151b2d}.arena-feature .image-label{background:#151b2de6;color:#f0f2f6}
+.return-title{display:block;margin-top:8px;font-size:.72em;letter-spacing:.05em}.return-feature .feature-art{background:#172527}.return-feature .image-label{background:#172527e6;color:#f0f2f6}
 .home-faq{display:grid;grid-template-columns:1fr 1.5fr;gap:72px;padding:65px 0 10px;margin-top:35px;border-top:1px solid #dfd8ce}.home-faq h2{font-family:Georgia,'Songti SC','SimSun',serif;font-size:31px;font-weight:500;line-height:1.5;margin-top:14px}.faq-items details{border-bottom:1px solid #dfd8ce}.faq-items summary{display:flex;justify-content:space-between;align-items:center;gap:20px;cursor:pointer;list-style:none;padding:23px 0;font-size:15px}.faq-items summary::-webkit-details-marker{display:none}.faq-items summary span{font-size:24px;font-weight:300;color:#8d8276;transition:transform .15s}.faq-items details[open] summary span{transform:rotate(45deg)}.faq-items p{padding:0 30px 24px 0;font-size:13px;color:#777066;line-height:1.9}.faq-items summary:focus-visible{outline:2px solid #a65036;outline-offset:4px}#discover-title{scroll-margin-top:110px}@media(max-width:700px){.home-faq{grid-template-columns:1fr;gap:18px;padding-top:35px}.home-faq h2{font-size:26px}.home-faq h2 br{display:none}}@media(prefers-reduced-motion:reduce){.faq-items summary span{transition:none}}
 </style>

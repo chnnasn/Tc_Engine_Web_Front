@@ -47,7 +47,7 @@ async function submitComment() {
       </div>
       <aside class="detail-sidebar">
         <div class="play-panel">
-          <span class="small-tag">内置示例</span><h3>{{ game.controls ? '准备迎接下一波？' : '准备好出发了吗？' }}</h3><p>{{ game.controls ? '走进竞技场，试试你的反应与选择。' : '打开一个新世界，给自己一点游玩的时间。' }}</p>
+          <span class="small-tag">内置示例</span><h3>准备好出发了吗？</h3><p>打开这个示例，亲自体验它的玩法。</p>
           <button class="button button-primary" @click="player = true"><Play :size="16" fill="currentColor" />{{ game.packageUrl ? '开始游玩' : '打开游玩预览' }}</button>
           <a v-if="game.sourceUrl" class="button sample-download" :href="game.sourceUrl" download>下载示例工程</a>
           <span class="play-footnote">{{ game.controls ? '桌面键盘 / 鼠标 · 首次加载请稍候' : '点击即可游玩，首次加载请稍候' }}</span><div class="play-stats"><span><Gamepad2 :size="15" />{{ game.category }}示例</span><span>浏览器直接体验</span></div>

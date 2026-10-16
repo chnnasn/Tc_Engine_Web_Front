@@ -1,0 +1,8 @@
+SchemaVersion: 4
+Project:
+  Name: Return
+  Version: 1.0.0
+  Description: "Return: the supplied Unity pixel puzzle, recreated with native Tc C# gameplay."
+  EditorVersion: 0.4.0
+  Template: 2D
+  AssetDirectory: Assets

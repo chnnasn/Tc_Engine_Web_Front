@@ -2,6 +2,19 @@ import lock from '../../engine.lock.json' with { type: 'json' }
 
 export type RuntimeKind = 'editor' | 'player'
 
+/** Wall-clock gaps while a tab is hidden must not become a gameplay update. */
+export class FrameClock {
+  private previous: number | undefined
+
+  reset() { this.previous = undefined }
+
+  step(time: number) {
+    const previous = this.previous
+    this.previous = time
+    return previous === undefined ? 0 : Math.max(0, Math.min((time - previous) / 1000, .1))
+  }
+}
+
 // ---------------------------------------------------------------------------
 // 托管 Web 引擎（.NET browser-wasm 拥有最终模块）暴露的契约。
 // 与旧版 Emscripten 模块工厂（window.TomCatEditorModule + ccall）不同：

@@ -1,0 +1,1481 @@
+SchemaVersion: 11
+SceneName: "Return - Level2"
+Entities:
+  - Entity: 6200000000000029003
+    Tag:
+      Tag: "MainCamera"
+      Visible: true
+    EntityMetadata:
+      GameplayTag: "Untagged"
+      Layer: 0
+      HierarchyIcon: "Entity"
+    Transform:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+    LocalTransform:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+    Components:
+      - TypeId: 11457157452030541825
+        StableName: "TomCat.ID"
+        SchemaVersion: 1
+        Properties:
+          - PropertyId: 1
+            StableName: "Value"
+            Value: 6200000000000029003
+      - TypeId: 11457157452030541826
+        StableName: "TomCat.Tag"
+        SchemaVersion: 1
+        Properties:
+          - PropertyId: 1
+            StableName: "Name"
+            Value: "MainCamera"
+          - PropertyId: 2
+            StableName: "Visible"
+            Value: true
+      - TypeId: 11457157452030541827
+        StableName: "TomCat.EntityMetadata"
+        SchemaVersion: 1
+        Properties:
+          - PropertyId: 1
+            StableName: "GameplayTag"
+            Value: "Untagged"
+          - PropertyId: 2
+            StableName: "Layer"
+            Value: 0
+          - PropertyId: 3
+            StableName: "HierarchyIcon"
+            Value: 1
+      - TypeId: 11457157452030541828
+        StableName: "TomCat.Transform"
+        SchemaVersion: 1
+        Properties:
+          - PropertyId: 1
+            StableName: "Translation"
+            Value: [0, 0, 0]
+          - PropertyId: 2
+            StableName: "Rotation"
+            Value: [0, 0, 0]
+          - PropertyId: 3
+            StableName: "Scale"
+            Value: [1, 1, 1]
+          - PropertyId: 4
+            StableName: "LocalTranslation"
+            Value: [0, 0, 0]
+          - PropertyId: 5
+            StableName: "LocalRotation"
+            Value: [0, 0, 0]
+          - PropertyId: 6
+            StableName: "LocalScale"
+            Value: [1, 1, 1]
+      - TypeId: 11457157452030541829
+        StableName: "TomCat.Camera"
+        SchemaVersion: 4
+        Properties:
+          - PropertyId: 300
+            StableName: "Primary"
+            Value: true
+          - PropertyId: 301
+            StableName: "FixedAspectRatio"
+            Value: false
+          - PropertyId: 302
+            StableName: "BackgroundColor"
+            Value: [0.113725498, 0.129411772, 0.176470593, 1]
+          - PropertyId: 303
+            StableName: "ProjectionType"
+            Value: 1
+          - PropertyId: 304
+            StableName: "OrthographicSize"
+            Value: 16.875
+          - PropertyId: 305
+            StableName: "OrthographicNearClip"
+            Value: 0
+          - PropertyId: 306
+            StableName: "OrthographicFarClip"
+            Value: 1000
+          - PropertyId: 307
+            StableName: "PerspectiveVerticalFov"
+            Value: 0.785398185
+          - PropertyId: 308
+            StableName: "PerspectiveNearClip"
+            Value: 0.00999999978
+          - PropertyId: 309
+            StableName: "PerspectiveFarClip"
+            Value: 1000
+          - PropertyId: 310
+            StableName: "Enabled"
+            Value: true
+          - PropertyId: 311
+            StableName: "Exposure"
+            Value: 0
+          - PropertyId: 312
+            StableName: "Saturation"
+            Value: 1
+          - PropertyId: 313
+            StableName: "Vignette"
+            Value: 0
+    Parent: 0
+    Camera:
+      Camera:
+        ProjectionType: 1
+        PerspectiveFOV: 0.785398185
+        PerspectiveNear: 0.00999999978
+        PerspectiveFar: 1000
+        OrthographicSize: 16.875
+        OrthographicNear: 0
+        OrthographicFar: 1000
+      Primary: true
+      FixedAspectRatio: false
+      BackgroundColor: [0.113725498, 0.129411772, 0.176470593, 1]
+      Exposure: 0
+      Saturation: 1
+      Vignette: 0
+  - Entity: 6200000000000030300
+    Tag:
+      Tag: "ReturnMap_3_0"
+      Visible: true
+    EntityMetadata:
+      GameplayTag: "Untagged"
+      Layer: 0
+      HierarchyIcon: "Entity"
+    Transform:
+      Translation: [0.5, 0.5, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+    LocalTransform:
+      Translation: [0.5, 0.5, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+    Components:
+      - TypeId: 11457157452030541825
+        StableName: "TomCat.ID"
+        SchemaVersion: 1
+        Properties:
+          - PropertyId: 1
+            StableName: "Value"
+            Value: 6200000000000030300
+      - TypeId: 11457157452030541826
+        StableName: "TomCat.Tag"
+        SchemaVersion: 1
+        Properties:
+          - PropertyId: 1
+            StableName: "Name"
+            Value: "ReturnMap_3_0"
+          - PropertyId: 2
+            StableName: "Visible"
+            Value: true
+      - TypeId: 11457157452030541827
+        StableName: "TomCat.EntityMetadata"
+        SchemaVersion: 1
+        Properties:
+          - PropertyId: 1
+            StableName: "GameplayTag"
+            Value: "Untagged"
+          - PropertyId: 2
+            StableName: "Layer"
+            Value: 0
+          - PropertyId: 3
+            StableName: "HierarchyIcon"
+            Value: 1
+      - TypeId: 11457157452030541828
+        StableName: "TomCat.Transform"
+        SchemaVersion: 1
+        Properties:
+          - PropertyId: 1
+            StableName: "Translation"
+            Value: [0.5, 0.5, 0]
+          - PropertyId: 2
+            StableName: "Rotation"
+            Value: [0, 0, 0]
+          - PropertyId: 3
+            StableName: "Scale"
+            Value: [1, 1, 1]
+          - PropertyId: 4
+            StableName: "LocalTranslation"
+            Value: [0.5, 0.5, 0]
+          - PropertyId: 5
+            StableName: "LocalRotation"
+            Value: [0, 0, 0]
+          - PropertyId: 6
+            StableName: "LocalScale"
+            Value: [1, 1, 1]
+      - TypeId: 11457157452030541841
+        StableName: "TomCat.Tilemap2D"
+        SchemaVersion: 1
+        Properties:
+          Enabled: true
+          CellSize: [1, 1]
+          CellGap: [0, 0]
+          SortingLayer: 0
+          OrderInLayer: -100
+          Cells:
+            - Coordinate: [2, -7]
+              SpriteHandle: 6200000000000010062
+              Tint: [1, 1, 1, 1]
+              FlipX: false
+              FlipY: false
+              RotationQuarterTurns: 0
+            - Coordinate: [2, -6]
+              SpriteHandle: 6200000000000010068
+              Tint: [1, 1, 1, 1]
+              FlipX: false
+              FlipY: false
+              RotationQuarterTurns: 0
+            - Coordinate: [2, -5]
+              SpriteHandle: 6200000000000010068
+              Tint: [1, 1, 1, 1]
+              FlipX: false
+              FlipY: false
+              RotationQuarterTurns: 0
+            - Coordinate: [-3, -4]
+              SpriteHandle: 6200000000000010062
+              Tint: [1, 1, 1, 1]
+              FlipX: false
+              FlipY: false
+              RotationQuarterTurns: 0
+            - Coordinate: [2, -4]
+              SpriteHandle: 6200000000000010068
+              Tint: [1, 1, 1, 1]
+              FlipX: false
+              FlipY: false
+              RotationQuarterTurns: 0
+            - Coordinate: [-3, -3]
+              SpriteHandle: 6200000000000010068
+              Tint: [1, 1, 1, 1]
+              FlipX: false
+              FlipY: false
+              RotationQuarterTurns: 0
+            - Coordinate: [2, -3]
+              SpriteHandle: 6200000000000010068
+              Tint: [1, 1, 1, 1]
+              FlipX: false
+              FlipY: false
+              RotationQuarterTurns: 0
+            - Coordinate: [-3, -2]
+              SpriteHandle: 6200000000000010068
+              Tint: [1, 1, 1, 1]
+              FlipX: false
+              FlipY: false
+              RotationQuarterTurns: 0
+            - Coordinate: [2, -2]
+              SpriteHandle: 6200000000000010068
+              Tint: [1, 1, 1, 1]
+              FlipX: false
+              FlipY: false
+              RotationQuarterTurns: 0
+            - Coordinate: [-3, -1]
+              SpriteHandle: 6200000000000010068
+              Tint: [1, 1, 1, 1]
+              FlipX: false
+              FlipY: false
+              RotationQuarterTurns: 0
+            - Coordinate: [2, -1]
+              SpriteHandle: 6200000000000010068
+              Tint: [1, 1, 1, 1]
+              FlipX: false
+              FlipY: false
+              RotationQuarterTurns: 0
+            - Coordinate: [-3, 0]
+              SpriteHandle: 6200000000000010068
+              Tint: [1, 1, 1, 1]
+              FlipX: false
+              FlipY: false
+              RotationQuarterTurns: 0
+            - Coordinate: [2, 0]
+              SpriteHandle: 6200000000000010068
+              Tint: [1, 1, 1, 1]
+              FlipX: false
+              FlipY: false
+              RotationQuarterTurns: 0
+            - Coordinate: [-3, 1]
+              SpriteHandle: 6200000000000010068
+              Tint: [1, 1, 1, 1]
+              FlipX: false
+              FlipY: false
+              RotationQuarterTurns: 0
+            - Coordinate: [-1, 1]
+              SpriteHandle: 6200000000000010050
+              Tint: [1, 1, 1, 1]
+              FlipX: false
+              FlipY: false
+              RotationQuarterTurns: 0
+            - Coordinate: [0, 1]
+              SpriteHandle: 6200000000000010051
+              Tint: [1, 1, 1, 1]
+              FlipX: false
+              FlipY: false
+              RotationQuarterTurns: 0
+            - Coordinate: [2, 1]
+              SpriteHandle: 6200000000000010068
+              Tint: [1, 1, 1, 1]
+              FlipX: false
+              FlipY: false
+              RotationQuarterTurns: 0
+            - Coordinate: [-3, 2]
+              SpriteHandle: 6200000000000010068
+              Tint: [1, 1, 1, 1]
+              FlipX: false
+              FlipY: false
+              RotationQuarterTurns: 0
+            - Coordinate: [-1, 2]
+              SpriteHandle: 6200000000000010056
+              Tint: [1, 1, 1, 1]
+              FlipX: false
+              FlipY: false
+              RotationQuarterTurns: 0
+            - Coordinate: [0, 2]
+              SpriteHandle: 6200000000000010057
+              Tint: [1, 1, 1, 1]
+              FlipX: false
+              FlipY: false
+              RotationQuarterTurns: 0
+            - Coordinate: [2, 2]
+              SpriteHandle: 6200000000000010068
+              Tint: [1, 1, 1, 1]
+              FlipX: false
+              FlipY: false
+              RotationQuarterTurns: 0
+            - Coordinate: [-6, 3]
+              SpriteHandle: 6200000000000010049
+              Tint: [1, 1, 1, 1]
+              FlipX: false
+              FlipY: false
+              RotationQuarterTurns: 0
+            - Coordinate: [-3, 3]
+              SpriteHandle: 6200000000000010068
+              Tint: [1, 1, 1, 1]
+              FlipX: false
+              FlipY: false
+              RotationQuarterTurns: 0
+            - Coordinate: [2, 3]
+              SpriteHandle: 6200000000000010068
+              Tint: [1, 1, 1, 1]
+              FlipX: false
+              FlipY: false
+              RotationQuarterTurns: 0
+            - Coordinate: [5, 3]
+              SpriteHandle: 6200000000000010049
+              Tint: [1, 1, 1, 1]
+              FlipX: false
+              FlipY: false
+              RotationQuarterTurns: 0
+            - Coordinate: [-6, 4]
+              SpriteHandle: 6200000000000010065
+              Tint: [1, 1, 1, 1]
+              FlipX: false
+              FlipY: false
+              RotationQuarterTurns: 0
+            - Coordinate: [-3, 4]
+              SpriteHandle: 6200000000000010068
+              Tint: [1, 1, 1, 1]
+              FlipX: false
+              FlipY: false
+              RotationQuarterTurns: 0
+            - Coordinate: [2, 4]
+              SpriteHandle: 6200000000000010068
+              Tint: [1, 1, 1, 1]
+              FlipX: false
+              FlipY: false
+              RotationQuarterTurns: 0
+            - Coordinate: [3, 4]
+              SpriteHandle: 6200000000000010008
+              Tint: [1, 1, 1, 1]
+              FlipX: false
+              FlipY: false
+              RotationQuarterTurns: 0
+            - Coordinate: [4, 4]
+              SpriteHandle: 6200000000000010008
+              Tint: [1, 1, 1, 1]
+              FlipX: false
+              FlipY: false
+              RotationQuarterTurns: 0
+            - Coordinate: [5, 4]
+              SpriteHandle: 6200000000000010065
+              Tint: [1, 1, 1, 1]
+              FlipX: false
+              FlipY: false
+              RotationQuarterTurns: 0
+            - Coordinate: [-6, 5]
+              SpriteHandle: 6200000000000010065
+              Tint: [1, 1, 1, 1]
+              FlipX: false
+              FlipY: false
+              RotationQuarterTurns: 0
+            - Coordinate: [-3, 5]
+              SpriteHandle: 6200000000000010068
+              Tint: [1, 1, 1, 1]
+              FlipX: false
+              FlipY: false
+              RotationQuarterTurns: 0
+            - Coordinate: [2, 5]
+              SpriteHandle: 6200000000000010068
+              Tint: [1, 1, 1, 1]
+              FlipX: false
+              FlipY: false
+              RotationQuarterTurns: 0
+            - Coordinate: [5, 5]
+              SpriteHandle: 6200000000000010065
+              Tint: [1, 1, 1, 1]
+              FlipX: false
+              FlipY: false
+              RotationQuarterTurns: 0
+            - Coordinate: [-6, 6]
+              SpriteHandle: 6200000000000010069
+              Tint: [1, 1, 1, 1]
+              FlipX: false
+              FlipY: false
+              RotationQuarterTurns: 0
+            - Coordinate: [-3, 6]
+              SpriteHandle: 6200000000000010068
+              Tint: [1, 1, 1, 1]
+              FlipX: false
+              FlipY: false
+              RotationQuarterTurns: 0
+            - Coordinate: [2, 6]
+              SpriteHandle: 6200000000000010068
+              Tint: [1, 1, 1, 1]
+              FlipX: false
+              FlipY: false
+              RotationQuarterTurns: 0
+            - Coordinate: [5, 6]
+              SpriteHandle: 6200000000000010069
+              Tint: [1, 1, 1, 1]
+              FlipX: false
+              FlipY: false
+              RotationQuarterTurns: 0
+      - TypeId: 11457157452030541845
+        StableName: "TomCat.TilemapRenderer2D"
+        SchemaVersion: 1
+        Properties:
+          - PropertyId: 1400
+            StableName: "Enabled"
+            Value: true
+          - PropertyId: 1401
+            StableName: "SortOrder"
+            Value: 0
+          - PropertyId: 1402
+            StableName: "Mode"
+            Value: 0
+          - PropertyId: 1403
+            StableName: "DetectChunkCulling"
+            Value: 0
+          - PropertyId: 1404
+            StableName: "SortingLayer"
+            Value: 0
+          - PropertyId: 1405
+            StableName: "OrderInLayer"
+            Value: -100
+          - PropertyId: 1406
+            StableName: "Material"
+            Value: 0
+    Parent: 0
+  - Entity: 6200000000000030301
+    Tag:
+      Tag: "ReturnMap_3_1"
+      Visible: false
+    EntityMetadata:
+      GameplayTag: "Untagged"
+      Layer: 0
+      HierarchyIcon: "Entity"
+    Transform:
+      Translation: [0.5, 0.5, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+    LocalTransform:
+      Translation: [0.5, 0.5, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+    Components:
+      - TypeId: 11457157452030541825
+        StableName: "TomCat.ID"
+        SchemaVersion: 1
+        Properties:
+          - PropertyId: 1
+            StableName: "Value"
+            Value: 6200000000000030301
+      - TypeId: 11457157452030541826
+        StableName: "TomCat.Tag"
+        SchemaVersion: 1
+        Properties:
+          - PropertyId: 1
+            StableName: "Name"
+            Value: "ReturnMap_3_1"
+          - PropertyId: 2
+            StableName: "Visible"
+            Value: false
+      - TypeId: 11457157452030541827
+        StableName: "TomCat.EntityMetadata"
+        SchemaVersion: 1
+        Properties:
+          - PropertyId: 1
+            StableName: "GameplayTag"
+            Value: "Untagged"
+          - PropertyId: 2
+            StableName: "Layer"
+            Value: 0
+          - PropertyId: 3
+            StableName: "HierarchyIcon"
+            Value: 1
+      - TypeId: 11457157452030541828
+        StableName: "TomCat.Transform"
+        SchemaVersion: 1
+        Properties:
+          - PropertyId: 1
+            StableName: "Translation"
+            Value: [0.5, 0.5, 0]
+          - PropertyId: 2
+            StableName: "Rotation"
+            Value: [0, 0, 0]
+          - PropertyId: 3
+            StableName: "Scale"
+            Value: [1, 1, 1]
+          - PropertyId: 4
+            StableName: "LocalTranslation"
+            Value: [0.5, 0.5, 0]
+          - PropertyId: 5
+            StableName: "LocalRotation"
+            Value: [0, 0, 0]
+          - PropertyId: 6
+            StableName: "LocalScale"
+            Value: [1, 1, 1]
+      - TypeId: 11457157452030541841
+        StableName: "TomCat.Tilemap2D"
+        SchemaVersion: 1
+        Properties:
+          Enabled: true
+          CellSize: [1, 1]
+          CellGap: [0, 0]
+          SortingLayer: 0
+          OrderInLayer: -100
+          Cells:
+            - Coordinate: [-6, 4]
+              SpriteHandle: 6200000000000010029
+              Tint: [1, 1, 1, 1]
+              FlipX: false
+              FlipY: false
+              RotationQuarterTurns: 0
+            - Coordinate: [-1, 4]
+              SpriteHandle: 6200000000000010050
+              Tint: [1, 1, 1, 1]
+              FlipX: false
+              FlipY: false
+              RotationQuarterTurns: 0
+            - Coordinate: [0, 4]
+              SpriteHandle: 6200000000000010051
+              Tint: [1, 1, 1, 1]
+              FlipX: false
+              FlipY: false
+              RotationQuarterTurns: 0
+            - Coordinate: [5, 4]
+              SpriteHandle: 6200000000000010029
+              Tint: [1, 1, 1, 1]
+              FlipX: false
+              FlipY: false
+              RotationQuarterTurns: 0
+            - Coordinate: [-6, 5]
+              SpriteHandle: 6200000000000010082
+              Tint: [1, 1, 1, 1]
+              FlipX: false
+              FlipY: false
+              RotationQuarterTurns: 0
+            - Coordinate: [-1, 5]
+              SpriteHandle: 6200000000000010056
+              Tint: [1, 1, 1, 1]
+              FlipX: false
+              FlipY: false
+              RotationQuarterTurns: 0
+            - Coordinate: [0, 5]
+              SpriteHandle: 6200000000000010057
+              Tint: [1, 1, 1, 1]
+              FlipX: false
+              FlipY: false
+              RotationQuarterTurns: 0
+            - Coordinate: [5, 5]
+              SpriteHandle: 6200000000000010082
+              Tint: [1, 1, 1, 1]
+              FlipX: false
+              FlipY: false
+              RotationQuarterTurns: 0
+            - Coordinate: [-6, 6]
+              SpriteHandle: 6200000000000010082
+              Tint: [1, 1, 1, 1]
+              FlipX: false
+              FlipY: false
+              RotationQuarterTurns: 0
+            - Coordinate: [5, 6]
+              SpriteHandle: 6200000000000010082
+              Tint: [1, 1, 1, 1]
+              FlipX: false
+              FlipY: false
+              RotationQuarterTurns: 0
+      - TypeId: 11457157452030541845
+        StableName: "TomCat.TilemapRenderer2D"
+        SchemaVersion: 1
+        Properties:
+          - PropertyId: 1400
+            StableName: "Enabled"
+            Value: true
+          - PropertyId: 1401
+            StableName: "SortOrder"
+            Value: 0
+          - PropertyId: 1402
+            StableName: "Mode"
+            Value: 0
+          - PropertyId: 1403
+            StableName: "DetectChunkCulling"
+            Value: 0
+          - PropertyId: 1404
+            StableName: "SortingLayer"
+            Value: 0
+          - PropertyId: 1405
+            StableName: "OrderInLayer"
+            Value: -100
+          - PropertyId: 1406
+            StableName: "Material"
+            Value: 0
+    Parent: 0
+  - Entity: 6200000000000030302
+    Tag:
+      Tag: "ReturnMap_3_2"
+      Visible: true
+    EntityMetadata:
+      GameplayTag: "Untagged"
+      Layer: 0
+      HierarchyIcon: "Entity"
+    Transform:
+      Translation: [0.5, 0.5, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+    LocalTransform:
+      Translation: [0.5, 0.5, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+    Components:
+      - TypeId: 11457157452030541825
+        StableName: "TomCat.ID"
+        SchemaVersion: 1
+        Properties:
+          - PropertyId: 1
+            StableName: "Value"
+            Value: 6200000000000030302
+      - TypeId: 11457157452030541826
+        StableName: "TomCat.Tag"
+        SchemaVersion: 1
+        Properties:
+          - PropertyId: 1
+            StableName: "Name"
+            Value: "ReturnMap_3_2"
+          - PropertyId: 2
+            StableName: "Visible"
+            Value: true
+      - TypeId: 11457157452030541827
+        StableName: "TomCat.EntityMetadata"
+        SchemaVersion: 1
+        Properties:
+          - PropertyId: 1
+            StableName: "GameplayTag"
+            Value: "Untagged"
+          - PropertyId: 2
+            StableName: "Layer"
+            Value: 0
+          - PropertyId: 3
+            StableName: "HierarchyIcon"
+            Value: 1
+      - TypeId: 11457157452030541828
+        StableName: "TomCat.Transform"
+        SchemaVersion: 1
+        Properties:
+          - PropertyId: 1
+            StableName: "Translation"
+            Value: [0.5, 0.5, 0]
+          - PropertyId: 2
+            StableName: "Rotation"
+            Value: [0, 0, 0]
+          - PropertyId: 3
+            StableName: "Scale"
+            Value: [1, 1, 1]
+          - PropertyId: 4
+            StableName: "LocalTranslation"
+            Value: [0.5, 0.5, 0]
+          - PropertyId: 5
+            StableName: "LocalRotation"
+            Value: [0, 0, 0]
+          - PropertyId: 6
+            StableName: "LocalScale"
+            Value: [1, 1, 1]
+      - TypeId: 11457157452030541841
+        StableName: "TomCat.Tilemap2D"
+        SchemaVersion: 1
+        Properties:
+          Enabled: true
+          CellSize: [1, 1]
+          CellGap: [0, 0]
+          SortingLayer: 0
+          OrderInLayer: 0
+          Cells:
+            - Coordinate: [-8, -8]
+              SpriteHandle: 6200000000000010001
+              Tint: [1, 1, 1, 1]
+              FlipX: false
+              FlipY: false
+              RotationQuarterTurns: 0
+            - Coordinate: [-7, -8]
+              SpriteHandle: 6200000000000010001
+              Tint: [1, 1, 1, 1]
+              FlipX: false
+              FlipY: false
+              RotationQuarterTurns: 0
+            - Coordinate: [-6, -8]
+              SpriteHandle: 6200000000000010001
+              Tint: [1, 1, 1, 1]
+              FlipX: false
+              FlipY: false
+              RotationQuarterTurns: 0
+            - Coordinate: [-5, -8]
+              SpriteHandle: 6200000000000010001
+              Tint: [1, 1, 1, 1]
+              FlipX: false
+              FlipY: false
+              RotationQuarterTurns: 0
+            - Coordinate: [-4, -8]
+              SpriteHandle: 6200000000000010001
+              Tint: [1, 1, 1, 1]
+              FlipX: false
+              FlipY: false
+              RotationQuarterTurns: 0
+            - Coordinate: [-3, -8]
+              SpriteHandle: 6200000000000010001
+              Tint: [1, 1, 1, 1]
+              FlipX: false
+              FlipY: false
+              RotationQuarterTurns: 0
+            - Coordinate: [-2, -8]
+              SpriteHandle: 6200000000000010001
+              Tint: [1, 1, 1, 1]
+              FlipX: false
+              FlipY: false
+              RotationQuarterTurns: 0
+            - Coordinate: [-1, -8]
+              SpriteHandle: 6200000000000010001
+              Tint: [1, 1, 1, 1]
+              FlipX: false
+              FlipY: false
+              RotationQuarterTurns: 0
+            - Coordinate: [0, -8]
+              SpriteHandle: 6200000000000010001
+              Tint: [1, 1, 1, 1]
+              FlipX: false
+              FlipY: false
+              RotationQuarterTurns: 0
+            - Coordinate: [1, -8]
+              SpriteHandle: 6200000000000010001
+              Tint: [1, 1, 1, 1]
+              FlipX: false
+              FlipY: false
+              RotationQuarterTurns: 0
+            - Coordinate: [2, -8]
+              SpriteHandle: 6200000000000010001
+              Tint: [1, 1, 1, 1]
+              FlipX: false
+              FlipY: false
+              RotationQuarterTurns: 0
+            - Coordinate: [3, -8]
+              SpriteHandle: 6200000000000010001
+              Tint: [1, 1, 1, 1]
+              FlipX: false
+              FlipY: false
+              RotationQuarterTurns: 0
+            - Coordinate: [4, -8]
+              SpriteHandle: 6200000000000010001
+              Tint: [1, 1, 1, 1]
+              FlipX: false
+              FlipY: false
+              RotationQuarterTurns: 0
+            - Coordinate: [5, -8]
+              SpriteHandle: 6200000000000010001
+              Tint: [1, 1, 1, 1]
+              FlipX: false
+              FlipY: false
+              RotationQuarterTurns: 0
+            - Coordinate: [6, -8]
+              SpriteHandle: 6200000000000010001
+              Tint: [1, 1, 1, 1]
+              FlipX: false
+              FlipY: false
+              RotationQuarterTurns: 0
+            - Coordinate: [7, -8]
+              SpriteHandle: 6200000000000010001
+              Tint: [1, 1, 1, 1]
+              FlipX: false
+              FlipY: false
+              RotationQuarterTurns: 0
+            - Coordinate: [-8, -7]
+              SpriteHandle: 6200000000000010001
+              Tint: [1, 1, 1, 1]
+              FlipX: false
+              FlipY: false
+              RotationQuarterTurns: 0
+            - Coordinate: [5, -7]
+              SpriteHandle: 6200000000000010084
+              Tint: [1, 1, 1, 1]
+              FlipX: false
+              FlipY: false
+              RotationQuarterTurns: 0
+            - Coordinate: [6, -7]
+              SpriteHandle: 6200000000000010085
+              Tint: [1, 1, 1, 1]
+              FlipX: false
+              FlipY: false
+              RotationQuarterTurns: 0
+            - Coordinate: [7, -7]
+              SpriteHandle: 6200000000000010001
+              Tint: [1, 1, 1, 1]
+              FlipX: false
+              FlipY: false
+              RotationQuarterTurns: 0
+            - Coordinate: [-8, -6]
+              SpriteHandle: 6200000000000010001
+              Tint: [1, 1, 1, 1]
+              FlipX: false
+              FlipY: false
+              RotationQuarterTurns: 0
+            - Coordinate: [5, -6]
+              SpriteHandle: 6200000000000010084
+              Tint: [1, 1, 1, 1]
+              FlipX: false
+              FlipY: false
+              RotationQuarterTurns: 0
+            - Coordinate: [6, -6]
+              SpriteHandle: 6200000000000010085
+              Tint: [1, 1, 1, 1]
+              FlipX: false
+              FlipY: false
+              RotationQuarterTurns: 0
+            - Coordinate: [7, -6]
+              SpriteHandle: 6200000000000010001
+              Tint: [1, 1, 1, 1]
+              FlipX: false
+              FlipY: false
+              RotationQuarterTurns: 0
+            - Coordinate: [-8, -5]
+              SpriteHandle: 6200000000000010001
+              Tint: [1, 1, 1, 1]
+              FlipX: false
+              FlipY: false
+              RotationQuarterTurns: 0
+            - Coordinate: [5, -5]
+              SpriteHandle: 6200000000000010084
+              Tint: [1, 1, 1, 1]
+              FlipX: false
+              FlipY: false
+              RotationQuarterTurns: 0
+            - Coordinate: [6, -5]
+              SpriteHandle: 6200000000000010085
+              Tint: [1, 1, 1, 1]
+              FlipX: false
+              FlipY: false
+              RotationQuarterTurns: 0
+            - Coordinate: [7, -5]
+              SpriteHandle: 6200000000000010001
+              Tint: [1, 1, 1, 1]
+              FlipX: false
+              FlipY: false
+              RotationQuarterTurns: 0
+            - Coordinate: [-8, -4]
+              SpriteHandle: 6200000000000010001
+              Tint: [1, 1, 1, 1]
+              FlipX: false
+              FlipY: false
+              RotationQuarterTurns: 0
+            - Coordinate: [7, -4]
+              SpriteHandle: 6200000000000010001
+              Tint: [1, 1, 1, 1]
+              FlipX: false
+              FlipY: false
+              RotationQuarterTurns: 0
+            - Coordinate: [-8, -3]
+              SpriteHandle: 6200000000000010001
+              Tint: [1, 1, 1, 1]
+              FlipX: false
+              FlipY: false
+              RotationQuarterTurns: 0
+            - Coordinate: [7, -3]
+              SpriteHandle: 6200000000000010001
+              Tint: [1, 1, 1, 1]
+              FlipX: false
+              FlipY: false
+              RotationQuarterTurns: 0
+            - Coordinate: [-8, -2]
+              SpriteHandle: 6200000000000010001
+              Tint: [1, 1, 1, 1]
+              FlipX: false
+              FlipY: false
+              RotationQuarterTurns: 0
+            - Coordinate: [-1, -2]
+              SpriteHandle: 6200000000000010020
+              Tint: [1, 1, 1, 1]
+              FlipX: false
+              FlipY: false
+              RotationQuarterTurns: 0
+            - Coordinate: [0, -2]
+              SpriteHandle: 6200000000000010030
+              Tint: [1, 1, 1, 1]
+              FlipX: false
+              FlipY: false
+              RotationQuarterTurns: 0
+            - Coordinate: [7, -2]
+              SpriteHandle: 6200000000000010001
+              Tint: [1, 1, 1, 1]
+              FlipX: false
+              FlipY: false
+              RotationQuarterTurns: 0
+            - Coordinate: [-8, -1]
+              SpriteHandle: 6200000000000010001
+              Tint: [1, 1, 1, 1]
+              FlipX: false
+              FlipY: false
+              RotationQuarterTurns: 0
+            - Coordinate: [7, -1]
+              SpriteHandle: 6200000000000010001
+              Tint: [1, 1, 1, 1]
+              FlipX: false
+              FlipY: false
+              RotationQuarterTurns: 0
+            - Coordinate: [-8, 0]
+              SpriteHandle: 6200000000000010001
+              Tint: [1, 1, 1, 1]
+              FlipX: false
+              FlipY: false
+              RotationQuarterTurns: 0
+            - Coordinate: [7, 0]
+              SpriteHandle: 6200000000000010001
+              Tint: [1, 1, 1, 1]
+              FlipX: false
+              FlipY: false
+              RotationQuarterTurns: 0
+            - Coordinate: [-8, 1]
+              SpriteHandle: 6200000000000010001
+              Tint: [1, 1, 1, 1]
+              FlipX: false
+              FlipY: false
+              RotationQuarterTurns: 0
+            - Coordinate: [7, 1]
+              SpriteHandle: 6200000000000010001
+              Tint: [1, 1, 1, 1]
+              FlipX: false
+              FlipY: false
+              RotationQuarterTurns: 0
+            - Coordinate: [-8, 2]
+              SpriteHandle: 6200000000000010001
+              Tint: [1, 1, 1, 1]
+              FlipX: false
+              FlipY: false
+              RotationQuarterTurns: 0
+            - Coordinate: [7, 2]
+              SpriteHandle: 6200000000000010001
+              Tint: [1, 1, 1, 1]
+              FlipX: false
+              FlipY: false
+              RotationQuarterTurns: 0
+            - Coordinate: [-8, 3]
+              SpriteHandle: 6200000000000010001
+              Tint: [1, 1, 1, 1]
+              FlipX: false
+              FlipY: false
+              RotationQuarterTurns: 0
+            - Coordinate: [7, 3]
+              SpriteHandle: 6200000000000010001
+              Tint: [1, 1, 1, 1]
+              FlipX: false
+              FlipY: false
+              RotationQuarterTurns: 0
+            - Coordinate: [-8, 4]
+              SpriteHandle: 6200000000000010001
+              Tint: [1, 1, 1, 1]
+              FlipX: false
+              FlipY: false
+              RotationQuarterTurns: 0
+            - Coordinate: [7, 4]
+              SpriteHandle: 6200000000000010001
+              Tint: [1, 1, 1, 1]
+              FlipX: false
+              FlipY: false
+              RotationQuarterTurns: 0
+            - Coordinate: [-8, 5]
+              SpriteHandle: 6200000000000010001
+              Tint: [1, 1, 1, 1]
+              FlipX: false
+              FlipY: false
+              RotationQuarterTurns: 0
+            - Coordinate: [7, 5]
+              SpriteHandle: 6200000000000010001
+              Tint: [1, 1, 1, 1]
+              FlipX: false
+              FlipY: false
+              RotationQuarterTurns: 0
+            - Coordinate: [-8, 6]
+              SpriteHandle: 6200000000000010001
+              Tint: [1, 1, 1, 1]
+              FlipX: false
+              FlipY: false
+              RotationQuarterTurns: 0
+            - Coordinate: [7, 6]
+              SpriteHandle: 6200000000000010001
+              Tint: [1, 1, 1, 1]
+              FlipX: false
+              FlipY: false
+              RotationQuarterTurns: 0
+            - Coordinate: [-8, 7]
+              SpriteHandle: 6200000000000010001
+              Tint: [1, 1, 1, 1]
+              FlipX: false
+              FlipY: false
+              RotationQuarterTurns: 0
+            - Coordinate: [-7, 7]
+              SpriteHandle: 6200000000000010001
+              Tint: [1, 1, 1, 1]
+              FlipX: false
+              FlipY: false
+              RotationQuarterTurns: 0
+            - Coordinate: [-6, 7]
+              SpriteHandle: 6200000000000010001
+              Tint: [1, 1, 1, 1]
+              FlipX: false
+              FlipY: false
+              RotationQuarterTurns: 0
+            - Coordinate: [-5, 7]
+              SpriteHandle: 6200000000000010001
+              Tint: [1, 1, 1, 1]
+              FlipX: false
+              FlipY: false
+              RotationQuarterTurns: 0
+            - Coordinate: [-4, 7]
+              SpriteHandle: 6200000000000010001
+              Tint: [1, 1, 1, 1]
+              FlipX: false
+              FlipY: false
+              RotationQuarterTurns: 0
+            - Coordinate: [-3, 7]
+              SpriteHandle: 6200000000000010001
+              Tint: [1, 1, 1, 1]
+              FlipX: false
+              FlipY: false
+              RotationQuarterTurns: 0
+            - Coordinate: [-2, 7]
+              SpriteHandle: 6200000000000010001
+              Tint: [1, 1, 1, 1]
+              FlipX: false
+              FlipY: false
+              RotationQuarterTurns: 0
+            - Coordinate: [-1, 7]
+              SpriteHandle: 6200000000000010001
+              Tint: [1, 1, 1, 1]
+              FlipX: false
+              FlipY: false
+              RotationQuarterTurns: 0
+            - Coordinate: [0, 7]
+              SpriteHandle: 6200000000000010001
+              Tint: [1, 1, 1, 1]
+              FlipX: false
+              FlipY: false
+              RotationQuarterTurns: 0
+            - Coordinate: [1, 7]
+              SpriteHandle: 6200000000000010001
+              Tint: [1, 1, 1, 1]
+              FlipX: false
+              FlipY: false
+              RotationQuarterTurns: 0
+            - Coordinate: [2, 7]
+              SpriteHandle: 6200000000000010001
+              Tint: [1, 1, 1, 1]
+              FlipX: false
+              FlipY: false
+              RotationQuarterTurns: 0
+            - Coordinate: [3, 7]
+              SpriteHandle: 6200000000000010001
+              Tint: [1, 1, 1, 1]
+              FlipX: false
+              FlipY: false
+              RotationQuarterTurns: 0
+            - Coordinate: [4, 7]
+              SpriteHandle: 6200000000000010001
+              Tint: [1, 1, 1, 1]
+              FlipX: false
+              FlipY: false
+              RotationQuarterTurns: 0
+            - Coordinate: [5, 7]
+              SpriteHandle: 6200000000000010001
+              Tint: [1, 1, 1, 1]
+              FlipX: false
+              FlipY: false
+              RotationQuarterTurns: 0
+            - Coordinate: [6, 7]
+              SpriteHandle: 6200000000000010001
+              Tint: [1, 1, 1, 1]
+              FlipX: false
+              FlipY: false
+              RotationQuarterTurns: 0
+            - Coordinate: [7, 7]
+              SpriteHandle: 6200000000000010001
+              Tint: [1, 1, 1, 1]
+              FlipX: false
+              FlipY: false
+              RotationQuarterTurns: 0
+      - TypeId: 11457157452030541845
+        StableName: "TomCat.TilemapRenderer2D"
+        SchemaVersion: 1
+        Properties:
+          - PropertyId: 1400
+            StableName: "Enabled"
+            Value: true
+          - PropertyId: 1401
+            StableName: "SortOrder"
+            Value: 0
+          - PropertyId: 1402
+            StableName: "Mode"
+            Value: 0
+          - PropertyId: 1403
+            StableName: "DetectChunkCulling"
+            Value: 0
+          - PropertyId: 1404
+            StableName: "SortingLayer"
+            Value: 0
+          - PropertyId: 1405
+            StableName: "OrderInLayer"
+            Value: 0
+          - PropertyId: 1406
+            StableName: "Material"
+            Value: 0
+    Parent: 0
+  - Entity: 6200000000000030303
+    Tag:
+      Tag: "ReturnMap_3_3"
+      Visible: true
+    EntityMetadata:
+      GameplayTag: "Untagged"
+      Layer: 0
+      HierarchyIcon: "Entity"
+    Transform:
+      Translation: [0.5, 0.5, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+    LocalTransform:
+      Translation: [0.5, 0.5, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+    Components:
+      - TypeId: 11457157452030541825
+        StableName: "TomCat.ID"
+        SchemaVersion: 1
+        Properties:
+          - PropertyId: 1
+            StableName: "Value"
+            Value: 6200000000000030303
+      - TypeId: 11457157452030541826
+        StableName: "TomCat.Tag"
+        SchemaVersion: 1
+        Properties:
+          - PropertyId: 1
+            StableName: "Name"
+            Value: "ReturnMap_3_3"
+          - PropertyId: 2
+            StableName: "Visible"
+            Value: true
+      - TypeId: 11457157452030541827
+        StableName: "TomCat.EntityMetadata"
+        SchemaVersion: 1
+        Properties:
+          - PropertyId: 1
+            StableName: "GameplayTag"
+            Value: "Untagged"
+          - PropertyId: 2
+            StableName: "Layer"
+            Value: 0
+          - PropertyId: 3
+            StableName: "HierarchyIcon"
+            Value: 1
+      - TypeId: 11457157452030541828
+        StableName: "TomCat.Transform"
+        SchemaVersion: 1
+        Properties:
+          - PropertyId: 1
+            StableName: "Translation"
+            Value: [0.5, 0.5, 0]
+          - PropertyId: 2
+            StableName: "Rotation"
+            Value: [0, 0, 0]
+          - PropertyId: 3
+            StableName: "Scale"
+            Value: [1, 1, 1]
+          - PropertyId: 4
+            StableName: "LocalTranslation"
+            Value: [0.5, 0.5, 0]
+          - PropertyId: 5
+            StableName: "LocalRotation"
+            Value: [0, 0, 0]
+          - PropertyId: 6
+            StableName: "LocalScale"
+            Value: [1, 1, 1]
+      - TypeId: 11457157452030541841
+        StableName: "TomCat.Tilemap2D"
+        SchemaVersion: 1
+        Properties:
+          Enabled: true
+          CellSize: [1, 1]
+          CellGap: [0, 0]
+          SortingLayer: 0
+          OrderInLayer: 0
+          Cells:
+            - Coordinate: [-7, -7]
+              SpriteHandle: 6200000000000010004
+              Tint: [1, 1, 1, 1]
+              FlipX: false
+              FlipY: false
+              RotationQuarterTurns: 0
+            - Coordinate: [-6, -7]
+              SpriteHandle: 6200000000000010004
+              Tint: [1, 1, 1, 1]
+              FlipX: false
+              FlipY: false
+              RotationQuarterTurns: 0
+            - Coordinate: [-4, -5]
+              SpriteHandle: 6200000000000010020
+              Tint: [1, 1, 1, 1]
+              FlipX: false
+              FlipY: false
+              RotationQuarterTurns: 0
+            - Coordinate: [-3, -5]
+              SpriteHandle: 6200000000000010030
+              Tint: [1, 1, 1, 1]
+              FlipX: false
+              FlipY: false
+              RotationQuarterTurns: 0
+            - Coordinate: [3, 3]
+              SpriteHandle: 6200000000000010020
+              Tint: [1, 1, 1, 1]
+              FlipX: false
+              FlipY: false
+              RotationQuarterTurns: 0
+            - Coordinate: [4, 3]
+              SpriteHandle: 6200000000000010030
+              Tint: [1, 1, 1, 1]
+              FlipX: false
+              FlipY: false
+              RotationQuarterTurns: 0
+            - Coordinate: [-5, 4]
+              SpriteHandle: 6200000000000010020
+              Tint: [1, 1, 1, 1]
+              FlipX: false
+              FlipY: false
+              RotationQuarterTurns: 0
+            - Coordinate: [-4, 4]
+              SpriteHandle: 6200000000000010030
+              Tint: [1, 1, 1, 1]
+              FlipX: false
+              FlipY: false
+              RotationQuarterTurns: 0
+      - TypeId: 11457157452030541845
+        StableName: "TomCat.TilemapRenderer2D"
+        SchemaVersion: 1
+        Properties:
+          - PropertyId: 1400
+            StableName: "Enabled"
+            Value: true
+          - PropertyId: 1401
+            StableName: "SortOrder"
+            Value: 0
+          - PropertyId: 1402
+            StableName: "Mode"
+            Value: 0
+          - PropertyId: 1403
+            StableName: "DetectChunkCulling"
+            Value: 0
+          - PropertyId: 1404
+            StableName: "SortingLayer"
+            Value: 0
+          - PropertyId: 1405
+            StableName: "OrderInLayer"
+            Value: 0
+          - PropertyId: 1406
+            StableName: "Material"
+            Value: 0
+    Parent: 0
+  - Entity: 6200000000000030304
+    Tag:
+      Tag: "ReturnMap_3_4"
+      Visible: false
+    EntityMetadata:
+      GameplayTag: "Untagged"
+      Layer: 0
+      HierarchyIcon: "Entity"
+    Transform:
+      Translation: [0.5, 0.5, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+    LocalTransform:
+      Translation: [0.5, 0.5, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+    Components:
+      - TypeId: 11457157452030541825
+        StableName: "TomCat.ID"
+        SchemaVersion: 1
+        Properties:
+          - PropertyId: 1
+            StableName: "Value"
+            Value: 6200000000000030304
+      - TypeId: 11457157452030541826
+        StableName: "TomCat.Tag"
+        SchemaVersion: 1
+        Properties:
+          - PropertyId: 1
+            StableName: "Name"
+            Value: "ReturnMap_3_4"
+          - PropertyId: 2
+            StableName: "Visible"
+            Value: false
+      - TypeId: 11457157452030541827
+        StableName: "TomCat.EntityMetadata"
+        SchemaVersion: 1
+        Properties:
+          - PropertyId: 1
+            StableName: "GameplayTag"
+            Value: "Untagged"
+          - PropertyId: 2
+            StableName: "Layer"
+            Value: 0
+          - PropertyId: 3
+            StableName: "HierarchyIcon"
+            Value: 1
+      - TypeId: 11457157452030541828
+        StableName: "TomCat.Transform"
+        SchemaVersion: 1
+        Properties:
+          - PropertyId: 1
+            StableName: "Translation"
+            Value: [0.5, 0.5, 0]
+          - PropertyId: 2
+            StableName: "Rotation"
+            Value: [0, 0, 0]
+          - PropertyId: 3
+            StableName: "Scale"
+            Value: [1, 1, 1]
+          - PropertyId: 4
+            StableName: "LocalTranslation"
+            Value: [0.5, 0.5, 0]
+          - PropertyId: 5
+            StableName: "LocalRotation"
+            Value: [0, 0, 0]
+          - PropertyId: 6
+            StableName: "LocalScale"
+            Value: [1, 1, 1]
+      - TypeId: 11457157452030541841
+        StableName: "TomCat.Tilemap2D"
+        SchemaVersion: 1
+        Properties:
+          Enabled: true
+          CellSize: [1, 1]
+          CellGap: [0, 0]
+          SortingLayer: 0
+          OrderInLayer: 0
+          Cells:
+            - Coordinate: [-1, -7]
+              SpriteHandle: 6200000000000010004
+              Tint: [1, 1, 1, 1]
+              FlipX: false
+              FlipY: false
+              RotationQuarterTurns: 0
+            - Coordinate: [0, -7]
+              SpriteHandle: 6200000000000010004
+              Tint: [1, 1, 1, 1]
+              FlipX: false
+              FlipY: false
+              RotationQuarterTurns: 0
+            - Coordinate: [-4, -6]
+              SpriteHandle: 6200000000000010084
+              Tint: [1, 1, 1, 1]
+              FlipX: false
+              FlipY: false
+              RotationQuarterTurns: 0
+            - Coordinate: [-5, -4]
+              SpriteHandle: 6200000000000010001
+              Tint: [1, 1, 1, 1]
+              FlipX: false
+              FlipY: false
+              RotationQuarterTurns: 0
+            - Coordinate: [-6, -2]
+              SpriteHandle: 6200000000000010001
+              Tint: [1, 1, 1, 1]
+              FlipX: false
+              FlipY: false
+              RotationQuarterTurns: 0
+            - Coordinate: [5, -2]
+              SpriteHandle: 6200000000000010001
+              Tint: [1, 1, 1, 1]
+              FlipX: false
+              FlipY: false
+              RotationQuarterTurns: 0
+            - Coordinate: [-5, 0]
+              SpriteHandle: 6200000000000010001
+              Tint: [1, 1, 1, 1]
+              FlipX: false
+              FlipY: false
+              RotationQuarterTurns: 0
+            - Coordinate: [4, 0]
+              SpriteHandle: 6200000000000010001
+              Tint: [1, 1, 1, 1]
+              FlipX: false
+              FlipY: false
+              RotationQuarterTurns: 0
+            - Coordinate: [-4, 2]
+              SpriteHandle: 6200000000000010001
+              Tint: [1, 1, 1, 1]
+              FlipX: false
+              FlipY: false
+              RotationQuarterTurns: 0
+            - Coordinate: [-1, 2]
+              SpriteHandle: 6200000000000010088
+              Tint: [1, 1, 1, 1]
+              FlipX: false
+              FlipY: false
+              RotationQuarterTurns: 0
+            - Coordinate: [0, 2]
+              SpriteHandle: 6200000000000010089
+              Tint: [1, 1, 1, 1]
+              FlipX: false
+              FlipY: false
+              RotationQuarterTurns: 0
+            - Coordinate: [3, 2]
+              SpriteHandle: 6200000000000010001
+              Tint: [1, 1, 1, 1]
+              FlipX: false
+              FlipY: false
+              RotationQuarterTurns: 0
+      - TypeId: 11457157452030541845
+        StableName: "TomCat.TilemapRenderer2D"
+        SchemaVersion: 1
+        Properties:
+          - PropertyId: 1400
+            StableName: "Enabled"
+            Value: true
+          - PropertyId: 1401
+            StableName: "SortOrder"
+            Value: 0
+          - PropertyId: 1402
+            StableName: "Mode"
+            Value: 0
+          - PropertyId: 1403
+            StableName: "DetectChunkCulling"
+            Value: 0
+          - PropertyId: 1404
+            StableName: "SortingLayer"
+            Value: 0
+          - PropertyId: 1405
+            StableName: "OrderInLayer"
+            Value: 0
+          - PropertyId: 1406
+            StableName: "Material"
+            Value: 0
+    Parent: 0

@@ -1,8 +1,14 @@
 # TomCat Web
 
+## Return 主页示例
+
+首页精选入口提供 `/games/return`。Return 使用 Tc 原生 C# 运行教学关、五个解谜关和终幕，保留原始素材、生死切换、推箱和按钮机关。27 个原生 `Tilemap2D` 图层包含 770 个可逐格编辑的单元格；下载工程后，可在 `Assets/Scene/Levels` 编辑关卡地图。
+
+`npm run engine:return` 从可编辑场景同步碰撞、调用固定版本的 Tc cooker，并生成经过哈希校验的游戏包和源码 ZIP。详见 [示例说明](samples/return/README.md)、[地图编辑与素材来源](samples/return/Reference/README.md) 和 [验证记录](docs/return-delivery.md)。
+
 ## Rougelike 主页示例
 
-首页首屏与精选入口提供 `/games/rougelike`，游客可直接游玩、全屏运行并下载可编辑的 Tc 工程。十波战斗、三选一强化、时间凝滞、黑洞、蓄力斩、可破坏菜单/HUD、死亡重开及原版音乐音效由 Tc 原生 C# 脚本执行。游戏包包含场景、图片、字体、音频和编译后的程序集。
+首页示例列表提供 `/games/rougelike`，游客可直接游玩、全屏运行并下载可编辑的 Tc 工程。十波战斗、三选一强化、时间凝滞、黑洞、蓄力斩、可破坏菜单/HUD、死亡重开及原版音乐音效由 Tc 原生 C# 脚本执行。游戏包包含场景、图片、字体、音频和编译后的程序集。
 
 源工程位于 `samples/rougelike`。`npm run engine:rougelike` 调用真实 Tc cooker 重建静态 TCPAK、校验资源哈希并生成源码 ZIP；`node tests/rougelike-browser.mjs` 验证浏览器启动和交互，设置 `TEST_REQUIRE_AUDIO=1` 校验真实音频输出，`TEST_COMBAT=1` 通过画面识别与鼠标操作完成首波/强化流程。完整操作、重建条件和渲染近似见 [示例说明](samples/rougelike/README.md) 与 [复原核对](samples/rougelike/REFERENCE.md)。
 
@@ -24,7 +30,7 @@ Vue 3 创作工作台，使用固定版本的上游 TomCat Web Editor / Player�
 
 ## 开发与构建
 
-当前浏览器引擎与 Railway 编译打包器统一锁定 `c2848721`（上游 [PR #36](https://github.com/chnnasn/TomCat_Engine/pull/36)，包含 [PR #31](https://github.com/chnnasn/TomCat_Engine/pull/31)、[PR #33](https://github.com/chnnasn/TomCat_Engine/pull/33)）。该版本优化频繁创建/销毁实体、延迟命令投影、名称查重、Web 渲染状态查询及字体源复用；保留已有 WebAudio、动态脚本 BCL 和多字体能力，继续使用 Managed API v6、TCPAK v8、Scene v11、Project v4。`5734c56ae05241b01a684afb8e62f2b164c69ba2` 与 `0b8829a864ff53ad0ad2c7ded56ef433325a836a` 保留在明确兼容列表中；未知提交和旧 Managed API v5 不通用放行，历史云端数据保留。性能测量方法、结果和边界见 [Rougelike 性能回归](docs/rougelike-performance.md)。
+当前浏览器引擎与 Railway 编译打包器统一锁定 `c2848721`（上游 [PR #36](https://github.com/chnnasn/TomCat_Engine/pull/36)，包含 [PR #31](https://github.com/chnnasn/TomCat_Engine/pull/31)、[PR #33](https://github.com/chnnasn/TomCat_Engine/pull/33)）。该版本优化频繁创建/销毁实体、延迟命令投影、名称查重、Web 渲染状态查询及字体源复用；保留已有 WebAudio、动态脚本 BCL、多字体、Return 辅助脚本烘焙及带符号变换能力，继续使用 Managed API v6、TCPAK v8、Scene v11、Project v4。`9a0ccad79bb4ec33225bd8210fe9b47438bb06bc`、`5734c56ae05241b01a684afb8e62f2b164c69ba2` 与 `0b8829a864ff53ad0ad2c7ded56ef433325a836a` 保留在明确兼容列表中；未知提交和旧 Managed API v5 不通用放行，历史云端数据保留。性能测量方法、结果和边界见 [Rougelike 性能回归](docs/rougelike-performance.md)。
 
 托管 Web 构建支持分帧场景加载、文字塑形、虚拟列表、2D 光照与后处理。浏览器 AudioSource 通过 WebAudio 播放驻留音频，首次用户操作后解锁声音，并在退出运行时关闭音频上下文；流式音频仍不支持。动态 C# 脚本的常用 BCL 实现与类型转发元数据会保留，多字体在浏览器单线程中依次完成准备和上传。原生 DLL 模块、浏览器存档持久化和完整 ICU/IME 的既有限制仍然适用。
 

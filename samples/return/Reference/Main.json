@@ -1,0 +1,63 @@
+{
+  "source": "Assets/Scenes/Main.unity",
+  "tilemaps": [],
+  "objects": [],
+  "texts": [
+    {
+      "Text": "重置",
+      "X": 0.0,
+      "Y": 0.0,
+      "Realm": -1,
+      "Size": 25,
+      "Path": "Menu/Panel/Return/Text (Legacy)"
+    },
+    {
+      "Text": "开始游戏",
+      "X": 0.0,
+      "Y": 0.0,
+      "Realm": -1,
+      "Size": 25,
+      "Path": "Canvas/Start/Text (Legacy)"
+    },
+    {
+      "Text": "Echo World",
+      "X": 0.0,
+      "Y": 0.0,
+      "Realm": -1,
+      "Size": 30,
+      "Path": "Canvas/Title/outline"
+    },
+    {
+      "Text": "继续",
+      "X": 0.0,
+      "Y": 0.0,
+      "Realm": -1,
+      "Size": 25,
+      "Path": "Menu/Panel/Continue/Text (Legacy)"
+    },
+    {
+      "Text": "退出",
+      "X": 0.0,
+      "Y": 0.0,
+      "Realm": -1,
+      "Size": 25,
+      "Path": "Menu/Panel/Quat/Text (Legacy)"
+    },
+    {
+      "Text": "Echo World",
+      "X": 0.0,
+      "Y": 0.0,
+      "Realm": -1,
+      "Size": 30,
+      "Path": "Canvas/Title/outline/TIittle"
+    },
+    {
+      "Text": "退出",
+      "X": 0.0,
+      "Y": 0.0,
+      "Realm": -1,
+      "Size": 25,
+      "Path": "Canvas/Quat/Text (Legacy)"
+    }
+  ]
+}

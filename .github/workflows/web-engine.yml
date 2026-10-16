@@ -35,6 +35,8 @@ jobs:
           Get-Content .engine/ci-engine-build.log -Tail 80
           exit $buildExitCode
       - run: node tests/rougelike-logic.mjs
+      - run: node tests/return-physics.mjs
+      - run: node scripts/return-tilemap.test.mjs
       - run: npm run build
       - run: npx playwright install chromium
       - name: Browser regression
@@ -42,10 +44,12 @@ jobs:
           TEST_BASE_URL: http://127.0.0.1:4173
           TEST_BROWSER_CHANNEL: chromium
           TEST_REQUIRE_AUDIO: '1'
+          TEST_RETURN_WARMUP: '1'
+          TEST_SOFTWARE_GPU: '1'
         run: |
           $preview = Start-Process node -ArgumentList 'node_modules/vite/bin/vite.js', 'preview', '--host', '127.0.0.1', '--port', '4173', '--strictPort' -PassThru -WindowStyle Hidden -RedirectStandardOutput .engine/ci-preview.log -RedirectStandardError .engine/ci-preview-error.log
           try {
-            foreach ($suite in @('browser', 'inspector-metadata-browser', 'project-authoring-browser', 'scene-ownership-browser', 'layout-exit-browser', 'rougelike-browser')) {
+            foreach ($suite in @('browser', 'inspector-metadata-browser', 'project-authoring-browser', 'scene-ownership-browser', 'layout-exit-browser', 'rougelike-browser', 'return-homepage-browser', 'return-browser', 'return-orientation-browser')) {
               Write-Output "::group::$suite"
               node --experimental-strip-types "tests/$suite.mjs" *> ".engine/ci-$suite.log"
               $testExitCode = $LASTEXITCODE
@@ -65,6 +69,11 @@ jobs:
             .engine/ci-*.log
             .engine/*.png
             .engine/rougelike-qa/*.png
+            .engine/return-qa/**/*.png
+            .engine/return-qa/**/evidence.json
+            .engine/return-homepage-qa/**/*.png
+            .engine/return-orientation-qa/**/*.png
+            .engine/return-orientation-qa/**/evidence.json
       - uses: actions/upload-artifact@v4
         with:
           name: tomcat-web-with-engine
