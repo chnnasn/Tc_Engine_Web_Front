@@ -51,3 +51,18 @@
 - 首次下载取决于网络情况；本次跨境冷启动约两分钟，页面显示逐项校验进度。完成后缓存可复用，已经实际验证再次打开没有重新下载引擎。
 
 上游 Windows/Web CI 和本地发布检查均已通过；前端完整托管构建工作流在记录时仍运行，不能把本地或线上验收写成该次远程 CI 已完成。
+
+## 2026-10-17 性能更新
+
+此前普通攻击会触发大量场景投影、名称扫描和对象复制。性能修复已通过上游 [PR #31](https://github.com/chnnasn/TomCat_Engine/pull/31)、[PR #33](https://github.com/chnnasn/TomCat_Engine/pull/33)、[PR #36](https://github.com/chnnasn/TomCat_Engine/pull/36) 合入，前后端统一升级至 `c28487215bd5df89b35c1d68252ba240231d9c4f`。上游最终 head 与合并提交六项 Windows/Web CI 全部通过。示例同时复用组件代理、减少重复分配、以原始图集半片替代拼接条带，并合并同帧击杀日志；保留伤害、随机调用、粒子、音效及销毁时机。
+
+最终硬件 GPU 实测：八次普通攻击各区间最大 CPU 回调为 **5.955–19.310 ms**，原始基线为 357–375 ms；1080p 完整 120 秒聚敌后实际 43+17 杀并清场，活动窗口 CPU 回调 p95 为 **7.540 ms**、最大 **33.245 ms**，没有超过 50 ms 的回调。CPU 时间不等于显示帧率，该压力窗口仍记录了调度长间隔，完整数据与此前失败迭代见 [性能优化与回归](rougelike-performance.md)。
+
+- 前端正式应用提交：[`abab8d1`](https://github.com/chnnasn/Tc_Engine_Web_Front/commit/abab8d1fc12b1d7cadf7dcc8fd2db1fc788b1131)。手动部署为 `6ad277c87d52cc46c053dac7`，随后同一提交的 Netlify 自动构建 `6ad277dc916de1bea3ad6628` 于 03:16（北京时间）发布，成为正式版本；后续线上实玩对应此自动构建。保留同期已合入的 Return 示例。前端 57 项测试、类型检查、生产构建和生产 C# 逻辑回归通过。
+- 后端提交：[`77eb53c`](https://github.com/chnnasn/Tc_Engine_Web_backend/commit/77eb53cf08200f94121e0114dacde147f020dcf6)，Railway 部署 `a176b925-7f09-4870-9897-7836a269e064` 成功；镜像摘要 `sha256:1b01557eebfad946d2ab6b806439f5f246ccb2b0060cb17b2df293fceebc15ea`。构建日志确认正式引擎提交，Docker ENV 使用该 pin，平台不存在同名变量覆盖。未注册 SSH 凭证或执行容器 SSH；未改 Redis、数据卷或服务配置。直连及网站代理健康检查均返回 200。
+- 后端 Release 构建通过，40 项测试通过、1 项 Redis 测试因未配置服务跳过；有 NuGet 漏洞索引不可达的 NU1900 警告。`9a0ccad7`、`5734c56a`、`0b8829a8` 三个真实旧版本的工程恢复与旧包播放均通过，保留明确兼容列表。
+- 2026-10-17 03:18（北京时间），正式域名使用真实后端通过完整匿名实玩：菜单挥刀、首波五杀、升级进入第二波、接触死亡、M 返回、Enter 重开、WebAudio 非零输出、全屏、关闭清理及缓存复开。未用本地或模拟 API 替代线上结果。
+- 正式游戏包为 17,558,164 字节、21 条目，SHA-256 为 `41103940f1faa52a7f8b1f8f92ef0625b70bd6d62b30758b775f0e2edadc7944`；源码 ZIP SHA-256 为 `046691657019ff62eeb18090a513ca78a20fe39ff4d3aeacf5ad35640d0b3eac`。可复用引擎归档见 [web-engine-c2848721](https://github.com/chnnasn/Tc_Engine_Web_Front/releases/tag/web-engine-c2848721)，SHA-256 为 `5592781c45dd2099e5e13520d634e6f8a718b7694d0d67638c0e8275a29a7e98`，GitHub 上传摘要与本地一致。
+- 正式域名的引擎清单、游戏清单、TCPAK 与源码 ZIP 均与本地发布文件逐字节一致。自动构建的 HTML/应用入口文件名与本地构建不同，未声称二者字节相同；承载引擎 pin 的共享脚本字节一致，含正式提交及三个 legacy。实际主页保留 Return 与 Rougelike，详情页“下载示例工程”位于“开始游玩”按钮下方 12 px，链接和下载属性正确。
+
+前端应用提交的远程完整构建工作流在本次发布记录时仍运行；上述上游 CI、本地测试和正式域名验收分别记录，不混称为前端远程 CI 已完成。
