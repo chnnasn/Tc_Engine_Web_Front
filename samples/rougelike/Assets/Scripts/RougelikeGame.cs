@@ -129,7 +129,7 @@ public sealed class RougelikeGame : MonoBehaviour
     int pendingAction = -1;
     float energy=100, maxEnergy=100, speed=500, attackCost=10, regen=25, attackCooldown=.05f, slashRadius=65, slashSpan=240, invulnerability=.65f;
     float slowDrain=44, slowScale=.25f, holeCost=30, holeDuration=3, holeRadius=220, chargeMaxTime=1.1f, chargeMinRange=140, chargeMaxRange=560, chargeWidth=34;
-    int health=10, maxHealth=10, wave, spawned, kills, combo, rerolls=3;
+    int health=10, maxHealth=10, wave, spawned, kills, combo, rerolls=3, pendingKillLogs;
     bool slowUnlocked, holeUnlocked, chargeUnlocked, slow, slowLocked, paused;
     float viewportWidth=1152, viewportHeight=648, worldHeight=648;
 
@@ -256,6 +256,7 @@ public sealed class RougelikeGame : MonoBehaviour
     }
     void Menu()
     {
+        FlushKillLog();
         ClearWorld(); ClearPanel(); phase=Phase.Menu; phaseTime=0; paused=false;
         ResetPlayer();position=new(300,470);
         PanelText("Title","ROUGELIKE",120,275,72,Ink,false);
@@ -270,6 +271,7 @@ public sealed class RougelikeGame : MonoBehaviour
     }
     void Begin()
     {
+        FlushKillLog();
         ClearPanel();ClearWorld();
         ResetPlayer();runTime=0;kills=combo=0;rerolls=3;
         position=new(576,324);wave=0;StartWave(1.5f);
@@ -362,6 +364,7 @@ public sealed class RougelikeGame : MonoBehaviour
         audio.Tick(phase is Phase.Playing or Phase.Upgrade or Phase.Dying or Phase.Clear,paused,pitch);
         Render();
         Flush();
+        FlushKillLog();
     }
     void OnDestroy() => audio?.Stop();
     void Move(float dt)
@@ -459,7 +462,19 @@ public sealed class RougelikeGame : MonoBehaviour
         if(e.Health>0)return;
         Burst(e.Position,Alpha(Ink,.4f),16);SplitShape(e.Position,25.63f,false,Ink);Remove(e.Body);Remove(e.Number);enemies.Remove(e);
         kills++;combo++;comboTime=1.6f;comboBump=.11f;shake=Math.Max(shake,4);
-        Log.Info($"[Rougelike] kill:{kills} remaining:{enemies.Count}");
+        pendingKillLogs++;
+    }
+    string? TakeKillLog()
+    {
+        if(pendingKillLogs==0)return null;
+        string message=$"[Rougelike] kill:{kills} remaining:{enemies.Count} count:{pendingKillLogs}";
+        pendingKillLogs=0;
+        return message;
+    }
+    void FlushKillLog()
+    {
+        var message=TakeKillLog();
+        if(message is not null)Log.Info(message);
     }
     void TickSlashes(float dt)
     {
@@ -769,6 +784,7 @@ public sealed class RougelikeGame : MonoBehaviour
     }
     void Finish(bool won)
     {
+        FlushKillLog();
         slow=false;chargeTime=0;paused=false;pendingAction=-1;
         if(won){GameOver(true);return;}
         phase=Phase.Dying;phaseTime=0;ClearPanel();shake=22;
@@ -779,6 +795,7 @@ public sealed class RougelikeGame : MonoBehaviour
     }
     void GameOver(bool won=false)
     {
+        FlushKillLog();
         ClearWorld();ClearPanel();ResetPlayer();phase=won?Phase.Clear:Phase.Dead;phaseTime=0;position=new(300,470);
         PanelText("End title",won?"CLEAR":"GAME OVER",120,255,72,won?Ink:Red,false);
         PanelText("End stats",$"第 {wave+1} / 10 波  ·  击杀 {kills}  ·  {(int)runTime} 秒",124,340,26);

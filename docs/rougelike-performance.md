@@ -59,7 +59,7 @@
 - 保留两半碎片、粒子、刀光和扫描线效果；图集半片需核对原图区域、旋转原点和打包引用，同时验证技能、死亡、暂停、全屏、音频关闭及旧版本项目兼容。
 - WASM 缓冲区容量和浏览器堆快照只作趋势记录，不能单凭容量不增长断言没有内存泄漏。
 
-## 最终候选的实测结果
+## 合并前候选的实测结果
 
 2026-10-17 02:23–02:28（北京时间），候选引擎 `2077a53ca294bf541a9db207d1762e90c296d40c` 和原图半片方案通过上述门槛。浏览器为 Chrome 155.0.8059.82，使用 Intel UHD / ANGLE D3D11 硬件渲染，开启 CPU 采样。生产脚本 SHA-256 为 `991b8547b02a0f6cd3530a1c16c661b555682001ccd3672de85d0e444b1be37e`。
 
@@ -79,3 +79,70 @@
 原图半片另经实际浏览器像素验证：将完整圆形/六边形和两个半片并排绘制，两组 180×180 比较区域的不同像素数均为 0。打包核验确认四个子精灵的区域、pivot、PPU、底层纹理和全部 21 个 TCPAK 条目哈希正确。
 
 本地证据保存在 `.engine/rougelike-performance/candidate7-empty-swings/evidence.json`、`.engine/rougelike-stress/2026-10-16T18-23-45-592Z-32676/evidence.json` 及 `.engine/rougelike-half-sprites/`。这些原始日志与 profile 为本机审计材料，未提交进仓库。
+
+## 上游合并与版本一致性
+
+性能修复经 [PR #31](https://github.com/chnnasn/TomCat_Engine/pull/31)、[PR #33](https://github.com/chnnasn/TomCat_Engine/pull/33) 和 [PR #36](https://github.com/chnnasn/TomCat_Engine/pull/36) 合入上游，最终提交为 `c28487215bd5df89b35c1d68252ba240231d9c4f`。正式提交同时包含主线新增的辅助脚本烘焙和带符号变换修复，未回退同期 Return 示例。
+
+最终 PR head 与合并提交的六项 Windows/Web CI 均为 `completed/success`（6/6）；其中两项直接验证合并提交，其余四项验证 PR #36 的最终 head：
+
+| 提交与触发方式 | Windows 原生回归 | Managed Web 浏览器回归 |
+| --- | --- | --- |
+| 合并提交 `c2848721`，push | [通过](https://github.com/chnnasn/TomCat_Engine/actions/runs/38948149686) | [通过](https://github.com/chnnasn/TomCat_Engine/actions/runs/38948149684) |
+| PR head `cbc3957b`，pull_request | [通过](https://github.com/chnnasn/TomCat_Engine/actions/runs/38948013755) | [通过](https://github.com/chnnasn/TomCat_Engine/actions/runs/38948013776) |
+| PR head `cbc3957b`，push | [通过](https://github.com/chnnasn/TomCat_Engine/actions/runs/38948005429) | [通过](https://github.com/chnnasn/TomCat_Engine/actions/runs/38948005417) |
+
+正式提交与已测候选 `2077a53c` 的生产运行时源码完全一致，仅物理回归的七行断言不同。重新构建后的 `dotnet.native.wasm` 字节一致，SHA-256 为 `1b3b726bb571f885eeb47bfd132483de7c8c3ee3d63420bda06322fc5736314c`；四个 TomCat 托管 Webcil 文件的版本元数据更新到正式 SHA，因此不能称整个发布目录字节相同。前端运行时、Cooker、托管 API 与源生成器使用同一正式提交。
+
+明确兼容 `9a0ccad79bb4ec33225bd8210fe9b47438bb06bc`、`5734c56ae05241b01a684afb8e62f2b164c69ba2`、`0b8829a864ff53ad0ad2c7ded56ef433325a836a`：三个旧 WASM 实际生成的工程分别保存、清空本地副本后从云端恢复，并在新版保存相同的类型化场景值；旧 Return、Rougelike、CoinRunner TCPAK 分别在新版真实运行。未知版本和 Managed API v5 继续拒绝。
+
+前端整合后的 57 项单元测试通过，包含批量击杀日志计数、旧格式兼容及清场边界回归。后端完整测试为 40 通过、0 失败、1 跳过（未配置 Redis 测试服务），覆盖四个允许版本创建、读回及服务重启恢复。后端 Release 构建通过，NuGet 漏洞索引不可达产生 NU1900 警告；未将其描述成零警告构建。
+
+可复跑性能检查（先构建锁定引擎与示例包，分别单独运行，避免本机同时编译或启动其他测试）：
+
+```powershell
+$env:TEST_BASE_URL='http://127.0.0.1:5186'
+$env:TEST_PERF_MAX_FRAME_MS='50'
+$env:TEST_PERF_P95_MS='16.67'
+node tests/rougelike-performance-browser.mjs
+$env:TEST_STRESS_PROFILE='1'
+$env:TEST_STRESS_FULLSCREEN='1'
+$env:TEST_STRESS_WIDTH='1920'
+$env:TEST_STRESS_HEIGHT='1080'
+$env:TEST_STRESS_MAX_FRAME_MS='50'
+$env:TEST_STRESS_P95_MS='16.67'
+node tests/rougelike-stress-browser.mjs
+```
+
+压力夹具新建时会记录完整工程输入指纹；复用要求场景、纹理、`.tcmeta`、项目配置、脚本及工具链一致，旧夹具缺少指纹时明确拒绝。生成缓存不参与指纹。正式示例不会加入测试用的第十波、全技能和 1000 生命初始化。
+
+## 正式版本复测发现的日志开销
+
+整合最新前端主线后，`c2848721` 的第一次正式 120 秒复测仍记录为失败：17,993 次活动回调的 p95 为 9.095 ms，但集中击杀有一次 54.145 ms 回调超过 50 ms 门槛。实际蓄力 40 杀、连续攻击 20 杀并清场；其他阶段通过。证据位于 `.engine/rougelike-stress/2026-10-16T18-43-48-817Z-32492/`，没有用已通过的候选结果覆盖这次失败。
+
+将 68,393 个忙闲采样与帧记录对齐后，尖峰内 41 个采样覆盖约 54.077 ms，没有大采样空洞。互斥调用栈估计为：托管解释/PInvoke 14.621 ms、投影 8.398 ms、延迟提交 8.777 ms、日志桥输出 5.135 ms、首次死亡音效建声部 4.339 ms、即时编译 2.315 ms、GC 1.286 ms，其他原生/音频工作占剩余部分。该区间没有采到字体校验或 GL 同步热点；不能将它归咎于单一调度停摆，也不能把采样估计当成精确计时。
+
+基于该证据，示例将同一帧的击杀日志合并为一次输出，仍记录实际累计和本批击杀数。伤害、特效、随机数、声音及原生销毁时机保持；压力测试按明确批次数累计真实击杀，保留旧日志格式兼容和清场前后的归属检查。此项属于示例日志开销优化，不需要新的引擎 API 或上游补丁。
+
+## 正式版本最终复测
+
+2026-10-17 02:58–03:02（北京时间），使用正式引擎 `c28487215bd5df89b35c1d68252ba240231d9c4f`、批量日志后的示例和整合后的前端，分别完成完整压力与八次菜单空挥测试，两项均通过 p95 16.67 ms、最大 CPU 回调 50 ms 门槛。浏览器为 Chrome 155.0.8059.82，Intel UHD / ANGLE D3D11 硬件渲染；压力测试为 1920×1080 全屏并开启 CPU 采样，菜单空挥为 1440×1000。
+
+| 场景 | rAF 回调 CPU p95 | 最大回调 CPU | 超过 50 ms 的回调 |
+| --- | --- | --- | --- |
+| 八次菜单空挥，各次区间 | 4.110–5.840 ms | 5.955–19.310 ms | 0 |
+| 1080p 黑洞阶段 | 9.040 ms | 17.905 ms | 0 |
+| 持续按 Shift、能量限制下的慢时阶段 | 10.880 ms | 14.960 ms | 0 |
+| 蓄力斩，实际 43 杀 | 9.025 ms | 25.990 ms | 0 |
+| 随后连续正反手斩，实际 17 杀 | 5.975 ms | 12.075 ms | 0 |
+| 完整压力活动窗口，167.926 秒、11,085 次回调 | 7.540 ms | 33.245 ms | 0 |
+
+目标 120 秒的聚敌阶段实际持续 122.636 秒，各聚敌窗口均有新受伤日志并检查音乐仍在运行，排除了暂停或提前清场后的空场景。其后按顺序测试黑洞、慢时、蓄力与连续攻击，累计 60 杀，最后 17 杀发生在连续攻击阶段并清场。连续攻击的 20 秒区间包含清场后的时间，不能称为全程 60 敌压力；完整活动窗口包含阶段之间的采集间隙，排除初始化、暂停和关闭阶段。`PlayerFrame` 全窗口 p95 为 7.435 ms、最大 33.110 ms。清场后重开第一波再检查暂停，最后关闭音频上下文也通过。
+
+CPU 门槛通过不等于屏幕帧率达标：同一活动窗口的回调开始间隔 p95 为 **34.33984375 ms**、最大 **91.935 ms**，仍有 **77 次超过 50 ms**。这反映回调调度间隔，不能当作屏幕呈现 FPS，也不能据此宣称所有设备零掉帧。八次空挥各区间的开始间隔最大值为 30.735 ms，没有超过 50 ms；每次均核实真实鼠标输入、原生播放调用和实际 WebAudio 声源启动。各轮随机敌人分布、击杀分组及调度状态不同，以上结果不用于计算逐轮提升百分比，也不单独证明日志合并的因果收益。
+
+本轮源脚本 SHA-256 为 `f2e0f2aab3260451380cf396b35f882f24e9be862ef45e4bc23be9b8877a55d5`。正式 TCPAK 为 v8、21 个条目、17,558,164 字节，SHA-256 为 `41103940f1faa52a7f8b1f8f92ef0625b70bd6d62b30758b775f0e2edadc7944`；空挥测试核对了浏览器实际收到的此包。压力测试使用从相同源工程新建的 QA 包，SHA-256 为 `f8a44e02140ae7266c8a34297b1b4dcd7e141b4cb1875cbbc66e6a27bf79eba4`，只追加上述第十波、技能和生命初始化。两项测试均核对实际 iframe 加载的引擎版本与核心资源哈希，没有用本地 lock 代替运行时身份检查。
+
+正式生产包另通过完整玩法回归：菜单挥刀、首波五次击杀、强化卡显示与数字选卡进入第二波、接触死亡时间轴、M 返回菜单、Enter 重开、实际音频输出、全屏与关闭清理，以及再次打开时不重新下载引擎。该回归验证生产流程，没有将 QA 第十波初始化当作自然通关，也没有额外声称死亡音高已经断言。
+
+最终本地证据为 `.engine/rougelike-stress/2026-10-16T18-58-06-626Z-33200/evidence.json`、`.engine/rougelike-performance/final-batched-empty-swings/evidence.json` 和 `.engine/rougelike-performance/final-batched-gameplay.log`。此前 54.145 ms 失败记录继续保留，上述通过结论只对应这里列出的最终源码、正式引擎及测量范围。

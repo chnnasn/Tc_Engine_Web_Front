@@ -19,6 +19,7 @@ import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { chromium } from 'playwright'
 import { readLoadedEngine } from './rougelike-performance-probe.mjs'
+import { killCounts } from './rougelike-log-counts.mjs'
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 const hash = value => createHash('sha256').update(value).digest('hex')
@@ -148,7 +149,7 @@ async function phase(label, seconds, action) {
     .map(sample => sample.duration), { start, end })
   const live = stats(costs)
   console.log('[stress phase] ' + JSON.stringify({ label, frames: live.count, p95: live.p95, p99: live.p99, max: live.max,
-    over50: live.over50ms, kills: phases.at(-1).logs.filter(value => value.includes('[Rougelike] kill:')).length,
+    over50: live.over50ms, kills: killCounts(phases.at(-1)).kills,
     cleared: phases.at(-1).clearedAtEnd, thresholdFailures: checkThresholds(label, live) }))
   await snapshot(`${label}:after`)
   running()
@@ -169,14 +170,6 @@ async function finishActiveWindow(partial = false) {
   const end = await now()
   Object.assign(activeWindow, { end, seconds: (end - activeWindow.start) / 1000, partial,
     clearedAtEnd: logs.some(value => value.includes('[Rougelike] clear')), logs: logs.slice(activeWindow.logStart) })
-}
-function killCounts(window) {
-  let cleared = window.wasClearedAtStart, killsBeforeClear = 0, killsAfterClear = 0
-  for (const value of window.logs) {
-    if (value.includes('[Rougelike] clear')) cleared = true
-    if (value.includes('[Rougelike] kill:')) { if (cleared) killsAfterClear++; else killsBeforeClear++ }
-  }
-  return { kills: killsBeforeClear + killsAfterClear, killsBeforeClear, killsAfterClear }
 }
 try {
   await page.goto(`${base}/games/rougelike`)
@@ -322,7 +315,7 @@ finally {
       'rAF CPU callbacks include synchronous WASM/render submission, not completed GPU/compositor work. Callback-start intervals show scheduling gaps, not exact displayed FPS.',
       'engineIntervals pairs globally adjacent engine starts and assigns each gap to the window containing its preceding start, retaining cross-boundary stalls; the last observed callback has no inferred successor.',
       'activeWindow starts after initialization/focus/profiler setup and ends after the final attack phase, before clear restart, P, and teardown. It includes inter-phase snapshots/screenshots and their instrumentation overhead so delayed fragment work cannot fall between thresholded phases. Its timing is not directly comparable with phase-only or original empty-swing CPU baselines.',
-      'Native kill logs are counted across the whole active window, including collection gaps, and split before/after the first clear. A phase already cleared at start can be an empty-scene input sample, not crowd pressure.',
+      'Native kill batches contribute their explicit count (historical single-kill records count as one) across the whole active window, including collection gaps, split before/after the first clear. A phase already cleared at start can be an empty-scene input sample, not crowd pressure.',
       '16.67/33.33 ms counts are diagnostic 60/30 Hz budgets, not assertions. Headless display cadence, instrumentation and optional profiler affect measurements.',
       'Heap metrics are snapshots with GC variation. JS heap does not include the full WASM/audio/GPU allocations; WASM buffer size is capacity, not live allocations. No draw hooks or forced GC are used.',
       'The observer retains frame/audio records, so some JS heap growth is measurement overhead, not evidence of a game leak.',
