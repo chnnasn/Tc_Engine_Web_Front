@@ -252,6 +252,12 @@ try {
   await page.keyboard.press('Space', { delay: 50 }); await logAfter('[Return] jump', jump)
   await capture('jump-right', 1, { jumping: true })
   await turn('a', 'jump-left'); await turn('d', 'jump-right-turn'); await wait(800)
+  // Slow software rendering can keep movement held long enough to reach the
+  // trap during capture. Begin this separate death leg from a known live realm.
+  const deathRestart = count('[Return] restart'), deathStage = count('[Return] stage:0')
+  await page.keyboard.press('r', { delay: 80 })
+  await logAfter('[Return] restart', deathRestart)
+  await logAfter('[Return] stage:0', deathStage)
   const death = count('[Return] realm:1')
   await page.keyboard.down('d')
   try { await logAfter('[Return] realm:1', death) } finally { await page.keyboard.up('d') }
