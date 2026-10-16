@@ -126,8 +126,11 @@ try {
       await canvas.focus()
     }
     await page.keyboard.press('1')
-    await page.waitForTimeout(3500)
-    assert.ok(logs.some(text=>text.includes('[Rougelike] wave:2')))
+    // Wait for the real transition: software rendering and concurrent CI can
+    // advance less than three game seconds during a fixed wall-clock sleep.
+    const nextWaveDeadline=Date.now()+30000
+    while(!logs.some(text=>text.includes('[Rougelike] wave:2'))&&Date.now()<nextWaveDeadline)await page.waitForTimeout(200)
+    assert.ok(logs.some(text=>text.includes('[Rougelike] wave:2')),logs.slice(-35).join('\n'))
   }
   await page.keyboard.down('d'); await page.waitForTimeout(350); await page.keyboard.up('d')
   await page.mouse.click((await canvas.boundingBox()).x+500,(await canvas.boundingBox()).y+240)
@@ -144,10 +147,14 @@ try {
     assert.ok(logs.some(text=>text.includes('[Rougelike] dying'))&&logs.some(text=>text.includes('[Rougelike] game over')),'real contact damage must reach death and game over')
     await canvas.screenshot({path:'.engine/rougelike-qa/game-over.png'})
     const before=logs.filter(text=>text.includes('[Rougelike] menu')).length
-    await page.keyboard.press('m');await page.waitForTimeout(500)
+    await page.keyboard.press('m')
+    const menuDeadline=Date.now()+10000
+    while(logs.filter(text=>text.includes('[Rougelike] menu')).length===before&&Date.now()<menuDeadline)await page.waitForTimeout(100)
     assert.equal(logs.filter(text=>text.includes('[Rougelike] menu')).length,before+1)
     const waves=logs.filter(text=>text.includes('[Rougelike] wave:1 ')).length
-    await page.keyboard.press('Enter');await page.waitForTimeout(2500)
+    await page.keyboard.press('Enter')
+    const retryDeadline=Date.now()+30000
+    while(logs.filter(text=>text.includes('[Rougelike] wave:1 ')).length===waves&&Date.now()<retryDeadline)await page.waitForTimeout(100)
     assert.equal(logs.filter(text=>text.includes('[Rougelike] wave:1 ')).length,waves+1)
     await canvas.screenshot({path:'.engine/rougelike-qa/retry.png'})
   }

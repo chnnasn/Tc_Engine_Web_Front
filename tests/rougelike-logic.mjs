@@ -164,6 +164,25 @@ static class Program
         Set(noRerolls, "rerolls", 0); Set(noRerolls, "pendingAction", 20);
         performAction.Invoke(noRerolls, null); Value(noRerolls, "rerolls", 0); Value(noRerolls, "pendingAction", -1);
 
+        // Drain the actual production batch formatter without calling the native
+        // logger. Empty frames emit nothing; cumulative totals are not the batch
+        // count, and consuming a batch must neither repeat it nor alter gameplay.
+        var takeKillLog = typeof(RougelikeGame).GetMethod("TakeKillLog", instance)!;
+        var logging = new RougelikeGame();
+        Check(takeKillLog.Invoke(logging, null) is null, "empty frame has no kill log");
+        Set(logging, "kills", 40); Set(logging, "pendingKillLogs", 31);
+        var enemyList = (System.Collections.IList)typeof(RougelikeGame).GetField("enemies", instance)!.GetValue(logging)!;
+        var enemyType = typeof(RougelikeGame).GetNestedType("Enemy", BindingFlags.NonPublic)!;
+        for (int i = 0; i < 20; i++) enemyList.Add(Activator.CreateInstance(enemyType, true)!);
+        Check((string)takeKillLog.Invoke(logging, null)! == "[Rougelike] kill:40 remaining:20 count:31", "production batch preserves total, remaining and actual count");
+        Value(logging, "kills", 40); Value(logging, "pendingKillLogs", 0);
+        Check(enemyList.Count == 20 && takeKillLog.Invoke(logging, null) is null, "batch drains once without changing enemies");
+        enemyList.Clear(); Set(logging, "kills", 60); Set(logging, "pendingKillLogs", 20);
+        Check((string)takeKillLog.Invoke(logging, null)! == "[Rougelike] kill:60 remaining:0 count:20", "final kill batch before clear");
+        Check(takeKillLog.Invoke(logging, null) is null, "finish and end-update cannot duplicate a flushed batch");
+        Set(logging, "kills", 1); Set(logging, "pendingKillLogs", 1);
+        Check((string)takeKillLog.Invoke(logging, null)! == "[Rougelike] kill:1 remaining:0 count:1", "new run starts a fresh batch");
+
         // Exercise the production circle/polygon predicate, not a copied implementation.
         var flags = BindingFlags.NonPublic | BindingFlags.Static;
         var hit = typeof(RougelikeGame).GetMethod("CirclePolygon", flags)!;
@@ -180,7 +199,7 @@ static class Program
         Check(Math.Abs((float)ease.Invoke(null, new object[] { .5f })! - .96875f) < .00001, "quint sweep timing");
         var turned = (Vector2)rotate.Invoke(null, new object[] { new Vector2(100, 0), MathF.PI / 2 })!;
         Check(Math.Abs(turned.X) < .001 && Math.Abs(turned.Y - 100) < .001, "rotated facing");
-        Console.WriteLine("PASS: authored waves, 8 special pools, chance boundaries, rarity progression, descriptions, all 21 upgrade applications, 7 repeated clamps, stale-reroll race guards and production slash geometry.");
+        Console.WriteLine("PASS: authored waves, 8 special pools, chance boundaries, rarity progression, descriptions, all 21 upgrade applications, 7 repeated clamps, stale-reroll race guards, production kill-log batches and slash geometry.");
         Console.WriteLine("Scope: native pure logic; does not prove browser rendering, ten-wave survival, skill input, or audio.");
     }
 }

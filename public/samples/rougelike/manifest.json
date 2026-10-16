@@ -2,11 +2,11 @@
   "id": "rougelike",
   "title": "Rougelike",
   "engine": "TomCat",
-  "engineCommit": "5734c56ae05241b01a684afb8e62f2b164c69ba2",
+  "engineCommit": "c28487215bd5df89b35c1d68252ba240231d9c4f",
   "packageVersion": 8,
-  "byteLength": 17193584,
-  "sha256": "dab80522e621a167ce4d28192fc25d0e8edc8b15d05ed1cd920f5983b38f1ea5",
-  "entries": 17,
+  "byteLength": 17558164,
+  "sha256": "41103940f1faa52a7f8b1f8f92ef0625b70bd6d62b30758b775f0e2edadc7944",
+  "entries": 21,
   "packageUrl": "/samples/rougelike/rougelike.tcpak",
   "sourceUrl": "/samples/rougelike/rougelike-source.zip"
 }

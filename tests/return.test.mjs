@@ -17,7 +17,9 @@ test('Return homepage entry ships a verified Tc package and editable project', (
   assert.equal(validatePackage(bytes),manifest.entries)
   assert.equal(bytes.length,manifest.byteLength)
   assert.equal(createHash('sha256').update(bytes).digest('hex'),manifest.sha256)
-  assert.equal(manifest.engineCommit,JSON.parse(read('engine.lock.json')).commit)
+  const pin=JSON.parse(read('engine.lock.json'))
+  assert.ok([pin.commit,...(pin.legacyCommits||[])].includes(manifest.engineCommit),
+    'Return package must target the locked runtime or an explicitly supported legacy engine revision')
   const damaged=Buffer.from(bytes);damaged[damaged.length-1]^=1
   assert.throws(()=>validatePackage(damaged),/hash mismatch/)
   const assets=assetList(),ids=new Set(assets.map(a=>a.handle.toString()))

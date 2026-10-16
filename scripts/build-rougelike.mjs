@@ -13,6 +13,8 @@ export const handles = {
   player: 6100000000000000010n, circle: 6100000000000000011n,
   square: 6100000000000000012n, triangle: 6100000000000000013n,
   hexagonPointed: 6100000000000000014n, hexagonFlat: 6100000000000000015n,
+  circleLeft: 6100000000000000016n, circleRight: 6100000000000000017n,
+  hexLeft: 6100000000000000018n, hexRight: 6100000000000000019n,
   monogram: 6100000000000000020n, silver: 6100000000000000021n,
   welcome: 6100000000000000030n, knife: 6100000000000000031n,
   hit: 6100000000000000032n, death: 6100000000000000033n,
@@ -79,7 +81,7 @@ export function sceneDocument() {
   const entities = [camera, controller]
   // Cook traverses serialized references. Offscreen, disabled anchors retain
   // the textures/fonts that the C# controller assigns to runtime entities.
-  const textures = ['player', 'circle', 'square', 'triangle', 'hexagonPointed', 'hexagonFlat']
+  const textures = ['player', 'circle', 'square', 'triangle', 'hexagonPointed', 'hexagonFlat', 'circleLeft', 'circleRight', 'hexLeft', 'hexRight']
   for (const [index, key] of textures.entries()) {
     const anchor = entity(6100000000000000200n + BigInt(index), `Asset_${key}`, [10000, 10000, 0])
     anchor.SpriteRenderer = { Enabled: false, Color: [1, 1, 1, 1], SpriteHandle: handles[key], TilingFactor: 1, SortingLayer: 0, OrderInLayer: 0, NormalMap: 0, CastShadows: false, Material: 0 }
