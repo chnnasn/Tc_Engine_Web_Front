@@ -1,8 +1,27 @@
 export type Game = {
   id: string; title: string; subtitle: string; author: string; category: string;
-  image: string; color: string; plays: string; likes: number; duration: string; description: string;
+  image: string; color: string; plays?: string; likes?: number; duration?: string; description: string;
+  packageUrl?: string;
+  sourceUrl?: string;
+  controls?: { key: string; action: string }[];
 }
 export const games: Game[] = [
+  {
+    id: 'rougelike', title: 'Rougelike · 几何竞技场', subtitle: '挥出刀光，在十波围攻中找到自己的节奏。',
+    author: 'Tc 引擎示例', category: '动作', image: '/images/rougelike.png', color: '#f7f7e2',
+    packageUrl: '/samples/rougelike/rougelike.tcpak',
+    sourceUrl: '/samples/rougelike/rougelike-source.zip',
+    description: '走进几何竞技场，用前斩与后斩迎击不断涌来的敌人。不断走位，抓准时机放慢时间或释放黑洞，在每一波战斗之后选择升级，挑战全部十波敌人。靠近菜单和升级选项，挥刀击破即可选择；也可以使用键盘快捷键。基于原始 Rougelike demo，以 Tc 引擎复原。',
+    controls: [
+      { key: 'W A S D', action: '移动' }, { key: '鼠标', action: '瞄准方向' },
+      { key: '左键', action: '前斩' }, { key: '右键', action: '后斩' },
+      { key: '按住 Shift', action: '时间凝滞（强化解锁）' }, { key: 'R', action: '黑洞（强化解锁）' },
+      { key: '长按左键', action: '蓄力斩（强化解锁）' },
+      { key: '1 / 2 / 3', action: '选择升级' }, { key: 'E', action: '重抽强化（共 3 次）' },
+      { key: 'Enter', action: '开始 / 重试' }, { key: 'M', action: '结束后返回菜单' },
+      { key: 'P', action: '暂停 / 继续' },
+    ],
+  },
   { id: 'forest', title: '林间来信', subtitle: '把一封信，送到森林的另一端。', author: '木木工作室', category: '探索', image: '/images/forest.webp', color: '#d8e1d0', plays: '1.2k', likes: 128, duration: '约 15 分钟', description: '背上小小的邮包，走进一座慢下来的森林。沿着溪流寻找路标，和沿途的居民聊聊天，把那封迟到的信送到目的地。没有倒计时，也没有必须完成的任务，按自己的节奏出发就好。' },
   { id: 'puzzle', title: '方寸之间', subtitle: '换一个角度，路就在眼前。', author: '一格', category: '解谜', image: '/images/puzzle.webp', color: '#e4e7e9', plays: '864', likes: 96, duration: '约 20 分钟', description: '旋转、连接、重新观察。在小小的几何世界里，寻找一条通往出口的路。十二个手工设计的关卡，留给你安静思考的空间。' },
   { id: 'desert', title: '日落以后', subtitle: '在最后一缕光里，继续向前。', author: '迟岛', category: '冒险', image: '/images/desert.webp', color: '#e9d3b5', plays: '632', likes: 74, duration: '约 10 分钟', description: '一辆旧车，一片沙漠，一段没有地图的旅途。收集沿途遗落的物件，寻找藏在落日之后的故事。这是一段适合戴上耳机体验的短篇冒险。' },

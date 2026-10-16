@@ -2,7 +2,8 @@ import assert from 'node:assert/strict'
 import { readFileSync } from 'node:fs'
 import { chromium } from 'playwright'
 const lock=JSON.parse(readFileSync('engine.lock.json','utf8'))
-const previous='331d1e0b15edc202a375e9568b5cefea5821e18c'
+const previous=process.env.TEST_PREVIOUS_ENGINE_COMMIT || lock.legacyCommits[0]
+assert.ok(previous && previous!==lock.commit,'Configure a genuine compatible previous engine build')
 const base=process.env.TEST_BASE_URL || 'http://127.0.0.1:5173'
 const browser=await chromium.launch({channel:'chrome',headless:true})
 const context=await browser.newContext({viewport:{width:1440,height:960}})
@@ -38,11 +39,6 @@ const rpc=async(page,type,payload)=>page.evaluate(({type,payload})=>{
 try {
   const oldPage=await context.newPage()
   await oldPage.route('**/engine.lock.json*',route=>route.fulfill({contentType:'application/javascript',body:`export default ${JSON.stringify({...lock,commit:previous,legacyCommits:[]})}`}))
-  // The old bundle has no scene.persist RPC; use its original capture behavior for this fixture.
-  await oldPage.route('**/src/engine/host.ts*',async route=>{
-    const response=await route.fetch();const raw=await response.text();const body=raw.replace(/protocol\.request\(["']scene\.persist["']\)/g,'protocol.snapshot(state().sceneHandle)')
-    await route.fulfill({response,body})
-  })
   await ready(oldPage)
   await rpc(oldPage,'scene.transact',{label:'Existing work',operations:[{op:'entity.create',entityId:'7011',name:'Keep this existing entity'}]})
   await oldPage.getByRole('button',{name:'保存到云端',exact:true}).click()

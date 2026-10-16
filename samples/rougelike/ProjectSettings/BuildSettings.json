@@ -1,0 +1,5 @@
+{
+  "schemaVersion": 1,
+  "entrySceneHandle": 6100000000000000002,
+  "scenes": [{ "handle": 6100000000000000002, "enabled": true, "pathHint": "Scene/rougelike.tomcat" }]
+}

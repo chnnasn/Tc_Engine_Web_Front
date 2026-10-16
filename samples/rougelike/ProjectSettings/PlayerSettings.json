@@ -1,0 +1,9 @@
+{
+  "schemaVersion": 1,
+  "productName": "Rougelike",
+  "companyName": "TomCatSamples",
+  "version": "1.0.0",
+  "icon": 0,
+  "display": { "width": 1152, "height": 648, "windowMode": "Windowed", "resizable": true, "vSync": true },
+  "directories": { "save": "Saves", "log": "Logs", "crash": "Crashes" }
+}

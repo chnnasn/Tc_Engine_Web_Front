@@ -231,7 +231,10 @@ for (const required of ['mscorlib.dll', 'System.Runtime.dll', 'TomCat.Managed.dl
 // ---------------------------------------------------------------------------
 const output = resolve(root, 'public/engine', lock.commit)
 mkdirSync(output, { recursive: true })
-copyTree(bundle, output)
+// Smoke tests add HTML, reference copies and fixture packages to WasmAppDir.
+// Publish only the runtime payload, even when reusing a tested build directory.
+for (const name of ['main.js', 'TomCat.WebHost.runtimeconfig.json']) copyFileSync(join(bundle, name), join(output, name))
+for (const name of ['_framework', 'refs']) copyTree(join(bundle, name), join(output, name))
 for (const required of ['main.js', join('_framework', 'dotnet.js'), join('_framework', 'dotnet.native.wasm')]) {
   if (!existsSync(join(output, required))) throw new Error(`引擎产物缺少 ${required}`)
 }
@@ -245,6 +248,21 @@ writeFileSync(join(output, 'manifest.json'), JSON.stringify({
   refsList,
 }, null, 2))
 await (await import('./engine-manifest.mjs')).writeEngineManifest(output)
+
+// Keep the local cooker and C# compilation inputs on the same revision as the
+// browser runtime. Sample builds must not silently reuse a previous API DLL or
+// standalone player after an engine upgrade.
+const playerFixture = join(root, '.engine/player-fixture')
+mkdirSync(playerFixture, { recursive: true })
+for (const extension of ['js', 'wasm', 'data']) copyFileSync(join(buildNative, `tomcat_player.${extension}`), join(playerFixture, `tomcat_player.${extension}`))
+writeFileSync(join(playerFixture, 'package.json'), '{"type":"commonjs"}\n')
+copyTree(join(source, 'Editor/TomCatInut/Packages/fonts'), join(playerFixture, 'Packages/fonts'))
+const managedTools = join(root, '.engine/upgrade-managed')
+mkdirSync(managedTools, { recursive: true })
+copyFileSync(managedDll, join(managedTools, 'TomCat.Managed.dll'))
+copyFileSync(join(source, 'Managed/TomCat.ScriptGenerator/bin/Release/net10.0/TomCat.ScriptGenerator.dll'), join(managedTools, 'TomCat.ScriptGenerator.dll'))
+writeFileSync(join(playerFixture, 'engine-commit.txt'), lock.commit + '\n')
+writeFileSync(join(managedTools, 'engine-commit.txt'), lock.commit + '\n')
 console.log(`已生成托管 Web 引擎：${output}`)
 console.log(`  提交 ${lock.commit}`)
 console.log(`  引用程序集 ${refsList.length} 个`)

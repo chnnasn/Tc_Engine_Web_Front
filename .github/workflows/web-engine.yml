@@ -34,16 +34,18 @@ jobs:
           $buildExitCode = $LASTEXITCODE
           Get-Content .engine/ci-engine-build.log -Tail 80
           exit $buildExitCode
+      - run: node tests/rougelike-logic.mjs
       - run: npm run build
       - run: npx playwright install chromium
       - name: Browser regression
         env:
           TEST_BASE_URL: http://127.0.0.1:4173
           TEST_BROWSER_CHANNEL: chromium
+          TEST_REQUIRE_AUDIO: '1'
         run: |
           $preview = Start-Process node -ArgumentList 'node_modules/vite/bin/vite.js', 'preview', '--host', '127.0.0.1', '--port', '4173', '--strictPort' -PassThru -WindowStyle Hidden -RedirectStandardOutput .engine/ci-preview.log -RedirectStandardError .engine/ci-preview-error.log
           try {
-            foreach ($suite in @('browser', 'inspector-metadata-browser', 'project-authoring-browser', 'scene-ownership-browser', 'layout-exit-browser')) {
+            foreach ($suite in @('browser', 'inspector-metadata-browser', 'project-authoring-browser', 'scene-ownership-browser', 'layout-exit-browser', 'rougelike-browser')) {
               Write-Output "::group::$suite"
               node --experimental-strip-types "tests/$suite.mjs" *> ".engine/ci-$suite.log"
               $testExitCode = $LASTEXITCODE
@@ -62,6 +64,7 @@ jobs:
           path: |
             .engine/ci-*.log
             .engine/*.png
+            .engine/rougelike-qa/*.png
       - uses: actions/upload-artifact@v4
         with:
           name: tomcat-web-with-engine

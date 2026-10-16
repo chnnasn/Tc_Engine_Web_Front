@@ -1,0 +1,7 @@
+SchemaVersion: 2
+Asset:
+  Handle: 6100000000000000014
+  Type: Texture2D
+  ImportSettings:
+    Usage: Sprite
+  SubAssets: []

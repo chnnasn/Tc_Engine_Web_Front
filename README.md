@@ -1,5 +1,11 @@
 # TomCat Web
 
+## Rougelike 主页示例
+
+首页首屏与精选入口提供 `/games/rougelike`，游客可直接游玩、全屏运行并下载可编辑的 Tc 工程。十波战斗、三选一强化、时间凝滞、黑洞、蓄力斩、可破坏菜单/HUD、死亡重开及原版音乐音效由 Tc 原生 C# 脚本执行。游戏包包含场景、图片、字体、音频和编译后的程序集。
+
+源工程位于 `samples/rougelike`。`npm run engine:rougelike` 调用真实 Tc cooker 重建静态 TCPAK、校验资源哈希并生成源码 ZIP；`node tests/rougelike-browser.mjs` 验证浏览器启动和交互，设置 `TEST_REQUIRE_AUDIO=1` 校验真实音频输出，`TEST_COMBAT=1` 通过画面识别与鼠标操作完成首波/强化流程。完整操作、重建条件和渲染近似见 [示例说明](samples/rougelike/README.md) 与 [复原核对](samples/rougelike/REFERENCE.md)。
+
 ## AI 场景改造与试验
 
 编辑器顶部的“项目工具”提供语义差异、完整项目试验副本、固定步数位置验收和项目笔记；AI 面板的“执行证据与变更”显示持久工具记录。新增原子批量场景操作与能力发现，沿用当前引擎版本，无上游修改。使用入口、工具限制和验证命令见 [AI 工作流说明](docs/ai-workspace.md)。
@@ -18,9 +24,9 @@ Vue 3 创作工作台，使用固定版本的上游 TomCat Web Editor / Player�
 
 ## 开发与构建
 
-当前浏览器引擎与 Railway 编译打包器统一锁定 `0b8829a8`（上游 [PR #29](https://github.com/chnnasn/TomCat_Engine/pull/29)）。基于 `d6c8261b` 的新脚本系统整合原生 Project 文件管理、场景保存保护和 Inspector 脚本元数据。Managed API 升为 v6，TCPAK v8、Scene v11、Project v4 不变。旧 Managed API v5 项目与作品不再作为兼容版本打开，历史云端数据保留。
+当前浏览器引擎与 Railway 编译打包器统一锁定 `5734c56a`（上游 [PR #30](https://github.com/chnnasn/TomCat_Engine/pull/30)）。该版本补齐 WebAudio、动态脚本 BCL 和浏览器多字体加载支持，继续使用 Managed API v6、TCPAK v8、Scene v11、Project v4。上一版 `0b8829a864ff53ad0ad2c7ded56ef433325a836a` 已通过真实作品播放与云端归档恢复回归，保留在明确兼容列表中；旧 Managed API v5 项目与作品不再作为兼容版本打开，历史云端数据保留。
 
-该版本恢复了完整托管 Web 构建，并引入分帧场景加载、文字塑形、虚拟列表、2D 光照与后处理等引擎功能。原生 DLL 模块仍不支持 Web；浏览器存档持久化、完整 ICU/IME 和可听音频不因版本升级而自动获得支持。
+托管 Web 构建支持分帧场景加载、文字塑形、虚拟列表、2D 光照与后处理。浏览器 AudioSource 通过 WebAudio 播放驻留音频，首次用户操作后解锁声音，并在退出运行时关闭音频上下文；流式音频仍不支持。动态 C# 脚本的常用 BCL 实现与类型转发元数据会保留，多字体在浏览器单线程中依次完成准备和上传。原生 DLL 模块、浏览器存档持久化和完整 ICU/IME 的既有限制仍然适用。
 
 本地升级验收发现 CoinRunner 的新 SaveData API 会触发 Mono WASM 桥接错误，JSON 存档也出现 `JsonSerializerIsReflectionDisabled`，因此该样例不能作为已支持的浏览器作品发布。常规 C# 编译与生命周期回归独立验证。服务器打包镜像额外提供内置 OpenSans 字体，以支持文字场景 Cook。
 
@@ -38,7 +44,7 @@ npm run engine:build
 npm run dev
 ```
 
-`engine.lock.json` 固定引擎提交 `0b8829a864ff53ad0ad2c7ded56ef433325a836a`，并记录 `kind: managed`。构建脚本检出到 `.engine/source`、初始化四个依赖子模块，然后用 **托管（C#）管线** 生成引擎产物：先用 Emscripten 编出 C++ 静态库（`tomcat_managed_web_entrypoints`、`tc_player_core`、`tc_yaml`、`box2d`），再 `dotnet publish -r browser-wasm` 发布 `Managed/TomCat.WebHost`——**最终 `.wasm` 由 .NET 运行时拥有**，C++ 引擎归档被链接进同一块 WebAssembly 内存，原生与托管共享函数表。最后把完整的 `main.js`、`_framework/` 与 C# 编译引用集 `refs/` 复制到 `public/engine/<commit>/`。没有本地 C++ 移植补丁。
+`engine.lock.json` 固定引擎提交 `5734c56ae05241b01a684afb8e62f2b164c69ba2`，并记录 `kind: managed`。构建脚本检出到 `.engine/source`、初始化四个依赖子模块，然后用 **托管（C#）管线** 生成引擎产物：先用 Emscripten 编出 C++ 静态库（`tomcat_managed_web_entrypoints`、`tc_player_core`、`tc_yaml`、`box2d`），再 `dotnet publish -r browser-wasm` 发布 `Managed/TomCat.WebHost`——**最终 `.wasm` 由 .NET 运行时拥有**，C++ 引擎归档被链接进同一块 WebAssembly 内存，原生与托管共享函数表。最后把完整的 `main.js`、`_framework/` 与 C# 编译引用集 `refs/` 复制到 `public/engine/<commit>/`。没有本地 C++ 移植补丁。
 
 托管模块是单线程构建（`WasmEnableThreads=false`），产物中不含 `SharedArrayBuffer`/pthread，因此**不再要求跨源隔离**；`vite.config.ts` 与 `netlify.toml` 仍保留 COOP/COEP 以便将来启用线程构建。
 
@@ -101,7 +107,7 @@ npm run test:browser
 
 加载前检查安全上下文、WebAssembly 和 WebGL2（托管构建是单线程，不再要求跨源隔离或 `SharedArrayBuffer`）。Vue 路由退出、关闭播放器、加载失败和 WebGL 上下文丢失时，取消帧循环、断开 ResizeObserver、调用原生 shutdown、终止可能存在的 pthread 池并销毁 iframe。重开创建全新模块和画布。
 
-上游限制仍然适用：无可听 WebAudio，自定义 Cooked SPIR-V Shader 和多重采样不支持；桌面新增工具不代表浏览器已支持。**含 C# 的 TCPAK 现在可以播放**（这是本次升级的主要目标），但包内脚本必须是已编译进 `Assembly-CSharp` 的类型；浏览器不提供反射式脚本发现。
+上游限制仍然适用：流式音频、自定义 Cooked SPIR-V Shader 和多重采样不支持；桌面新增工具不代表浏览器已支持。驻留音频可通过 WebAudio 输出。**含 C# 的 TCPAK 可以播放**，但包内脚本必须是已编译进 `Assembly-CSharp` 的类型；浏览器不提供反射式脚本发现。
 
 ## 部署
 
@@ -203,9 +209,9 @@ AI 通过 `script_get_api` 获取与当前引擎匹配的 C# API，再使用 `sc
 
 网页编辑器沿用原生 Project 面板：支持右键 Create → Scene / Folder / C# Script、Rename、Delete，以及资源与文件夹拖动移动。Packages 保持只读。场景使用原生 `.tomcat` 格式；切换场景前保留当前修改，云端保存包含场景文件和空文件夹。中文与带空格的资源路径可保存，C# 面板扫描整个 Assets，并用资源 Handle 跟随重命名或移动后的脚本。
 
-引擎源码固定在 `fix/web-authoring-mono-lifecycle` 分支的锁定提交，上游 PR #29 跟踪合入。顶部导出按钮移除，原生 File 菜单的 Open Scene / Export project 保留。
+引擎源码固定到 `engine.lock.json` 指定的提交；[上游 PR #30](https://github.com/chnnasn/TomCat_Engine/pull/30) 补齐 WebAudio、动态脚本 BCL 和多字体加载支持。顶部导出按钮移除，原生 File 菜单的 Open Scene / Export project 保留。
 
-验证：`node tests/project-authoring-browser.mjs`（需运行本地 Vite）覆盖原生新建、改名、拖动、云端恢复、场景切换、Play、移动后 C# 草稿保存与编译。API v6 不支持原 API v5 项目直接升级；`tests/viewport-upgrade-browser.mjs` 是之前仅改变编辑器的历史版本回归。
+验证：`node tests/project-authoring-browser.mjs`（需运行本地 Vite）覆盖原生新建、改名、拖动、云端恢复、场景切换、Play、移动后 C# 草稿保存与编译。API v6 不支持原 API v5 项目直接升级；`tests/viewport-upgrade-browser.mjs` 使用 `legacyCommits` 中的真实旧引擎保存项目，再清除本地缓存并由新引擎从云端恢复，验证场景归档保持一致。
 
 ### 场景文件归属与自动保存
 

@@ -1,0 +1,8 @@
+SchemaVersion: 4
+Project:
+  Name: Rougelike
+  Version: 1.0.0
+  Description: "Tc Engine recreation of the supplied Godot Rougelike demo. Gameplay runs as managed C# in the Tc Web player."
+  EditorVersion: 0.4.0
+  Template: 2D
+  AssetDirectory: Assets

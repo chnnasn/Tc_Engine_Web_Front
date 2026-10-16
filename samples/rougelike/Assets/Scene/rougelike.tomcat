@@ -1,0 +1,1833 @@
+SchemaVersion: 11
+SceneName: "Rougelike"
+Entities:
+  - Entity: 6100000000000000100
+    Tag:
+      Tag: "MainCamera"
+      Visible: true
+    EntityMetadata:
+      GameplayTag: "Untagged"
+      Layer: 0
+      HierarchyIcon: "Entity"
+    Transform:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+    LocalTransform:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+    Components:
+      - TypeId: 11457157452030541825
+        StableName: "TomCat.ID"
+        SchemaVersion: 1
+        Properties:
+          - PropertyId: 1
+            StableName: "Value"
+            Value: 6100000000000000100
+      - TypeId: 11457157452030541826
+        StableName: "TomCat.Tag"
+        SchemaVersion: 1
+        Properties:
+          - PropertyId: 1
+            StableName: "Name"
+            Value: "MainCamera"
+          - PropertyId: 2
+            StableName: "Visible"
+            Value: true
+      - TypeId: 11457157452030541827
+        StableName: "TomCat.EntityMetadata"
+        SchemaVersion: 1
+        Properties:
+          - PropertyId: 1
+            StableName: "GameplayTag"
+            Value: "Untagged"
+          - PropertyId: 2
+            StableName: "Layer"
+            Value: 0
+          - PropertyId: 3
+            StableName: "HierarchyIcon"
+            Value: 1
+      - TypeId: 11457157452030541828
+        StableName: "TomCat.Transform"
+        SchemaVersion: 1
+        Properties:
+          - PropertyId: 1
+            StableName: "Translation"
+            Value: [0, 0, 0]
+          - PropertyId: 2
+            StableName: "Rotation"
+            Value: [0, 0, 0]
+          - PropertyId: 3
+            StableName: "Scale"
+            Value: [1, 1, 1]
+          - PropertyId: 4
+            StableName: "LocalTranslation"
+            Value: [0, 0, 0]
+          - PropertyId: 5
+            StableName: "LocalRotation"
+            Value: [0, 0, 0]
+          - PropertyId: 6
+            StableName: "LocalScale"
+            Value: [1, 1, 1]
+      - TypeId: 11457157452030541829
+        StableName: "TomCat.Camera"
+        SchemaVersion: 4
+        Properties:
+          - PropertyId: 300
+            StableName: "Primary"
+            Value: true
+          - PropertyId: 301
+            StableName: "FixedAspectRatio"
+            Value: false
+          - PropertyId: 302
+            StableName: "BackgroundColor"
+            Value: [0.968264401, 0.968449175, 0.887652516, 1]
+          - PropertyId: 303
+            StableName: "ProjectionType"
+            Value: 1
+          - PropertyId: 304
+            StableName: "OrthographicSize"
+            Value: 648
+          - PropertyId: 305
+            StableName: "OrthographicNearClip"
+            Value: 0
+          - PropertyId: 306
+            StableName: "OrthographicFarClip"
+            Value: 1000
+          - PropertyId: 307
+            StableName: "PerspectiveVerticalFov"
+            Value: 0.785398185
+          - PropertyId: 308
+            StableName: "PerspectiveNearClip"
+            Value: 0.00999999978
+          - PropertyId: 309
+            StableName: "PerspectiveFarClip"
+            Value: 1000
+          - PropertyId: 310
+            StableName: "Enabled"
+            Value: true
+          - PropertyId: 311
+            StableName: "Exposure"
+            Value: 0
+          - PropertyId: 312
+            StableName: "Saturation"
+            Value: 1
+          - PropertyId: 313
+            StableName: "Vignette"
+            Value: 0
+    Parent: 0
+    Camera:
+      Camera:
+        ProjectionType: 1
+        PerspectiveFOV: 0.785398185
+        PerspectiveNear: 0.00999999978
+        PerspectiveFar: 1000
+        OrthographicSize: 648
+        OrthographicNear: 0
+        OrthographicFar: 1000
+      Primary: true
+      FixedAspectRatio: false
+      BackgroundColor: [0.968264401, 0.968449175, 0.887652516, 1]
+      Exposure: 0
+      Saturation: 1
+      Vignette: 0
+  - Entity: 6100000000000000101
+    Tag:
+      Tag: "RougelikeGame"
+      Visible: true
+    EntityMetadata:
+      GameplayTag: "Untagged"
+      Layer: 0
+      HierarchyIcon: "Entity"
+    Transform:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+    LocalTransform:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+    Components:
+      - TypeId: 11457157452030541825
+        StableName: "TomCat.ID"
+        SchemaVersion: 1
+        Properties:
+          - PropertyId: 1
+            StableName: "Value"
+            Value: 6100000000000000101
+      - TypeId: 11457157452030541826
+        StableName: "TomCat.Tag"
+        SchemaVersion: 1
+        Properties:
+          - PropertyId: 1
+            StableName: "Name"
+            Value: "RougelikeGame"
+          - PropertyId: 2
+            StableName: "Visible"
+            Value: true
+      - TypeId: 11457157452030541827
+        StableName: "TomCat.EntityMetadata"
+        SchemaVersion: 1
+        Properties:
+          - PropertyId: 1
+            StableName: "GameplayTag"
+            Value: "Untagged"
+          - PropertyId: 2
+            StableName: "Layer"
+            Value: 0
+          - PropertyId: 3
+            StableName: "HierarchyIcon"
+            Value: 1
+      - TypeId: 11457157452030541828
+        StableName: "TomCat.Transform"
+        SchemaVersion: 1
+        Properties:
+          - PropertyId: 1
+            StableName: "Translation"
+            Value: [0, 0, 0]
+          - PropertyId: 2
+            StableName: "Rotation"
+            Value: [0, 0, 0]
+          - PropertyId: 3
+            StableName: "Scale"
+            Value: [1, 1, 1]
+          - PropertyId: 4
+            StableName: "LocalTranslation"
+            Value: [0, 0, 0]
+          - PropertyId: 5
+            StableName: "LocalRotation"
+            Value: [0, 0, 0]
+          - PropertyId: 6
+            StableName: "LocalScale"
+            Value: [1, 1, 1]
+      - TypeId: 11457157452030541833
+        StableName: "TomCat.CSharpScripts"
+        SchemaVersion: 1
+        Properties:
+          Scripts:
+            - AttachmentID: 6100000000000000102
+              Enabled: true
+              ScriptHandle: 6100000000000000001
+              ClassName: "TomCatGame.RougelikeGame"
+              Fields: []
+    Parent: 0
+    CSharpScripts:
+      Scripts:
+        - AttachmentID: 6100000000000000102
+          Enabled: true
+          ScriptHandle: 6100000000000000001
+          ClassName: "TomCatGame.RougelikeGame"
+          Fields: []
+  - Entity: 6100000000000000200
+    Tag:
+      Tag: "Asset_player"
+      Visible: true
+    EntityMetadata:
+      GameplayTag: "Untagged"
+      Layer: 0
+      HierarchyIcon: "Entity"
+    Transform:
+      Translation: [10000, 10000, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+    LocalTransform:
+      Translation: [10000, 10000, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+    Components:
+      - TypeId: 11457157452030541825
+        StableName: "TomCat.ID"
+        SchemaVersion: 1
+        Properties:
+          - PropertyId: 1
+            StableName: "Value"
+            Value: 6100000000000000200
+      - TypeId: 11457157452030541826
+        StableName: "TomCat.Tag"
+        SchemaVersion: 1
+        Properties:
+          - PropertyId: 1
+            StableName: "Name"
+            Value: "Asset_player"
+          - PropertyId: 2
+            StableName: "Visible"
+            Value: true
+      - TypeId: 11457157452030541827
+        StableName: "TomCat.EntityMetadata"
+        SchemaVersion: 1
+        Properties:
+          - PropertyId: 1
+            StableName: "GameplayTag"
+            Value: "Untagged"
+          - PropertyId: 2
+            StableName: "Layer"
+            Value: 0
+          - PropertyId: 3
+            StableName: "HierarchyIcon"
+            Value: 1
+      - TypeId: 11457157452030541828
+        StableName: "TomCat.Transform"
+        SchemaVersion: 1
+        Properties:
+          - PropertyId: 1
+            StableName: "Translation"
+            Value: [10000, 10000, 0]
+          - PropertyId: 2
+            StableName: "Rotation"
+            Value: [0, 0, 0]
+          - PropertyId: 3
+            StableName: "Scale"
+            Value: [1, 1, 1]
+          - PropertyId: 4
+            StableName: "LocalTranslation"
+            Value: [10000, 10000, 0]
+          - PropertyId: 5
+            StableName: "LocalRotation"
+            Value: [0, 0, 0]
+          - PropertyId: 6
+            StableName: "LocalScale"
+            Value: [1, 1, 1]
+      - TypeId: 11457157452030541830
+        StableName: "TomCat.SpriteRenderer"
+        SchemaVersion: 2
+        Properties:
+          - PropertyId: 200
+            StableName: "Enabled"
+            Value: false
+          - PropertyId: 201
+            StableName: "Color"
+            Value: [1, 1, 1, 1]
+          - PropertyId: 202
+            StableName: "Sprite"
+            Value: 6100000000000000010
+          - PropertyId: 203
+            StableName: "TilingFactor"
+            Value: 1
+          - PropertyId: 204
+            StableName: "SortingLayer"
+            Value: 0
+          - PropertyId: 205
+            StableName: "OrderInLayer"
+            Value: 0
+          - PropertyId: 206
+            StableName: "NormalMap"
+            Value: 0
+          - PropertyId: 207
+            StableName: "CastShadows"
+            Value: false
+          - PropertyId: 208
+            StableName: "Material"
+            Value: 0
+    Parent: 0
+    SpriteRenderer:
+      Enabled: false
+      Color: [1, 1, 1, 1]
+      SpriteHandle: 6100000000000000010
+      TilingFactor: 1
+      SortingLayer: 0
+      OrderInLayer: 0
+      NormalMap: 0
+      CastShadows: false
+      Material: 0
+  - Entity: 6100000000000000201
+    Tag:
+      Tag: "Asset_circle"
+      Visible: true
+    EntityMetadata:
+      GameplayTag: "Untagged"
+      Layer: 0
+      HierarchyIcon: "Entity"
+    Transform:
+      Translation: [10000, 10000, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+    LocalTransform:
+      Translation: [10000, 10000, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+    Components:
+      - TypeId: 11457157452030541825
+        StableName: "TomCat.ID"
+        SchemaVersion: 1
+        Properties:
+          - PropertyId: 1
+            StableName: "Value"
+            Value: 6100000000000000201
+      - TypeId: 11457157452030541826
+        StableName: "TomCat.Tag"
+        SchemaVersion: 1
+        Properties:
+          - PropertyId: 1
+            StableName: "Name"
+            Value: "Asset_circle"
+          - PropertyId: 2
+            StableName: "Visible"
+            Value: true
+      - TypeId: 11457157452030541827
+        StableName: "TomCat.EntityMetadata"
+        SchemaVersion: 1
+        Properties:
+          - PropertyId: 1
+            StableName: "GameplayTag"
+            Value: "Untagged"
+          - PropertyId: 2
+            StableName: "Layer"
+            Value: 0
+          - PropertyId: 3
+            StableName: "HierarchyIcon"
+            Value: 1
+      - TypeId: 11457157452030541828
+        StableName: "TomCat.Transform"
+        SchemaVersion: 1
+        Properties:
+          - PropertyId: 1
+            StableName: "Translation"
+            Value: [10000, 10000, 0]
+          - PropertyId: 2
+            StableName: "Rotation"
+            Value: [0, 0, 0]
+          - PropertyId: 3
+            StableName: "Scale"
+            Value: [1, 1, 1]
+          - PropertyId: 4
+            StableName: "LocalTranslation"
+            Value: [10000, 10000, 0]
+          - PropertyId: 5
+            StableName: "LocalRotation"
+            Value: [0, 0, 0]
+          - PropertyId: 6
+            StableName: "LocalScale"
+            Value: [1, 1, 1]
+      - TypeId: 11457157452030541830
+        StableName: "TomCat.SpriteRenderer"
+        SchemaVersion: 2
+        Properties:
+          - PropertyId: 200
+            StableName: "Enabled"
+            Value: false
+          - PropertyId: 201
+            StableName: "Color"
+            Value: [1, 1, 1, 1]
+          - PropertyId: 202
+            StableName: "Sprite"
+            Value: 6100000000000000011
+          - PropertyId: 203
+            StableName: "TilingFactor"
+            Value: 1
+          - PropertyId: 204
+            StableName: "SortingLayer"
+            Value: 0
+          - PropertyId: 205
+            StableName: "OrderInLayer"
+            Value: 0
+          - PropertyId: 206
+            StableName: "NormalMap"
+            Value: 0
+          - PropertyId: 207
+            StableName: "CastShadows"
+            Value: false
+          - PropertyId: 208
+            StableName: "Material"
+            Value: 0
+    Parent: 0
+    SpriteRenderer:
+      Enabled: false
+      Color: [1, 1, 1, 1]
+      SpriteHandle: 6100000000000000011
+      TilingFactor: 1
+      SortingLayer: 0
+      OrderInLayer: 0
+      NormalMap: 0
+      CastShadows: false
+      Material: 0
+  - Entity: 6100000000000000202
+    Tag:
+      Tag: "Asset_square"
+      Visible: true
+    EntityMetadata:
+      GameplayTag: "Untagged"
+      Layer: 0
+      HierarchyIcon: "Entity"
+    Transform:
+      Translation: [10000, 10000, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+    LocalTransform:
+      Translation: [10000, 10000, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+    Components:
+      - TypeId: 11457157452030541825
+        StableName: "TomCat.ID"
+        SchemaVersion: 1
+        Properties:
+          - PropertyId: 1
+            StableName: "Value"
+            Value: 6100000000000000202
+      - TypeId: 11457157452030541826
+        StableName: "TomCat.Tag"
+        SchemaVersion: 1
+        Properties:
+          - PropertyId: 1
+            StableName: "Name"
+            Value: "Asset_square"
+          - PropertyId: 2
+            StableName: "Visible"
+            Value: true
+      - TypeId: 11457157452030541827
+        StableName: "TomCat.EntityMetadata"
+        SchemaVersion: 1
+        Properties:
+          - PropertyId: 1
+            StableName: "GameplayTag"
+            Value: "Untagged"
+          - PropertyId: 2
+            StableName: "Layer"
+            Value: 0
+          - PropertyId: 3
+            StableName: "HierarchyIcon"
+            Value: 1
+      - TypeId: 11457157452030541828
+        StableName: "TomCat.Transform"
+        SchemaVersion: 1
+        Properties:
+          - PropertyId: 1
+            StableName: "Translation"
+            Value: [10000, 10000, 0]
+          - PropertyId: 2
+            StableName: "Rotation"
+            Value: [0, 0, 0]
+          - PropertyId: 3
+            StableName: "Scale"
+            Value: [1, 1, 1]
+          - PropertyId: 4
+            StableName: "LocalTranslation"
+            Value: [10000, 10000, 0]
+          - PropertyId: 5
+            StableName: "LocalRotation"
+            Value: [0, 0, 0]
+          - PropertyId: 6
+            StableName: "LocalScale"
+            Value: [1, 1, 1]
+      - TypeId: 11457157452030541830
+        StableName: "TomCat.SpriteRenderer"
+        SchemaVersion: 2
+        Properties:
+          - PropertyId: 200
+            StableName: "Enabled"
+            Value: false
+          - PropertyId: 201
+            StableName: "Color"
+            Value: [1, 1, 1, 1]
+          - PropertyId: 202
+            StableName: "Sprite"
+            Value: 6100000000000000012
+          - PropertyId: 203
+            StableName: "TilingFactor"
+            Value: 1
+          - PropertyId: 204
+            StableName: "SortingLayer"
+            Value: 0
+          - PropertyId: 205
+            StableName: "OrderInLayer"
+            Value: 0
+          - PropertyId: 206
+            StableName: "NormalMap"
+            Value: 0
+          - PropertyId: 207
+            StableName: "CastShadows"
+            Value: false
+          - PropertyId: 208
+            StableName: "Material"
+            Value: 0
+    Parent: 0
+    SpriteRenderer:
+      Enabled: false
+      Color: [1, 1, 1, 1]
+      SpriteHandle: 6100000000000000012
+      TilingFactor: 1
+      SortingLayer: 0
+      OrderInLayer: 0
+      NormalMap: 0
+      CastShadows: false
+      Material: 0
+  - Entity: 6100000000000000203
+    Tag:
+      Tag: "Asset_triangle"
+      Visible: true
+    EntityMetadata:
+      GameplayTag: "Untagged"
+      Layer: 0
+      HierarchyIcon: "Entity"
+    Transform:
+      Translation: [10000, 10000, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+    LocalTransform:
+      Translation: [10000, 10000, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+    Components:
+      - TypeId: 11457157452030541825
+        StableName: "TomCat.ID"
+        SchemaVersion: 1
+        Properties:
+          - PropertyId: 1
+            StableName: "Value"
+            Value: 6100000000000000203
+      - TypeId: 11457157452030541826
+        StableName: "TomCat.Tag"
+        SchemaVersion: 1
+        Properties:
+          - PropertyId: 1
+            StableName: "Name"
+            Value: "Asset_triangle"
+          - PropertyId: 2
+            StableName: "Visible"
+            Value: true
+      - TypeId: 11457157452030541827
+        StableName: "TomCat.EntityMetadata"
+        SchemaVersion: 1
+        Properties:
+          - PropertyId: 1
+            StableName: "GameplayTag"
+            Value: "Untagged"
+          - PropertyId: 2
+            StableName: "Layer"
+            Value: 0
+          - PropertyId: 3
+            StableName: "HierarchyIcon"
+            Value: 1
+      - TypeId: 11457157452030541828
+        StableName: "TomCat.Transform"
+        SchemaVersion: 1
+        Properties:
+          - PropertyId: 1
+            StableName: "Translation"
+            Value: [10000, 10000, 0]
+          - PropertyId: 2
+            StableName: "Rotation"
+            Value: [0, 0, 0]
+          - PropertyId: 3
+            StableName: "Scale"
+            Value: [1, 1, 1]
+          - PropertyId: 4
+            StableName: "LocalTranslation"
+            Value: [10000, 10000, 0]
+          - PropertyId: 5
+            StableName: "LocalRotation"
+            Value: [0, 0, 0]
+          - PropertyId: 6
+            StableName: "LocalScale"
+            Value: [1, 1, 1]
+      - TypeId: 11457157452030541830
+        StableName: "TomCat.SpriteRenderer"
+        SchemaVersion: 2
+        Properties:
+          - PropertyId: 200
+            StableName: "Enabled"
+            Value: false
+          - PropertyId: 201
+            StableName: "Color"
+            Value: [1, 1, 1, 1]
+          - PropertyId: 202
+            StableName: "Sprite"
+            Value: 6100000000000000013
+          - PropertyId: 203
+            StableName: "TilingFactor"
+            Value: 1
+          - PropertyId: 204
+            StableName: "SortingLayer"
+            Value: 0
+          - PropertyId: 205
+            StableName: "OrderInLayer"
+            Value: 0
+          - PropertyId: 206
+            StableName: "NormalMap"
+            Value: 0
+          - PropertyId: 207
+            StableName: "CastShadows"
+            Value: false
+          - PropertyId: 208
+            StableName: "Material"
+            Value: 0
+    Parent: 0
+    SpriteRenderer:
+      Enabled: false
+      Color: [1, 1, 1, 1]
+      SpriteHandle: 6100000000000000013
+      TilingFactor: 1
+      SortingLayer: 0
+      OrderInLayer: 0
+      NormalMap: 0
+      CastShadows: false
+      Material: 0
+  - Entity: 6100000000000000204
+    Tag:
+      Tag: "Asset_hexagonPointed"
+      Visible: true
+    EntityMetadata:
+      GameplayTag: "Untagged"
+      Layer: 0
+      HierarchyIcon: "Entity"
+    Transform:
+      Translation: [10000, 10000, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+    LocalTransform:
+      Translation: [10000, 10000, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+    Components:
+      - TypeId: 11457157452030541825
+        StableName: "TomCat.ID"
+        SchemaVersion: 1
+        Properties:
+          - PropertyId: 1
+            StableName: "Value"
+            Value: 6100000000000000204
+      - TypeId: 11457157452030541826
+        StableName: "TomCat.Tag"
+        SchemaVersion: 1
+        Properties:
+          - PropertyId: 1
+            StableName: "Name"
+            Value: "Asset_hexagonPointed"
+          - PropertyId: 2
+            StableName: "Visible"
+            Value: true
+      - TypeId: 11457157452030541827
+        StableName: "TomCat.EntityMetadata"
+        SchemaVersion: 1
+        Properties:
+          - PropertyId: 1
+            StableName: "GameplayTag"
+            Value: "Untagged"
+          - PropertyId: 2
+            StableName: "Layer"
+            Value: 0
+          - PropertyId: 3
+            StableName: "HierarchyIcon"
+            Value: 1
+      - TypeId: 11457157452030541828
+        StableName: "TomCat.Transform"
+        SchemaVersion: 1
+        Properties:
+          - PropertyId: 1
+            StableName: "Translation"
+            Value: [10000, 10000, 0]
+          - PropertyId: 2
+            StableName: "Rotation"
+            Value: [0, 0, 0]
+          - PropertyId: 3
+            StableName: "Scale"
+            Value: [1, 1, 1]
+          - PropertyId: 4
+            StableName: "LocalTranslation"
+            Value: [10000, 10000, 0]
+          - PropertyId: 5
+            StableName: "LocalRotation"
+            Value: [0, 0, 0]
+          - PropertyId: 6
+            StableName: "LocalScale"
+            Value: [1, 1, 1]
+      - TypeId: 11457157452030541830
+        StableName: "TomCat.SpriteRenderer"
+        SchemaVersion: 2
+        Properties:
+          - PropertyId: 200
+            StableName: "Enabled"
+            Value: false
+          - PropertyId: 201
+            StableName: "Color"
+            Value: [1, 1, 1, 1]
+          - PropertyId: 202
+            StableName: "Sprite"
+            Value: 6100000000000000014
+          - PropertyId: 203
+            StableName: "TilingFactor"
+            Value: 1
+          - PropertyId: 204
+            StableName: "SortingLayer"
+            Value: 0
+          - PropertyId: 205
+            StableName: "OrderInLayer"
+            Value: 0
+          - PropertyId: 206
+            StableName: "NormalMap"
+            Value: 0
+          - PropertyId: 207
+            StableName: "CastShadows"
+            Value: false
+          - PropertyId: 208
+            StableName: "Material"
+            Value: 0
+    Parent: 0
+    SpriteRenderer:
+      Enabled: false
+      Color: [1, 1, 1, 1]
+      SpriteHandle: 6100000000000000014
+      TilingFactor: 1
+      SortingLayer: 0
+      OrderInLayer: 0
+      NormalMap: 0
+      CastShadows: false
+      Material: 0
+  - Entity: 6100000000000000205
+    Tag:
+      Tag: "Asset_hexagonFlat"
+      Visible: true
+    EntityMetadata:
+      GameplayTag: "Untagged"
+      Layer: 0
+      HierarchyIcon: "Entity"
+    Transform:
+      Translation: [10000, 10000, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+    LocalTransform:
+      Translation: [10000, 10000, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+    Components:
+      - TypeId: 11457157452030541825
+        StableName: "TomCat.ID"
+        SchemaVersion: 1
+        Properties:
+          - PropertyId: 1
+            StableName: "Value"
+            Value: 6100000000000000205
+      - TypeId: 11457157452030541826
+        StableName: "TomCat.Tag"
+        SchemaVersion: 1
+        Properties:
+          - PropertyId: 1
+            StableName: "Name"
+            Value: "Asset_hexagonFlat"
+          - PropertyId: 2
+            StableName: "Visible"
+            Value: true
+      - TypeId: 11457157452030541827
+        StableName: "TomCat.EntityMetadata"
+        SchemaVersion: 1
+        Properties:
+          - PropertyId: 1
+            StableName: "GameplayTag"
+            Value: "Untagged"
+          - PropertyId: 2
+            StableName: "Layer"
+            Value: 0
+          - PropertyId: 3
+            StableName: "HierarchyIcon"
+            Value: 1
+      - TypeId: 11457157452030541828
+        StableName: "TomCat.Transform"
+        SchemaVersion: 1
+        Properties:
+          - PropertyId: 1
+            StableName: "Translation"
+            Value: [10000, 10000, 0]
+          - PropertyId: 2
+            StableName: "Rotation"
+            Value: [0, 0, 0]
+          - PropertyId: 3
+            StableName: "Scale"
+            Value: [1, 1, 1]
+          - PropertyId: 4
+            StableName: "LocalTranslation"
+            Value: [10000, 10000, 0]
+          - PropertyId: 5
+            StableName: "LocalRotation"
+            Value: [0, 0, 0]
+          - PropertyId: 6
+            StableName: "LocalScale"
+            Value: [1, 1, 1]
+      - TypeId: 11457157452030541830
+        StableName: "TomCat.SpriteRenderer"
+        SchemaVersion: 2
+        Properties:
+          - PropertyId: 200
+            StableName: "Enabled"
+            Value: false
+          - PropertyId: 201
+            StableName: "Color"
+            Value: [1, 1, 1, 1]
+          - PropertyId: 202
+            StableName: "Sprite"
+            Value: 6100000000000000015
+          - PropertyId: 203
+            StableName: "TilingFactor"
+            Value: 1
+          - PropertyId: 204
+            StableName: "SortingLayer"
+            Value: 0
+          - PropertyId: 205
+            StableName: "OrderInLayer"
+            Value: 0
+          - PropertyId: 206
+            StableName: "NormalMap"
+            Value: 0
+          - PropertyId: 207
+            StableName: "CastShadows"
+            Value: false
+          - PropertyId: 208
+            StableName: "Material"
+            Value: 0
+    Parent: 0
+    SpriteRenderer:
+      Enabled: false
+      Color: [1, 1, 1, 1]
+      SpriteHandle: 6100000000000000015
+      TilingFactor: 1
+      SortingLayer: 0
+      OrderInLayer: 0
+      NormalMap: 0
+      CastShadows: false
+      Material: 0
+  - Entity: 6100000000000000300
+    Tag:
+      Tag: "Font_monogram"
+      Visible: true
+    EntityMetadata:
+      GameplayTag: "Untagged"
+      Layer: 0
+      HierarchyIcon: "Entity"
+    Transform:
+      Translation: [10000, 10000, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+    LocalTransform:
+      Translation: [10000, 10000, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+    Components:
+      - TypeId: 11457157452030541825
+        StableName: "TomCat.ID"
+        SchemaVersion: 1
+        Properties:
+          - PropertyId: 1
+            StableName: "Value"
+            Value: 6100000000000000300
+      - TypeId: 11457157452030541826
+        StableName: "TomCat.Tag"
+        SchemaVersion: 1
+        Properties:
+          - PropertyId: 1
+            StableName: "Name"
+            Value: "Font_monogram"
+          - PropertyId: 2
+            StableName: "Visible"
+            Value: true
+      - TypeId: 11457157452030541827
+        StableName: "TomCat.EntityMetadata"
+        SchemaVersion: 1
+        Properties:
+          - PropertyId: 1
+            StableName: "GameplayTag"
+            Value: "Untagged"
+          - PropertyId: 2
+            StableName: "Layer"
+            Value: 0
+          - PropertyId: 3
+            StableName: "HierarchyIcon"
+            Value: 1
+      - TypeId: 11457157452030541828
+        StableName: "TomCat.Transform"
+        SchemaVersion: 1
+        Properties:
+          - PropertyId: 1
+            StableName: "Translation"
+            Value: [10000, 10000, 0]
+          - PropertyId: 2
+            StableName: "Rotation"
+            Value: [0, 0, 0]
+          - PropertyId: 3
+            StableName: "Scale"
+            Value: [1, 1, 1]
+          - PropertyId: 4
+            StableName: "LocalTranslation"
+            Value: [10000, 10000, 0]
+          - PropertyId: 5
+            StableName: "LocalRotation"
+            Value: [0, 0, 0]
+          - PropertyId: 6
+            StableName: "LocalScale"
+            Value: [1, 1, 1]
+      - TypeId: 11457438927007252481
+        StableName: "TomCat.TextRenderer"
+        SchemaVersion: 1
+        Properties:
+          - PropertyId: 11457456519193296897
+            StableName: "Enabled"
+            Value: false
+          - PropertyId: 11457456519193296898
+            StableName: "Font"
+            Value: 6100000000000000020
+          - PropertyId: 11457456519193296899
+            StableName: "Text"
+            Value: "Rougelike"
+          - PropertyId: 11457456519193296900
+            StableName: "FontSize"
+            Value: 32
+          - PropertyId: 11457456519193296901
+            StableName: "Color"
+            Value: [0, 0, 0, 1]
+          - PropertyId: 11457456519193296902
+            StableName: "Alignment"
+            Value: 0
+          - PropertyId: 11457456519193296903
+            StableName: "MaxWidth"
+            Value: 0
+          - PropertyId: 11457456519193296904
+            StableName: "LineSpacing"
+            Value: 1
+          - PropertyId: 11457456519193296905
+            StableName: "FallbackFont"
+            Value: 6100000000000000021
+          - PropertyId: 11457456519193296906
+            StableName: "EmojiFont"
+            Value: 0
+    Parent: 0
+  - Entity: 6100000000000000301
+    Tag:
+      Tag: "Font_silver"
+      Visible: true
+    EntityMetadata:
+      GameplayTag: "Untagged"
+      Layer: 0
+      HierarchyIcon: "Entity"
+    Transform:
+      Translation: [10000, 10000, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+    LocalTransform:
+      Translation: [10000, 10000, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+    Components:
+      - TypeId: 11457157452030541825
+        StableName: "TomCat.ID"
+        SchemaVersion: 1
+        Properties:
+          - PropertyId: 1
+            StableName: "Value"
+            Value: 6100000000000000301
+      - TypeId: 11457157452030541826
+        StableName: "TomCat.Tag"
+        SchemaVersion: 1
+        Properties:
+          - PropertyId: 1
+            StableName: "Name"
+            Value: "Font_silver"
+          - PropertyId: 2
+            StableName: "Visible"
+            Value: true
+      - TypeId: 11457157452030541827
+        StableName: "TomCat.EntityMetadata"
+        SchemaVersion: 1
+        Properties:
+          - PropertyId: 1
+            StableName: "GameplayTag"
+            Value: "Untagged"
+          - PropertyId: 2
+            StableName: "Layer"
+            Value: 0
+          - PropertyId: 3
+            StableName: "HierarchyIcon"
+            Value: 1
+      - TypeId: 11457157452030541828
+        StableName: "TomCat.Transform"
+        SchemaVersion: 1
+        Properties:
+          - PropertyId: 1
+            StableName: "Translation"
+            Value: [10000, 10000, 0]
+          - PropertyId: 2
+            StableName: "Rotation"
+            Value: [0, 0, 0]
+          - PropertyId: 3
+            StableName: "Scale"
+            Value: [1, 1, 1]
+          - PropertyId: 4
+            StableName: "LocalTranslation"
+            Value: [10000, 10000, 0]
+          - PropertyId: 5
+            StableName: "LocalRotation"
+            Value: [0, 0, 0]
+          - PropertyId: 6
+            StableName: "LocalScale"
+            Value: [1, 1, 1]
+      - TypeId: 11457438927007252481
+        StableName: "TomCat.TextRenderer"
+        SchemaVersion: 1
+        Properties:
+          - PropertyId: 11457456519193296897
+            StableName: "Enabled"
+            Value: false
+          - PropertyId: 11457456519193296898
+            StableName: "Font"
+            Value: 6100000000000000021
+          - PropertyId: 11457456519193296899
+            StableName: "Text"
+            Value: "Rougelike"
+          - PropertyId: 11457456519193296900
+            StableName: "FontSize"
+            Value: 32
+          - PropertyId: 11457456519193296901
+            StableName: "Color"
+            Value: [0, 0, 0, 1]
+          - PropertyId: 11457456519193296902
+            StableName: "Alignment"
+            Value: 0
+          - PropertyId: 11457456519193296903
+            StableName: "MaxWidth"
+            Value: 0
+          - PropertyId: 11457456519193296904
+            StableName: "LineSpacing"
+            Value: 1
+          - PropertyId: 11457456519193296905
+            StableName: "FallbackFont"
+            Value: 6100000000000000021
+          - PropertyId: 11457456519193296906
+            StableName: "EmojiFont"
+            Value: 0
+    Parent: 0
+  - Entity: 6100000000000000400
+    Tag:
+      Tag: "Audio_welcome"
+      Visible: true
+    EntityMetadata:
+      GameplayTag: "Untagged"
+      Layer: 0
+      HierarchyIcon: "Entity"
+    Transform:
+      Translation: [10000, 10000, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+    LocalTransform:
+      Translation: [10000, 10000, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+    Components:
+      - TypeId: 11457157452030541825
+        StableName: "TomCat.ID"
+        SchemaVersion: 1
+        Properties:
+          - PropertyId: 1
+            StableName: "Value"
+            Value: 6100000000000000400
+      - TypeId: 11457157452030541826
+        StableName: "TomCat.Tag"
+        SchemaVersion: 1
+        Properties:
+          - PropertyId: 1
+            StableName: "Name"
+            Value: "Audio_welcome"
+          - PropertyId: 2
+            StableName: "Visible"
+            Value: true
+      - TypeId: 11457157452030541827
+        StableName: "TomCat.EntityMetadata"
+        SchemaVersion: 1
+        Properties:
+          - PropertyId: 1
+            StableName: "GameplayTag"
+            Value: "Untagged"
+          - PropertyId: 2
+            StableName: "Layer"
+            Value: 0
+          - PropertyId: 3
+            StableName: "HierarchyIcon"
+            Value: 1
+      - TypeId: 11457157452030541828
+        StableName: "TomCat.Transform"
+        SchemaVersion: 1
+        Properties:
+          - PropertyId: 1
+            StableName: "Translation"
+            Value: [10000, 10000, 0]
+          - PropertyId: 2
+            StableName: "Rotation"
+            Value: [0, 0, 0]
+          - PropertyId: 3
+            StableName: "Scale"
+            Value: [1, 1, 1]
+          - PropertyId: 4
+            StableName: "LocalTranslation"
+            Value: [10000, 10000, 0]
+          - PropertyId: 5
+            StableName: "LocalRotation"
+            Value: [0, 0, 0]
+          - PropertyId: 6
+            StableName: "LocalScale"
+            Value: [1, 1, 1]
+      - TypeId: 11457157452030541834
+        StableName: "TomCat.AudioSource"
+        SchemaVersion: 2
+        Properties:
+          - PropertyId: 900
+            StableName: "Enabled"
+            Value: false
+          - PropertyId: 901
+            StableName: "Clip"
+            Value: 6100000000000000030
+          - PropertyId: 902
+            StableName: "PlayOnStart"
+            Value: false
+          - PropertyId: 903
+            StableName: "Loop"
+            Value: false
+          - PropertyId: 904
+            StableName: "Streaming"
+            Value: false
+          - PropertyId: 905
+            StableName: "Volume"
+            Value: 1
+          - PropertyId: 906
+            StableName: "Pitch"
+            Value: 1
+          - PropertyId: 907
+            StableName: "SpatialBlend"
+            Value: 0
+          - PropertyId: 908
+            StableName: "MinDistance"
+            Value: 1
+          - PropertyId: 909
+            StableName: "MaxDistance"
+            Value: 25
+          - PropertyId: 910
+            StableName: "MixerGroup"
+            Value: 1
+          - PropertyId: 911
+            StableName: "Bus"
+            Value: 4294967295
+    Parent: 0
+    AudioSource:
+      Enabled: false
+      Clip: 6100000000000000030
+      PlayOnStart: false
+      Loop: false
+      Streaming: false
+      Volume: 1
+      Pitch: 1
+      SpatialBlend: 0
+      MinDistance: 1
+      MaxDistance: 25
+      MixerGroup: 1
+      Bus: 4294967295
+  - Entity: 6100000000000000401
+    Tag:
+      Tag: "Audio_knife"
+      Visible: true
+    EntityMetadata:
+      GameplayTag: "Untagged"
+      Layer: 0
+      HierarchyIcon: "Entity"
+    Transform:
+      Translation: [10000, 10000, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+    LocalTransform:
+      Translation: [10000, 10000, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+    Components:
+      - TypeId: 11457157452030541825
+        StableName: "TomCat.ID"
+        SchemaVersion: 1
+        Properties:
+          - PropertyId: 1
+            StableName: "Value"
+            Value: 6100000000000000401
+      - TypeId: 11457157452030541826
+        StableName: "TomCat.Tag"
+        SchemaVersion: 1
+        Properties:
+          - PropertyId: 1
+            StableName: "Name"
+            Value: "Audio_knife"
+          - PropertyId: 2
+            StableName: "Visible"
+            Value: true
+      - TypeId: 11457157452030541827
+        StableName: "TomCat.EntityMetadata"
+        SchemaVersion: 1
+        Properties:
+          - PropertyId: 1
+            StableName: "GameplayTag"
+            Value: "Untagged"
+          - PropertyId: 2
+            StableName: "Layer"
+            Value: 0
+          - PropertyId: 3
+            StableName: "HierarchyIcon"
+            Value: 1
+      - TypeId: 11457157452030541828
+        StableName: "TomCat.Transform"
+        SchemaVersion: 1
+        Properties:
+          - PropertyId: 1
+            StableName: "Translation"
+            Value: [10000, 10000, 0]
+          - PropertyId: 2
+            StableName: "Rotation"
+            Value: [0, 0, 0]
+          - PropertyId: 3
+            StableName: "Scale"
+            Value: [1, 1, 1]
+          - PropertyId: 4
+            StableName: "LocalTranslation"
+            Value: [10000, 10000, 0]
+          - PropertyId: 5
+            StableName: "LocalRotation"
+            Value: [0, 0, 0]
+          - PropertyId: 6
+            StableName: "LocalScale"
+            Value: [1, 1, 1]
+      - TypeId: 11457157452030541834
+        StableName: "TomCat.AudioSource"
+        SchemaVersion: 2
+        Properties:
+          - PropertyId: 900
+            StableName: "Enabled"
+            Value: false
+          - PropertyId: 901
+            StableName: "Clip"
+            Value: 6100000000000000031
+          - PropertyId: 902
+            StableName: "PlayOnStart"
+            Value: false
+          - PropertyId: 903
+            StableName: "Loop"
+            Value: false
+          - PropertyId: 904
+            StableName: "Streaming"
+            Value: false
+          - PropertyId: 905
+            StableName: "Volume"
+            Value: 1
+          - PropertyId: 906
+            StableName: "Pitch"
+            Value: 1
+          - PropertyId: 907
+            StableName: "SpatialBlend"
+            Value: 0
+          - PropertyId: 908
+            StableName: "MinDistance"
+            Value: 1
+          - PropertyId: 909
+            StableName: "MaxDistance"
+            Value: 25
+          - PropertyId: 910
+            StableName: "MixerGroup"
+            Value: 2
+          - PropertyId: 911
+            StableName: "Bus"
+            Value: 4294967295
+    Parent: 0
+    AudioSource:
+      Enabled: false
+      Clip: 6100000000000000031
+      PlayOnStart: false
+      Loop: false
+      Streaming: false
+      Volume: 1
+      Pitch: 1
+      SpatialBlend: 0
+      MinDistance: 1
+      MaxDistance: 25
+      MixerGroup: 2
+      Bus: 4294967295
+  - Entity: 6100000000000000402
+    Tag:
+      Tag: "Audio_hit"
+      Visible: true
+    EntityMetadata:
+      GameplayTag: "Untagged"
+      Layer: 0
+      HierarchyIcon: "Entity"
+    Transform:
+      Translation: [10000, 10000, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+    LocalTransform:
+      Translation: [10000, 10000, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+    Components:
+      - TypeId: 11457157452030541825
+        StableName: "TomCat.ID"
+        SchemaVersion: 1
+        Properties:
+          - PropertyId: 1
+            StableName: "Value"
+            Value: 6100000000000000402
+      - TypeId: 11457157452030541826
+        StableName: "TomCat.Tag"
+        SchemaVersion: 1
+        Properties:
+          - PropertyId: 1
+            StableName: "Name"
+            Value: "Audio_hit"
+          - PropertyId: 2
+            StableName: "Visible"
+            Value: true
+      - TypeId: 11457157452030541827
+        StableName: "TomCat.EntityMetadata"
+        SchemaVersion: 1
+        Properties:
+          - PropertyId: 1
+            StableName: "GameplayTag"
+            Value: "Untagged"
+          - PropertyId: 2
+            StableName: "Layer"
+            Value: 0
+          - PropertyId: 3
+            StableName: "HierarchyIcon"
+            Value: 1
+      - TypeId: 11457157452030541828
+        StableName: "TomCat.Transform"
+        SchemaVersion: 1
+        Properties:
+          - PropertyId: 1
+            StableName: "Translation"
+            Value: [10000, 10000, 0]
+          - PropertyId: 2
+            StableName: "Rotation"
+            Value: [0, 0, 0]
+          - PropertyId: 3
+            StableName: "Scale"
+            Value: [1, 1, 1]
+          - PropertyId: 4
+            StableName: "LocalTranslation"
+            Value: [10000, 10000, 0]
+          - PropertyId: 5
+            StableName: "LocalRotation"
+            Value: [0, 0, 0]
+          - PropertyId: 6
+            StableName: "LocalScale"
+            Value: [1, 1, 1]
+      - TypeId: 11457157452030541834
+        StableName: "TomCat.AudioSource"
+        SchemaVersion: 2
+        Properties:
+          - PropertyId: 900
+            StableName: "Enabled"
+            Value: false
+          - PropertyId: 901
+            StableName: "Clip"
+            Value: 6100000000000000032
+          - PropertyId: 902
+            StableName: "PlayOnStart"
+            Value: false
+          - PropertyId: 903
+            StableName: "Loop"
+            Value: false
+          - PropertyId: 904
+            StableName: "Streaming"
+            Value: false
+          - PropertyId: 905
+            StableName: "Volume"
+            Value: 1
+          - PropertyId: 906
+            StableName: "Pitch"
+            Value: 1
+          - PropertyId: 907
+            StableName: "SpatialBlend"
+            Value: 0
+          - PropertyId: 908
+            StableName: "MinDistance"
+            Value: 1
+          - PropertyId: 909
+            StableName: "MaxDistance"
+            Value: 25
+          - PropertyId: 910
+            StableName: "MixerGroup"
+            Value: 2
+          - PropertyId: 911
+            StableName: "Bus"
+            Value: 4294967295
+    Parent: 0
+    AudioSource:
+      Enabled: false
+      Clip: 6100000000000000032
+      PlayOnStart: false
+      Loop: false
+      Streaming: false
+      Volume: 1
+      Pitch: 1
+      SpatialBlend: 0
+      MinDistance: 1
+      MaxDistance: 25
+      MixerGroup: 2
+      Bus: 4294967295
+  - Entity: 6100000000000000403
+    Tag:
+      Tag: "Audio_death"
+      Visible: true
+    EntityMetadata:
+      GameplayTag: "Untagged"
+      Layer: 0
+      HierarchyIcon: "Entity"
+    Transform:
+      Translation: [10000, 10000, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+    LocalTransform:
+      Translation: [10000, 10000, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+    Components:
+      - TypeId: 11457157452030541825
+        StableName: "TomCat.ID"
+        SchemaVersion: 1
+        Properties:
+          - PropertyId: 1
+            StableName: "Value"
+            Value: 6100000000000000403
+      - TypeId: 11457157452030541826
+        StableName: "TomCat.Tag"
+        SchemaVersion: 1
+        Properties:
+          - PropertyId: 1
+            StableName: "Name"
+            Value: "Audio_death"
+          - PropertyId: 2
+            StableName: "Visible"
+            Value: true
+      - TypeId: 11457157452030541827
+        StableName: "TomCat.EntityMetadata"
+        SchemaVersion: 1
+        Properties:
+          - PropertyId: 1
+            StableName: "GameplayTag"
+            Value: "Untagged"
+          - PropertyId: 2
+            StableName: "Layer"
+            Value: 0
+          - PropertyId: 3
+            StableName: "HierarchyIcon"
+            Value: 1
+      - TypeId: 11457157452030541828
+        StableName: "TomCat.Transform"
+        SchemaVersion: 1
+        Properties:
+          - PropertyId: 1
+            StableName: "Translation"
+            Value: [10000, 10000, 0]
+          - PropertyId: 2
+            StableName: "Rotation"
+            Value: [0, 0, 0]
+          - PropertyId: 3
+            StableName: "Scale"
+            Value: [1, 1, 1]
+          - PropertyId: 4
+            StableName: "LocalTranslation"
+            Value: [10000, 10000, 0]
+          - PropertyId: 5
+            StableName: "LocalRotation"
+            Value: [0, 0, 0]
+          - PropertyId: 6
+            StableName: "LocalScale"
+            Value: [1, 1, 1]
+      - TypeId: 11457157452030541834
+        StableName: "TomCat.AudioSource"
+        SchemaVersion: 2
+        Properties:
+          - PropertyId: 900
+            StableName: "Enabled"
+            Value: false
+          - PropertyId: 901
+            StableName: "Clip"
+            Value: 6100000000000000033
+          - PropertyId: 902
+            StableName: "PlayOnStart"
+            Value: false
+          - PropertyId: 903
+            StableName: "Loop"
+            Value: false
+          - PropertyId: 904
+            StableName: "Streaming"
+            Value: false
+          - PropertyId: 905
+            StableName: "Volume"
+            Value: 1
+          - PropertyId: 906
+            StableName: "Pitch"
+            Value: 1
+          - PropertyId: 907
+            StableName: "SpatialBlend"
+            Value: 0
+          - PropertyId: 908
+            StableName: "MinDistance"
+            Value: 1
+          - PropertyId: 909
+            StableName: "MaxDistance"
+            Value: 25
+          - PropertyId: 910
+            StableName: "MixerGroup"
+            Value: 2
+          - PropertyId: 911
+            StableName: "Bus"
+            Value: 4294967295
+    Parent: 0
+    AudioSource:
+      Enabled: false
+      Clip: 6100000000000000033
+      PlayOnStart: false
+      Loop: false
+      Streaming: false
+      Volume: 1
+      Pitch: 1
+      SpatialBlend: 0
+      MinDistance: 1
+      MaxDistance: 25
+      MixerGroup: 2
+      Bus: 4294967295
+  - Entity: 6100000000000000404
+    Tag:
+      Tag: "Audio_hurt"
+      Visible: true
+    EntityMetadata:
+      GameplayTag: "Untagged"
+      Layer: 0
+      HierarchyIcon: "Entity"
+    Transform:
+      Translation: [10000, 10000, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+    LocalTransform:
+      Translation: [10000, 10000, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+    Components:
+      - TypeId: 11457157452030541825
+        StableName: "TomCat.ID"
+        SchemaVersion: 1
+        Properties:
+          - PropertyId: 1
+            StableName: "Value"
+            Value: 6100000000000000404
+      - TypeId: 11457157452030541826
+        StableName: "TomCat.Tag"
+        SchemaVersion: 1
+        Properties:
+          - PropertyId: 1
+            StableName: "Name"
+            Value: "Audio_hurt"
+          - PropertyId: 2
+            StableName: "Visible"
+            Value: true
+      - TypeId: 11457157452030541827
+        StableName: "TomCat.EntityMetadata"
+        SchemaVersion: 1
+        Properties:
+          - PropertyId: 1
+            StableName: "GameplayTag"
+            Value: "Untagged"
+          - PropertyId: 2
+            StableName: "Layer"
+            Value: 0
+          - PropertyId: 3
+            StableName: "HierarchyIcon"
+            Value: 1
+      - TypeId: 11457157452030541828
+        StableName: "TomCat.Transform"
+        SchemaVersion: 1
+        Properties:
+          - PropertyId: 1
+            StableName: "Translation"
+            Value: [10000, 10000, 0]
+          - PropertyId: 2
+            StableName: "Rotation"
+            Value: [0, 0, 0]
+          - PropertyId: 3
+            StableName: "Scale"
+            Value: [1, 1, 1]
+          - PropertyId: 4
+            StableName: "LocalTranslation"
+            Value: [10000, 10000, 0]
+          - PropertyId: 5
+            StableName: "LocalRotation"
+            Value: [0, 0, 0]
+          - PropertyId: 6
+            StableName: "LocalScale"
+            Value: [1, 1, 1]
+      - TypeId: 11457157452030541834
+        StableName: "TomCat.AudioSource"
+        SchemaVersion: 2
+        Properties:
+          - PropertyId: 900
+            StableName: "Enabled"
+            Value: false
+          - PropertyId: 901
+            StableName: "Clip"
+            Value: 6100000000000000034
+          - PropertyId: 902
+            StableName: "PlayOnStart"
+            Value: false
+          - PropertyId: 903
+            StableName: "Loop"
+            Value: false
+          - PropertyId: 904
+            StableName: "Streaming"
+            Value: false
+          - PropertyId: 905
+            StableName: "Volume"
+            Value: 1
+          - PropertyId: 906
+            StableName: "Pitch"
+            Value: 1
+          - PropertyId: 907
+            StableName: "SpatialBlend"
+            Value: 0
+          - PropertyId: 908
+            StableName: "MinDistance"
+            Value: 1
+          - PropertyId: 909
+            StableName: "MaxDistance"
+            Value: 25
+          - PropertyId: 910
+            StableName: "MixerGroup"
+            Value: 2
+          - PropertyId: 911
+            StableName: "Bus"
+            Value: 4294967295
+    Parent: 0
+    AudioSource:
+      Enabled: false
+      Clip: 6100000000000000034
+      PlayOnStart: false
+      Loop: false
+      Streaming: false
+      Volume: 1
+      Pitch: 1
+      SpatialBlend: 0
+      MinDistance: 1
+      MaxDistance: 25
+      MixerGroup: 2
+      Bus: 4294967295
+  - Entity: 6100000000000000405
+    Tag:
+      Tag: "Audio_blackHole"
+      Visible: true
+    EntityMetadata:
+      GameplayTag: "Untagged"
+      Layer: 0
+      HierarchyIcon: "Entity"
+    Transform:
+      Translation: [10000, 10000, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+    LocalTransform:
+      Translation: [10000, 10000, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+    Components:
+      - TypeId: 11457157452030541825
+        StableName: "TomCat.ID"
+        SchemaVersion: 1
+        Properties:
+          - PropertyId: 1
+            StableName: "Value"
+            Value: 6100000000000000405
+      - TypeId: 11457157452030541826
+        StableName: "TomCat.Tag"
+        SchemaVersion: 1
+        Properties:
+          - PropertyId: 1
+            StableName: "Name"
+            Value: "Audio_blackHole"
+          - PropertyId: 2
+            StableName: "Visible"
+            Value: true
+      - TypeId: 11457157452030541827
+        StableName: "TomCat.EntityMetadata"
+        SchemaVersion: 1
+        Properties:
+          - PropertyId: 1
+            StableName: "GameplayTag"
+            Value: "Untagged"
+          - PropertyId: 2
+            StableName: "Layer"
+            Value: 0
+          - PropertyId: 3
+            StableName: "HierarchyIcon"
+            Value: 1
+      - TypeId: 11457157452030541828
+        StableName: "TomCat.Transform"
+        SchemaVersion: 1
+        Properties:
+          - PropertyId: 1
+            StableName: "Translation"
+            Value: [10000, 10000, 0]
+          - PropertyId: 2
+            StableName: "Rotation"
+            Value: [0, 0, 0]
+          - PropertyId: 3
+            StableName: "Scale"
+            Value: [1, 1, 1]
+          - PropertyId: 4
+            StableName: "LocalTranslation"
+            Value: [10000, 10000, 0]
+          - PropertyId: 5
+            StableName: "LocalRotation"
+            Value: [0, 0, 0]
+          - PropertyId: 6
+            StableName: "LocalScale"
+            Value: [1, 1, 1]
+      - TypeId: 11457157452030541834
+        StableName: "TomCat.AudioSource"
+        SchemaVersion: 2
+        Properties:
+          - PropertyId: 900
+            StableName: "Enabled"
+            Value: false
+          - PropertyId: 901
+            StableName: "Clip"
+            Value: 6100000000000000035
+          - PropertyId: 902
+            StableName: "PlayOnStart"
+            Value: false
+          - PropertyId: 903
+            StableName: "Loop"
+            Value: false
+          - PropertyId: 904
+            StableName: "Streaming"
+            Value: false
+          - PropertyId: 905
+            StableName: "Volume"
+            Value: 1
+          - PropertyId: 906
+            StableName: "Pitch"
+            Value: 1
+          - PropertyId: 907
+            StableName: "SpatialBlend"
+            Value: 0
+          - PropertyId: 908
+            StableName: "MinDistance"
+            Value: 1
+          - PropertyId: 909
+            StableName: "MaxDistance"
+            Value: 25
+          - PropertyId: 910
+            StableName: "MixerGroup"
+            Value: 2
+          - PropertyId: 911
+            StableName: "Bus"
+            Value: 4294967295
+    Parent: 0
+    AudioSource:
+      Enabled: false
+      Clip: 6100000000000000035
+      PlayOnStart: false
+      Loop: false
+      Streaming: false
+      Volume: 1
+      Pitch: 1
+      SpatialBlend: 0
+      MinDistance: 1
+      MaxDistance: 25
+      MixerGroup: 2
+      Bus: 4294967295

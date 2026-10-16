@@ -5,6 +5,7 @@ import { readFileSync } from 'node:fs'
 
 const bytes = readFileSync(process.env.TEST_COOKED_PACKAGE || '.engine/upgrade-v6-coinrunner.tcpak')
 const { commit } = JSON.parse(readFileSync('engine.lock.json', 'utf8'))
+const packageCommit = process.env.TEST_PACKAGE_ENGINE_COMMIT || commit
 const debug = (...values) => { if (process.env.TEST_DEBUG) console.log(...values) }
 const browser = await chromium.launch({ channel: 'chrome', headless: true, args: ['--enable-webgl', '--use-angle=swiftshader', '--enable-unsafe-swiftshader'] })
 debug('browser started')
@@ -17,7 +18,7 @@ try {
   await page.route('**/v1/**', route => {
     const path = new URL(route.request().url()).pathname
     if (path.endsWith('/package')) return route.fulfill({ contentType: 'application/octet-stream', body: bytes })
-    if (path === '/v1/games/published/cook-smoke') return route.fulfill({ json: { id: 'cook-smoke', title: 'CoinRunner', description: '', engineCommit: commit, byteLength: bytes.length, etag: 'test', publishedAt: new Date().toISOString() } })
+    if (path === '/v1/games/published/cook-smoke') return route.fulfill({ json: { id: 'cook-smoke', title: 'CoinRunner', description: '', engineCommit: packageCommit, byteLength: bytes.length, etag: 'test', publishedAt: new Date().toISOString() } })
     if (path === '/v1/auth/me') return route.fulfill({ status: 401, json: { error: 'guest' } })
     return route.fulfill({ json: [] })
   })
@@ -32,5 +33,5 @@ try {
   assert.deepEqual(errors, [])
   await page.goto(`${process.env.TEST_BASE_URL || 'http://127.0.0.1:5173'}/play`)
   assert.equal(await page.locator('iframe').count(), 0)
-  console.log('PASS: server-compiled MonoBehaviour payload runs in the matching browser player and closes cleanly')
+  console.log(`PASS: server-compiled MonoBehaviour package (${packageCommit}) runs in browser player (${commit}) and closes cleanly`)
 } finally { await browser.close() }

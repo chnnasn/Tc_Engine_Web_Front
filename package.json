@@ -6,6 +6,7 @@
   "scripts": {
     "engine:build": "node scripts/build-engine.mjs",
     "engine:samples": "node scripts/build-sample-games.mjs",
+    "engine:rougelike": "node scripts/build-rougelike.mjs",
     "test": "node --experimental-strip-types --test tests/*.test.mjs",
     "test:auth": "node tests/auth-browser.mjs",
     "test:browser": "node tests/browser.mjs",

@@ -1,0 +1,4 @@
+# Keep the downloadable native project's text identical across Windows/Linux.
+# Binary images, audio, fonts and archives retain their original bytes.
+samples/rougelike/** text=auto eol=lf
+public/samples/rougelike/manifest.json text eol=lf
