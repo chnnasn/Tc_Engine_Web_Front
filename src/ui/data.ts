@@ -7,6 +7,18 @@ export type Game = {
 }
 export const games: Game[] = [
   {
+    id: 'return', title: 'Return · 归途', subtitle: '在生与死的两面，寻找回去的路。',
+    author: 'Tc 引擎示例', category: '解谜', image: '/samples/return/cover.png', color: '#cbd8d2',
+    packageUrl: '/samples/return/return.tcpak',
+    sourceUrl: '/samples/return/return-source.zip',
+    description: '一段在生死两个世界之间往返的像素平台解谜旅程。每次死亡都会切换世界，并在原地留下身体。观察两侧不同的地形，推动箱子、压住按钮，寻找通路。包含教学关、五个关卡与最终场景，基于原始 Return demo，以 Tc 引擎复原。',
+    controls: [
+      { key: 'A / D 或 ← / →', action: '左右移动' }, { key: 'Space', action: '跳跃' },
+      { key: 'R', action: '重新开始当前关卡' }, { key: 'Enter', action: '开始游戏' },
+      { key: 'P', action: '暂停 / 继续' }, { key: 'M', action: '静音 / 开启声音' },
+    ],
+  },
+  {
     id: 'rougelike', title: 'Rougelike · 几何竞技场', subtitle: '挥出刀光，在十波围攻中找到自己的节奏。',
     author: 'Tc 引擎示例', category: '动作', image: '/images/rougelike.png', color: '#f7f7e2',
     packageUrl: '/samples/rougelike/rougelike.tcpak',

@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict'
 import { readFileSync } from 'node:fs'
 import { chromium } from 'playwright'
+import { parse } from 'yaml'
 const lock=JSON.parse(readFileSync('engine.lock.json','utf8'))
 const previous=process.env.TEST_PREVIOUS_ENGINE_COMMIT || lock.legacyCommits[0]
 assert.ok(previous && previous!==lock.commit,'Configure a genuine compatible previous engine build')
@@ -8,6 +9,10 @@ const base=process.env.TEST_BASE_URL || 'http://127.0.0.1:5173'
 const browser=await chromium.launch({channel:'chrome',headless:true})
 const context=await browser.newContext({viewport:{width:1440,height:960}})
 const uploads=new Map();let manifest
+// Signed-TRS preservation no longer decomposes identity rotations into -0.
+// Compare exact typed scene values (including uint64 IDs), allowing only the
+// numerically equivalent zero spelling to change during serialization.
+const sceneValues = archive => parse(archive, { intAsBigInt: true })
 const revision='b'.repeat(32),etag=`"${revision}"`
 await context.addInitScript(()=>localStorage.setItem('tomcat-ui-projects-v2-upgrade',JSON.stringify([
   {id:'upgrade',name:'Existing cloud project',template:'2D',description:'',image:'',status:'draft',updated:'today'}])))
@@ -53,10 +58,10 @@ try {
   const newPage=await context.newPage();await ready(newPage)
   const restored=await rpc(newPage,'scene.snapshot',{})
   assert.ok(restored.entities.some(e=>e.id==='7011' && e.name==='Keep this existing entity'))
-  assert.equal(restored.archive,archive,'cloud restore must preserve the existing scene')
+  assert.deepEqual(sceneValues(restored.archive),sceneValues(archive),'cloud restore must preserve every existing scene value')
   await newPage.getByRole('button',{name:'保存到云端',exact:true}).click()
   await newPage.getByText('已保存到数据库',{exact:true}).waitFor()
   assert.equal(manifest.engineCommit,lock.commit)
-  assert.equal(manifest.archive,archive)
+  assert.deepEqual(sceneValues(manifest.archive),sceneValues(archive))
   console.log('PASS: genuine previous WASM project saved, local copy removed, restored from cloud in new engine and saved intact.')
 } catch(error) {const p=context.pages().at(-1);console.log(await p.locator('body').innerText());throw error} finally {await browser.close()}

@@ -43,9 +43,12 @@ export function assertDocument(value: unknown): asserts value is EngineDocument 
   const paths = Object.keys(d.files)
   if (paths.length > 512 || new Set(paths.map(path => path.toLowerCase())).size !== paths.length) throw new Error('项目文件过多或路径重复')
   for (const [path, data] of Object.entries(d.files)) {
-    if (!validFilePath(path) || typeof data !== 'string' || !/^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$/.test(data)) throw new Error('无效的项目文件')
-    bytes += data.length
+    if (!validFilePath(path) || typeof data !== 'string') throw new Error('无效的项目文件')
     if (data.length > Math.ceil(8 * 1024 * 1024 / 3) * 4) throw new Error('单个文件不能超过 8 MiB')
+    // Repeated four-character groups exhaust V8's regexp stack on valid
+    // multi-MiB assets. Scan a flat alphabet and require the absolute end.
+    if (data.length % 4 !== 0 || !/^[A-Za-z0-9+/]*={0,2}(?![\s\S])/.test(data)) throw new Error('无效的项目文件')
+    bytes += data.length
   }
   if (bytes > 48 * 1024 * 1024) throw new Error('项目资源超过本地归档限制')
   if (d.version === 2) {

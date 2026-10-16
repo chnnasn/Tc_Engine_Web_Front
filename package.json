@@ -14,7 +14,8 @@
     "dev": "vite",
     "prebuild": "node scripts/engine-manifest.mjs --optional",
     "build": "vue-tsc -b && vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "engine:return": "node scripts/build-return.mjs"
   },
   "dependencies": {
     "@lucide/vue": "latest",

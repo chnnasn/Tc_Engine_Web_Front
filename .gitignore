@@ -3,6 +3,7 @@ dist/
 public/engine/
 node_modules/
 *.tsbuildinfo
+__pycache__/
 
 .env
 .env.*

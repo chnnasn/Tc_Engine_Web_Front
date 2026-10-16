@@ -1,0 +1,76 @@
+{
+  "source": "E:\\Gitee\\Return",
+  "sceneOrder": [
+    "Main",
+    "default",
+    "Level1",
+    "Level2",
+    "Level3",
+    "Level4",
+    "Level5",
+    "final"
+  ],
+  "sourceSha256": {
+    "Assets/Scenes/default.unity": "7369f95f61cdbe573246b9413a4a8fa66c25d7b20b324705889191559c19aa38",
+    "Assets/Scenes/final.unity": "1df7adc4cdb86c4d9963350626f2dd23b0d9b949b202e67b9b40e064f2522f6f",
+    "Assets/Scenes/Level1.unity": "45797343e3c22abb1bee2e61c4d84243979c34bbec3edbd1aebd206c08d3a0f4",
+    "Assets/Scenes/Level2.unity": "c8fe8d5710e11a9dccc0b8f768ccf3e3f0cb2e810fdd15fcd602453a48d357e7",
+    "Assets/Scenes/Level3.unity": "56203d5f1936b15865dbee23498ad5ec5a3c49d458596705ec2a65bd56137060",
+    "Assets/Scenes/Level4.unity": "b46d799aba7a8e24fe3d3b44d7fc240dca2d045909ffb147607ccc2561d17bed",
+    "Assets/Scenes/Level5.unity": "e4a53e0b0bdef5759bd41314244f98be83be869c7f9bfcf64c13e8777e0a39ac",
+    "Assets/Scenes/Main.unity": "be3fffdfcd42339c77a0a899907b44d5439bdbbf955f9a897078215305388890"
+  },
+  "warnings": [],
+  "assetCount": 146,
+  "tileCollisionPolicy": "Saved Unity CompositeCollider2D outlines decomposed into rectangles with even-odd holes; numerical extrusion epsilon is snapped to the source 1/16-unit pixel grid. Raw outlines are retained in per-scene JSON. TilemapCollider2D + tile collider type grid fallback applies only without CompositeCollider2D.",
+  "sceneStats": [
+    {
+      "name": "Main",
+      "maps": 0,
+      "objects": 0,
+      "solids": 0
+    },
+    {
+      "name": "default",
+      "maps": 1,
+      "objects": 28,
+      "solids": 4
+    },
+    {
+      "name": "Level1",
+      "maps": 5,
+      "objects": 5,
+      "solids": 15
+    },
+    {
+      "name": "Level2",
+      "maps": 5,
+      "objects": 5,
+      "solids": 28
+    },
+    {
+      "name": "Level3",
+      "maps": 4,
+      "objects": 6,
+      "solids": 13
+    },
+    {
+      "name": "Level4",
+      "maps": 5,
+      "objects": 14,
+      "solids": 9
+    },
+    {
+      "name": "Level5",
+      "maps": 5,
+      "objects": 15,
+      "solids": 18
+    },
+    {
+      "name": "final",
+      "maps": 2,
+      "objects": 4,
+      "solids": 5
+    }
+  ]
+}

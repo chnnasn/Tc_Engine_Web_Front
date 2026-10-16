@@ -1,0 +1,1420 @@
+{
+  "source": "Assets/Scenes/default.unity",
+  "tilemaps": [
+    {
+      "name": "Life And Death/Tilemap",
+      "active": true,
+      "tileCount": 60,
+      "collide": true,
+      "tiles": [
+        {
+          "x": -8,
+          "y": -8,
+          "sprite": "sprite-industrial.v2_14",
+          "colliderType": 1
+        },
+        {
+          "x": -7,
+          "y": -8,
+          "sprite": "sprite-industrial.v2_14",
+          "colliderType": 1
+        },
+        {
+          "x": -6,
+          "y": -8,
+          "sprite": "sprite-industrial.v2_14",
+          "colliderType": 1
+        },
+        {
+          "x": -5,
+          "y": -8,
+          "sprite": "sprite-industrial.v2_14",
+          "colliderType": 1
+        },
+        {
+          "x": -4,
+          "y": -8,
+          "sprite": "sprite-industrial.v2_14",
+          "colliderType": 1
+        },
+        {
+          "x": -3,
+          "y": -8,
+          "sprite": "sprite-industrial.v2_14",
+          "colliderType": 1
+        },
+        {
+          "x": -2,
+          "y": -8,
+          "sprite": "sprite-industrial.v2_14",
+          "colliderType": 1
+        },
+        {
+          "x": -1,
+          "y": -8,
+          "sprite": "sprite-industrial.v2_14",
+          "colliderType": 1
+        },
+        {
+          "x": 0,
+          "y": -8,
+          "sprite": "sprite-industrial.v2_14",
+          "colliderType": 1
+        },
+        {
+          "x": 1,
+          "y": -8,
+          "sprite": "sprite-industrial.v2_14",
+          "colliderType": 1
+        },
+        {
+          "x": 2,
+          "y": -8,
+          "sprite": "sprite-industrial.v2_14",
+          "colliderType": 1
+        },
+        {
+          "x": 3,
+          "y": -8,
+          "sprite": "sprite-industrial.v2_14",
+          "colliderType": 1
+        },
+        {
+          "x": 4,
+          "y": -8,
+          "sprite": "sprite-industrial.v2_14",
+          "colliderType": 1
+        },
+        {
+          "x": 5,
+          "y": -8,
+          "sprite": "sprite-industrial.v2_14",
+          "colliderType": 1
+        },
+        {
+          "x": 6,
+          "y": -8,
+          "sprite": "sprite-industrial.v2_14",
+          "colliderType": 1
+        },
+        {
+          "x": 7,
+          "y": -8,
+          "sprite": "sprite-industrial.v2_14",
+          "colliderType": 1
+        },
+        {
+          "x": -8,
+          "y": -7,
+          "sprite": "sprite-industrial.v2_14",
+          "colliderType": 1
+        },
+        {
+          "x": 7,
+          "y": -7,
+          "sprite": "sprite-industrial.v2_14",
+          "colliderType": 1
+        },
+        {
+          "x": -8,
+          "y": -6,
+          "sprite": "sprite-industrial.v2_14",
+          "colliderType": 1
+        },
+        {
+          "x": 7,
+          "y": -6,
+          "sprite": "sprite-industrial.v2_14",
+          "colliderType": 1
+        },
+        {
+          "x": -8,
+          "y": -5,
+          "sprite": "sprite-industrial.v2_14",
+          "colliderType": 1
+        },
+        {
+          "x": 7,
+          "y": -5,
+          "sprite": "sprite-industrial.v2_14",
+          "colliderType": 1
+        },
+        {
+          "x": -8,
+          "y": -4,
+          "sprite": "sprite-industrial.v2_14",
+          "colliderType": 1
+        },
+        {
+          "x": 7,
+          "y": -4,
+          "sprite": "sprite-industrial.v2_14",
+          "colliderType": 1
+        },
+        {
+          "x": -8,
+          "y": -3,
+          "sprite": "sprite-industrial.v2_14",
+          "colliderType": 1
+        },
+        {
+          "x": 7,
+          "y": -3,
+          "sprite": "sprite-industrial.v2_14",
+          "colliderType": 1
+        },
+        {
+          "x": -8,
+          "y": -2,
+          "sprite": "sprite-industrial.v2_14",
+          "colliderType": 1
+        },
+        {
+          "x": 7,
+          "y": -2,
+          "sprite": "sprite-industrial.v2_14",
+          "colliderType": 1
+        },
+        {
+          "x": -8,
+          "y": -1,
+          "sprite": "sprite-industrial.v2_14",
+          "colliderType": 1
+        },
+        {
+          "x": 7,
+          "y": -1,
+          "sprite": "sprite-industrial.v2_14",
+          "colliderType": 1
+        },
+        {
+          "x": -8,
+          "y": 0,
+          "sprite": "sprite-industrial.v2_14",
+          "colliderType": 1
+        },
+        {
+          "x": 7,
+          "y": 0,
+          "sprite": "sprite-industrial.v2_14",
+          "colliderType": 1
+        },
+        {
+          "x": -8,
+          "y": 1,
+          "sprite": "sprite-industrial.v2_14",
+          "colliderType": 1
+        },
+        {
+          "x": 7,
+          "y": 1,
+          "sprite": "sprite-industrial.v2_14",
+          "colliderType": 1
+        },
+        {
+          "x": -8,
+          "y": 2,
+          "sprite": "sprite-industrial.v2_14",
+          "colliderType": 1
+        },
+        {
+          "x": 7,
+          "y": 2,
+          "sprite": "sprite-industrial.v2_14",
+          "colliderType": 1
+        },
+        {
+          "x": -8,
+          "y": 3,
+          "sprite": "sprite-industrial.v2_14",
+          "colliderType": 1
+        },
+        {
+          "x": 7,
+          "y": 3,
+          "sprite": "sprite-industrial.v2_14",
+          "colliderType": 1
+        },
+        {
+          "x": -8,
+          "y": 4,
+          "sprite": "sprite-industrial.v2_14",
+          "colliderType": 1
+        },
+        {
+          "x": 7,
+          "y": 4,
+          "sprite": "sprite-industrial.v2_14",
+          "colliderType": 1
+        },
+        {
+          "x": -8,
+          "y": 5,
+          "sprite": "sprite-industrial.v2_14",
+          "colliderType": 1
+        },
+        {
+          "x": 7,
+          "y": 5,
+          "sprite": "sprite-industrial.v2_14",
+          "colliderType": 1
+        },
+        {
+          "x": -8,
+          "y": 6,
+          "sprite": "sprite-industrial.v2_14",
+          "colliderType": 1
+        },
+        {
+          "x": 7,
+          "y": 6,
+          "sprite": "sprite-industrial.v2_14",
+          "colliderType": 1
+        },
+        {
+          "x": -8,
+          "y": 7,
+          "sprite": "sprite-industrial.v2_14",
+          "colliderType": 1
+        },
+        {
+          "x": -7,
+          "y": 7,
+          "sprite": "sprite-industrial.v2_14",
+          "colliderType": 1
+        },
+        {
+          "x": -6,
+          "y": 7,
+          "sprite": "sprite-industrial.v2_14",
+          "colliderType": 1
+        },
+        {
+          "x": -5,
+          "y": 7,
+          "sprite": "sprite-industrial.v2_14",
+          "colliderType": 1
+        },
+        {
+          "x": -4,
+          "y": 7,
+          "sprite": "sprite-industrial.v2_14",
+          "colliderType": 1
+        },
+        {
+          "x": -3,
+          "y": 7,
+          "sprite": "sprite-industrial.v2_14",
+          "colliderType": 1
+        },
+        {
+          "x": -2,
+          "y": 7,
+          "sprite": "sprite-industrial.v2_14",
+          "colliderType": 1
+        },
+        {
+          "x": -1,
+          "y": 7,
+          "sprite": "sprite-industrial.v2_14",
+          "colliderType": 1
+        },
+        {
+          "x": 0,
+          "y": 7,
+          "sprite": "sprite-industrial.v2_14",
+          "colliderType": 1
+        },
+        {
+          "x": 1,
+          "y": 7,
+          "sprite": "sprite-industrial.v2_14",
+          "colliderType": 1
+        },
+        {
+          "x": 2,
+          "y": 7,
+          "sprite": "sprite-industrial.v2_14",
+          "colliderType": 1
+        },
+        {
+          "x": 3,
+          "y": 7,
+          "sprite": "sprite-industrial.v2_14",
+          "colliderType": 1
+        },
+        {
+          "x": 4,
+          "y": 7,
+          "sprite": "sprite-industrial.v2_14",
+          "colliderType": 1
+        },
+        {
+          "x": 5,
+          "y": 7,
+          "sprite": "sprite-industrial.v2_14",
+          "colliderType": 1
+        },
+        {
+          "x": 6,
+          "y": 7,
+          "sprite": "sprite-industrial.v2_14",
+          "colliderType": 1
+        },
+        {
+          "x": 7,
+          "y": 7,
+          "sprite": "sprite-industrial.v2_14",
+          "colliderType": 1
+        }
+      ],
+      "sourceCompositePaths": [
+        [
+          {
+            "x": 7.99997,
+            "y": -8
+          },
+          {
+            "x": 7.99997,
+            "y": 8
+          },
+          {
+            "x": -8,
+            "y": 7.99997
+          },
+          {
+            "x": -7.99997,
+            "y": -8
+          }
+        ],
+        [
+          {
+            "x": 7.000009,
+            "y": -6.999974
+          },
+          {
+            "x": -7.000009,
+            "y": -6.999974
+          },
+          {
+            "x": -6.99997,
+            "y": 7
+          },
+          {
+            "x": 7,
+            "y": 6.99997
+          }
+        ]
+      ],
+      "Realm": -1,
+      "Texture": 6200000000000010002,
+      "X": 0.0,
+      "Y": 0.0,
+      "W": 16.0,
+      "H": 16.0,
+      "Order": 0,
+      "Solids": [
+        {
+          "X": 0.0,
+          "Y": -7.5,
+          "W": 16.0,
+          "H": 1.0
+        },
+        {
+          "X": -7.5,
+          "Y": 0.0,
+          "W": 1.0,
+          "H": 14.0
+        },
+        {
+          "X": 7.5,
+          "Y": 0.0,
+          "W": 1.0,
+          "H": 14.0
+        },
+        {
+          "X": 0.0,
+          "Y": 7.5,
+          "W": 16.0,
+          "H": 1.0
+        }
+      ]
+    }
+  ],
+  "objects": [
+    {
+      "path": "Player",
+      "Id": "1075273165",
+      "Name": "Player",
+      "Kind": "player",
+      "Realm": -1,
+      "X": 0.39,
+      "Y": -6.45,
+      "ScaleX": 1.0,
+      "ScaleY": 1.0,
+      "Texture": 6200000000000010003,
+      "Width": 1.0,
+      "Height": 1.0,
+      "Angle": 0.0,
+      "OffsetX": 0.0,
+      "OffsetY": -0.1,
+      "ColliderW": 0.5,
+      "ColliderH": 0.8,
+      "Collide": true,
+      "Trigger": false,
+      "TargetId": "0",
+      "DisableWhenOn": true,
+      "Order": 100,
+      "Active": true,
+      "FlipX": false,
+      "FlipY": false,
+      "Color": {
+        "r": 1,
+        "g": 1,
+        "b": 1,
+        "a": 1
+      }
+    },
+    {
+      "path": "Life/Death/Trap",
+      "Id": "6184818825998002554",
+      "Name": "Trap",
+      "Kind": "decor",
+      "Realm": 0,
+      "X": 6.02,
+      "Y": -6.49,
+      "ScaleX": 1.0,
+      "ScaleY": 1.0,
+      "Texture": 6200000000000010005,
+      "Width": 2.0,
+      "Height": 1.0,
+      "Angle": 0.0,
+      "OffsetX": 0.0,
+      "OffsetY": 0.0,
+      "ColliderW": 0.0,
+      "ColliderH": 0.0,
+      "Collide": false,
+      "Trigger": false,
+      "TargetId": "0",
+      "DisableWhenOn": true,
+      "Order": 0,
+      "Active": true,
+      "FlipX": false,
+      "FlipY": false,
+      "Color": {
+        "r": 1,
+        "g": 1,
+        "b": 1,
+        "a": 1
+      }
+    },
+    {
+      "path": "Life/Death",
+      "Id": "6399721197326807491",
+      "Name": "Death",
+      "Kind": "trap",
+      "Realm": 0,
+      "X": 6.05,
+      "Y": -6.89,
+      "ScaleX": 1.0,
+      "ScaleY": 1.0,
+      "Texture": 0,
+      "Width": 0.0,
+      "Height": 0.0,
+      "Angle": 0.0,
+      "OffsetX": 0.0,
+      "OffsetY": 0.0,
+      "ColliderW": 2.0,
+      "ColliderH": 0.2,
+      "Collide": true,
+      "Trigger": true,
+      "TargetId": "0",
+      "DisableWhenOn": true,
+      "Order": 0,
+      "Active": true,
+      "FlipX": false,
+      "FlipY": false,
+      "Color": {
+        "r": 1,
+        "g": 1,
+        "b": 1,
+        "a": 1
+      }
+    },
+    {
+      "path": "Death/PressButtons/PressButton",
+      "Id": "159445659:5513520972314207830",
+      "Name": "PressButton",
+      "Kind": "button",
+      "Realm": 1,
+      "X": 1.5,
+      "Y": -6.5,
+      "ScaleX": 1.0,
+      "ScaleY": 1.0,
+      "Texture": 6200000000000010006,
+      "Width": 1.0,
+      "Height": 1.0,
+      "Angle": 0.0,
+      "OffsetX": 0.0,
+      "OffsetY": -0.4,
+      "ColliderW": 0.4,
+      "ColliderH": 0.2,
+      "Collide": true,
+      "Trigger": true,
+      "TargetId": "1826498671:1134063466905981387",
+      "DisableWhenOn": true,
+      "Order": 0,
+      "Active": true,
+      "FlipX": false,
+      "FlipY": false,
+      "Color": {
+        "r": 1,
+        "g": 1,
+        "b": 1,
+        "a": 1
+      }
+    },
+    {
+      "path": "Death/PressButtons/PressButton/Bulb",
+      "Id": "159445659:5513520972958893942",
+      "Name": "Bulb",
+      "Kind": "decor",
+      "Realm": 1,
+      "X": 2.48,
+      "Y": -6.44,
+      "ScaleX": 1.0,
+      "ScaleY": 1.0,
+      "Texture": 6200000000000010007,
+      "Width": 1.0,
+      "Height": 1.0,
+      "Angle": 0.0,
+      "OffsetX": 0.0,
+      "OffsetY": 0.0,
+      "ColliderW": 0.0,
+      "ColliderH": 0.0,
+      "Collide": false,
+      "Trigger": false,
+      "TargetId": "0",
+      "DisableWhenOn": true,
+      "Order": 0,
+      "Active": true,
+      "FlipX": false,
+      "FlipY": false,
+      "Color": {
+        "r": 1,
+        "g": 1,
+        "b": 1,
+        "a": 1
+      }
+    },
+    {
+      "path": "Death/TriggerableBlocks/TriggerableBlock",
+      "Id": "432393843:1134063466905981387",
+      "Name": "TriggerableBlock",
+      "Kind": "door",
+      "Realm": 1,
+      "X": 4.5,
+      "Y": -4.5,
+      "ScaleX": 1.0,
+      "ScaleY": 1.0,
+      "Texture": 6200000000000010008,
+      "Width": 1.0,
+      "Height": 1.0,
+      "Angle": 0.0,
+      "OffsetX": 0.0,
+      "OffsetY": 0.0,
+      "ColliderW": 1.0,
+      "ColliderH": 1.0,
+      "Collide": true,
+      "Trigger": false,
+      "TargetId": "0",
+      "DisableWhenOn": true,
+      "Order": 0,
+      "Active": true,
+      "FlipX": false,
+      "FlipY": false,
+      "Color": {
+        "r": 1,
+        "g": 1,
+        "b": 1,
+        "a": 1
+      }
+    },
+    {
+      "path": "Death/PressButtons/PressButton",
+      "Id": "628442590:5513520972314207830",
+      "Name": "PressButton",
+      "Kind": "button",
+      "Realm": 1,
+      "X": 1.5,
+      "Y": -6.5,
+      "ScaleX": 1.0,
+      "ScaleY": 1.0,
+      "Texture": 6200000000000010006,
+      "Width": 1.0,
+      "Height": 1.0,
+      "Angle": 0.0,
+      "OffsetX": 0.0,
+      "OffsetY": -0.4,
+      "ColliderW": 0.4,
+      "ColliderH": 0.2,
+      "Collide": true,
+      "Trigger": true,
+      "TargetId": "1902859761:1134063466905981387",
+      "DisableWhenOn": true,
+      "Order": 0,
+      "Active": true,
+      "FlipX": false,
+      "FlipY": false,
+      "Color": {
+        "r": 1,
+        "g": 1,
+        "b": 1,
+        "a": 1
+      }
+    },
+    {
+      "path": "Death/PressButtons/PressButton/Bulb",
+      "Id": "628442590:5513520972958893942",
+      "Name": "Bulb",
+      "Kind": "decor",
+      "Realm": 1,
+      "X": 2.48,
+      "Y": -6.44,
+      "ScaleX": 1.0,
+      "ScaleY": 1.0,
+      "Texture": 6200000000000010007,
+      "Width": 1.0,
+      "Height": 1.0,
+      "Angle": 0.0,
+      "OffsetX": 0.0,
+      "OffsetY": 0.0,
+      "ColliderW": 0.0,
+      "ColliderH": 0.0,
+      "Collide": false,
+      "Trigger": false,
+      "TargetId": "0",
+      "DisableWhenOn": true,
+      "Order": 0,
+      "Active": true,
+      "FlipX": false,
+      "FlipY": false,
+      "Color": {
+        "r": 1,
+        "g": 1,
+        "b": 1,
+        "a": 1
+      }
+    },
+    {
+      "path": "Death/TriggerableBlocks/TriggerableBlock",
+      "Id": "655052947:1134063466905981387",
+      "Name": "TriggerableBlock",
+      "Kind": "door",
+      "Realm": 1,
+      "X": 3.5,
+      "Y": -4.5,
+      "ScaleX": 1.0,
+      "ScaleY": 1.0,
+      "Texture": 6200000000000010008,
+      "Width": 1.0,
+      "Height": 1.0,
+      "Angle": 0.0,
+      "OffsetX": 0.0,
+      "OffsetY": 0.0,
+      "ColliderW": 1.0,
+      "ColliderH": 1.0,
+      "Collide": true,
+      "Trigger": false,
+      "TargetId": "0",
+      "DisableWhenOn": true,
+      "Order": 0,
+      "Active": true,
+      "FlipX": false,
+      "FlipY": false,
+      "Color": {
+        "r": 1,
+        "g": 1,
+        "b": 1,
+        "a": 1
+      }
+    },
+    {
+      "path": "Death/TriggerableBlocks/TriggerableBlock",
+      "Id": "840597961:1134063466905981387",
+      "Name": "TriggerableBlock",
+      "Kind": "door",
+      "Realm": 1,
+      "X": 0.5,
+      "Y": -4.5,
+      "ScaleX": 1.0,
+      "ScaleY": 1.0,
+      "Texture": 6200000000000010008,
+      "Width": 1.0,
+      "Height": 1.0,
+      "Angle": 0.0,
+      "OffsetX": 0.0,
+      "OffsetY": 0.0,
+      "ColliderW": 1.0,
+      "ColliderH": 1.0,
+      "Collide": true,
+      "Trigger": false,
+      "TargetId": "0",
+      "DisableWhenOn": true,
+      "Order": 0,
+      "Active": true,
+      "FlipX": false,
+      "FlipY": false,
+      "Color": {
+        "r": 1,
+        "g": 1,
+        "b": 1,
+        "a": 1
+      }
+    },
+    {
+      "path": "Death/TriggerableBlocks/TriggerableBlock",
+      "Id": "868684622:1134063466905981387",
+      "Name": "TriggerableBlock",
+      "Kind": "door",
+      "Realm": 1,
+      "X": 1.5,
+      "Y": -4.5,
+      "ScaleX": 1.0,
+      "ScaleY": 1.0,
+      "Texture": 6200000000000010008,
+      "Width": 1.0,
+      "Height": 1.0,
+      "Angle": 0.0,
+      "OffsetX": 0.0,
+      "OffsetY": 0.0,
+      "ColliderW": 1.0,
+      "ColliderH": 1.0,
+      "Collide": true,
+      "Trigger": false,
+      "TargetId": "0",
+      "DisableWhenOn": true,
+      "Order": 0,
+      "Active": true,
+      "FlipX": false,
+      "FlipY": false,
+      "Color": {
+        "r": 1,
+        "g": 1,
+        "b": 1,
+        "a": 1
+      }
+    },
+    {
+      "path": "Death/Box",
+      "Id": "912210193:1951573150192399104",
+      "Name": "Box",
+      "Kind": "box",
+      "Realm": 1,
+      "X": 3.5,
+      "Y": -6.5,
+      "ScaleX": 1.2,
+      "ScaleY": 1.2,
+      "Texture": 6200000000000010009,
+      "Width": 1.2,
+      "Height": 1.2,
+      "Angle": 0.0,
+      "OffsetX": -0.042,
+      "OffsetY": 0.06,
+      "ColliderW": 0.96,
+      "ColliderH": 0.96,
+      "Collide": true,
+      "Trigger": false,
+      "TargetId": "0",
+      "DisableWhenOn": true,
+      "Order": 0,
+      "Active": true,
+      "FlipX": false,
+      "FlipY": false,
+      "Color": {
+        "r": 1,
+        "g": 1,
+        "b": 1,
+        "a": 1
+      }
+    },
+    {
+      "path": "Death/TriggerableBlocks/TriggerableBlock",
+      "Id": "926998676:1134063466905981387",
+      "Name": "TriggerableBlock",
+      "Kind": "door",
+      "Realm": 1,
+      "X": 0.5,
+      "Y": -6.5,
+      "ScaleX": 1.0,
+      "ScaleY": 1.0,
+      "Texture": 6200000000000010008,
+      "Width": 1.0,
+      "Height": 1.0,
+      "Angle": 0.0,
+      "OffsetX": 0.0,
+      "OffsetY": 0.0,
+      "ColliderW": 1.0,
+      "ColliderH": 1.0,
+      "Collide": true,
+      "Trigger": false,
+      "TargetId": "0",
+      "DisableWhenOn": true,
+      "Order": 0,
+      "Active": true,
+      "FlipX": false,
+      "FlipY": false,
+      "Color": {
+        "r": 1,
+        "g": 1,
+        "b": 1,
+        "a": 1
+      }
+    },
+    {
+      "path": "Death/PressButtons/PressButton",
+      "Id": "963535505:5513520972314207830",
+      "Name": "PressButton",
+      "Kind": "button",
+      "Realm": 1,
+      "X": 1.5,
+      "Y": -6.5,
+      "ScaleX": 1.0,
+      "ScaleY": 1.0,
+      "Texture": 6200000000000010006,
+      "Width": 1.0,
+      "Height": 1.0,
+      "Angle": 0.0,
+      "OffsetX": 0.0,
+      "OffsetY": -0.4,
+      "ColliderW": 0.4,
+      "ColliderH": 0.2,
+      "Collide": true,
+      "Trigger": true,
+      "TargetId": "1317927581:1134063466905981387",
+      "DisableWhenOn": true,
+      "Order": 0,
+      "Active": true,
+      "FlipX": false,
+      "FlipY": false,
+      "Color": {
+        "r": 1,
+        "g": 1,
+        "b": 1,
+        "a": 1
+      }
+    },
+    {
+      "path": "Death/PressButtons/PressButton/Bulb",
+      "Id": "963535505:5513520972958893942",
+      "Name": "Bulb",
+      "Kind": "decor",
+      "Realm": 1,
+      "X": 2.48,
+      "Y": -6.44,
+      "ScaleX": 1.0,
+      "ScaleY": 1.0,
+      "Texture": 6200000000000010007,
+      "Width": 1.0,
+      "Height": 1.0,
+      "Angle": 0.0,
+      "OffsetX": 0.0,
+      "OffsetY": 0.0,
+      "ColliderW": 0.0,
+      "ColliderH": 0.0,
+      "Collide": false,
+      "Trigger": false,
+      "TargetId": "0",
+      "DisableWhenOn": true,
+      "Order": 0,
+      "Active": true,
+      "FlipX": false,
+      "FlipY": false,
+      "Color": {
+        "r": 1,
+        "g": 1,
+        "b": 1,
+        "a": 1
+      }
+    },
+    {
+      "path": "Death/PressButtons/PressButton",
+      "Id": "1276220342:5513520972314207830",
+      "Name": "PressButton",
+      "Kind": "button",
+      "Realm": 1,
+      "X": 1.5,
+      "Y": -6.5,
+      "ScaleX": 1.0,
+      "ScaleY": 1.0,
+      "Texture": 6200000000000010006,
+      "Width": 1.0,
+      "Height": 1.0,
+      "Angle": 0.0,
+      "OffsetX": 0.0,
+      "OffsetY": -0.4,
+      "ColliderW": 0.4,
+      "ColliderH": 0.2,
+      "Collide": true,
+      "Trigger": true,
+      "TargetId": "432393843:1134063466905981387",
+      "DisableWhenOn": true,
+      "Order": 0,
+      "Active": true,
+      "FlipX": false,
+      "FlipY": false,
+      "Color": {
+        "r": 1,
+        "g": 1,
+        "b": 1,
+        "a": 1
+      }
+    },
+    {
+      "path": "Death/PressButtons/PressButton/Bulb",
+      "Id": "1276220342:5513520972958893942",
+      "Name": "Bulb",
+      "Kind": "decor",
+      "Realm": 1,
+      "X": 2.48,
+      "Y": -6.44,
+      "ScaleX": 1.0,
+      "ScaleY": 1.0,
+      "Texture": 6200000000000010007,
+      "Width": 1.0,
+      "Height": 1.0,
+      "Angle": 0.0,
+      "OffsetX": 0.0,
+      "OffsetY": 0.0,
+      "ColliderW": 0.0,
+      "ColliderH": 0.0,
+      "Collide": false,
+      "Trigger": false,
+      "TargetId": "0",
+      "DisableWhenOn": true,
+      "Order": 0,
+      "Active": true,
+      "FlipX": false,
+      "FlipY": false,
+      "Color": {
+        "r": 1,
+        "g": 1,
+        "b": 1,
+        "a": 1
+      }
+    },
+    {
+      "path": "Death/TriggerableBlocks/TriggerableBlock",
+      "Id": "1317927581:1134063466905981387",
+      "Name": "TriggerableBlock",
+      "Kind": "door",
+      "Realm": 1,
+      "X": 6.5,
+      "Y": -4.5,
+      "ScaleX": 1.0,
+      "ScaleY": 1.0,
+      "Texture": 6200000000000010008,
+      "Width": 1.0,
+      "Height": 1.0,
+      "Angle": 0.0,
+      "OffsetX": 0.0,
+      "OffsetY": 0.0,
+      "ColliderW": 1.0,
+      "ColliderH": 1.0,
+      "Collide": true,
+      "Trigger": false,
+      "TargetId": "0",
+      "DisableWhenOn": true,
+      "Order": 0,
+      "Active": true,
+      "FlipX": false,
+      "FlipY": false,
+      "Color": {
+        "r": 1,
+        "g": 1,
+        "b": 1,
+        "a": 1
+      }
+    },
+    {
+      "path": "Death/PressButtons/PressButton",
+      "Id": "1618260995:5513520972314207830",
+      "Name": "PressButton",
+      "Kind": "button",
+      "Realm": 1,
+      "X": 1.5,
+      "Y": -6.5,
+      "ScaleX": 1.0,
+      "ScaleY": 1.0,
+      "Texture": 6200000000000010006,
+      "Width": 1.0,
+      "Height": 1.0,
+      "Angle": 0.0,
+      "OffsetX": 0.0,
+      "OffsetY": -0.4,
+      "ColliderW": 0.4,
+      "ColliderH": 0.2,
+      "Collide": true,
+      "Trigger": true,
+      "TargetId": "868684622:1134063466905981387",
+      "DisableWhenOn": true,
+      "Order": 0,
+      "Active": true,
+      "FlipX": false,
+      "FlipY": false,
+      "Color": {
+        "r": 1,
+        "g": 1,
+        "b": 1,
+        "a": 1
+      }
+    },
+    {
+      "path": "Death/PressButtons/PressButton/Bulb",
+      "Id": "1618260995:5513520972958893942",
+      "Name": "Bulb",
+      "Kind": "decor",
+      "Realm": 1,
+      "X": 2.48,
+      "Y": -6.44,
+      "ScaleX": 1.0,
+      "ScaleY": 1.0,
+      "Texture": 6200000000000010007,
+      "Width": 1.0,
+      "Height": 1.0,
+      "Angle": 0.0,
+      "OffsetX": 0.0,
+      "OffsetY": 0.0,
+      "ColliderW": 0.0,
+      "ColliderH": 0.0,
+      "Collide": false,
+      "Trigger": false,
+      "TargetId": "0",
+      "DisableWhenOn": true,
+      "Order": 0,
+      "Active": true,
+      "FlipX": false,
+      "FlipY": false,
+      "Color": {
+        "r": 1,
+        "g": 1,
+        "b": 1,
+        "a": 1
+      }
+    },
+    {
+      "path": "Death/PressButtons/PressButton",
+      "Id": "1635395513:5513520972314207830",
+      "Name": "PressButton",
+      "Kind": "button",
+      "Realm": 1,
+      "X": 1.5,
+      "Y": -6.5,
+      "ScaleX": 1.0,
+      "ScaleY": 1.0,
+      "Texture": 6200000000000010006,
+      "Width": 1.0,
+      "Height": 1.0,
+      "Angle": 0.0,
+      "OffsetX": 0.0,
+      "OffsetY": -0.4,
+      "ColliderW": 0.4,
+      "ColliderH": 0.2,
+      "Collide": true,
+      "Trigger": true,
+      "TargetId": "840597961:1134063466905981387",
+      "DisableWhenOn": true,
+      "Order": 0,
+      "Active": true,
+      "FlipX": false,
+      "FlipY": false,
+      "Color": {
+        "r": 1,
+        "g": 1,
+        "b": 1,
+        "a": 1
+      }
+    },
+    {
+      "path": "Death/PressButtons/PressButton/Bulb",
+      "Id": "1635395513:5513520972958893942",
+      "Name": "Bulb",
+      "Kind": "decor",
+      "Realm": 1,
+      "X": 2.48,
+      "Y": -6.44,
+      "ScaleX": 1.0,
+      "ScaleY": 1.0,
+      "Texture": 6200000000000010007,
+      "Width": 1.0,
+      "Height": 1.0,
+      "Angle": 0.0,
+      "OffsetX": 0.0,
+      "OffsetY": 0.0,
+      "ColliderW": 0.0,
+      "ColliderH": 0.0,
+      "Collide": false,
+      "Trigger": false,
+      "TargetId": "0",
+      "DisableWhenOn": true,
+      "Order": 0,
+      "Active": true,
+      "FlipX": false,
+      "FlipY": false,
+      "Color": {
+        "r": 1,
+        "g": 1,
+        "b": 1,
+        "a": 1
+      }
+    },
+    {
+      "path": "Death/TriggerableBlocks/TriggerableBlock",
+      "Id": "1826498671:1134063466905981387",
+      "Name": "TriggerableBlock",
+      "Kind": "door",
+      "Realm": 1,
+      "X": 5.5,
+      "Y": -4.5,
+      "ScaleX": 1.0,
+      "ScaleY": 1.0,
+      "Texture": 6200000000000010008,
+      "Width": 1.0,
+      "Height": 1.0,
+      "Angle": 0.0,
+      "OffsetX": 0.0,
+      "OffsetY": 0.0,
+      "ColliderW": 1.0,
+      "ColliderH": 1.0,
+      "Collide": true,
+      "Trigger": false,
+      "TargetId": "0",
+      "DisableWhenOn": true,
+      "Order": 0,
+      "Active": true,
+      "FlipX": false,
+      "FlipY": false,
+      "Color": {
+        "r": 1,
+        "g": 1,
+        "b": 1,
+        "a": 1
+      }
+    },
+    {
+      "path": "Death/TriggerableBlocks/TriggerableBlock",
+      "Id": "1902859761:1134063466905981387",
+      "Name": "TriggerableBlock",
+      "Kind": "door",
+      "Realm": 1,
+      "X": 2.5,
+      "Y": -4.5,
+      "ScaleX": 1.0,
+      "ScaleY": 1.0,
+      "Texture": 6200000000000010008,
+      "Width": 1.0,
+      "Height": 1.0,
+      "Angle": 0.0,
+      "OffsetX": 0.0,
+      "OffsetY": 0.0,
+      "ColliderW": 1.0,
+      "ColliderH": 1.0,
+      "Collide": true,
+      "Trigger": false,
+      "TargetId": "0",
+      "DisableWhenOn": true,
+      "Order": 0,
+      "Active": true,
+      "FlipX": false,
+      "FlipY": false,
+      "Color": {
+        "r": 1,
+        "g": 1,
+        "b": 1,
+        "a": 1
+      }
+    },
+    {
+      "path": "Death/TriggerableBlocks/TriggerableBlock",
+      "Id": "2011605322:1134063466905981387",
+      "Name": "TriggerableBlock",
+      "Kind": "door",
+      "Realm": 1,
+      "X": 0.5,
+      "Y": -5.5,
+      "ScaleX": 1.0,
+      "ScaleY": 1.0,
+      "Texture": 6200000000000010008,
+      "Width": 1.0,
+      "Height": 1.0,
+      "Angle": 0.0,
+      "OffsetX": 0.0,
+      "OffsetY": 0.0,
+      "ColliderW": 1.0,
+      "ColliderH": 1.0,
+      "Collide": true,
+      "Trigger": false,
+      "TargetId": "0",
+      "DisableWhenOn": true,
+      "Order": 0,
+      "Active": true,
+      "FlipX": false,
+      "FlipY": false,
+      "Color": {
+        "r": 1,
+        "g": 1,
+        "b": 1,
+        "a": 1
+      }
+    },
+    {
+      "path": "Death/PressButtons/PressButton",
+      "Id": "2095461500:5513520972314207830",
+      "Name": "PressButton",
+      "Kind": "button",
+      "Realm": 1,
+      "X": 1.5,
+      "Y": -6.5,
+      "ScaleX": 1.0,
+      "ScaleY": 1.0,
+      "Texture": 6200000000000010006,
+      "Width": 1.0,
+      "Height": 1.0,
+      "Angle": 0.0,
+      "OffsetX": 0.0,
+      "OffsetY": -0.4,
+      "ColliderW": 0.4,
+      "ColliderH": 0.2,
+      "Collide": true,
+      "Trigger": true,
+      "TargetId": "655052947:1134063466905981387",
+      "DisableWhenOn": true,
+      "Order": 0,
+      "Active": true,
+      "FlipX": false,
+      "FlipY": false,
+      "Color": {
+        "r": 1,
+        "g": 1,
+        "b": 1,
+        "a": 1
+      }
+    },
+    {
+      "path": "Death/PressButtons/PressButton/Bulb",
+      "Id": "2095461500:5513520972958893942",
+      "Name": "Bulb",
+      "Kind": "decor",
+      "Realm": 1,
+      "X": 2.48,
+      "Y": -6.44,
+      "ScaleX": 1.0,
+      "ScaleY": 1.0,
+      "Texture": 6200000000000010007,
+      "Width": 1.0,
+      "Height": 1.0,
+      "Angle": 0.0,
+      "OffsetX": 0.0,
+      "OffsetY": 0.0,
+      "ColliderW": 0.0,
+      "ColliderH": 0.0,
+      "Collide": false,
+      "Trigger": false,
+      "TargetId": "0",
+      "DisableWhenOn": true,
+      "Order": 0,
+      "Active": true,
+      "FlipX": false,
+      "FlipY": false,
+      "Color": {
+        "r": 1,
+        "g": 1,
+        "b": 1,
+        "a": 1
+      }
+    },
+    {
+      "path": "Death/Win",
+      "Id": "1260578946243736355:1260578944845380061",
+      "Name": "Win",
+      "Kind": "goal",
+      "Realm": 1,
+      "X": 0.02,
+      "Y": -2.5,
+      "ScaleX": 1.0,
+      "ScaleY": 1.0,
+      "Texture": 6200000000000010010,
+      "Width": 2.0,
+      "Height": 2.0,
+      "Angle": 0.0,
+      "OffsetX": 0.0,
+      "OffsetY": 0.0,
+      "ColliderW": 1.4,
+      "ColliderH": 1.4,
+      "Collide": true,
+      "Trigger": true,
+      "TargetId": "0",
+      "DisableWhenOn": true,
+      "Order": 0,
+      "Active": true,
+      "FlipX": false,
+      "FlipY": false,
+      "Color": {
+        "r": 1,
+        "g": 1,
+        "b": 1,
+        "a": 1
+      }
+    }
+  ],
+  "texts": [
+    {
+      "Text": "按下Esc键盘唤出菜单",
+      "X": 0.0,
+      "Y": 0.0,
+      "Realm": -1,
+      "Size": 14,
+      "Path": "Canvas/ESCText"
+    },
+    {
+      "Text": "机关可以被玩家或者箱子触发",
+      "X": 0.0,
+      "Y": 0.0,
+      "Realm": -1,
+      "Size": 14,
+      "Path": "Canvas/pressButton/WinText"
+    },
+    {
+      "Text": "终点",
+      "X": 0.0,
+      "Y": 0.0,
+      "Realm": -1,
+      "Size": 14,
+      "Path": "Canvas/Win/WinText"
+    },
+    {
+      "Text": "触碰尖刺切换梦境",
+      "X": 0.0,
+      "Y": 0.0,
+      "Realm": -1,
+      "Size": 14,
+      "Path": "Canvas/Trap/TrapText"
+    },
+    {
+      "Text": "移动",
+      "X": 0.0,
+      "Y": 0.0,
+      "Realm": -1,
+      "Size": 14,
+      "Path": "Canvas/MoveAndJump/Move"
+    },
+    {
+      "Text": "跳跃",
+      "X": 0.0,
+      "Y": 0.0,
+      "Realm": -1,
+      "Size": 14,
+      "Path": "Canvas/MoveAndJump/Jump"
+    }
+  ]
+}

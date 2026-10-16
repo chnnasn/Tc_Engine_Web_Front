@@ -1,0 +1,13 @@
+{
+  "name": "return-tc-authoring-tools",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Synchronize editable Return Tilemap scenes and collision data before running or cooking in Tc.",
+  "scripts": {
+    "sync:maps": "node Tools/sync-maps.mjs"
+  },
+  "dependencies": {
+    "yaml": "2.9.1"
+  }
+}
