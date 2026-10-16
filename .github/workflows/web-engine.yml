@@ -58,6 +58,7 @@ jobs:
         if: always()
         with:
           name: web-engine-evidence
+          include-hidden-files: true
           path: |
             .engine/ci-*.log
             .engine/*.png
