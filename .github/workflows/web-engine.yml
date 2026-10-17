@@ -49,7 +49,7 @@ jobs:
         run: |
           $preview = Start-Process node -ArgumentList 'node_modules/vite/bin/vite.js', 'preview', '--host', '127.0.0.1', '--port', '4173', '--strictPort' -PassThru -WindowStyle Hidden -RedirectStandardOutput .engine/ci-preview.log -RedirectStandardError .engine/ci-preview-error.log
           try {
-            foreach ($suite in @('browser', 'inspector-metadata-browser', 'project-authoring-browser', 'scene-ownership-browser', 'layout-exit-browser', 'rougelike-browser', 'return-homepage-browser', 'return-menu-browser', 'return-browser', 'return-orientation-browser')) {
+            foreach ($suite in @('browser', 'inspector-metadata-browser', 'project-authoring-browser', 'scene-ownership-browser', 'layout-exit-browser', 'rougelike-browser', 'catalog-browser', 'catalog-player-browser', 'return-homepage-browser', 'return-menu-browser', 'return-browser', 'return-orientation-browser')) {
               Write-Output "::group::$suite"
               node --experimental-strip-types "tests/$suite.mjs" *> ".engine/ci-$suite.log"
               $testExitCode = $LASTEXITCODE

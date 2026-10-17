@@ -1,0 +1,12 @@
+{
+  "id": "shelter",
+  "title": "Shelter",
+  "engine": "TomCat",
+  "engineCommit": "c28487215bd5df89b35c1d68252ba240231d9c4f",
+  "packageVersion": 8,
+  "byteLength": 54589589,
+  "sha256": "803042e74343c8220664f52f2afec41a7b8d5b0d0f5f15f80b5343ed4529d8f0",
+  "entries": 30,
+  "packageUrl": "/samples/shelter/shelter.tcpak",
+  "sourceUrl": "/samples/shelter/shelter-source.zip"
+}

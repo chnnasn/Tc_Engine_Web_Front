@@ -16,16 +16,14 @@ const page = await browser.newPage({ viewport: { width: 1440, height: 960 } })
 await page.addInitScript(() => {
   localStorage.setItem('tomcat-ui-projects-v2-engine-test', JSON.stringify([{ id: 'my-first-game', name: '我的第一个游戏', description: '', template: '2D', image: '', status: 'draft', updated: '今天' }]))
 })
+let packageMode = 'valid'
+await page.route('**/samples/physics-lab/physics-lab.tcpak*', route => {
+  if (packageMode === 'missing') return route.fulfill({ status: 404, body: 'missing' })
+  return route.fulfill({ contentType: 'application/octet-stream', body: packageMode === 'corrupt' ? Buffer.from('not a tcpak') : readFileSync('.engine/games/physics-lab.tcpak') })
+})
 await page.route('**/v1/**', route => {
   const path = new URL(route.request().url()).pathname
   const json = (value, headers = {}) => route.fulfill({ json: value, headers })
-  // 示例游戏包由后端提供：forest 是真实包，desert 故意损坏，puzzle 缺包。
-  if (path.startsWith('/v1/games/') && path.endsWith('/package')) {
-    const id = path.split('/')[3]
-    if (id === 'forest') return route.fulfill({ status: 200, headers: { 'content-type': 'application/octet-stream' }, body: readFileSync('.engine/games/forest.tcpak') })
-    if (id === 'desert') return route.fulfill({ status: 200, headers: { 'content-type': 'application/octet-stream' }, body: Buffer.from('not a tcpak') })
-    return route.fulfill({ status: 404, json: { error: '没有这个示例游戏包。' } })
-  }
   if (path === '/v1/auth/me') return json({ id: 'engine-test', email: 'engine-test@example.com', emailVerified: true })
   if (path === '/v1/projects/sync-config') return json({ enabled: false })
   if (path.endsWith('/ai-sessions/')) return json([])
@@ -218,10 +216,10 @@ public sealed class WebSmoke : MonoBehaviour
   }
   if (!process.argv.includes('--missing')) {
     // 示例作品：播放器按作品 id 从后端取包，用户不再需要自己上传 TCPAK。
-    await page.goto(`${base}/games/forest`)
-    await page.getByRole('button', { name: '打开游玩预览' }).click()
+    await page.goto(`${base}/games/physics-lab`)
+    await page.getByRole('button', { name: '开始游玩', exact: true }).first().click()
     for (let i = 0; i < 2; i++) {
-      await page.getByText(/正在运行 林间来信 的游戏包/).waitFor({ timeout: 240000 })
+      await page.getByText(/Physics Lab · 物理实验室 已就绪/).waitFor({ timeout: 240000 })
       if (i === 0) await page.screenshot({ path: '.engine/player-browser.png' })
       await page.getByRole('button', { name: '停止', exact: true }).click()
       assert.equal(await page.locator('iframe').count(), 0)
@@ -238,16 +236,16 @@ public sealed class WebSmoke : MonoBehaviour
     // 面板只有应有的一半——这条断言此前固化的正是那个错误行为。
     const hidpi = await browser.newPage({ viewport: { width: 1200, height: 800 }, deviceScaleFactor: 2 })
     hidpi.on('pageerror', error => errors.push(error.message))
+    await hidpi.route('**/samples/physics-lab/physics-lab.tcpak*', route => route.fulfill({ contentType: 'application/octet-stream', body: readFileSync('.engine/games/physics-lab.tcpak') }))
     await hidpi.route('**/v1/**', route => {
       const path = new URL(route.request().url()).pathname
-      if (path.startsWith('/v1/games/')) return route.fulfill({ status: 200, headers: { 'content-type': 'application/octet-stream' }, body: readFileSync('.engine/games/forest.tcpak') })
       if (path === '/v1/auth/me') return route.fulfill({ json: { id: 'engine-test', email: 'engine-test@example.com', emailVerified: true } })
       return route.fulfill({ json: {} })
     })
     try {
-      await hidpi.goto(`${base}/games/forest`)
-      await hidpi.getByRole('button', { name: '打开游玩预览' }).click()
-      await hidpi.getByText(/正在运行 林间来信 的游戏包/).waitFor({ timeout: 240000 })
+      await hidpi.goto(`${base}/games/physics-lab`)
+      await hidpi.getByRole('button', { name: '开始游玩', exact: true }).first().click()
+      await hidpi.getByText(/Physics Lab · 物理实验室 已就绪/).waitFor({ timeout: 240000 })
       await hidpi.waitForTimeout(1000)
       const surface = await hidpi.evaluate(() => {
         const frame = document.querySelector('iframe')
@@ -275,15 +273,17 @@ public sealed class WebSmoke : MonoBehaviour
       await hidpi.locator('.runtime-player').screenshot({ path: '.engine/player-hidpi.png' })
     } finally { await hidpi.close() }
     // 后端没有这个作品的包：给出明确提示，而不是让用户自己去找本地文件。
-    await page.goto(`${base}/games/puzzle`)
-    await page.getByRole('button', { name: '打开游玩预览' }).click()
+    packageMode = 'missing'
+    await page.goto(`${base}/games/physics-lab`)
+    await page.getByRole('button', { name: '开始游玩', exact: true }).first().click()
     await page.getByRole('alert').waitFor({ timeout: 30000 })
-    assert.match(await page.getByRole('alert').textContent(), /后端尚未提供/)
+    assert.match(await page.getByRole('alert').textContent(), /这个示例的游戏资源暂时无法找到/)
     assert.equal(await page.locator('iframe').count(), 0)
     await page.getByRole('button', { name: '关闭播放器', exact: true }).click()
     // 后端返回损坏的包：引擎拒绝加载，并给出“包损坏/版本不匹配”的提示。
-    await page.goto(`${base}/games/desert`)
-    await page.getByRole('button', { name: '打开游玩预览' }).click()
+    packageMode = 'corrupt'
+    await page.goto(`${base}/games/physics-lab`)
+    await page.getByRole('button', { name: '开始游玩', exact: true }).first().click()
     await page.getByRole('alert').waitFor({ timeout: 240000 })
     assert.equal(await page.locator('iframe').count(), 0)
     await page.getByRole('button', { name: '关闭播放器', exact: true }).click()

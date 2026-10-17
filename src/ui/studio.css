@@ -314,3 +314,6 @@
   .studio-site .header-create { padding: 8px; gap: 5px; }
   .studio-site .account-trigger > svg { display: none; }
 }
+
+/* Avoid recompositing a blurred page behind the running WebGL player. */
+.studio-app .dialog.player-dialog::backdrop { backdrop-filter: none; }

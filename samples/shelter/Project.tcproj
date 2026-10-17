@@ -1,0 +1,8 @@
+SchemaVersion: 4
+Project:
+  Name: Shelter
+  Version: 1.0.0
+  Description: Shelter survival strategy recreated in Tc
+  EditorVersion: 0.4.0
+  Template: 2D
+  AssetDirectory: Assets

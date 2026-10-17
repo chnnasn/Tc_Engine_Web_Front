@@ -1,4 +1,4 @@
-// 从引擎烘焙出的示例 TCPAK 派生出三份内容不同的示例游戏包。
+// 从 Tc 真实烘焙的基底派生一个 2D 物理实验场景。
 //
 // 为什么改写而不是重新 Cook：
 //   托管 Web 引擎把 C++ 归档链进 .NET browser-wasm 模块，重建一次需要 .NET 10 +
@@ -319,7 +319,7 @@ ${componentRigidbody}      - TypeId: ${TYPE.boxCollider2D}
     Parent: 0`
 }
 
-// 三个示例共用同一台正交相机（尺寸 10，即可见高度 -5..5），只换背景色。
+// 正交相机可见高度为 10。
 const CAMERA_UUID = '3000000000000000001'
 const camera = background => ({ uuid: CAMERA_UUID, name: 'MainCamera', translation: [0, 0, 0], rotation: [0, 0, 0], scale: [1, 1, 1], background })
 
@@ -328,44 +328,17 @@ const entity = spec => ({ uuid: String(3000000000000000100n + BigInt(nextUuid++)
 
 export const sampleGames = [
   {
-    id: 'forest',
-    title: '林间来信',
-    scene: 'forest',
-    // 林间来信：暖绿背景 + 苔色地面，四片叶子从不同高度飘落。
+    id: 'physics-lab',
+    title: '2D 物理实验室',
+    scene: 'PhysicsLab',
+    // 四个不同角度的动态刚体落到静态地面，展示重力、旋转与碰撞。
     background: [0.36, 0.52, 0.34, 1],
     entities: [
-      entity({ name: 'MossyGround', translation: [0, -2.4, 0], scale: [7, 0.5, 1], color: [0.3, 0.44, 0.26, 1], dynamic: false }),
-      entity({ name: 'LeafA', translation: [-2.2, 2.4, 0], rotation: [0, 0, 0.32], scale: [0.7, 0.5, 1], color: [0.62, 0.78, 0.42, 1] }),
-      entity({ name: 'LeafB', translation: [0.4, 3.1, 0], rotation: [0, 0, -0.55], scale: [0.9, 0.62, 1], color: [0.5, 0.7, 0.36, 1] }),
-      entity({ name: 'LeafC', translation: [2.1, 2, 0], rotation: [0, 0, 0.95], scale: [0.6, 0.45, 1], color: [0.72, 0.84, 0.5, 1] }),
-      entity({ name: 'LeafD', translation: [-0.9, 3.8, 0], rotation: [0, 0, -0.2], scale: [0.8, 0.55, 1], color: [0.44, 0.64, 0.34, 1] }),
-    ],
-  },
-  {
-    id: 'puzzle',
-    title: '方寸之间',
-    scene: 'puzzle',
-    // 方寸之间：冷灰蓝背景 + 两侧静态台阶，两块暖色方块落进中间。
-    background: [0.2, 0.24, 0.3, 1],
-    entities: [
-      entity({ name: 'Floor', translation: [0, -2.6, 0], scale: [6, 0.4, 1], color: [0.3, 0.35, 0.42, 1], dynamic: false }),
-      entity({ name: 'StepLeft', translation: [-1.6, -1.6, 0], scale: [1, 0.5, 1], color: [0.62, 0.68, 0.78, 1], dynamic: false }),
-      entity({ name: 'StepRight', translation: [1.6, -1.6, 0], scale: [1, 0.5, 1], color: [0.62, 0.68, 0.78, 1], dynamic: false }),
-      entity({ name: 'PieceA', translation: [0, 2.6, 0], rotation: [0, 0, 0.785398185], scale: [0.8, 0.8, 1], color: [0.85, 0.72, 0.45, 1] }),
-      entity({ name: 'PieceB', translation: [0.3, 3.8, 0], rotation: [0, 0, -0.4], scale: [0.6, 0.6, 1], color: [0.78, 0.64, 0.4, 1] }),
-    ],
-  },
-  {
-    id: 'desert',
-    title: '日落以后',
-    scene: 'desert',
-    // 日落以后：夕阳橙背景 + 宽沙丘，三块暖色石头依次落下。
-    background: [0.86, 0.52, 0.28, 1],
-    entities: [
-      entity({ name: 'Dune', translation: [0, -2.2, 0], scale: [9, 0.6, 1], color: [0.72, 0.5, 0.28, 1], dynamic: false }),
-      entity({ name: 'SunStoneA', translation: [-2.8, 2.8, 0], rotation: [0, 0, 0.5], scale: [0.75, 0.75, 1], color: [0.95, 0.78, 0.45, 1] }),
-      entity({ name: 'SunStoneB', translation: [1.2, 3.4, 0], rotation: [0, 0, -0.35], scale: [0.9, 0.6, 1], color: [0.9, 0.62, 0.35, 1] }),
-      entity({ name: 'SunStoneC', translation: [2.9, 2.2, 0], rotation: [0, 0, 0.8], scale: [0.55, 0.55, 1], color: [0.98, 0.85, 0.55, 1] }),
+      entity({ name: 'Ground', translation: [0, -2.4, 0], scale: [7, 0.5, 1], color: [0.3, 0.44, 0.26, 1], dynamic: false }),
+      entity({ name: 'BoxA', translation: [-2.2, 2.4, 0], rotation: [0, 0, 0.32], scale: [0.7, 0.5, 1], color: [0.62, 0.78, 0.42, 1] }),
+      entity({ name: 'BoxB', translation: [0.4, 3.1, 0], rotation: [0, 0, -0.55], scale: [0.9, 0.62, 1], color: [0.5, 0.7, 0.36, 1] }),
+      entity({ name: 'BoxC', translation: [2.1, 2, 0], rotation: [0, 0, 0.95], scale: [0.6, 0.45, 1], color: [0.72, 0.84, 0.5, 1] }),
+      entity({ name: 'BoxD', translation: [-0.9, 3.8, 0], rotation: [0, 0, -0.2], scale: [0.8, 0.55, 1], color: [0.44, 0.64, 0.34, 1] }),
     ],
   },
 ]

@@ -1,0 +1,43 @@
+{
+  "previousProductionDeploy": "6ad3637c85e10d28709df848",
+  "previousVerificationAt": "2026-10-17T12:03:55.706Z",
+  "preservedResources": [
+    {
+      "path": "/samples/shelter/shelter.tcpak",
+      "size": 54589589,
+      "sha256": "803042e74343c8220664f52f2afec41a7b8d5b0d0f5f15f80b5343ed4529d8f0"
+    },
+    {
+      "path": "/samples/shelter/gameplay.png",
+      "size": 85601,
+      "sha256": "9e673f210bcf7885724e7e1ee8c90c800bd8500099aab6ac54c4cabade932b9c"
+    },
+    {
+      "path": "/samples/shelter/manifest.json",
+      "size": 378,
+      "sha256": "7bf374355df10f2a6e66f5d9bf06655f39ce7488c6d370dd1f8baa668a7b449d"
+    },
+    {
+      "path": "/samples/shelter/shelter-source.zip",
+      "size": 21269628,
+      "sha256": "052fb67a1e2f3345043a7ec9d5fa93998243fcc23e82abbce6c93052964da6ab"
+    },
+    {
+      "path": "/samples/rougelike/cover.png",
+      "size": 183156,
+      "sha256": "b18900ed3d1fc0139d9ce50bbac51172f51cd0589b7e84062e70945e885d6a4b"
+    },
+    {
+      "path": "/samples/physics-lab/physics-lab.tcpak",
+      "size": 44525,
+      "sha256": "ad62fc21d77750bf48f59d5aa39d7e81b5cf9bc59469c08d1e2c45bcfe0c4344"
+    },
+    {
+      "path": "/samples/physics-lab/cover.png",
+      "size": 7307,
+      "sha256": "7c4d3185a29bf42c343ab20ff49af8ef3104d7877dc82fece49b1c8db06a6098"
+    }
+  ],
+  "currentEngine": "b04d81d80a92fdf28ce7c27d37e24005e8a8f984",
+  "note": "Return retains its newer verified package. Shelter keeps its actual c284 cooker provenance; compatibility is checked with the current b04 runtime."
+}

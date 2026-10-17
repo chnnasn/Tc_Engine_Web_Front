@@ -1,0 +1,191 @@
+[
+  {
+    "source": "Assets/CodeMonkey/Assets/White_1x1.png",
+    "path": "Assets/Art/white.png",
+    "sourceSha256": "1ebfbc4d1facb6a02b485a91cb1cbe2ead2c8134dbdf4da36d47868f1a356c7c",
+    "sha256": "1ebfbc4d1facb6a02b485a91cb1cbe2ead2c8134dbdf4da36d47868f1a356c7c",
+    "conversion": "byte-identical"
+  },
+  {
+    "source": "Assets/Image/UI/主页面背景.png",
+    "path": "Assets/Art/menu.png",
+    "sourceSha256": "7c6ff29f8b75296aae8da8109c9e000c6bc8619e5756cf0df2d66b7b9601268a",
+    "sha256": "7c6ff29f8b75296aae8da8109c9e000c6bc8619e5756cf0df2d66b7b9601268a",
+    "conversion": "byte-identical"
+  },
+  {
+    "source": "Assets/Image/UI/标题.png",
+    "path": "Assets/Art/title.png",
+    "sourceSha256": "793ef02ae813360acd47fda1de6e67642fcca19783de8adfd78b84449a224e7f",
+    "sha256": "793ef02ae813360acd47fda1de6e67642fcca19783de8adfd78b84449a224e7f",
+    "conversion": "byte-identical"
+  },
+  {
+    "source": "Assets/Image/building/main.png",
+    "path": "Assets/Art/ground.png",
+    "sourceSha256": "28346b8b21ae81b6379facd255e42ded6f83d4dce5e601323fc0996548859e3b",
+    "sha256": "28346b8b21ae81b6379facd255e42ded6f83d4dce5e601323fc0996548859e3b",
+    "conversion": "byte-identical"
+  },
+  {
+    "source": "Assets/Image/building/Resource.png",
+    "path": "Assets/Art/wood.png",
+    "sourceSha256": "20626c69fd5b866d78ab1c2f219c7c00b8d21ef41a27679eecefc06b44e707ad",
+    "sha256": "20626c69fd5b866d78ab1c2f219c7c00b8d21ef41a27679eecefc06b44e707ad",
+    "conversion": "byte-identical"
+  },
+  {
+    "source": "Assets/Image/building/build.png",
+    "path": "Assets/Art/stone.png",
+    "sourceSha256": "99b4de68b236c187bec294cdbe66716bf72d27fada37a5b7676dd8d1e0c0d447",
+    "sha256": "99b4de68b236c187bec294cdbe66716bf72d27fada37a5b7676dd8d1e0c0d447",
+    "conversion": "byte-identical"
+  },
+  {
+    "source": "Assets/Image/building/主城.png",
+    "path": "Assets/Art/castle.png",
+    "sourceSha256": "fdaa99a22e30cca311409833dc7c0ef8b50e60ef9e6cfd2b0aea702774600a5e",
+    "sha256": "fdaa99a22e30cca311409833dc7c0ef8b50e60ef9e6cfd2b0aea702774600a5e",
+    "conversion": "byte-identical"
+  },
+  {
+    "source": "Assets/Image/building/食物产出房.png",
+    "path": "Assets/Art/farm.png",
+    "sourceSha256": "acb235b08e6e41819734a04717ebf7649113177d11d1c3226d65d8d2453171cf",
+    "sha256": "acb235b08e6e41819734a04717ebf7649113177d11d1c3226d65d8d2453171cf",
+    "conversion": "byte-identical"
+  },
+  {
+    "source": "Assets/Image/building/城墙.png",
+    "path": "Assets/Art/wall.png",
+    "sourceSha256": "768c3f4841468546df7ba6b1d485dc847e0be53ecf032c2386e598b4171af704",
+    "sha256": "768c3f4841468546df7ba6b1d485dc847e0be53ecf032c2386e598b4171af704",
+    "conversion": "byte-identical"
+  },
+  {
+    "source": "Assets/Image/UI/游戏界面UI.png",
+    "path": "Assets/Art/frame.png",
+    "sourceSha256": "d994208a22eaa952dd1f6d45bb51e09df9800a7a1b90e5930ac5ecfe427a775a",
+    "sha256": "d994208a22eaa952dd1f6d45bb51e09df9800a7a1b90e5930ac5ecfe427a775a",
+    "conversion": "byte-identical"
+  },
+  {
+    "source": "Assets/站酷快乐体2016修订版.ttf",
+    "path": "Assets/Fonts/shelter.ttf",
+    "sourceSha256": "302d8dee7d2cb7d25d6bc89399e43513d2cafd031862bd46bce47f573c68807e",
+    "sha256": "302d8dee7d2cb7d25d6bc89399e43513d2cafd031862bd46bce47f573c68807e",
+    "conversion": "byte-identical"
+  },
+  {
+    "source": "Assets/Image/UI/开始游戏.png",
+    "path": "Assets/Art/start.png",
+    "sourceSha256": "6c8a8c19bec4352a2d681b1b5f4cb680421c39398d7ba549f3f109ec0148b443",
+    "sha256": "6c8a8c19bec4352a2d681b1b5f4cb680421c39398d7ba549f3f109ec0148b443",
+    "conversion": "byte-identical"
+  },
+  {
+    "source": "Assets/Image/UI/退出游戏.png",
+    "path": "Assets/Art/quit.png",
+    "sourceSha256": "2586ab2df2035e7152d632cdae742c4573ef4040fba7ac8a73b357c972c24982",
+    "sha256": "2586ab2df2035e7152d632cdae742c4573ef4040fba7ac8a73b357c972c24982",
+    "conversion": "byte-identical"
+  },
+  {
+    "source": "Assets/Image/UI/设置UI.png",
+    "path": "Assets/Art/settings.png",
+    "sourceSha256": "17145bb3acc0feee7cd6fc7939c27ea2925306b62f23746ad824822b30095f6c",
+    "sha256": "17145bb3acc0feee7cd6fc7939c27ea2925306b62f23746ad824822b30095f6c",
+    "conversion": "byte-identical"
+  },
+  {
+    "source": "Assets/Image/UI/派遣UI.png",
+    "path": "Assets/Art/dispatch.png",
+    "sourceSha256": "02278c60ff1956a44c83d9a4a0cf053150ce829ce18edc7b288e47ea18ce916f",
+    "sha256": "02278c60ff1956a44c83d9a4a0cf053150ce829ce18edc7b288e47ea18ce916f",
+    "conversion": "byte-identical"
+  },
+  {
+    "source": "Assets/Image/UI/建造背景UI.png",
+    "path": "Assets/Art/build-panel.png",
+    "sourceSha256": "16f4d0916d7c5fddbcc04c312740a8e3da1926976275811cc84223e89c8d0953",
+    "sha256": "16f4d0916d7c5fddbcc04c312740a8e3da1926976275811cc84223e89c8d0953",
+    "conversion": "byte-identical"
+  },
+  {
+    "source": "Assets/Image/UI/建造UI.png",
+    "path": "Assets/Art/build-button.png",
+    "sourceSha256": "39059ba88b7ecf26a9efc1659a7b3c706b8b98ec30d29104742008d7c3706439",
+    "sha256": "39059ba88b7ecf26a9efc1659a7b3c706b8b98ec30d29104742008d7c3706439",
+    "conversion": "byte-identical"
+  },
+  {
+    "source": "Assets/Image/UI/取消UI.png",
+    "path": "Assets/Art/cancel.png",
+    "sourceSha256": "c4ff050b1a585f2611987377e8929a146b36f09d68a8b803f9c03394ef0b5a8b",
+    "sha256": "c4ff050b1a585f2611987377e8929a146b36f09d68a8b803f9c03394ef0b5a8b",
+    "conversion": "byte-identical"
+  },
+  {
+    "source": "Assets/Image/UI/派遣背景UI.png",
+    "path": "Assets/Art/dispatch-panel.png",
+    "sourceSha256": "9c31f297c72f0ffbc8f03a155b6275fa43e20aa5584017a723ff5194ae413eba",
+    "sha256": "9c31f297c72f0ffbc8f03a155b6275fa43e20aa5584017a723ff5194ae413eba",
+    "conversion": "byte-identical"
+  },
+  {
+    "source": "Assets/Image/UI/派遣确认UI.png",
+    "path": "Assets/Art/confirm.png",
+    "sourceSha256": "6b3ec42ad47b49b7e6cdd79c2698e6bda8a9b6a330b2f9356113a099df266238",
+    "sha256": "6b3ec42ad47b49b7e6cdd79c2698e6bda8a9b6a330b2f9356113a099df266238",
+    "conversion": "byte-identical"
+  },
+  {
+    "source": "Assets/Image/UI/派遣完成背景UI.png",
+    "path": "Assets/Art/report-panel.png",
+    "sourceSha256": "cb2fa281269f591d6f1419e1849a12b57249e6e7e09bc9cce9419e96c10d4eba",
+    "sha256": "cb2fa281269f591d6f1419e1849a12b57249e6e7e09bc9cce9419e96c10d4eba",
+    "conversion": "byte-identical"
+  },
+  {
+    "source": "Assets/Image/UI/继续游戏.png",
+    "path": "Assets/Art/continue.png",
+    "sourceSha256": "8a5125f1fdd57b334983244bb8d256c5284e2d0102f7ea07f87b61013315aade",
+    "sha256": "8a5125f1fdd57b334983244bb8d256c5284e2d0102f7ea07f87b61013315aade",
+    "conversion": "byte-identical"
+  },
+  {
+    "source": "Assets/Image/UI/返回主菜单.png",
+    "path": "Assets/Art/return-menu.png",
+    "sourceSha256": "ebd733b455265a6a15f9b92f5ce42f02fd1c93a451239d014e37f58a4977896d",
+    "sha256": "ebd733b455265a6a15f9b92f5ce42f02fd1c93a451239d014e37f58a4977896d",
+    "conversion": "byte-identical"
+  },
+  {
+    "source": "Assets/Image/UI/木材ui.png",
+    "path": "Assets/Art/wood-icon.png",
+    "sourceSha256": "f5f5e19f7ace13afdf6743201ec65fd45f317360eaa4c68e96699247440b8eb4",
+    "sha256": "f5f5e19f7ace13afdf6743201ec65fd45f317360eaa4c68e96699247440b8eb4",
+    "conversion": "byte-identical"
+  },
+  {
+    "source": "Assets/Image/UI/石头UI.png",
+    "path": "Assets/Art/stone-icon.png",
+    "sourceSha256": "0cc85c78de6f063a248550ac2e1329d9103c10bc5463a248a38b475d79a610ea",
+    "sha256": "0cc85c78de6f063a248550ac2e1329d9103c10bc5463a248a38b475d79a610ea",
+    "conversion": "byte-identical"
+  },
+  {
+    "source": "Assets/Image/UI/食物UI.png",
+    "path": "Assets/Art/food-icon.png",
+    "sourceSha256": "e09f95430e974522b113e486646db02ea99b6ba95fda0e2fa635a667a95bebec",
+    "sha256": "e09f95430e974522b113e486646db02ea99b6ba95fda0e2fa635a667a95bebec",
+    "conversion": "byte-identical"
+  },
+  {
+    "source": "Assets/Image/Nocturne in Paris.mp3",
+    "path": "Assets/Audio/music.ogg",
+    "sourceSha256": "a7be3a88e4da6ea98f9304c68de7bed8d89b9cbba3001e3c33673cd43328d822",
+    "sha256": "d07782812d05145598466f4b22031dee0d2bf91de8b992f4c44febc69859eb80",
+    "conversion": "full-length 22050 Hz mono Vorbis q3; embedded cover omitted"
+  }
+]

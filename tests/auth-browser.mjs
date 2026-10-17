@@ -58,10 +58,10 @@ try {
   await page.goto(base + '/community/welcome')
   await page.getByRole('button', { name: '登录后参与讨论' }).waitFor()
   assert.equal(await page.locator('#topic-reply').count(), 0)
-  await page.goto(base + '/games/forest')
+  await page.goto(base + '/games/physics-lab')
   await page.getByRole('button', { name: '登录后参与讨论' }).waitFor()
   assert.equal(await page.locator('#game-comment').count(), 0)
-  await page.getByRole('button', { name: '打开游玩预览', exact: true }).click()
+  await page.getByRole('button', { name: '开始游玩', exact: true }).first().click()
   assert.equal(await page.locator('#cloud-email').count(), 0)
   await page.goto(base + '/editor/owned')
   await page.getByRole('button', { name: '登录 / 注册', exact: true }).click()
@@ -80,13 +80,13 @@ try {
   assert.equal(await page.locator('iframe').count(), 0)
   assert.equal(engineLoads, loadsBefore)
   projectAccess = true
-  await page.goto(base + '/games/forest')
+  await page.goto(base + '/games/physics-lab')
   await page.locator('#game-comment').waitFor()
   await page.locator('#game-comment').fill('会话失效后不得写入')
   user = undefined
   await page.getByRole('button', { name: '留下想法', exact: true }).click()
   await page.locator('#cloud-email').waitFor()
-  assert.equal(await page.evaluate(() => localStorage.getItem('tomcat-ui-comments-forest')), null)
+  assert.equal(await page.evaluate(() => localStorage.getItem('tomcat-ui-comments-physics-lab')), null)
   user = { id: 'bob', email: 'bob@example.com', emailVerified: true }
   await page.goto(base + '/projects')
   await page.getByRole('heading', { name: '我的项目' }).waitFor()
