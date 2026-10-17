@@ -10,13 +10,7 @@ public sealed class ReturnGame : MonoBehaviour
 {
     const ulong Font = 6200000000000000020UL;
     const int CorpseCapacity = 64;
-    const string LifeText="生 / LIFE",DeathText="死 / DEATH";
-    const string SoundOnText="M  静音",SoundOffText="M  开启声音";
-    const string PausedText="已暂停 / P / ESC 继续",TransitionText="抵达终点 / 正在前往下一关";
-    static string HeadingText(int value)=>value==1?"序章 / 教学":value==7?"归途 / 终章":"第 "+(value-1)+" 关";
-    static string ProgressText(int value)=>value==1?"教学关\n\n观察 / 尝试\n\n触碰尖刺\n切换生死世界":value==7?"最后的回声\n\n离开平台\n再次进入另一面":"关卡 "+(value-1)+" / 5\n\n两侧地形不同\n寻找抵达终点的路";
-    static string HintText(int value)=>"A / D  左右移动\n方向键也可移动\n\nSPACE  跳跃\nR  重开当前关卡\nP / ESC  暂停"+(value==1?"\n\n箱子或角色\n都能压住按钮":"");
-    static readonly Color White = new(1,1,1,1), Muted = new(.68f,.76f,.8f,1);
+    static readonly Color White = new(1,1,1,1);
     sealed class Visual
     {
         public Entity Entity=null!;
@@ -27,7 +21,7 @@ public sealed class ReturnGame : MonoBehaviour
         public Vector3 LastPosition,LastScale,LastRotation;
         public Color Color=White,LastColor;
         public ulong Texture,LastTexture;
-        public float Angle,FontSize,TextHeight;
+        public float Angle,FontSize,TextHeight,MaxWidth;
         public int Order;
         public string? Text,LastText;
         public bool Visible,Initialized,Applied,LastVisible,FlipX,FlipY;
@@ -60,21 +54,21 @@ public sealed class ReturnGame : MonoBehaviour
         public int Stage=-1,Realm;
     }
     readonly List<Visual> visuals=[];
-    readonly List<Visual> menu=[];
+    ReturnMenu menu=null!,tutorial=null!,pauseMenu=null!,deathTint=null!;
     readonly Corpse[] corpses=new Corpse[CorpseCapacity];
     Stage[] stages=[];
     ReturnBounds[] solids=[];
     readonly ReturnBody player=new(0,0,.5f,.8f,0,-.1f);
-    Visual hero=null!,heading=null!,realmLabel=null!,pauseLabel=null!,hint=null!,progress=null!,soundLabel=null!;
+    Visual hero=null!;
     Visual finalThanks=null!,finalAgain=null!,finalExit=null!,fontWarmup=null!;
     ReturnNativeAudio audio=null!;
     Camera camera=null!;
     Entity viewport=null!;
     RectTransform? viewportRect;
-    int stage,realm,solidCount,corpseCursor,pendingStage=-1,warmupFrames;
+    int stage,realm,solidCount,corpseCursor,pendingStage=-1,warmupFrames,textureCursor;
     float accumulator,clock,jumpBuffer,transition,trapCooldown,lastHeight=-1;
     float viewportWidth=1280,viewportHeight=720,worldHeight=16.875f;
-    bool paused,muted,facingLeft,ready,solidsDirty=true;
+    bool paused,muted,facingLeft,ready,quitRequested,solidsDirty=true;
 
     void Awake()
     {
@@ -89,6 +83,7 @@ public sealed class ReturnGame : MonoBehaviour
         rect.AnchorMin=Vector2.Zero;rect.AnchorMax=Vector2.One;rect.SizeDelta=Vector2.Zero;
         audio=new ReturnNativeAudio();
         BuildPools();
+        BeginTextureWarmup();
         Load(0);
     }
 
@@ -105,6 +100,11 @@ public sealed class ReturnGame : MonoBehaviour
         entity.AddComponent<TextRenderer>();
         var visual=new Visual{Entity=entity,Text=text,Position=new(x,y),FontSize=size,Color=color,Order=250};
         visuals.Add(visual);return visual;
+    }
+    Visual CenteredText(string name,string text,float x,float y,float size,float width)
+    {
+        var visual=Text(name,text,x-width*.5f,y+size*.5f,size,White);
+        visual.MaxWidth=width;return visual;
     }
     void BuildPools()
     {
@@ -156,34 +156,68 @@ public sealed class ReturnGame : MonoBehaviour
         solids=new ReturnBounds[Math.Max(1,maximumSolids)];
         hero=Sprite("Return player",ReturnArt.Idle[0],0,0,1,1,110);
         for(int i=0;i<corpses.Length;i++)corpses[i]=new Corpse{Visual=Sprite("Return body "+i,ReturnArt.Dead,0,0,1,1,105)};
-        menu.Add(Sprite("Return title plate",ReturnArt.Title,0,3.3f,12,120f/490*12,150));
-        menu.Add(Text("Return original title","Echo World",-2.3f,5.5f,.6f,White));
-        menu.Add(Text("Return subtitle","归途",-.65f,1.0f,.6f,Muted));
-        menu.Add(Sprite("Return start plate",ReturnArt.Start,0,-1.3f,8,120f/485*8,150));
-        menu.Add(Text("Return start","按 ENTER 或点击开始",-3.5f,-3.0f,.46f,White));
-        menu.Add(Text("Return menu story","在生与死的两面，寻找回去的路。",-6.3f,-4.4f,.46f,Muted));
-        menu.Add(Text("Return menu controls","A / D 移动    空格跳跃    R 重来",-5.8f,-5.7f,.42f,Muted));
-        menu.Add(Text("Return menu footer","Return / Tc 引擎复原",-3.8f,-6.9f,.4f,Muted));
-        heading=Text("Return stage","",-14.2f,6.8f,.52f,White);
-        realmLabel=Text("Return realm","",-14.2f,5.8f,.40f,new(.55f,.84f,.75f,1));
-        hint=Text("Return hints","",-14.2f,3.8f,.42f,Muted);
-        progress=Text("Return progress","",8.8f,6.8f,.42f,Muted);
-        soundLabel=Text("Return sound",SoundOnText,8.8f,-6.9f,.4f,Muted);
-        pauseLabel=Text("Return pause","",-4.2f,7.8f,.40f,new(1,.85f,.5f,1));
-        finalThanks=Text("Return thanks","谢谢游玩",-2.5f,3.0f,.65f,White);
-        finalAgain=Text("Return replay","重新开始",-4.0f,-5.8f,.34f,White);
-        finalExit=Text("Return exit","返回菜单",1.9f,-5.8f,.34f,White);
+        menu=new ReturnMenu();
+        tutorial=new ReturnMenu("Tutorial",ReturnMenuData.TutorialNodes,ReturnMenuData.TutorialScaleFactor,20);
+        pauseMenu=new ReturnMenu("Pause",ReturnMenuData.PauseNodes,ReturnMenuData.PauseScaleFactor,200,fitDesign:false);
+        deathTint=new ReturnMenu("Death tint",[new ReturnMenuNode
+        {
+            Id="original-death-image",Name="Image",Parent=-1,Active=true,Image=true,
+            AnchorMinX=0,AnchorMinY=0,AnchorMaxX=1,AnchorMaxY=1,PivotX=.5f,PivotY=.5f,
+            ScaleX=1,ScaleY=1,ScaleZ=1,R=.0754717f,G=0,B=0,A=.39215687f
+        }],1,10,fitDesign:false);
+        // Original final WorldSpace canvases, including all ancestor scales.
+        finalThanks=CenteredText("Return thanks","谢谢游玩",.1f,2.37f,1.304499f,14.90856f);
+        finalAgain=CenteredText("Return replay","重新开始",-2.9f,-5.665f,.336f,3.84f);
+        finalExit=CenteredText("Return exit","退出",3,-5.665f,.336f,3.84f);
         // Submit the exact UI glyph union before play. FontManager prepares
         // missing glyphs synchronously on Web, then publishes on later ticks.
         var glyphs=new SortedSet<char>();
         // FontManager tracks line breaks as requested codepoints too.
         void Include(string text){foreach(char glyph in text)glyphs.Add(glyph);}
         foreach(var visual in visuals)if(visual.Text is {} text)Include(text);
-        for(int value=1;value<stages.Length;value++){Include(HeadingText(value));Include(ProgressText(value));Include(HintText(value));}
-        Include(LifeText);Include(DeathText);Include(SoundOnText);Include(SoundOffText);Include(PausedText);Include(TransitionText);
+        foreach(var node in ReturnMenuData.Nodes)if(node.Text is {} text)Include(text);
+        foreach(var node in ReturnMenuData.TutorialNodes)if(node.Text is {} text)Include(text);
+        foreach(var node in ReturnMenuData.PauseNodes)if(node.Text is {} text)Include(text);
         var characters=new char[glyphs.Count];glyphs.CopyTo(characters);
         fontWarmup=Text("Return menu font warmup",new string(characters),10000,10000,.4f,new(1,1,1,0));
-        menu.Add(fontWarmup);
+    }
+
+    void BeginTextureWarmup()
+    {
+        if(!TextureAssets.IsSupported)
+            throw new NotSupportedException("[Return] This engine lacks TextureAssets readiness support; use the project's matching engine runtime.");
+        // Generated from the cooked runtime textures, including hidden pause
+        // slices and native tile sprites. Reference-only map PNGs are excluded.
+        foreach(ulong handle in ReturnMenuData.PreloadTextures)
+        {
+            var texture=new AssetRef<Texture2DAsset>(handle);
+            var state=TextureAssets.RequestLoad(texture);
+            if(state==TextureLoadState.Failed||state==TextureLoadState.Invalid)
+                throw TextureWarmupFailure(texture,state);
+        }
+        Log.Info("[Return] texture warmup:"+ReturnMenuData.PreloadTextures.Length+" requested");
+    }
+
+    bool TexturesReady()
+    {
+        // Each completed texture is queried once. While loading, only the
+        // first outstanding handle is polled; no allocations or package I/O.
+        while(textureCursor<ReturnMenuData.PreloadTextures.Length)
+        {
+            var texture=new AssetRef<Texture2DAsset>(ReturnMenuData.PreloadTextures[textureCursor]);
+            var state=TextureAssets.GetLoadState(texture);
+            if(state==TextureLoadState.NotRequested)state=TextureAssets.RequestLoad(texture);
+            if(state==TextureLoadState.Loading||state==TextureLoadState.NotRequested)return false;
+            if(state!=TextureLoadState.Ready)throw TextureWarmupFailure(texture,state);
+            textureCursor++;
+        }
+        return true;
+    }
+
+    static InvalidOperationException TextureWarmupFailure(AssetRef<Texture2DAsset> texture,TextureLoadState state)
+    {
+        string message="[Return] texture warmup failed: "+texture.Handle+" ("+state+"): "+TextureAssets.GetLoadError(texture);
+        Log.Error(message);return new InvalidOperationException(message);
     }
 
     static ReturnBounds Collider(ReturnObject source)
@@ -208,11 +242,10 @@ public sealed class ReturnGame : MonoBehaviour
         }
         var data=stages[stage].Source;player.Reset(data.SpawnX,data.SpawnY);
         hero.Position=new(player.X,player.Y);hero.Texture=ReturnArt.Idle[0];hero.FlipX=false;
-        foreach(var visual in menu)visual.Visible=stage==0;
+        menu.SetVisible(stage==0&&ready);
+        tutorial.SetVisible(stage==1);pauseMenu.SetVisible(false);
         fontWarmup.Visible=stage==0&&!ready;
         hero.Visible=stage>0;
-        heading.Visible=realmLabel.Visible=hint.Visible=progress.Visible=soundLabel.Visible=stage>0;
-        heading.Text=HeadingText(stage);progress.Text=ProgressText(stage);hint.Text=HintText(stage);
         RefreshRealm();
         if(stage>0)Log.Info("[Return] stage:"+(stage-1)+" "+data.Name);
         else Log.Info("[Return] menu");
@@ -236,8 +269,7 @@ public sealed class ReturnGame : MonoBehaviour
             }
         }
         foreach(var corpse in corpses)corpse.Visual.Visible=corpse.Stage==stage&&corpse.Realm==realm;
-        realmLabel.Text=realm==0?LifeText:DeathText;
-        realmLabel.Color=realm==0?new(.55f,.84f,.75f,1):new(.8f,.64f,.95f,1);
+        deathTint.SetVisible(stage>0&&stage<7&&realm==1);
         finalThanks.Visible=finalAgain.Visible=finalExit.Visible=stage==7&&realm==1;
         solidsDirty=true;
     }
@@ -259,8 +291,15 @@ public sealed class ReturnGame : MonoBehaviour
         if(paused==value)return;paused=value;accumulator=jumpBuffer=0;
         player.PreviousX=player.X;player.PreviousY=player.Y;
         foreach(var box in stages[stage].Boxes){box.PreviousX=box.X;box.PreviousY=box.Y;}
+        pauseMenu.SetVisible(value&&stage>0&&stage<7);
         Log.Info("[Return] paused:"+(paused?"true":"false"));
     }
+    void Quit()
+    {
+        if(quitRequested)return;
+        quitRequested=true;Log.Info("[Return] quit");audio.Stop();Application.Quit();
+    }
+    void Restart(){Log.Info("[Return] restart");Load(stage);}
     void Update()
     {
         if(viewportRect is null&&viewport.IsValid)viewportRect=viewport.GetComponent<RectTransform>();
@@ -273,25 +312,35 @@ public sealed class ReturnGame : MonoBehaviour
         if(worldHeight!=lastHeight){camera.OrthographicSize=worldHeight;lastHeight=worldHeight;}
         if(Input.WasKeyPressed(KeyCode.M))
         {
-            muted=!muted;soundLabel.Text=muted?SoundOffText:SoundOnText;
+            muted=!muted;
             Log.Info("[Return] mute:"+(muted?"true":"false"));
         }
         float dt=Math.Clamp(Time.DeltaTime,0,ReturnPhysics.Step*8);
         if(stage==0)
         {
-            bool click=false;
-            if(Input.WasMouseButtonPressed(MouseButton.Left))
+            var action=menu.Tick(viewportWidth,viewportHeight,ready,Time.DeltaTime);
+            if(action==ReturnMenuAction.Start)Load(1);
+            else if(action==ReturnMenuAction.Quit)
             {
-                var mouse=Input.MousePosition;float x=(mouse.X-viewportWidth*.5f)*worldHeight/viewportHeight,y=(viewportHeight*.5f-mouse.Y)*worldHeight/viewportHeight;
-                click=Math.Abs(x)<4&&Math.Abs(y+1.3f)<1;
+                Quit();return;
             }
-            if(ready&&(Input.WasKeyPressed(KeyCode.Enter)||click))Load(1);
         }
-        else
+        else if(ready)
         {
-            if(!Input.IsWindowFocused)SetPaused(true);
+            tutorial.Tick(viewportWidth,viewportHeight,ready,Time.DeltaTime);
+            // The original final scene has no pause menu. Only suspend its
+            // simulation while unfocused, then resume when focus returns.
+            if(stage==7)SetPaused(!Input.IsWindowFocused);
+            else if(!Input.IsWindowFocused)SetPaused(true);
             else if(Input.WasKeyPressed(KeyCode.P)||Input.WasKeyPressed(KeyCode.Escape))SetPaused(!paused);
-            if(Input.WasKeyPressed(KeyCode.R)){Log.Info("[Return] restart");Load(stage);}
+            if(Input.WasKeyPressed(KeyCode.R))Restart();
+            if(paused)
+            {
+                var action=pauseMenu.Tick(viewportWidth,viewportHeight,ready,Time.DeltaTime);
+                if(action==ReturnMenuAction.Resume)SetPaused(false);
+                else if(action==ReturnMenuAction.Restart)Restart();
+                else if(action==ReturnMenuAction.Quit){Quit();return;}
+            }
             if(!paused)
             {
                 clock+=dt;
@@ -310,21 +359,23 @@ public sealed class ReturnGame : MonoBehaviour
                     while(accumulator>=ReturnPhysics.Step&&steps++<8)
                     {
                         Simulate(direction);accumulator=Math.Max(0,accumulator-ReturnPhysics.Step);
-                        if(transition>0)break;
+                        if(transition>0||quitRequested)break;
                     }
+                    if(quitRequested)return;
                     RenderBodies(direction,Math.Clamp(accumulator/ReturnPhysics.Step,0,1));
                 }
             }
         }
-        pauseLabel.Visible=stage>0&&(paused||transition>0);
-        pauseLabel.Text=paused?PausedText:TransitionText;
         audio.Tick(stage==0?-1:stage==1?1:0,paused,muted);
         Flush();
-        // Three completed initialization ticks cover prepare, publish/backlog,
-        // and publication of the complete glyph union in this Web runtime.
-        if(!ready&&hero.Initialized&&audio.Ready&&++warmupFrames>=3)
+        // Keep the glyph prepare/publish sequence, then require actual GPU
+        // readiness for every texture; elapsed frames never imply image readiness.
+        if(!ready&&hero.Initialized&&audio.Ready&&++warmupFrames>=3&&TexturesReady())
         {
-            ready=true;fontWarmup.Visible=false;
+            ready=true;fontWarmup.Visible=false;menu.SetVisible(stage==0);
+            menu.Tick(viewportWidth,viewportHeight,false,0);
+            menu.EnableInput();pauseMenu.EnableInput();
+            Log.Info("[Return] textures ready:"+textureCursor);
             Log.Info("[Return] ready: native Tc platform puzzle, tutorial + 5 levels + final");
         }
     }
@@ -368,9 +419,13 @@ public sealed class ReturnGame : MonoBehaviour
             if(item.Source.Kind is "goal" or "continue" or "exit")
             {
                 item.Collected=true;if(item.Visual is not null)item.Visual.Visible=false;
-                audio.Cue(4);transition=1.5f;
-                pendingStage=item.Source.Kind=="continue"?2:item.Source.Kind=="exit"?0:Math.Min(stage+1,stages.Length-1);
-                Log.Info("[Return] win:"+(stage-1));break;
+                audio.Cue(4);transition=item.Source.Kind=="continue"?2:1.5f;
+                pendingStage=item.Source.Kind=="continue"?2:Math.Min(stage+1,stages.Length-1);
+                if(item.Source.Kind=="continue")finalAgain.Visible=false;
+                if(item.Source.Kind=="exit")finalExit.Visible=false;
+                Log.Info("[Return] win:"+(stage-1));
+                if(item.Source.Kind=="exit")Quit();
+                break;
             }
         }
         // Escape from edited maps without a lower boundary is recoverable by R.
@@ -418,7 +473,8 @@ public sealed class ReturnGame : MonoBehaviour
                 if(v.Text is not null)
                 {
                     v.Label=v.Entity.GetComponent<TextRenderer>();v.Label.Font=new(Font);v.Label.FontSize=v.FontSize;
-                    v.Label.MaxWidth=0;v.Label.LineSpacing=1.4f;
+                    v.Label.MaxWidth=v.MaxWidth;v.Label.LineSpacing=1;
+                    v.Label.Alignment=v.MaxWidth>0?TextAlignment.Center:TextAlignment.Left;
                 }
                 else {v.Sprite=v.Entity.GetComponent<SpriteRenderer>();v.Sprite.OrderInLayer=v.Order;}
                 v.Initialized=true;
@@ -426,10 +482,10 @@ public sealed class ReturnGame : MonoBehaviour
             if(v.Text is not null&&v.Text!=v.LastText)
             {
                 int lines=1;foreach(char character in v.Text)if(character=='\n')lines++;
-                v.TextHeight=v.FontSize*(1+(lines-1)*1.4f);
+                v.TextHeight=v.FontSize*lines;
             }
-            // Tc anchors the complete line box at its bottom. Author labels by
-            // their top edge so multiline instructions cannot overlap headings.
+            // Tc anchors the complete line box at its bottom. Position stores
+            // the top edge of the centered final labels and invisible warmup.
             Vector3 position=new(v.Position.X,v.Position.Y-v.TextHeight,-v.Order*.002f);
             // A half turn around Y mirrors the 2D sprite horizontally without
             // an ambiguous negative scale decomposition. Keep its size positive

@@ -9,6 +9,7 @@ from __future__ import annotations
 import argparse
 import copy
 import hashlib
+import importlib.util
 import json
 import math
 import re
@@ -102,6 +103,7 @@ class Importer:
         self.reference.mkdir(parents=True, exist_ok=True)
         (output / "Assets/Scripts").mkdir(parents=True, exist_ok=True)
         self.guids, self.metas, self.prefabs, self.images = {}, {}, {}, {}
+        self.samplers = {}
         self.assets, self.sprites, self.tiles, self.image_records = [], {}, {}, {}
         self.warnings = []
         for path in sorted((source / "Assets").rglob("*.meta")):
@@ -110,6 +112,17 @@ class Importer:
             if guid:
                 self.guids[guid] = Path(str(path)[:-5])
                 self.metas[guid] = meta
+                if 'TextureImporter' in meta:
+                    settings = meta['TextureImporter'].get('textureSettings', {})
+                    filtering = {0: 'nearest', 1: 'linear'}
+                    wrapping = {0: 'repeat', 1: 'clamp'}
+                    if settings.get('filterMode', 1) not in filtering or any(settings.get(axis, 1) not in wrapping for axis in ['wrapU', 'wrapV']):
+                        raise ValueError(f'Unsupported source texture sampling: {path}')
+                    self.samplers[Path(str(path)[:-5]).relative_to(source).as_posix()] = {
+                        'filterMode': filtering[settings.get('filterMode', 1)],
+                        'wrapU': wrapping[settings.get('wrapU', 1)],
+                        'wrapV': wrapping[settings.get('wrapV', 1)],
+                    }
 
     def save_image(self, image, name, source, extra=None):
         name = re.sub(r"[^a-zA-Z0-9_.-]", "-", name)
@@ -118,10 +131,14 @@ class Importer:
             return self.image_records[path.name]
         image.save(path, optimize=False)
         handle = BASE + len(self.assets) + 1
+        # Cropped/tiled sprites retain their source sampler; whole-map reference
+        # PNGs are composites of the original point-filtered industrial tiles.
+        sampler = self.samplers.get(source, {'filterMode': 'nearest', 'wrapU': 'clamp', 'wrapV': 'clamp'})
+        sampling_yaml = ''.join(f'    {key}: {value}\n' for key, value in sampler.items())
         Path(str(path) + ".tcmeta").write_text(
-            f"SchemaVersion: 2\nAsset:\n  Handle: {handle}\n  Type: Texture2D\n  ImportSettings:\n    Usage: Sprite\n    sRGB: false\n    generateMipmaps: false\n    compression: rgba8\n  SubAssets: []\n", encoding="utf-8")
+            f"SchemaVersion: 2\nAsset:\n  Handle: {handle}\n  Type: Texture2D\n  ImportSettings:\n    Usage: Sprite\n    sRGB: false\n    generateMipmaps: false\n    compression: rgba8\n{sampling_yaml}  SubAssets: []\n", encoding="utf-8")
         record = {"name": name, "path": path.relative_to(self.output).as_posix(), "handle": str(handle),
-                  "width": image.width, "height": image.height, "source": source, **(extra or {})}
+                  "width": image.width, "height": image.height, "source": source, "sampling": sampler, **(extra or {})}
         self.assets.append(record)
         self.image_records[path.name] = record
         return record
@@ -140,7 +157,9 @@ class Importer:
         image = self.images.setdefault(guid, Image.open(path).convert("RGBA"))
         imp = self.metas[guid]["TextureImporter"]
         ppu = imp.get("spritePixelsToUnits", 100)
-        sprites = imp.get("spriteSheet", {}).get("sprites", [])
+        # Unity keeps stale sheet slices after switching Multiple -> Single.
+        # Single sprite references (21300000) address the complete texture.
+        sprites = imp.get("spriteSheet", {}).get("sprites", []) if imp.get("spriteMode", 1) == 2 else []
         meta = next((s for s in sprites if s.get("internalID") == file_id), None)
         if meta:
             r = meta["rect"]
@@ -385,6 +404,12 @@ class Importer:
             anims['Quit' if name=='Quat' else name]=int(self.sprite({'guid':guid,'fileID':file_id})['asset']['handle'])
         path=self.source/'Assets/Spritesheet/thx.png';guid=yaml.load(Path(str(path)+'.meta').read_text(),Loader=LOADER)['guid']
         anims['Thanks']=int(self.sprite({'guid':guid,'fileID':21300000})['asset']['handle'])
+        # Append UI assets after gameplay registration to preserve native tile
+        # cells' existing asset identities.
+        spec = importlib.util.spec_from_file_location('return_ui', Path(__file__).with_name('import-return-ui.py'))
+        menu_importer = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(menu_importer)
+        menu_importer.export_menu(self)
         self.write_csharp(levels,anims)
         known_handles={int(a['handle']) for a in self.assets}
         for level in levels:

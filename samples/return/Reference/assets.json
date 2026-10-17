@@ -7,6 +7,11 @@
       "width": 16,
       "height": 16,
       "source": "Assets/Spritesheet/industrial.v2.png",
+      "sampling": {
+        "filterMode": "nearest",
+        "wrapU": "clamp",
+        "wrapV": "clamp"
+      },
       "unityFileId": 2122637043,
       "pixelsPerUnit": 16
     },
@@ -16,7 +21,12 @@
       "handle": "6200000000000010002",
       "width": 256,
       "height": 256,
-      "source": "Assets/Scenes/default.unity"
+      "source": "Assets/Scenes/default.unity",
+      "sampling": {
+        "filterMode": "nearest",
+        "wrapU": "clamp",
+        "wrapV": "clamp"
+      }
     },
     {
       "name": "sprite-industrial.v2_322",
@@ -25,6 +35,11 @@
       "width": 16,
       "height": 16,
       "source": "Assets/Spritesheet/industrial.v2.png",
+      "sampling": {
+        "filterMode": "nearest",
+        "wrapU": "clamp",
+        "wrapV": "clamp"
+      },
       "unityFileId": -1099370031,
       "pixelsPerUnit": 16
     },
@@ -35,6 +50,11 @@
       "width": 16,
       "height": 16,
       "source": "Assets/Spritesheet/industrial.v2.png",
+      "sampling": {
+        "filterMode": "nearest",
+        "wrapU": "clamp",
+        "wrapV": "clamp"
+      },
       "unityFileId": -689839224,
       "pixelsPerUnit": 16
     },
@@ -44,7 +64,12 @@
       "handle": "6200000000000010005",
       "width": 32,
       "height": 16,
-      "source": "Assets/Spritesheet/industrial.v2.png"
+      "source": "Assets/Spritesheet/industrial.v2.png",
+      "sampling": {
+        "filterMode": "nearest",
+        "wrapU": "clamp",
+        "wrapV": "clamp"
+      }
     },
     {
       "name": "sprite-industrial.v2_245",
@@ -53,6 +78,11 @@
       "width": 16,
       "height": 16,
       "source": "Assets/Spritesheet/industrial.v2.png",
+      "sampling": {
+        "filterMode": "nearest",
+        "wrapU": "clamp",
+        "wrapV": "clamp"
+      },
       "unityFileId": 1040130677,
       "pixelsPerUnit": 16
     },
@@ -63,6 +93,11 @@
       "width": 16,
       "height": 16,
       "source": "Assets/Spritesheet/industrial.v2.png",
+      "sampling": {
+        "filterMode": "nearest",
+        "wrapU": "clamp",
+        "wrapV": "clamp"
+      },
       "unityFileId": 930400413,
       "pixelsPerUnit": 16
     },
@@ -73,6 +108,11 @@
       "width": 16,
       "height": 16,
       "source": "Assets/Spritesheet/industrial.v2.png",
+      "sampling": {
+        "filterMode": "nearest",
+        "wrapU": "clamp",
+        "wrapV": "clamp"
+      },
       "unityFileId": -224555681,
       "pixelsPerUnit": 16
     },
@@ -83,6 +123,11 @@
       "width": 16,
       "height": 16,
       "source": "Assets/Spritesheet/industrial.v2.png",
+      "sampling": {
+        "filterMode": "nearest",
+        "wrapU": "clamp",
+        "wrapV": "clamp"
+      },
       "unityFileId": 537827751,
       "pixelsPerUnit": 16
     },
@@ -93,6 +138,11 @@
       "width": 32,
       "height": 32,
       "source": "Assets/Spritesheet/industrial.v2.png",
+      "sampling": {
+        "filterMode": "nearest",
+        "wrapU": "clamp",
+        "wrapV": "clamp"
+      },
       "unityFileId": -2000967925,
       "pixelsPerUnit": 16
     },
@@ -103,6 +153,11 @@
       "width": 16,
       "height": 16,
       "source": "Assets/Spritesheet/industrial.v2.png",
+      "sampling": {
+        "filterMode": "nearest",
+        "wrapU": "clamp",
+        "wrapV": "clamp"
+      },
       "unityFileId": -1980666120,
       "pixelsPerUnit": 16
     },
@@ -113,6 +168,11 @@
       "width": 16,
       "height": 16,
       "source": "Assets/Spritesheet/industrial.v2.png",
+      "sampling": {
+        "filterMode": "nearest",
+        "wrapU": "clamp",
+        "wrapV": "clamp"
+      },
       "unityFileId": -1767834626,
       "pixelsPerUnit": 16
     },
@@ -123,6 +183,11 @@
       "width": 16,
       "height": 16,
       "source": "Assets/Spritesheet/industrial.v2.png",
+      "sampling": {
+        "filterMode": "nearest",
+        "wrapU": "clamp",
+        "wrapV": "clamp"
+      },
       "unityFileId": 2124504786,
       "pixelsPerUnit": 16
     },
@@ -133,6 +198,11 @@
       "width": 16,
       "height": 16,
       "source": "Assets/Spritesheet/industrial.v2.png",
+      "sampling": {
+        "filterMode": "nearest",
+        "wrapU": "clamp",
+        "wrapV": "clamp"
+      },
       "unityFileId": 1894601792,
       "pixelsPerUnit": 16
     },
@@ -143,6 +213,11 @@
       "width": 16,
       "height": 16,
       "source": "Assets/Spritesheet/industrial.v2.png",
+      "sampling": {
+        "filterMode": "nearest",
+        "wrapU": "clamp",
+        "wrapV": "clamp"
+      },
       "unityFileId": 753811559,
       "pixelsPerUnit": 16
     },
@@ -153,6 +228,11 @@
       "width": 16,
       "height": 16,
       "source": "Assets/Spritesheet/industrial.v2.png",
+      "sampling": {
+        "filterMode": "nearest",
+        "wrapU": "clamp",
+        "wrapV": "clamp"
+      },
       "unityFileId": 454086625,
       "pixelsPerUnit": 16
     },
@@ -163,6 +243,11 @@
       "width": 16,
       "height": 16,
       "source": "Assets/Spritesheet/industrial.v2.png",
+      "sampling": {
+        "filterMode": "nearest",
+        "wrapU": "clamp",
+        "wrapV": "clamp"
+      },
       "unityFileId": 1419164963,
       "pixelsPerUnit": 16
     },
@@ -173,6 +258,11 @@
       "width": 16,
       "height": 16,
       "source": "Assets/Spritesheet/industrial.v2.png",
+      "sampling": {
+        "filterMode": "nearest",
+        "wrapU": "clamp",
+        "wrapV": "clamp"
+      },
       "unityFileId": -1512635328,
       "pixelsPerUnit": 16
     },
@@ -183,6 +273,11 @@
       "width": 16,
       "height": 16,
       "source": "Assets/Spritesheet/industrial.v2.png",
+      "sampling": {
+        "filterMode": "nearest",
+        "wrapU": "clamp",
+        "wrapV": "clamp"
+      },
       "unityFileId": 175002593,
       "pixelsPerUnit": 16
     },
@@ -193,6 +288,11 @@
       "width": 16,
       "height": 16,
       "source": "Assets/Spritesheet/industrial.v2.png",
+      "sampling": {
+        "filterMode": "nearest",
+        "wrapU": "clamp",
+        "wrapV": "clamp"
+      },
       "unityFileId": -1108137786,
       "pixelsPerUnit": 16
     },
@@ -203,6 +303,11 @@
       "width": 16,
       "height": 16,
       "source": "Assets/Spritesheet/industrial.v2.png",
+      "sampling": {
+        "filterMode": "nearest",
+        "wrapU": "clamp",
+        "wrapV": "clamp"
+      },
       "unityFileId": 1619670629,
       "pixelsPerUnit": 16
     },
@@ -213,6 +318,11 @@
       "width": 16,
       "height": 16,
       "source": "Assets/Spritesheet/industrial.v2.png",
+      "sampling": {
+        "filterMode": "nearest",
+        "wrapU": "clamp",
+        "wrapV": "clamp"
+      },
       "unityFileId": 683841227,
       "pixelsPerUnit": 16
     },
@@ -223,6 +333,11 @@
       "width": 16,
       "height": 16,
       "source": "Assets/Spritesheet/industrial.v2.png",
+      "sampling": {
+        "filterMode": "nearest",
+        "wrapU": "clamp",
+        "wrapV": "clamp"
+      },
       "unityFileId": -133509074,
       "pixelsPerUnit": 16
     },
@@ -233,6 +348,11 @@
       "width": 16,
       "height": 16,
       "source": "Assets/Spritesheet/industrial.v2.png",
+      "sampling": {
+        "filterMode": "nearest",
+        "wrapU": "clamp",
+        "wrapV": "clamp"
+      },
       "unityFileId": -1501299421,
       "pixelsPerUnit": 16
     },
@@ -243,6 +363,11 @@
       "width": 16,
       "height": 16,
       "source": "Assets/Spritesheet/industrial.v2.png",
+      "sampling": {
+        "filterMode": "nearest",
+        "wrapU": "clamp",
+        "wrapV": "clamp"
+      },
       "unityFileId": 941120527,
       "pixelsPerUnit": 16
     },
@@ -253,6 +378,11 @@
       "width": 16,
       "height": 16,
       "source": "Assets/Spritesheet/industrial.v2.png",
+      "sampling": {
+        "filterMode": "nearest",
+        "wrapU": "clamp",
+        "wrapV": "clamp"
+      },
       "unityFileId": -2135953536,
       "pixelsPerUnit": 16
     },
@@ -263,6 +393,11 @@
       "width": 16,
       "height": 16,
       "source": "Assets/Spritesheet/industrial.v2.png",
+      "sampling": {
+        "filterMode": "nearest",
+        "wrapU": "clamp",
+        "wrapV": "clamp"
+      },
       "unityFileId": 1012205514,
       "pixelsPerUnit": 16
     },
@@ -273,6 +408,11 @@
       "width": 16,
       "height": 16,
       "source": "Assets/Spritesheet/industrial.v2.png",
+      "sampling": {
+        "filterMode": "nearest",
+        "wrapU": "clamp",
+        "wrapV": "clamp"
+      },
       "unityFileId": -1326595690,
       "pixelsPerUnit": 16
     },
@@ -283,6 +423,11 @@
       "width": 16,
       "height": 16,
       "source": "Assets/Spritesheet/industrial.v2.png",
+      "sampling": {
+        "filterMode": "nearest",
+        "wrapU": "clamp",
+        "wrapV": "clamp"
+      },
       "unityFileId": -1751967749,
       "pixelsPerUnit": 16
     },
@@ -293,6 +438,11 @@
       "width": 16,
       "height": 16,
       "source": "Assets/Spritesheet/industrial.v2.png",
+      "sampling": {
+        "filterMode": "nearest",
+        "wrapU": "clamp",
+        "wrapV": "clamp"
+      },
       "unityFileId": 561926378,
       "pixelsPerUnit": 16
     },
@@ -303,6 +453,11 @@
       "width": 16,
       "height": 16,
       "source": "Assets/Spritesheet/industrial.v2.png",
+      "sampling": {
+        "filterMode": "nearest",
+        "wrapU": "clamp",
+        "wrapV": "clamp"
+      },
       "unityFileId": 1559124317,
       "pixelsPerUnit": 16
     },
@@ -313,6 +468,11 @@
       "width": 16,
       "height": 16,
       "source": "Assets/Spritesheet/industrial.v2.png",
+      "sampling": {
+        "filterMode": "nearest",
+        "wrapU": "clamp",
+        "wrapV": "clamp"
+      },
       "unityFileId": 1170451774,
       "pixelsPerUnit": 16
     },
@@ -323,6 +483,11 @@
       "width": 16,
       "height": 16,
       "source": "Assets/Spritesheet/industrial.v2.png",
+      "sampling": {
+        "filterMode": "nearest",
+        "wrapU": "clamp",
+        "wrapV": "clamp"
+      },
       "unityFileId": -1115158453,
       "pixelsPerUnit": 16
     },
@@ -333,6 +498,11 @@
       "width": 16,
       "height": 16,
       "source": "Assets/Spritesheet/industrial.v2.png",
+      "sampling": {
+        "filterMode": "nearest",
+        "wrapU": "clamp",
+        "wrapV": "clamp"
+      },
       "unityFileId": 1623807082,
       "pixelsPerUnit": 16
     },
@@ -343,6 +513,11 @@
       "width": 16,
       "height": 16,
       "source": "Assets/Spritesheet/industrial.v2.png",
+      "sampling": {
+        "filterMode": "nearest",
+        "wrapU": "clamp",
+        "wrapV": "clamp"
+      },
       "unityFileId": 232884474,
       "pixelsPerUnit": 16
     },
@@ -353,6 +528,11 @@
       "width": 16,
       "height": 16,
       "source": "Assets/Spritesheet/industrial.v2.png",
+      "sampling": {
+        "filterMode": "nearest",
+        "wrapU": "clamp",
+        "wrapV": "clamp"
+      },
       "unityFileId": -1461235303,
       "pixelsPerUnit": 16
     },
@@ -362,7 +542,12 @@
       "handle": "6200000000000010037",
       "width": 224,
       "height": 224,
-      "source": "Assets/Scenes/Level1.unity"
+      "source": "Assets/Scenes/Level1.unity",
+      "sampling": {
+        "filterMode": "nearest",
+        "wrapU": "clamp",
+        "wrapV": "clamp"
+      }
     },
     {
       "name": "sprite-industrial.v2_271",
@@ -371,6 +556,11 @@
       "width": 16,
       "height": 16,
       "source": "Assets/Spritesheet/industrial.v2.png",
+      "sampling": {
+        "filterMode": "nearest",
+        "wrapU": "clamp",
+        "wrapV": "clamp"
+      },
       "unityFileId": 2146319118,
       "pixelsPerUnit": 16
     },
@@ -381,6 +571,11 @@
       "width": 16,
       "height": 16,
       "source": "Assets/Spritesheet/industrial.v2.png",
+      "sampling": {
+        "filterMode": "nearest",
+        "wrapU": "clamp",
+        "wrapV": "clamp"
+      },
       "unityFileId": 292164358,
       "pixelsPerUnit": 16
     },
@@ -391,6 +586,11 @@
       "width": 16,
       "height": 16,
       "source": "Assets/Spritesheet/industrial.v2.png",
+      "sampling": {
+        "filterMode": "nearest",
+        "wrapU": "clamp",
+        "wrapV": "clamp"
+      },
       "unityFileId": 206692352,
       "pixelsPerUnit": 16
     },
@@ -401,6 +601,11 @@
       "width": 16,
       "height": 16,
       "source": "Assets/Spritesheet/industrial.v2.png",
+      "sampling": {
+        "filterMode": "nearest",
+        "wrapU": "clamp",
+        "wrapV": "clamp"
+      },
       "unityFileId": 1922012325,
       "pixelsPerUnit": 16
     },
@@ -411,6 +616,11 @@
       "width": 16,
       "height": 16,
       "source": "Assets/Spritesheet/industrial.v2.png",
+      "sampling": {
+        "filterMode": "nearest",
+        "wrapU": "clamp",
+        "wrapV": "clamp"
+      },
       "unityFileId": 112602965,
       "pixelsPerUnit": 16
     },
@@ -421,6 +631,11 @@
       "width": 16,
       "height": 16,
       "source": "Assets/Spritesheet/industrial.v2.png",
+      "sampling": {
+        "filterMode": "nearest",
+        "wrapU": "clamp",
+        "wrapV": "clamp"
+      },
       "unityFileId": 1391706159,
       "pixelsPerUnit": 16
     },
@@ -431,6 +646,11 @@
       "width": 16,
       "height": 16,
       "source": "Assets/Spritesheet/industrial.v2.png",
+      "sampling": {
+        "filterMode": "nearest",
+        "wrapU": "clamp",
+        "wrapV": "clamp"
+      },
       "unityFileId": -1250873233,
       "pixelsPerUnit": 16
     },
@@ -441,6 +661,11 @@
       "width": 16,
       "height": 16,
       "source": "Assets/Spritesheet/industrial.v2.png",
+      "sampling": {
+        "filterMode": "nearest",
+        "wrapU": "clamp",
+        "wrapV": "clamp"
+      },
       "unityFileId": 1414615378,
       "pixelsPerUnit": 16
     },
@@ -451,6 +676,11 @@
       "width": 16,
       "height": 16,
       "source": "Assets/Spritesheet/industrial.v2.png",
+      "sampling": {
+        "filterMode": "nearest",
+        "wrapU": "clamp",
+        "wrapV": "clamp"
+      },
       "unityFileId": -1965645782,
       "pixelsPerUnit": 16
     },
@@ -461,6 +691,11 @@
       "width": 16,
       "height": 16,
       "source": "Assets/Spritesheet/industrial.v2.png",
+      "sampling": {
+        "filterMode": "nearest",
+        "wrapU": "clamp",
+        "wrapV": "clamp"
+      },
       "unityFileId": 1313126134,
       "pixelsPerUnit": 16
     },
@@ -471,6 +706,11 @@
       "width": 16,
       "height": 16,
       "source": "Assets/Spritesheet/industrial.v2.png",
+      "sampling": {
+        "filterMode": "nearest",
+        "wrapU": "clamp",
+        "wrapV": "clamp"
+      },
       "unityFileId": -1283789391,
       "pixelsPerUnit": 16
     },
@@ -481,6 +721,11 @@
       "width": 16,
       "height": 16,
       "source": "Assets/Spritesheet/industrial.v2.png",
+      "sampling": {
+        "filterMode": "nearest",
+        "wrapU": "clamp",
+        "wrapV": "clamp"
+      },
       "unityFileId": -887490519,
       "pixelsPerUnit": 16
     },
@@ -491,6 +736,11 @@
       "width": 16,
       "height": 16,
       "source": "Assets/Spritesheet/industrial.v2.png",
+      "sampling": {
+        "filterMode": "nearest",
+        "wrapU": "clamp",
+        "wrapV": "clamp"
+      },
       "unityFileId": -1699618234,
       "pixelsPerUnit": 16
     },
@@ -501,6 +751,11 @@
       "width": 16,
       "height": 16,
       "source": "Assets/Spritesheet/industrial.v2.png",
+      "sampling": {
+        "filterMode": "nearest",
+        "wrapU": "clamp",
+        "wrapV": "clamp"
+      },
       "unityFileId": 677918909,
       "pixelsPerUnit": 16
     },
@@ -511,6 +766,11 @@
       "width": 16,
       "height": 16,
       "source": "Assets/Spritesheet/industrial.v2.png",
+      "sampling": {
+        "filterMode": "nearest",
+        "wrapU": "clamp",
+        "wrapV": "clamp"
+      },
       "unityFileId": 1353171007,
       "pixelsPerUnit": 16
     },
@@ -521,6 +781,11 @@
       "width": 16,
       "height": 16,
       "source": "Assets/Spritesheet/industrial.v2.png",
+      "sampling": {
+        "filterMode": "nearest",
+        "wrapU": "clamp",
+        "wrapV": "clamp"
+      },
       "unityFileId": -1517255833,
       "pixelsPerUnit": 16
     },
@@ -531,6 +796,11 @@
       "width": 16,
       "height": 16,
       "source": "Assets/Spritesheet/industrial.v2.png",
+      "sampling": {
+        "filterMode": "nearest",
+        "wrapU": "clamp",
+        "wrapV": "clamp"
+      },
       "unityFileId": 291804462,
       "pixelsPerUnit": 16
     },
@@ -541,6 +811,11 @@
       "width": 16,
       "height": 16,
       "source": "Assets/Spritesheet/industrial.v2.png",
+      "sampling": {
+        "filterMode": "nearest",
+        "wrapU": "clamp",
+        "wrapV": "clamp"
+      },
       "unityFileId": -149988939,
       "pixelsPerUnit": 16
     },
@@ -551,6 +826,11 @@
       "width": 16,
       "height": 16,
       "source": "Assets/Spritesheet/industrial.v2.png",
+      "sampling": {
+        "filterMode": "nearest",
+        "wrapU": "clamp",
+        "wrapV": "clamp"
+      },
       "unityFileId": -2019947769,
       "pixelsPerUnit": 16
     },
@@ -561,6 +841,11 @@
       "width": 16,
       "height": 16,
       "source": "Assets/Spritesheet/industrial.v2.png",
+      "sampling": {
+        "filterMode": "nearest",
+        "wrapU": "clamp",
+        "wrapV": "clamp"
+      },
       "unityFileId": 1253221837,
       "pixelsPerUnit": 16
     },
@@ -571,6 +856,11 @@
       "width": 16,
       "height": 16,
       "source": "Assets/Spritesheet/industrial.v2.png",
+      "sampling": {
+        "filterMode": "nearest",
+        "wrapU": "clamp",
+        "wrapV": "clamp"
+      },
       "unityFileId": 831790755,
       "pixelsPerUnit": 16
     },
@@ -581,6 +871,11 @@
       "width": 16,
       "height": 16,
       "source": "Assets/Spritesheet/industrial.v2.png",
+      "sampling": {
+        "filterMode": "nearest",
+        "wrapU": "clamp",
+        "wrapV": "clamp"
+      },
       "unityFileId": 733968540,
       "pixelsPerUnit": 16
     },
@@ -591,6 +886,11 @@
       "width": 16,
       "height": 16,
       "source": "Assets/Spritesheet/industrial.v2.png",
+      "sampling": {
+        "filterMode": "nearest",
+        "wrapU": "clamp",
+        "wrapV": "clamp"
+      },
       "unityFileId": -703757457,
       "pixelsPerUnit": 16
     },
@@ -601,6 +901,11 @@
       "width": 16,
       "height": 16,
       "source": "Assets/Spritesheet/industrial.v2.png",
+      "sampling": {
+        "filterMode": "nearest",
+        "wrapU": "clamp",
+        "wrapV": "clamp"
+      },
       "unityFileId": -1462308633,
       "pixelsPerUnit": 16
     },
@@ -611,6 +916,11 @@
       "width": 16,
       "height": 16,
       "source": "Assets/Spritesheet/industrial.v2.png",
+      "sampling": {
+        "filterMode": "nearest",
+        "wrapU": "clamp",
+        "wrapV": "clamp"
+      },
       "unityFileId": 1734862941,
       "pixelsPerUnit": 16
     },
@@ -621,6 +931,11 @@
       "width": 16,
       "height": 16,
       "source": "Assets/Spritesheet/industrial.v2.png",
+      "sampling": {
+        "filterMode": "nearest",
+        "wrapU": "clamp",
+        "wrapV": "clamp"
+      },
       "unityFileId": 1496380393,
       "pixelsPerUnit": 16
     },
@@ -631,6 +946,11 @@
       "width": 16,
       "height": 16,
       "source": "Assets/Spritesheet/industrial.v2.png",
+      "sampling": {
+        "filterMode": "nearest",
+        "wrapU": "clamp",
+        "wrapV": "clamp"
+      },
       "unityFileId": 1041479857,
       "pixelsPerUnit": 16
     },
@@ -641,6 +961,11 @@
       "width": 16,
       "height": 16,
       "source": "Assets/Spritesheet/industrial.v2.png",
+      "sampling": {
+        "filterMode": "nearest",
+        "wrapU": "clamp",
+        "wrapV": "clamp"
+      },
       "unityFileId": -540350927,
       "pixelsPerUnit": 16
     },
@@ -651,6 +976,11 @@
       "width": 16,
       "height": 16,
       "source": "Assets/Spritesheet/industrial.v2.png",
+      "sampling": {
+        "filterMode": "nearest",
+        "wrapU": "clamp",
+        "wrapV": "clamp"
+      },
       "unityFileId": -995979093,
       "pixelsPerUnit": 16
     },
@@ -661,6 +991,11 @@
       "width": 16,
       "height": 16,
       "source": "Assets/Spritesheet/industrial.v2.png",
+      "sampling": {
+        "filterMode": "nearest",
+        "wrapU": "clamp",
+        "wrapV": "clamp"
+      },
       "unityFileId": -1230319032,
       "pixelsPerUnit": 16
     },
@@ -671,6 +1006,11 @@
       "width": 16,
       "height": 16,
       "source": "Assets/Spritesheet/industrial.v2.png",
+      "sampling": {
+        "filterMode": "nearest",
+        "wrapU": "clamp",
+        "wrapV": "clamp"
+      },
       "unityFileId": 1786109280,
       "pixelsPerUnit": 16
     },
@@ -681,6 +1021,11 @@
       "width": 16,
       "height": 16,
       "source": "Assets/Spritesheet/industrial.v2.png",
+      "sampling": {
+        "filterMode": "nearest",
+        "wrapU": "clamp",
+        "wrapV": "clamp"
+      },
       "unityFileId": -779979346,
       "pixelsPerUnit": 16
     },
@@ -691,6 +1036,11 @@
       "width": 16,
       "height": 16,
       "source": "Assets/Spritesheet/industrial.v2.png",
+      "sampling": {
+        "filterMode": "nearest",
+        "wrapU": "clamp",
+        "wrapV": "clamp"
+      },
       "unityFileId": 15671791,
       "pixelsPerUnit": 16
     },
@@ -701,6 +1051,11 @@
       "width": 16,
       "height": 16,
       "source": "Assets/Spritesheet/industrial.v2.png",
+      "sampling": {
+        "filterMode": "nearest",
+        "wrapU": "clamp",
+        "wrapV": "clamp"
+      },
       "unityFileId": -1064671147,
       "pixelsPerUnit": 16
     },
@@ -711,6 +1066,11 @@
       "width": 16,
       "height": 16,
       "source": "Assets/Spritesheet/industrial.v2.png",
+      "sampling": {
+        "filterMode": "nearest",
+        "wrapU": "clamp",
+        "wrapV": "clamp"
+      },
       "unityFileId": 1086032803,
       "pixelsPerUnit": 16
     },
@@ -721,6 +1081,11 @@
       "width": 16,
       "height": 16,
       "source": "Assets/Spritesheet/industrial.v2.png",
+      "sampling": {
+        "filterMode": "nearest",
+        "wrapU": "clamp",
+        "wrapV": "clamp"
+      },
       "unityFileId": -347201816,
       "pixelsPerUnit": 16
     },
@@ -731,6 +1096,11 @@
       "width": 16,
       "height": 16,
       "source": "Assets/Spritesheet/industrial.v2.png",
+      "sampling": {
+        "filterMode": "nearest",
+        "wrapU": "clamp",
+        "wrapV": "clamp"
+      },
       "unityFileId": -1933908962,
       "pixelsPerUnit": 16
     },
@@ -741,6 +1111,11 @@
       "width": 16,
       "height": 16,
       "source": "Assets/Spritesheet/industrial.v2.png",
+      "sampling": {
+        "filterMode": "nearest",
+        "wrapU": "clamp",
+        "wrapV": "clamp"
+      },
       "unityFileId": 1892525753,
       "pixelsPerUnit": 16
     },
@@ -750,7 +1125,12 @@
       "handle": "6200000000000010076",
       "width": 224,
       "height": 224,
-      "source": "Assets/Scenes/Level1.unity"
+      "source": "Assets/Scenes/Level1.unity",
+      "sampling": {
+        "filterMode": "nearest",
+        "wrapU": "clamp",
+        "wrapV": "clamp"
+      }
     },
     {
       "name": "sprite-industrial.v2_15",
@@ -759,6 +1139,11 @@
       "width": 16,
       "height": 16,
       "source": "Assets/Spritesheet/industrial.v2.png",
+      "sampling": {
+        "filterMode": "nearest",
+        "wrapU": "clamp",
+        "wrapV": "clamp"
+      },
       "unityFileId": 2036878527,
       "pixelsPerUnit": 16
     },
@@ -768,7 +1153,12 @@
       "handle": "6200000000000010078",
       "width": 256,
       "height": 256,
-      "source": "Assets/Scenes/Level1.unity"
+      "source": "Assets/Scenes/Level1.unity",
+      "sampling": {
+        "filterMode": "nearest",
+        "wrapU": "clamp",
+        "wrapV": "clamp"
+      }
     },
     {
       "name": "map-Level1-3",
@@ -776,7 +1166,12 @@
       "handle": "6200000000000010079",
       "width": 224,
       "height": 208,
-      "source": "Assets/Scenes/Level1.unity"
+      "source": "Assets/Scenes/Level1.unity",
+      "sampling": {
+        "filterMode": "nearest",
+        "wrapU": "clamp",
+        "wrapV": "clamp"
+      }
     },
     {
       "name": "map-Level1-4",
@@ -784,7 +1179,12 @@
       "handle": "6200000000000010080",
       "width": 160,
       "height": 208,
-      "source": "Assets/Scenes/Level1.unity"
+      "source": "Assets/Scenes/Level1.unity",
+      "sampling": {
+        "filterMode": "nearest",
+        "wrapU": "clamp",
+        "wrapV": "clamp"
+      }
     },
     {
       "name": "map-Level2-0",
@@ -792,7 +1192,12 @@
       "handle": "6200000000000010081",
       "width": 192,
       "height": 224,
-      "source": "Assets/Scenes/Level2.unity"
+      "source": "Assets/Scenes/Level2.unity",
+      "sampling": {
+        "filterMode": "nearest",
+        "wrapU": "clamp",
+        "wrapV": "clamp"
+      }
     },
     {
       "name": "sprite-industrial.v2_76",
@@ -801,6 +1206,11 @@
       "width": 16,
       "height": 16,
       "source": "Assets/Spritesheet/industrial.v2.png",
+      "sampling": {
+        "filterMode": "nearest",
+        "wrapU": "clamp",
+        "wrapV": "clamp"
+      },
       "unityFileId": -306606235,
       "pixelsPerUnit": 16
     },
@@ -810,7 +1220,12 @@
       "handle": "6200000000000010083",
       "width": 192,
       "height": 48,
-      "source": "Assets/Scenes/Level2.unity"
+      "source": "Assets/Scenes/Level2.unity",
+      "sampling": {
+        "filterMode": "nearest",
+        "wrapU": "clamp",
+        "wrapV": "clamp"
+      }
     },
     {
       "name": "sprite-industrial.v2_12",
@@ -819,6 +1234,11 @@
       "width": 16,
       "height": 16,
       "source": "Assets/Spritesheet/industrial.v2.png",
+      "sampling": {
+        "filterMode": "nearest",
+        "wrapU": "clamp",
+        "wrapV": "clamp"
+      },
       "unityFileId": 1867891154,
       "pixelsPerUnit": 16
     },
@@ -829,6 +1249,11 @@
       "width": 16,
       "height": 16,
       "source": "Assets/Spritesheet/industrial.v2.png",
+      "sampling": {
+        "filterMode": "nearest",
+        "wrapU": "clamp",
+        "wrapV": "clamp"
+      },
       "unityFileId": 1660639259,
       "pixelsPerUnit": 16
     },
@@ -838,7 +1263,12 @@
       "handle": "6200000000000010086",
       "width": 256,
       "height": 256,
-      "source": "Assets/Scenes/Level2.unity"
+      "source": "Assets/Scenes/Level2.unity",
+      "sampling": {
+        "filterMode": "nearest",
+        "wrapU": "clamp",
+        "wrapV": "clamp"
+      }
     },
     {
       "name": "map-Level2-3",
@@ -846,7 +1276,12 @@
       "handle": "6200000000000010087",
       "width": 192,
       "height": 208,
-      "source": "Assets/Scenes/Level2.unity"
+      "source": "Assets/Scenes/Level2.unity",
+      "sampling": {
+        "filterMode": "nearest",
+        "wrapU": "clamp",
+        "wrapV": "clamp"
+      }
     },
     {
       "name": "sprite-industrial.v2_92",
@@ -855,6 +1290,11 @@
       "width": 16,
       "height": 16,
       "source": "Assets/Spritesheet/industrial.v2.png",
+      "sampling": {
+        "filterMode": "nearest",
+        "wrapU": "clamp",
+        "wrapV": "clamp"
+      },
       "unityFileId": 517673232,
       "pixelsPerUnit": 16
     },
@@ -865,6 +1305,11 @@
       "width": 16,
       "height": 16,
       "source": "Assets/Spritesheet/industrial.v2.png",
+      "sampling": {
+        "filterMode": "nearest",
+        "wrapU": "clamp",
+        "wrapV": "clamp"
+      },
       "unityFileId": 1017703921,
       "pixelsPerUnit": 16
     },
@@ -874,7 +1319,12 @@
       "handle": "6200000000000010090",
       "width": 192,
       "height": 160,
-      "source": "Assets/Scenes/Level2.unity"
+      "source": "Assets/Scenes/Level2.unity",
+      "sampling": {
+        "filterMode": "nearest",
+        "wrapU": "clamp",
+        "wrapV": "clamp"
+      }
     },
     {
       "name": "sprite-industrial.v2_54",
@@ -883,6 +1333,11 @@
       "width": 16,
       "height": 16,
       "source": "Assets/Spritesheet/industrial.v2.png",
+      "sampling": {
+        "filterMode": "nearest",
+        "wrapU": "clamp",
+        "wrapV": "clamp"
+      },
       "unityFileId": 1385444648,
       "pixelsPerUnit": 16
     },
@@ -892,7 +1347,12 @@
       "handle": "6200000000000010092",
       "width": 96,
       "height": 80,
-      "source": "Assets/Scenes/Level3.unity"
+      "source": "Assets/Scenes/Level3.unity",
+      "sampling": {
+        "filterMode": "nearest",
+        "wrapU": "clamp",
+        "wrapV": "clamp"
+      }
     },
     {
       "name": "map-Level3-1",
@@ -900,7 +1360,12 @@
       "handle": "6200000000000010093",
       "width": 16,
       "height": 224,
-      "source": "Assets/Scenes/Level3.unity"
+      "source": "Assets/Scenes/Level3.unity",
+      "sampling": {
+        "filterMode": "nearest",
+        "wrapU": "clamp",
+        "wrapV": "clamp"
+      }
     },
     {
       "name": "map-Level3-2",
@@ -908,7 +1373,12 @@
       "handle": "6200000000000010094",
       "width": 256,
       "height": 256,
-      "source": "Assets/Scenes/Level3.unity"
+      "source": "Assets/Scenes/Level3.unity",
+      "sampling": {
+        "filterMode": "nearest",
+        "wrapU": "clamp",
+        "wrapV": "clamp"
+      }
     },
     {
       "name": "sprite-industrial.v2_67",
@@ -917,6 +1387,11 @@
       "width": 16,
       "height": 16,
       "source": "Assets/Spritesheet/industrial.v2.png",
+      "sampling": {
+        "filterMode": "nearest",
+        "wrapU": "clamp",
+        "wrapV": "clamp"
+      },
       "unityFileId": 1509961657,
       "pixelsPerUnit": 16
     },
@@ -927,6 +1402,11 @@
       "width": 16,
       "height": 16,
       "source": "Assets/Spritesheet/industrial.v2.png",
+      "sampling": {
+        "filterMode": "nearest",
+        "wrapU": "clamp",
+        "wrapV": "clamp"
+      },
       "unityFileId": 1625390958,
       "pixelsPerUnit": 16
     },
@@ -936,7 +1416,12 @@
       "handle": "6200000000000010097",
       "width": 96,
       "height": 160,
-      "source": "Assets/Scenes/Level3.unity"
+      "source": "Assets/Scenes/Level3.unity",
+      "sampling": {
+        "filterMode": "nearest",
+        "wrapU": "clamp",
+        "wrapV": "clamp"
+      }
     },
     {
       "name": "sprite-industrial.v2_173",
@@ -945,6 +1430,11 @@
       "width": 16,
       "height": 16,
       "source": "Assets/Spritesheet/industrial.v2.png",
+      "sampling": {
+        "filterMode": "nearest",
+        "wrapU": "clamp",
+        "wrapV": "clamp"
+      },
       "unityFileId": -1419219996,
       "pixelsPerUnit": 16
     },
@@ -955,6 +1445,11 @@
       "width": 16,
       "height": 16,
       "source": "Assets/Spritesheet/industrial.v2.png",
+      "sampling": {
+        "filterMode": "nearest",
+        "wrapU": "clamp",
+        "wrapV": "clamp"
+      },
       "unityFileId": -1341986830,
       "pixelsPerUnit": 16
     },
@@ -965,6 +1460,11 @@
       "width": 16,
       "height": 16,
       "source": "Assets/Spritesheet/industrial.v2.png",
+      "sampling": {
+        "filterMode": "nearest",
+        "wrapU": "clamp",
+        "wrapV": "clamp"
+      },
       "unityFileId": 1104759406,
       "pixelsPerUnit": 16
     },
@@ -975,6 +1475,11 @@
       "width": 16,
       "height": 16,
       "source": "Assets/Spritesheet/industrial.v2.png",
+      "sampling": {
+        "filterMode": "nearest",
+        "wrapU": "clamp",
+        "wrapV": "clamp"
+      },
       "unityFileId": 1673665464,
       "pixelsPerUnit": 16
     },
@@ -984,7 +1489,12 @@
       "handle": "6200000000000010102",
       "width": 224,
       "height": 16,
-      "source": "Assets/Scenes/Level4.unity"
+      "source": "Assets/Scenes/Level4.unity",
+      "sampling": {
+        "filterMode": "nearest",
+        "wrapU": "clamp",
+        "wrapV": "clamp"
+      }
     },
     {
       "name": "map-Level4-1",
@@ -992,7 +1502,12 @@
       "handle": "6200000000000010103",
       "width": 32,
       "height": 32,
-      "source": "Assets/Scenes/Level4.unity"
+      "source": "Assets/Scenes/Level4.unity",
+      "sampling": {
+        "filterMode": "nearest",
+        "wrapU": "clamp",
+        "wrapV": "clamp"
+      }
     },
     {
       "name": "map-Level4-2",
@@ -1000,7 +1515,12 @@
       "handle": "6200000000000010104",
       "width": 256,
       "height": 256,
-      "source": "Assets/Scenes/Level4.unity"
+      "source": "Assets/Scenes/Level4.unity",
+      "sampling": {
+        "filterMode": "nearest",
+        "wrapU": "clamp",
+        "wrapV": "clamp"
+      }
     },
     {
       "name": "map-Level4-3",
@@ -1008,7 +1528,12 @@
       "handle": "6200000000000010105",
       "width": 176,
       "height": 32,
-      "source": "Assets/Scenes/Level4.unity"
+      "source": "Assets/Scenes/Level4.unity",
+      "sampling": {
+        "filterMode": "nearest",
+        "wrapU": "clamp",
+        "wrapV": "clamp"
+      }
     },
     {
       "name": "map-Level4-4",
@@ -1016,7 +1541,12 @@
       "handle": "6200000000000010106",
       "width": 16,
       "height": 16,
-      "source": "Assets/Scenes/Level4.unity"
+      "source": "Assets/Scenes/Level4.unity",
+      "sampling": {
+        "filterMode": "nearest",
+        "wrapU": "clamp",
+        "wrapV": "clamp"
+      }
     },
     {
       "name": "sprite-industrial.v2_142",
@@ -1025,6 +1555,11 @@
       "width": 16,
       "height": 16,
       "source": "Assets/Spritesheet/industrial.v2.png",
+      "sampling": {
+        "filterMode": "nearest",
+        "wrapU": "clamp",
+        "wrapV": "clamp"
+      },
       "unityFileId": -423946032,
       "pixelsPerUnit": 16
     },
@@ -1035,6 +1570,11 @@
       "width": 16,
       "height": 16,
       "source": "Assets/Spritesheet/industrial.v2.png",
+      "sampling": {
+        "filterMode": "nearest",
+        "wrapU": "clamp",
+        "wrapV": "clamp"
+      },
       "unityFileId": 1795644413,
       "pixelsPerUnit": 16
     },
@@ -1045,6 +1585,11 @@
       "width": 16,
       "height": 16,
       "source": "Assets/Spritesheet/industrial.v2.png",
+      "sampling": {
+        "filterMode": "nearest",
+        "wrapU": "clamp",
+        "wrapV": "clamp"
+      },
       "unityFileId": 447593082,
       "pixelsPerUnit": 16
     },
@@ -1055,6 +1600,11 @@
       "width": 16,
       "height": 16,
       "source": "Assets/Spritesheet/industrial.v2.png",
+      "sampling": {
+        "filterMode": "nearest",
+        "wrapU": "clamp",
+        "wrapV": "clamp"
+      },
       "unityFileId": -1609793970,
       "pixelsPerUnit": 16
     },
@@ -1065,6 +1615,11 @@
       "width": 16,
       "height": 16,
       "source": "Assets/Spritesheet/industrial.v2.png",
+      "sampling": {
+        "filterMode": "nearest",
+        "wrapU": "clamp",
+        "wrapV": "clamp"
+      },
       "unityFileId": -1090479607,
       "pixelsPerUnit": 16
     },
@@ -1074,7 +1629,12 @@
       "handle": "6200000000000010112",
       "width": 32,
       "height": 80,
-      "source": "Assets/Scenes/Level5.unity"
+      "source": "Assets/Scenes/Level5.unity",
+      "sampling": {
+        "filterMode": "nearest",
+        "wrapU": "clamp",
+        "wrapV": "clamp"
+      }
     },
     {
       "name": "map-Level5-1",
@@ -1082,7 +1642,12 @@
       "handle": "6200000000000010113",
       "width": 224,
       "height": 128,
-      "source": "Assets/Scenes/Level5.unity"
+      "source": "Assets/Scenes/Level5.unity",
+      "sampling": {
+        "filterMode": "nearest",
+        "wrapU": "clamp",
+        "wrapV": "clamp"
+      }
     },
     {
       "name": "map-Level5-2",
@@ -1090,7 +1655,12 @@
       "handle": "6200000000000010114",
       "width": 256,
       "height": 256,
-      "source": "Assets/Scenes/Level5.unity"
+      "source": "Assets/Scenes/Level5.unity",
+      "sampling": {
+        "filterMode": "nearest",
+        "wrapU": "clamp",
+        "wrapV": "clamp"
+      }
     },
     {
       "name": "map-Level5-3",
@@ -1098,7 +1668,12 @@
       "handle": "6200000000000010115",
       "width": 224,
       "height": 176,
-      "source": "Assets/Scenes/Level5.unity"
+      "source": "Assets/Scenes/Level5.unity",
+      "sampling": {
+        "filterMode": "nearest",
+        "wrapU": "clamp",
+        "wrapV": "clamp"
+      }
     },
     {
       "name": "map-Level5-4",
@@ -1106,7 +1681,12 @@
       "handle": "6200000000000010116",
       "width": 144,
       "height": 192,
-      "source": "Assets/Scenes/Level5.unity"
+      "source": "Assets/Scenes/Level5.unity",
+      "sampling": {
+        "filterMode": "nearest",
+        "wrapU": "clamp",
+        "wrapV": "clamp"
+      }
     },
     {
       "name": "map-final-0",
@@ -1114,7 +1694,12 @@
       "handle": "6200000000000010117",
       "width": 256,
       "height": 256,
-      "source": "Assets/Scenes/final.unity"
+      "source": "Assets/Scenes/final.unity",
+      "sampling": {
+        "filterMode": "nearest",
+        "wrapU": "clamp",
+        "wrapV": "clamp"
+      }
     },
     {
       "name": "map-final-1",
@@ -1122,7 +1707,12 @@
       "handle": "6200000000000010118",
       "width": 32,
       "height": 16,
-      "source": "Assets/Scenes/final.unity"
+      "source": "Assets/Scenes/final.unity",
+      "sampling": {
+        "filterMode": "nearest",
+        "wrapU": "clamp",
+        "wrapV": "clamp"
+      }
     },
     {
       "name": "tiled-sprite-industrial.v2_57-224x16",
@@ -1130,7 +1720,12 @@
       "handle": "6200000000000010119",
       "width": 224,
       "height": 16,
-      "source": "Assets/Spritesheet/industrial.v2.png"
+      "source": "Assets/Spritesheet/industrial.v2.png",
+      "sampling": {
+        "filterMode": "nearest",
+        "wrapU": "clamp",
+        "wrapV": "clamp"
+      }
     },
     {
       "name": "sprite-industrial.v2_306",
@@ -1139,6 +1734,11 @@
       "width": 16,
       "height": 16,
       "source": "Assets/Spritesheet/industrial.v2.png",
+      "sampling": {
+        "filterMode": "nearest",
+        "wrapU": "clamp",
+        "wrapV": "clamp"
+      },
       "unityFileId": -1641242784,
       "pixelsPerUnit": 16
     },
@@ -1149,6 +1749,11 @@
       "width": 16,
       "height": 16,
       "source": "Assets/Spritesheet/industrial.v2.png",
+      "sampling": {
+        "filterMode": "nearest",
+        "wrapU": "clamp",
+        "wrapV": "clamp"
+      },
       "unityFileId": -1826445781,
       "pixelsPerUnit": 16
     },
@@ -1159,6 +1764,11 @@
       "width": 16,
       "height": 16,
       "source": "Assets/Spritesheet/industrial.v2.png",
+      "sampling": {
+        "filterMode": "nearest",
+        "wrapU": "clamp",
+        "wrapV": "clamp"
+      },
       "unityFileId": 18608645,
       "pixelsPerUnit": 16
     },
@@ -1169,6 +1779,11 @@
       "width": 16,
       "height": 16,
       "source": "Assets/Spritesheet/industrial.v2.png",
+      "sampling": {
+        "filterMode": "nearest",
+        "wrapU": "clamp",
+        "wrapV": "clamp"
+      },
       "unityFileId": 1801753388,
       "pixelsPerUnit": 16
     },
@@ -1179,6 +1794,11 @@
       "width": 16,
       "height": 16,
       "source": "Assets/Spritesheet/industrial.v2.png",
+      "sampling": {
+        "filterMode": "nearest",
+        "wrapU": "clamp",
+        "wrapV": "clamp"
+      },
       "unityFileId": -537568377,
       "pixelsPerUnit": 16
     },
@@ -1189,6 +1809,11 @@
       "width": 16,
       "height": 16,
       "source": "Assets/Spritesheet/industrial.v2.png",
+      "sampling": {
+        "filterMode": "nearest",
+        "wrapU": "clamp",
+        "wrapV": "clamp"
+      },
       "unityFileId": 263747065,
       "pixelsPerUnit": 16
     },
@@ -1199,6 +1824,11 @@
       "width": 16,
       "height": 16,
       "source": "Assets/Spritesheet/industrial.v2.png",
+      "sampling": {
+        "filterMode": "nearest",
+        "wrapU": "clamp",
+        "wrapV": "clamp"
+      },
       "unityFileId": -1003832635,
       "pixelsPerUnit": 16
     },
@@ -1209,6 +1839,11 @@
       "width": 16,
       "height": 16,
       "source": "Assets/Spritesheet/industrial.v2.png",
+      "sampling": {
+        "filterMode": "nearest",
+        "wrapU": "clamp",
+        "wrapV": "clamp"
+      },
       "unityFileId": 1088389957,
       "pixelsPerUnit": 16
     },
@@ -1219,6 +1854,11 @@
       "width": 16,
       "height": 16,
       "source": "Assets/Spritesheet/industrial.v2.png",
+      "sampling": {
+        "filterMode": "nearest",
+        "wrapU": "clamp",
+        "wrapV": "clamp"
+      },
       "unityFileId": -482348659,
       "pixelsPerUnit": 16
     },
@@ -1229,6 +1869,11 @@
       "width": 16,
       "height": 16,
       "source": "Assets/Spritesheet/industrial.v2.png",
+      "sampling": {
+        "filterMode": "nearest",
+        "wrapU": "clamp",
+        "wrapV": "clamp"
+      },
       "unityFileId": 59980101,
       "pixelsPerUnit": 16
     },
@@ -1239,6 +1884,11 @@
       "width": 16,
       "height": 16,
       "source": "Assets/Spritesheet/industrial.v2.png",
+      "sampling": {
+        "filterMode": "nearest",
+        "wrapU": "clamp",
+        "wrapV": "clamp"
+      },
       "unityFileId": -1653852392,
       "pixelsPerUnit": 16
     },
@@ -1249,6 +1899,11 @@
       "width": 16,
       "height": 16,
       "source": "Assets/Spritesheet/industrial.v2.png",
+      "sampling": {
+        "filterMode": "nearest",
+        "wrapU": "clamp",
+        "wrapV": "clamp"
+      },
       "unityFileId": 1117820206,
       "pixelsPerUnit": 16
     },
@@ -1259,6 +1914,11 @@
       "width": 16,
       "height": 16,
       "source": "Assets/Spritesheet/industrial.v2.png",
+      "sampling": {
+        "filterMode": "nearest",
+        "wrapU": "clamp",
+        "wrapV": "clamp"
+      },
       "unityFileId": -521289476,
       "pixelsPerUnit": 16
     },
@@ -1269,6 +1929,11 @@
       "width": 16,
       "height": 16,
       "source": "Assets/Spritesheet/industrial.v2.png",
+      "sampling": {
+        "filterMode": "nearest",
+        "wrapU": "clamp",
+        "wrapV": "clamp"
+      },
       "unityFileId": 1537410434,
       "pixelsPerUnit": 16
     },
@@ -1279,6 +1944,11 @@
       "width": 16,
       "height": 16,
       "source": "Assets/Spritesheet/industrial.v2.png",
+      "sampling": {
+        "filterMode": "nearest",
+        "wrapU": "clamp",
+        "wrapV": "clamp"
+      },
       "unityFileId": -523879205,
       "pixelsPerUnit": 16
     },
@@ -1289,6 +1959,11 @@
       "width": 16,
       "height": 16,
       "source": "Assets/Spritesheet/industrial.v2.png",
+      "sampling": {
+        "filterMode": "nearest",
+        "wrapU": "clamp",
+        "wrapV": "clamp"
+      },
       "unityFileId": -1677774871,
       "pixelsPerUnit": 16
     },
@@ -1299,6 +1974,11 @@
       "width": 16,
       "height": 16,
       "source": "Assets/Spritesheet/industrial.v2.png",
+      "sampling": {
+        "filterMode": "nearest",
+        "wrapU": "clamp",
+        "wrapV": "clamp"
+      },
       "unityFileId": -1540832215,
       "pixelsPerUnit": 16
     },
@@ -1309,6 +1989,11 @@
       "width": 16,
       "height": 16,
       "source": "Assets/Spritesheet/industrial.v2.png",
+      "sampling": {
+        "filterMode": "nearest",
+        "wrapU": "clamp",
+        "wrapV": "clamp"
+      },
       "unityFileId": 934682981,
       "pixelsPerUnit": 16
     },
@@ -1319,6 +2004,11 @@
       "width": 16,
       "height": 16,
       "source": "Assets/Spritesheet/industrial.v2.png",
+      "sampling": {
+        "filterMode": "nearest",
+        "wrapU": "clamp",
+        "wrapV": "clamp"
+      },
       "unityFileId": -213054251,
       "pixelsPerUnit": 16
     },
@@ -1329,6 +2019,11 @@
       "width": 16,
       "height": 16,
       "source": "Assets/Spritesheet/industrial.v2.png",
+      "sampling": {
+        "filterMode": "nearest",
+        "wrapU": "clamp",
+        "wrapV": "clamp"
+      },
       "unityFileId": 773380578,
       "pixelsPerUnit": 16
     },
@@ -1339,6 +2034,11 @@
       "width": 16,
       "height": 16,
       "source": "Assets/Spritesheet/industrial.v2.png",
+      "sampling": {
+        "filterMode": "nearest",
+        "wrapU": "clamp",
+        "wrapV": "clamp"
+      },
       "unityFileId": 1770029273,
       "pixelsPerUnit": 16
     },
@@ -1349,6 +2049,11 @@
       "width": 16,
       "height": 16,
       "source": "Assets/Spritesheet/industrial.v2.png",
+      "sampling": {
+        "filterMode": "nearest",
+        "wrapU": "clamp",
+        "wrapV": "clamp"
+      },
       "unityFileId": 733975924,
       "pixelsPerUnit": 16
     },
@@ -1359,6 +2064,11 @@
       "width": 16,
       "height": 16,
       "source": "Assets/Spritesheet/industrial.v2.png",
+      "sampling": {
+        "filterMode": "nearest",
+        "wrapU": "clamp",
+        "wrapV": "clamp"
+      },
       "unityFileId": 1349893608,
       "pixelsPerUnit": 16
     },
@@ -1369,6 +2079,11 @@
       "width": 490,
       "height": 120,
       "source": "Assets/Scenes/Title.png",
+      "sampling": {
+        "filterMode": "linear",
+        "wrapU": "clamp",
+        "wrapV": "clamp"
+      },
       "unityFileId": -681564848453251676,
       "pixelsPerUnit": 100
     },
@@ -1379,6 +2094,11 @@
       "width": 485,
       "height": 120,
       "source": "Assets/Scenes/Start.png",
+      "sampling": {
+        "filterMode": "linear",
+        "wrapU": "clamp",
+        "wrapV": "clamp"
+      },
       "unityFileId": -3650637318166952343,
       "pixelsPerUnit": 100
     },
@@ -1389,6 +2109,11 @@
       "width": 240,
       "height": 120,
       "source": "Assets/Scenes/Quat.png",
+      "sampling": {
+        "filterMode": "linear",
+        "wrapU": "clamp",
+        "wrapV": "clamp"
+      },
       "unityFileId": -5483215198695101708,
       "pixelsPerUnit": 100
     },
@@ -1399,8 +2124,265 @@
       "width": 256,
       "height": 64,
       "source": "Assets/Spritesheet/thx.png",
+      "sampling": {
+        "filterMode": "linear",
+        "wrapU": "clamp",
+        "wrapV": "clamp"
+      },
       "unityFileId": 21300000,
       "pixelsPerUnit": 100
+    },
+    {
+      "name": "sprite-industrial.v2_164",
+      "path": "Assets/Art/sprite-industrial.v2_164.png",
+      "handle": "6200000000000010147",
+      "width": 16,
+      "height": 16,
+      "source": "Assets/Spritesheet/industrial.v2.png",
+      "sampling": {
+        "filterMode": "nearest",
+        "wrapU": "clamp",
+        "wrapV": "clamp"
+      },
+      "unityFileId": -1577373790,
+      "pixelsPerUnit": 16
+    },
+    {
+      "name": "sprite-industrial.v2_219",
+      "path": "Assets/Art/sprite-industrial.v2_219.png",
+      "handle": "6200000000000010148",
+      "width": 16,
+      "height": 16,
+      "source": "Assets/Spritesheet/industrial.v2.png",
+      "sampling": {
+        "filterMode": "nearest",
+        "wrapU": "clamp",
+        "wrapV": "clamp"
+      },
+      "unityFileId": 1802699786,
+      "pixelsPerUnit": 16
+    },
+    {
+      "name": "sprite-pixel11",
+      "path": "Assets/Art/sprite-pixel11.png",
+      "handle": "6200000000000010149",
+      "width": 364,
+      "height": 364,
+      "source": "Assets/Scenes/pixel11.png",
+      "sampling": {
+        "filterMode": "linear",
+        "wrapU": "clamp",
+        "wrapV": "clamp"
+      },
+      "unityFileId": 21300000,
+      "pixelsPerUnit": 100
+    },
+    {
+      "name": "ui-pause-panel-0-0",
+      "path": "Assets/Art/ui-pause-panel-0-0.png",
+      "handle": "6200000000000010150",
+      "width": 10,
+      "height": 10,
+      "source": "Reference/UnityBuiltins/Background.png",
+      "sampling": {
+        "filterMode": "linear",
+        "wrapU": "clamp",
+        "wrapV": "clamp"
+      },
+      "unityBuiltinResource": "UI/Skin/Background.psd",
+      "unityFileId": 10907,
+      "unityGuid": "0000000000000000f000000000000000",
+      "pixelsPerUnit": 200.0,
+      "cropTopLeftPixels": [
+        0,
+        22,
+        10,
+        10
+      ]
+    },
+    {
+      "name": "ui-pause-panel-0-1",
+      "path": "Assets/Art/ui-pause-panel-0-1.png",
+      "handle": "6200000000000010151",
+      "width": 12,
+      "height": 10,
+      "source": "Reference/UnityBuiltins/Background.png",
+      "sampling": {
+        "filterMode": "linear",
+        "wrapU": "clamp",
+        "wrapV": "clamp"
+      },
+      "unityBuiltinResource": "UI/Skin/Background.psd",
+      "unityFileId": 10907,
+      "unityGuid": "0000000000000000f000000000000000",
+      "pixelsPerUnit": 200.0,
+      "cropTopLeftPixels": [
+        10,
+        22,
+        12,
+        10
+      ]
+    },
+    {
+      "name": "ui-pause-panel-0-2",
+      "path": "Assets/Art/ui-pause-panel-0-2.png",
+      "handle": "6200000000000010152",
+      "width": 10,
+      "height": 10,
+      "source": "Reference/UnityBuiltins/Background.png",
+      "sampling": {
+        "filterMode": "linear",
+        "wrapU": "clamp",
+        "wrapV": "clamp"
+      },
+      "unityBuiltinResource": "UI/Skin/Background.psd",
+      "unityFileId": 10907,
+      "unityGuid": "0000000000000000f000000000000000",
+      "pixelsPerUnit": 200.0,
+      "cropTopLeftPixels": [
+        22,
+        22,
+        10,
+        10
+      ]
+    },
+    {
+      "name": "ui-pause-panel-1-0",
+      "path": "Assets/Art/ui-pause-panel-1-0.png",
+      "handle": "6200000000000010153",
+      "width": 10,
+      "height": 12,
+      "source": "Reference/UnityBuiltins/Background.png",
+      "sampling": {
+        "filterMode": "linear",
+        "wrapU": "clamp",
+        "wrapV": "clamp"
+      },
+      "unityBuiltinResource": "UI/Skin/Background.psd",
+      "unityFileId": 10907,
+      "unityGuid": "0000000000000000f000000000000000",
+      "pixelsPerUnit": 200.0,
+      "cropTopLeftPixels": [
+        0,
+        10,
+        10,
+        12
+      ]
+    },
+    {
+      "name": "ui-pause-panel-1-1",
+      "path": "Assets/Art/ui-pause-panel-1-1.png",
+      "handle": "6200000000000010154",
+      "width": 12,
+      "height": 12,
+      "source": "Reference/UnityBuiltins/Background.png",
+      "sampling": {
+        "filterMode": "linear",
+        "wrapU": "clamp",
+        "wrapV": "clamp"
+      },
+      "unityBuiltinResource": "UI/Skin/Background.psd",
+      "unityFileId": 10907,
+      "unityGuid": "0000000000000000f000000000000000",
+      "pixelsPerUnit": 200.0,
+      "cropTopLeftPixels": [
+        10,
+        10,
+        12,
+        12
+      ]
+    },
+    {
+      "name": "ui-pause-panel-1-2",
+      "path": "Assets/Art/ui-pause-panel-1-2.png",
+      "handle": "6200000000000010155",
+      "width": 10,
+      "height": 12,
+      "source": "Reference/UnityBuiltins/Background.png",
+      "sampling": {
+        "filterMode": "linear",
+        "wrapU": "clamp",
+        "wrapV": "clamp"
+      },
+      "unityBuiltinResource": "UI/Skin/Background.psd",
+      "unityFileId": 10907,
+      "unityGuid": "0000000000000000f000000000000000",
+      "pixelsPerUnit": 200.0,
+      "cropTopLeftPixels": [
+        22,
+        10,
+        10,
+        12
+      ]
+    },
+    {
+      "name": "ui-pause-panel-2-0",
+      "path": "Assets/Art/ui-pause-panel-2-0.png",
+      "handle": "6200000000000010156",
+      "width": 10,
+      "height": 10,
+      "source": "Reference/UnityBuiltins/Background.png",
+      "sampling": {
+        "filterMode": "linear",
+        "wrapU": "clamp",
+        "wrapV": "clamp"
+      },
+      "unityBuiltinResource": "UI/Skin/Background.psd",
+      "unityFileId": 10907,
+      "unityGuid": "0000000000000000f000000000000000",
+      "pixelsPerUnit": 200.0,
+      "cropTopLeftPixels": [
+        0,
+        0,
+        10,
+        10
+      ]
+    },
+    {
+      "name": "ui-pause-panel-2-1",
+      "path": "Assets/Art/ui-pause-panel-2-1.png",
+      "handle": "6200000000000010157",
+      "width": 12,
+      "height": 10,
+      "source": "Reference/UnityBuiltins/Background.png",
+      "sampling": {
+        "filterMode": "linear",
+        "wrapU": "clamp",
+        "wrapV": "clamp"
+      },
+      "unityBuiltinResource": "UI/Skin/Background.psd",
+      "unityFileId": 10907,
+      "unityGuid": "0000000000000000f000000000000000",
+      "pixelsPerUnit": 200.0,
+      "cropTopLeftPixels": [
+        10,
+        0,
+        12,
+        10
+      ]
+    },
+    {
+      "name": "ui-pause-panel-2-2",
+      "path": "Assets/Art/ui-pause-panel-2-2.png",
+      "handle": "6200000000000010158",
+      "width": 10,
+      "height": 10,
+      "source": "Reference/UnityBuiltins/Background.png",
+      "sampling": {
+        "filterMode": "linear",
+        "wrapU": "clamp",
+        "wrapV": "clamp"
+      },
+      "unityBuiltinResource": "UI/Skin/Background.psd",
+      "unityFileId": 10907,
+      "unityGuid": "0000000000000000f000000000000000",
+      "pixelsPerUnit": 200.0,
+      "cropTopLeftPixels": [
+        22,
+        0,
+        10,
+        10
+      ]
     }
   ],
   "animations": {

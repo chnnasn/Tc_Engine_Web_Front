@@ -21,7 +21,7 @@
     "Assets/Scenes/Main.unity": "be3fffdfcd42339c77a0a899907b44d5439bdbbf955f9a897078215305388890"
   },
   "warnings": [],
-  "assetCount": 146,
+  "assetCount": 158,
   "tileCollisionPolicy": "Saved Unity CompositeCollider2D outlines decomposed into rectangles with even-odd holes; numerical extrusion epsilon is snapped to the source 1/16-unit pixel grid. Raw outlines are retained in per-scene JSON. TilemapCollider2D + tile collider type grid fallback applies only without CompositeCollider2D.",
   "sceneStats": [
     {

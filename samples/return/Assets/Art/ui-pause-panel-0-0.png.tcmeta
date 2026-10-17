@@ -1,0 +1,13 @@
+SchemaVersion: 2
+Asset:
+  Handle: 6200000000000010150
+  Type: Texture2D
+  ImportSettings:
+    Usage: Sprite
+    sRGB: false
+    generateMipmaps: false
+    compression: rgba8
+    filterMode: linear
+    wrapU: clamp
+    wrapV: clamp
+  SubAssets: []

@@ -2552,7 +2552,7 @@ Entities:
       Material: 0
   - Entity: 6200000000000001023
     Tag:
-      Tag: "Asset_Assets/Art/sprite-industrial.v2_171.png"
+      Tag: "Asset_Assets/Art/sprite-industrial.v2_164.png"
       Visible: true
     EntityMetadata:
       GameplayTag: "Untagged"
@@ -2574,6 +2574,117 @@ Entities:
           - PropertyId: 1
             StableName: "Value"
             Value: 6200000000000001023
+      - TypeId: 11457157452030541826
+        StableName: "TomCat.Tag"
+        SchemaVersion: 1
+        Properties:
+          - PropertyId: 1
+            StableName: "Name"
+            Value: "Asset_Assets/Art/sprite-industrial.v2_164.png"
+          - PropertyId: 2
+            StableName: "Visible"
+            Value: true
+      - TypeId: 11457157452030541827
+        StableName: "TomCat.EntityMetadata"
+        SchemaVersion: 1
+        Properties:
+          - PropertyId: 1
+            StableName: "GameplayTag"
+            Value: "Untagged"
+          - PropertyId: 2
+            StableName: "Layer"
+            Value: 0
+          - PropertyId: 3
+            StableName: "HierarchyIcon"
+            Value: 1
+      - TypeId: 11457157452030541828
+        StableName: "TomCat.Transform"
+        SchemaVersion: 1
+        Properties:
+          - PropertyId: 1
+            StableName: "Translation"
+            Value: [10000, 10000, 0]
+          - PropertyId: 2
+            StableName: "Rotation"
+            Value: [0, 0, 0]
+          - PropertyId: 3
+            StableName: "Scale"
+            Value: [1, 1, 1]
+          - PropertyId: 4
+            StableName: "LocalTranslation"
+            Value: [10000, 10000, 0]
+          - PropertyId: 5
+            StableName: "LocalRotation"
+            Value: [0, 0, 0]
+          - PropertyId: 6
+            StableName: "LocalScale"
+            Value: [1, 1, 1]
+      - TypeId: 11457157452030541830
+        StableName: "TomCat.SpriteRenderer"
+        SchemaVersion: 2
+        Properties:
+          - PropertyId: 200
+            StableName: "Enabled"
+            Value: false
+          - PropertyId: 201
+            StableName: "Color"
+            Value: [1, 1, 1, 1]
+          - PropertyId: 202
+            StableName: "Sprite"
+            Value: 6200000000000010147
+          - PropertyId: 203
+            StableName: "TilingFactor"
+            Value: 1
+          - PropertyId: 204
+            StableName: "SortingLayer"
+            Value: 0
+          - PropertyId: 205
+            StableName: "OrderInLayer"
+            Value: 0
+          - PropertyId: 206
+            StableName: "NormalMap"
+            Value: 0
+          - PropertyId: 207
+            StableName: "CastShadows"
+            Value: false
+          - PropertyId: 208
+            StableName: "Material"
+            Value: 0
+    Parent: 0
+    SpriteRenderer:
+      Enabled: false
+      Color: [1, 1, 1, 1]
+      SpriteHandle: 6200000000000010147
+      TilingFactor: 1
+      SortingLayer: 0
+      OrderInLayer: 0
+      NormalMap: 0
+      CastShadows: false
+      Material: 0
+  - Entity: 6200000000000001024
+    Tag:
+      Tag: "Asset_Assets/Art/sprite-industrial.v2_171.png"
+      Visible: true
+    EntityMetadata:
+      GameplayTag: "Untagged"
+      Layer: 0
+      HierarchyIcon: "Entity"
+    Transform:
+      Translation: [10000, 10000, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+    LocalTransform:
+      Translation: [10000, 10000, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+    Components:
+      - TypeId: 11457157452030541825
+        StableName: "TomCat.ID"
+        SchemaVersion: 1
+        Properties:
+          - PropertyId: 1
+            StableName: "Value"
+            Value: 6200000000000001024
       - TypeId: 11457157452030541826
         StableName: "TomCat.Tag"
         SchemaVersion: 1
@@ -2661,7 +2772,7 @@ Entities:
       NormalMap: 0
       CastShadows: false
       Material: 0
-  - Entity: 6200000000000001024
+  - Entity: 6200000000000001025
     Tag:
       Tag: "Asset_Assets/Art/sprite-industrial.v2_172.png"
       Visible: true
@@ -2684,7 +2795,7 @@ Entities:
         Properties:
           - PropertyId: 1
             StableName: "Value"
-            Value: 6200000000000001024
+            Value: 6200000000000001025
       - TypeId: 11457157452030541826
         StableName: "TomCat.Tag"
         SchemaVersion: 1
@@ -2772,7 +2883,7 @@ Entities:
       NormalMap: 0
       CastShadows: false
       Material: 0
-  - Entity: 6200000000000001025
+  - Entity: 6200000000000001026
     Tag:
       Tag: "Asset_Assets/Art/sprite-industrial.v2_173.png"
       Visible: true
@@ -2795,7 +2906,7 @@ Entities:
         Properties:
           - PropertyId: 1
             StableName: "Value"
-            Value: 6200000000000001025
+            Value: 6200000000000001026
       - TypeId: 11457157452030541826
         StableName: "TomCat.Tag"
         SchemaVersion: 1
@@ -2883,7 +2994,7 @@ Entities:
       NormalMap: 0
       CastShadows: false
       Material: 0
-  - Entity: 6200000000000001026
+  - Entity: 6200000000000001027
     Tag:
       Tag: "Asset_Assets/Art/sprite-industrial.v2_174.png"
       Visible: true
@@ -2906,7 +3017,7 @@ Entities:
         Properties:
           - PropertyId: 1
             StableName: "Value"
-            Value: 6200000000000001026
+            Value: 6200000000000001027
       - TypeId: 11457157452030541826
         StableName: "TomCat.Tag"
         SchemaVersion: 1
@@ -2994,7 +3105,7 @@ Entities:
       NormalMap: 0
       CastShadows: false
       Material: 0
-  - Entity: 6200000000000001027
+  - Entity: 6200000000000001028
     Tag:
       Tag: "Asset_Assets/Art/sprite-industrial.v2_175.png"
       Visible: true
@@ -3017,7 +3128,7 @@ Entities:
         Properties:
           - PropertyId: 1
             StableName: "Value"
-            Value: 6200000000000001027
+            Value: 6200000000000001028
       - TypeId: 11457157452030541826
         StableName: "TomCat.Tag"
         SchemaVersion: 1
@@ -3105,7 +3216,7 @@ Entities:
       NormalMap: 0
       CastShadows: false
       Material: 0
-  - Entity: 6200000000000001028
+  - Entity: 6200000000000001029
     Tag:
       Tag: "Asset_Assets/Art/sprite-industrial.v2_176.png"
       Visible: true
@@ -3128,7 +3239,7 @@ Entities:
         Properties:
           - PropertyId: 1
             StableName: "Value"
-            Value: 6200000000000001028
+            Value: 6200000000000001029
       - TypeId: 11457157452030541826
         StableName: "TomCat.Tag"
         SchemaVersion: 1
@@ -3216,7 +3327,7 @@ Entities:
       NormalMap: 0
       CastShadows: false
       Material: 0
-  - Entity: 6200000000000001029
+  - Entity: 6200000000000001030
     Tag:
       Tag: "Asset_Assets/Art/sprite-industrial.v2_177.png"
       Visible: true
@@ -3239,7 +3350,7 @@ Entities:
         Properties:
           - PropertyId: 1
             StableName: "Value"
-            Value: 6200000000000001029
+            Value: 6200000000000001030
       - TypeId: 11457157452030541826
         StableName: "TomCat.Tag"
         SchemaVersion: 1
@@ -3327,7 +3438,7 @@ Entities:
       NormalMap: 0
       CastShadows: false
       Material: 0
-  - Entity: 6200000000000001030
+  - Entity: 6200000000000001031
     Tag:
       Tag: "Asset_Assets/Art/sprite-industrial.v2_183.png"
       Visible: true
@@ -3350,7 +3461,7 @@ Entities:
         Properties:
           - PropertyId: 1
             StableName: "Value"
-            Value: 6200000000000001030
+            Value: 6200000000000001031
       - TypeId: 11457157452030541826
         StableName: "TomCat.Tag"
         SchemaVersion: 1
@@ -3438,7 +3549,7 @@ Entities:
       NormalMap: 0
       CastShadows: false
       Material: 0
-  - Entity: 6200000000000001031
+  - Entity: 6200000000000001032
     Tag:
       Tag: "Asset_Assets/Art/sprite-industrial.v2_184.png"
       Visible: true
@@ -3461,7 +3572,7 @@ Entities:
         Properties:
           - PropertyId: 1
             StableName: "Value"
-            Value: 6200000000000001031
+            Value: 6200000000000001032
       - TypeId: 11457157452030541826
         StableName: "TomCat.Tag"
         SchemaVersion: 1
@@ -3549,7 +3660,7 @@ Entities:
       NormalMap: 0
       CastShadows: false
       Material: 0
-  - Entity: 6200000000000001032
+  - Entity: 6200000000000001033
     Tag:
       Tag: "Asset_Assets/Art/sprite-industrial.v2_185.png"
       Visible: true
@@ -3572,7 +3683,7 @@ Entities:
         Properties:
           - PropertyId: 1
             StableName: "Value"
-            Value: 6200000000000001032
+            Value: 6200000000000001033
       - TypeId: 11457157452030541826
         StableName: "TomCat.Tag"
         SchemaVersion: 1
@@ -3660,7 +3771,7 @@ Entities:
       NormalMap: 0
       CastShadows: false
       Material: 0
-  - Entity: 6200000000000001033
+  - Entity: 6200000000000001034
     Tag:
       Tag: "Asset_Assets/Art/sprite-industrial.v2_193.png"
       Visible: true
@@ -3683,7 +3794,7 @@ Entities:
         Properties:
           - PropertyId: 1
             StableName: "Value"
-            Value: 6200000000000001033
+            Value: 6200000000000001034
       - TypeId: 11457157452030541826
         StableName: "TomCat.Tag"
         SchemaVersion: 1
@@ -3771,7 +3882,7 @@ Entities:
       NormalMap: 0
       CastShadows: false
       Material: 0
-  - Entity: 6200000000000001034
+  - Entity: 6200000000000001035
     Tag:
       Tag: "Asset_Assets/Art/sprite-industrial.v2_194.png"
       Visible: true
@@ -3794,7 +3905,7 @@ Entities:
         Properties:
           - PropertyId: 1
             StableName: "Value"
-            Value: 6200000000000001034
+            Value: 6200000000000001035
       - TypeId: 11457157452030541826
         StableName: "TomCat.Tag"
         SchemaVersion: 1
@@ -3882,7 +3993,7 @@ Entities:
       NormalMap: 0
       CastShadows: false
       Material: 0
-  - Entity: 6200000000000001035
+  - Entity: 6200000000000001036
     Tag:
       Tag: "Asset_Assets/Art/sprite-industrial.v2_206.png"
       Visible: true
@@ -3905,7 +4016,7 @@ Entities:
         Properties:
           - PropertyId: 1
             StableName: "Value"
-            Value: 6200000000000001035
+            Value: 6200000000000001036
       - TypeId: 11457157452030541826
         StableName: "TomCat.Tag"
         SchemaVersion: 1
@@ -3993,7 +4104,7 @@ Entities:
       NormalMap: 0
       CastShadows: false
       Material: 0
-  - Entity: 6200000000000001036
+  - Entity: 6200000000000001037
     Tag:
       Tag: "Asset_Assets/Art/sprite-industrial.v2_207.png"
       Visible: true
@@ -4016,7 +4127,7 @@ Entities:
         Properties:
           - PropertyId: 1
             StableName: "Value"
-            Value: 6200000000000001036
+            Value: 6200000000000001037
       - TypeId: 11457157452030541826
         StableName: "TomCat.Tag"
         SchemaVersion: 1
@@ -4104,7 +4215,7 @@ Entities:
       NormalMap: 0
       CastShadows: false
       Material: 0
-  - Entity: 6200000000000001037
+  - Entity: 6200000000000001038
     Tag:
       Tag: "Asset_Assets/Art/sprite-industrial.v2_209.png"
       Visible: true
@@ -4127,7 +4238,7 @@ Entities:
         Properties:
           - PropertyId: 1
             StableName: "Value"
-            Value: 6200000000000001037
+            Value: 6200000000000001038
       - TypeId: 11457157452030541826
         StableName: "TomCat.Tag"
         SchemaVersion: 1
@@ -4215,7 +4326,7 @@ Entities:
       NormalMap: 0
       CastShadows: false
       Material: 0
-  - Entity: 6200000000000001038
+  - Entity: 6200000000000001039
     Tag:
       Tag: "Asset_Assets/Art/sprite-industrial.v2_212.png"
       Visible: true
@@ -4238,7 +4349,7 @@ Entities:
         Properties:
           - PropertyId: 1
             StableName: "Value"
-            Value: 6200000000000001038
+            Value: 6200000000000001039
       - TypeId: 11457157452030541826
         StableName: "TomCat.Tag"
         SchemaVersion: 1
@@ -4326,7 +4437,7 @@ Entities:
       NormalMap: 0
       CastShadows: false
       Material: 0
-  - Entity: 6200000000000001039
+  - Entity: 6200000000000001040
     Tag:
       Tag: "Asset_Assets/Art/sprite-industrial.v2_213.png"
       Visible: true
@@ -4349,7 +4460,7 @@ Entities:
         Properties:
           - PropertyId: 1
             StableName: "Value"
-            Value: 6200000000000001039
+            Value: 6200000000000001040
       - TypeId: 11457157452030541826
         StableName: "TomCat.Tag"
         SchemaVersion: 1
@@ -4437,7 +4548,7 @@ Entities:
       NormalMap: 0
       CastShadows: false
       Material: 0
-  - Entity: 6200000000000001040
+  - Entity: 6200000000000001041
     Tag:
       Tag: "Asset_Assets/Art/sprite-industrial.v2_214.png"
       Visible: true
@@ -4460,7 +4571,7 @@ Entities:
         Properties:
           - PropertyId: 1
             StableName: "Value"
-            Value: 6200000000000001040
+            Value: 6200000000000001041
       - TypeId: 11457157452030541826
         StableName: "TomCat.Tag"
         SchemaVersion: 1
@@ -4548,7 +4659,7 @@ Entities:
       NormalMap: 0
       CastShadows: false
       Material: 0
-  - Entity: 6200000000000001041
+  - Entity: 6200000000000001042
     Tag:
       Tag: "Asset_Assets/Art/sprite-industrial.v2_215.png"
       Visible: true
@@ -4571,7 +4682,7 @@ Entities:
         Properties:
           - PropertyId: 1
             StableName: "Value"
-            Value: 6200000000000001041
+            Value: 6200000000000001042
       - TypeId: 11457157452030541826
         StableName: "TomCat.Tag"
         SchemaVersion: 1
@@ -4659,7 +4770,7 @@ Entities:
       NormalMap: 0
       CastShadows: false
       Material: 0
-  - Entity: 6200000000000001042
+  - Entity: 6200000000000001043
     Tag:
       Tag: "Asset_Assets/Art/sprite-industrial.v2_216.png"
       Visible: true
@@ -4682,7 +4793,7 @@ Entities:
         Properties:
           - PropertyId: 1
             StableName: "Value"
-            Value: 6200000000000001042
+            Value: 6200000000000001043
       - TypeId: 11457157452030541826
         StableName: "TomCat.Tag"
         SchemaVersion: 1
@@ -4770,7 +4881,7 @@ Entities:
       NormalMap: 0
       CastShadows: false
       Material: 0
-  - Entity: 6200000000000001043
+  - Entity: 6200000000000001044
     Tag:
       Tag: "Asset_Assets/Art/sprite-industrial.v2_217.png"
       Visible: true
@@ -4793,7 +4904,7 @@ Entities:
         Properties:
           - PropertyId: 1
             StableName: "Value"
-            Value: 6200000000000001043
+            Value: 6200000000000001044
       - TypeId: 11457157452030541826
         StableName: "TomCat.Tag"
         SchemaVersion: 1
@@ -4881,7 +4992,7 @@ Entities:
       NormalMap: 0
       CastShadows: false
       Material: 0
-  - Entity: 6200000000000001044
+  - Entity: 6200000000000001045
     Tag:
       Tag: "Asset_Assets/Art/sprite-industrial.v2_218.png"
       Visible: true
@@ -4904,7 +5015,7 @@ Entities:
         Properties:
           - PropertyId: 1
             StableName: "Value"
-            Value: 6200000000000001044
+            Value: 6200000000000001045
       - TypeId: 11457157452030541826
         StableName: "TomCat.Tag"
         SchemaVersion: 1
@@ -4992,7 +5103,118 @@ Entities:
       NormalMap: 0
       CastShadows: false
       Material: 0
-  - Entity: 6200000000000001045
+  - Entity: 6200000000000001046
+    Tag:
+      Tag: "Asset_Assets/Art/sprite-industrial.v2_219.png"
+      Visible: true
+    EntityMetadata:
+      GameplayTag: "Untagged"
+      Layer: 0
+      HierarchyIcon: "Entity"
+    Transform:
+      Translation: [10000, 10000, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+    LocalTransform:
+      Translation: [10000, 10000, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+    Components:
+      - TypeId: 11457157452030541825
+        StableName: "TomCat.ID"
+        SchemaVersion: 1
+        Properties:
+          - PropertyId: 1
+            StableName: "Value"
+            Value: 6200000000000001046
+      - TypeId: 11457157452030541826
+        StableName: "TomCat.Tag"
+        SchemaVersion: 1
+        Properties:
+          - PropertyId: 1
+            StableName: "Name"
+            Value: "Asset_Assets/Art/sprite-industrial.v2_219.png"
+          - PropertyId: 2
+            StableName: "Visible"
+            Value: true
+      - TypeId: 11457157452030541827
+        StableName: "TomCat.EntityMetadata"
+        SchemaVersion: 1
+        Properties:
+          - PropertyId: 1
+            StableName: "GameplayTag"
+            Value: "Untagged"
+          - PropertyId: 2
+            StableName: "Layer"
+            Value: 0
+          - PropertyId: 3
+            StableName: "HierarchyIcon"
+            Value: 1
+      - TypeId: 11457157452030541828
+        StableName: "TomCat.Transform"
+        SchemaVersion: 1
+        Properties:
+          - PropertyId: 1
+            StableName: "Translation"
+            Value: [10000, 10000, 0]
+          - PropertyId: 2
+            StableName: "Rotation"
+            Value: [0, 0, 0]
+          - PropertyId: 3
+            StableName: "Scale"
+            Value: [1, 1, 1]
+          - PropertyId: 4
+            StableName: "LocalTranslation"
+            Value: [10000, 10000, 0]
+          - PropertyId: 5
+            StableName: "LocalRotation"
+            Value: [0, 0, 0]
+          - PropertyId: 6
+            StableName: "LocalScale"
+            Value: [1, 1, 1]
+      - TypeId: 11457157452030541830
+        StableName: "TomCat.SpriteRenderer"
+        SchemaVersion: 2
+        Properties:
+          - PropertyId: 200
+            StableName: "Enabled"
+            Value: false
+          - PropertyId: 201
+            StableName: "Color"
+            Value: [1, 1, 1, 1]
+          - PropertyId: 202
+            StableName: "Sprite"
+            Value: 6200000000000010148
+          - PropertyId: 203
+            StableName: "TilingFactor"
+            Value: 1
+          - PropertyId: 204
+            StableName: "SortingLayer"
+            Value: 0
+          - PropertyId: 205
+            StableName: "OrderInLayer"
+            Value: 0
+          - PropertyId: 206
+            StableName: "NormalMap"
+            Value: 0
+          - PropertyId: 207
+            StableName: "CastShadows"
+            Value: false
+          - PropertyId: 208
+            StableName: "Material"
+            Value: 0
+    Parent: 0
+    SpriteRenderer:
+      Enabled: false
+      Color: [1, 1, 1, 1]
+      SpriteHandle: 6200000000000010148
+      TilingFactor: 1
+      SortingLayer: 0
+      OrderInLayer: 0
+      NormalMap: 0
+      CastShadows: false
+      Material: 0
+  - Entity: 6200000000000001047
     Tag:
       Tag: "Asset_Assets/Art/sprite-industrial.v2_22.png"
       Visible: true
@@ -5015,7 +5237,7 @@ Entities:
         Properties:
           - PropertyId: 1
             StableName: "Value"
-            Value: 6200000000000001045
+            Value: 6200000000000001047
       - TypeId: 11457157452030541826
         StableName: "TomCat.Tag"
         SchemaVersion: 1
@@ -5103,7 +5325,7 @@ Entities:
       NormalMap: 0
       CastShadows: false
       Material: 0
-  - Entity: 6200000000000001046
+  - Entity: 6200000000000001048
     Tag:
       Tag: "Asset_Assets/Art/sprite-industrial.v2_23.png"
       Visible: true
@@ -5126,7 +5348,7 @@ Entities:
         Properties:
           - PropertyId: 1
             StableName: "Value"
-            Value: 6200000000000001046
+            Value: 6200000000000001048
       - TypeId: 11457157452030541826
         StableName: "TomCat.Tag"
         SchemaVersion: 1
@@ -5214,7 +5436,7 @@ Entities:
       NormalMap: 0
       CastShadows: false
       Material: 0
-  - Entity: 6200000000000001047
+  - Entity: 6200000000000001049
     Tag:
       Tag: "Asset_Assets/Art/sprite-industrial.v2_230.png"
       Visible: true
@@ -5237,7 +5459,7 @@ Entities:
         Properties:
           - PropertyId: 1
             StableName: "Value"
-            Value: 6200000000000001047
+            Value: 6200000000000001049
       - TypeId: 11457157452030541826
         StableName: "TomCat.Tag"
         SchemaVersion: 1
@@ -5325,7 +5547,7 @@ Entities:
       NormalMap: 0
       CastShadows: false
       Material: 0
-  - Entity: 6200000000000001048
+  - Entity: 6200000000000001050
     Tag:
       Tag: "Asset_Assets/Art/sprite-industrial.v2_231.png"
       Visible: true
@@ -5348,7 +5570,7 @@ Entities:
         Properties:
           - PropertyId: 1
             StableName: "Value"
-            Value: 6200000000000001048
+            Value: 6200000000000001050
       - TypeId: 11457157452030541826
         StableName: "TomCat.Tag"
         SchemaVersion: 1
@@ -5436,7 +5658,7 @@ Entities:
       NormalMap: 0
       CastShadows: false
       Material: 0
-  - Entity: 6200000000000001049
+  - Entity: 6200000000000001051
     Tag:
       Tag: "Asset_Assets/Art/sprite-industrial.v2_232.png"
       Visible: true
@@ -5459,7 +5681,7 @@ Entities:
         Properties:
           - PropertyId: 1
             StableName: "Value"
-            Value: 6200000000000001049
+            Value: 6200000000000001051
       - TypeId: 11457157452030541826
         StableName: "TomCat.Tag"
         SchemaVersion: 1
@@ -5547,7 +5769,7 @@ Entities:
       NormalMap: 0
       CastShadows: false
       Material: 0
-  - Entity: 6200000000000001050
+  - Entity: 6200000000000001052
     Tag:
       Tag: "Asset_Assets/Art/sprite-industrial.v2_24.png"
       Visible: true
@@ -5570,7 +5792,7 @@ Entities:
         Properties:
           - PropertyId: 1
             StableName: "Value"
-            Value: 6200000000000001050
+            Value: 6200000000000001052
       - TypeId: 11457157452030541826
         StableName: "TomCat.Tag"
         SchemaVersion: 1
@@ -5658,7 +5880,7 @@ Entities:
       NormalMap: 0
       CastShadows: false
       Material: 0
-  - Entity: 6200000000000001051
+  - Entity: 6200000000000001053
     Tag:
       Tag: "Asset_Assets/Art/sprite-industrial.v2_245.png"
       Visible: true
@@ -5681,7 +5903,7 @@ Entities:
         Properties:
           - PropertyId: 1
             StableName: "Value"
-            Value: 6200000000000001051
+            Value: 6200000000000001053
       - TypeId: 11457157452030541826
         StableName: "TomCat.Tag"
         SchemaVersion: 1
@@ -5769,7 +5991,7 @@ Entities:
       NormalMap: 0
       CastShadows: false
       Material: 0
-  - Entity: 6200000000000001052
+  - Entity: 6200000000000001054
     Tag:
       Tag: "Asset_Assets/Art/sprite-industrial.v2_246.png"
       Visible: true
@@ -5792,7 +6014,7 @@ Entities:
         Properties:
           - PropertyId: 1
             StableName: "Value"
-            Value: 6200000000000001052
+            Value: 6200000000000001054
       - TypeId: 11457157452030541826
         StableName: "TomCat.Tag"
         SchemaVersion: 1
@@ -5880,7 +6102,7 @@ Entities:
       NormalMap: 0
       CastShadows: false
       Material: 0
-  - Entity: 6200000000000001053
+  - Entity: 6200000000000001055
     Tag:
       Tag: "Asset_Assets/Art/sprite-industrial.v2_249.png"
       Visible: true
@@ -5903,7 +6125,7 @@ Entities:
         Properties:
           - PropertyId: 1
             StableName: "Value"
-            Value: 6200000000000001053
+            Value: 6200000000000001055
       - TypeId: 11457157452030541826
         StableName: "TomCat.Tag"
         SchemaVersion: 1
@@ -5991,7 +6213,7 @@ Entities:
       NormalMap: 0
       CastShadows: false
       Material: 0
-  - Entity: 6200000000000001054
+  - Entity: 6200000000000001056
     Tag:
       Tag: "Asset_Assets/Art/sprite-industrial.v2_251.png"
       Visible: true
@@ -6014,7 +6236,7 @@ Entities:
         Properties:
           - PropertyId: 1
             StableName: "Value"
-            Value: 6200000000000001054
+            Value: 6200000000000001056
       - TypeId: 11457157452030541826
         StableName: "TomCat.Tag"
         SchemaVersion: 1
@@ -6102,7 +6324,7 @@ Entities:
       NormalMap: 0
       CastShadows: false
       Material: 0
-  - Entity: 6200000000000001055
+  - Entity: 6200000000000001057
     Tag:
       Tag: "Asset_Assets/Art/sprite-industrial.v2_252.png"
       Visible: true
@@ -6125,7 +6347,7 @@ Entities:
         Properties:
           - PropertyId: 1
             StableName: "Value"
-            Value: 6200000000000001055
+            Value: 6200000000000001057
       - TypeId: 11457157452030541826
         StableName: "TomCat.Tag"
         SchemaVersion: 1
@@ -6213,7 +6435,7 @@ Entities:
       NormalMap: 0
       CastShadows: false
       Material: 0
-  - Entity: 6200000000000001056
+  - Entity: 6200000000000001058
     Tag:
       Tag: "Asset_Assets/Art/sprite-industrial.v2_253.png"
       Visible: true
@@ -6236,7 +6458,7 @@ Entities:
         Properties:
           - PropertyId: 1
             StableName: "Value"
-            Value: 6200000000000001056
+            Value: 6200000000000001058
       - TypeId: 11457157452030541826
         StableName: "TomCat.Tag"
         SchemaVersion: 1
@@ -6324,7 +6546,7 @@ Entities:
       NormalMap: 0
       CastShadows: false
       Material: 0
-  - Entity: 6200000000000001057
+  - Entity: 6200000000000001059
     Tag:
       Tag: "Asset_Assets/Art/sprite-industrial.v2_261.png"
       Visible: true
@@ -6347,7 +6569,7 @@ Entities:
         Properties:
           - PropertyId: 1
             StableName: "Value"
-            Value: 6200000000000001057
+            Value: 6200000000000001059
       - TypeId: 11457157452030541826
         StableName: "TomCat.Tag"
         SchemaVersion: 1
@@ -6435,7 +6657,7 @@ Entities:
       NormalMap: 0
       CastShadows: false
       Material: 0
-  - Entity: 6200000000000001058
+  - Entity: 6200000000000001060
     Tag:
       Tag: "Asset_Assets/Art/sprite-industrial.v2_262.png"
       Visible: true
@@ -6458,7 +6680,7 @@ Entities:
         Properties:
           - PropertyId: 1
             StableName: "Value"
-            Value: 6200000000000001058
+            Value: 6200000000000001060
       - TypeId: 11457157452030541826
         StableName: "TomCat.Tag"
         SchemaVersion: 1
@@ -6546,7 +6768,7 @@ Entities:
       NormalMap: 0
       CastShadows: false
       Material: 0
-  - Entity: 6200000000000001059
+  - Entity: 6200000000000001061
     Tag:
       Tag: "Asset_Assets/Art/sprite-industrial.v2_263.png"
       Visible: true
@@ -6569,7 +6791,7 @@ Entities:
         Properties:
           - PropertyId: 1
             StableName: "Value"
-            Value: 6200000000000001059
+            Value: 6200000000000001061
       - TypeId: 11457157452030541826
         StableName: "TomCat.Tag"
         SchemaVersion: 1
@@ -6657,7 +6879,7 @@ Entities:
       NormalMap: 0
       CastShadows: false
       Material: 0
-  - Entity: 6200000000000001060
+  - Entity: 6200000000000001062
     Tag:
       Tag: "Asset_Assets/Art/sprite-industrial.v2_264.png"
       Visible: true
@@ -6680,7 +6902,7 @@ Entities:
         Properties:
           - PropertyId: 1
             StableName: "Value"
-            Value: 6200000000000001060
+            Value: 6200000000000001062
       - TypeId: 11457157452030541826
         StableName: "TomCat.Tag"
         SchemaVersion: 1
@@ -6768,7 +6990,7 @@ Entities:
       NormalMap: 0
       CastShadows: false
       Material: 0
-  - Entity: 6200000000000001061
+  - Entity: 6200000000000001063
     Tag:
       Tag: "Asset_Assets/Art/sprite-industrial.v2_271.png"
       Visible: true
@@ -6791,7 +7013,7 @@ Entities:
         Properties:
           - PropertyId: 1
             StableName: "Value"
-            Value: 6200000000000001061
+            Value: 6200000000000001063
       - TypeId: 11457157452030541826
         StableName: "TomCat.Tag"
         SchemaVersion: 1
@@ -6879,7 +7101,7 @@ Entities:
       NormalMap: 0
       CastShadows: false
       Material: 0
-  - Entity: 6200000000000001062
+  - Entity: 6200000000000001064
     Tag:
       Tag: "Asset_Assets/Art/sprite-industrial.v2_272.png"
       Visible: true
@@ -6902,7 +7124,7 @@ Entities:
         Properties:
           - PropertyId: 1
             StableName: "Value"
-            Value: 6200000000000001062
+            Value: 6200000000000001064
       - TypeId: 11457157452030541826
         StableName: "TomCat.Tag"
         SchemaVersion: 1
@@ -6990,7 +7212,7 @@ Entities:
       NormalMap: 0
       CastShadows: false
       Material: 0
-  - Entity: 6200000000000001063
+  - Entity: 6200000000000001065
     Tag:
       Tag: "Asset_Assets/Art/sprite-industrial.v2_273.png"
       Visible: true
@@ -7013,7 +7235,7 @@ Entities:
         Properties:
           - PropertyId: 1
             StableName: "Value"
-            Value: 6200000000000001063
+            Value: 6200000000000001065
       - TypeId: 11457157452030541826
         StableName: "TomCat.Tag"
         SchemaVersion: 1
@@ -7101,7 +7323,7 @@ Entities:
       NormalMap: 0
       CastShadows: false
       Material: 0
-  - Entity: 6200000000000001064
+  - Entity: 6200000000000001066
     Tag:
       Tag: "Asset_Assets/Art/sprite-industrial.v2_280.png"
       Visible: true
@@ -7124,7 +7346,7 @@ Entities:
         Properties:
           - PropertyId: 1
             StableName: "Value"
-            Value: 6200000000000001064
+            Value: 6200000000000001066
       - TypeId: 11457157452030541826
         StableName: "TomCat.Tag"
         SchemaVersion: 1
@@ -7212,7 +7434,7 @@ Entities:
       NormalMap: 0
       CastShadows: false
       Material: 0
-  - Entity: 6200000000000001065
+  - Entity: 6200000000000001067
     Tag:
       Tag: "Asset_Assets/Art/sprite-industrial.v2_281.png"
       Visible: true
@@ -7235,7 +7457,7 @@ Entities:
         Properties:
           - PropertyId: 1
             StableName: "Value"
-            Value: 6200000000000001065
+            Value: 6200000000000001067
       - TypeId: 11457157452030541826
         StableName: "TomCat.Tag"
         SchemaVersion: 1
@@ -7323,7 +7545,7 @@ Entities:
       NormalMap: 0
       CastShadows: false
       Material: 0
-  - Entity: 6200000000000001066
+  - Entity: 6200000000000001068
     Tag:
       Tag: "Asset_Assets/Art/sprite-industrial.v2_306.png"
       Visible: true
@@ -7346,7 +7568,7 @@ Entities:
         Properties:
           - PropertyId: 1
             StableName: "Value"
-            Value: 6200000000000001066
+            Value: 6200000000000001068
       - TypeId: 11457157452030541826
         StableName: "TomCat.Tag"
         SchemaVersion: 1
@@ -7434,7 +7656,7 @@ Entities:
       NormalMap: 0
       CastShadows: false
       Material: 0
-  - Entity: 6200000000000001067
+  - Entity: 6200000000000001069
     Tag:
       Tag: "Asset_Assets/Art/sprite-industrial.v2_307.png"
       Visible: true
@@ -7457,7 +7679,7 @@ Entities:
         Properties:
           - PropertyId: 1
             StableName: "Value"
-            Value: 6200000000000001067
+            Value: 6200000000000001069
       - TypeId: 11457157452030541826
         StableName: "TomCat.Tag"
         SchemaVersion: 1
@@ -7545,7 +7767,7 @@ Entities:
       NormalMap: 0
       CastShadows: false
       Material: 0
-  - Entity: 6200000000000001068
+  - Entity: 6200000000000001070
     Tag:
       Tag: "Asset_Assets/Art/sprite-industrial.v2_308.png"
       Visible: true
@@ -7568,7 +7790,7 @@ Entities:
         Properties:
           - PropertyId: 1
             StableName: "Value"
-            Value: 6200000000000001068
+            Value: 6200000000000001070
       - TypeId: 11457157452030541826
         StableName: "TomCat.Tag"
         SchemaVersion: 1
@@ -7656,7 +7878,7 @@ Entities:
       NormalMap: 0
       CastShadows: false
       Material: 0
-  - Entity: 6200000000000001069
+  - Entity: 6200000000000001071
     Tag:
       Tag: "Asset_Assets/Art/sprite-industrial.v2_309.png"
       Visible: true
@@ -7679,7 +7901,7 @@ Entities:
         Properties:
           - PropertyId: 1
             StableName: "Value"
-            Value: 6200000000000001069
+            Value: 6200000000000001071
       - TypeId: 11457157452030541826
         StableName: "TomCat.Tag"
         SchemaVersion: 1
@@ -7767,7 +7989,7 @@ Entities:
       NormalMap: 0
       CastShadows: false
       Material: 0
-  - Entity: 6200000000000001070
+  - Entity: 6200000000000001072
     Tag:
       Tag: "Asset_Assets/Art/sprite-industrial.v2_31.png"
       Visible: true
@@ -7790,7 +8012,7 @@ Entities:
         Properties:
           - PropertyId: 1
             StableName: "Value"
-            Value: 6200000000000001070
+            Value: 6200000000000001072
       - TypeId: 11457157452030541826
         StableName: "TomCat.Tag"
         SchemaVersion: 1
@@ -7878,7 +8100,7 @@ Entities:
       NormalMap: 0
       CastShadows: false
       Material: 0
-  - Entity: 6200000000000001071
+  - Entity: 6200000000000001073
     Tag:
       Tag: "Asset_Assets/Art/sprite-industrial.v2_310.png"
       Visible: true
@@ -7901,7 +8123,7 @@ Entities:
         Properties:
           - PropertyId: 1
             StableName: "Value"
-            Value: 6200000000000001071
+            Value: 6200000000000001073
       - TypeId: 11457157452030541826
         StableName: "TomCat.Tag"
         SchemaVersion: 1
@@ -7989,7 +8211,7 @@ Entities:
       NormalMap: 0
       CastShadows: false
       Material: 0
-  - Entity: 6200000000000001072
+  - Entity: 6200000000000001074
     Tag:
       Tag: "Asset_Assets/Art/sprite-industrial.v2_311.png"
       Visible: true
@@ -8012,7 +8234,7 @@ Entities:
         Properties:
           - PropertyId: 1
             StableName: "Value"
-            Value: 6200000000000001072
+            Value: 6200000000000001074
       - TypeId: 11457157452030541826
         StableName: "TomCat.Tag"
         SchemaVersion: 1
@@ -8100,7 +8322,7 @@ Entities:
       NormalMap: 0
       CastShadows: false
       Material: 0
-  - Entity: 6200000000000001073
+  - Entity: 6200000000000001075
     Tag:
       Tag: "Asset_Assets/Art/sprite-industrial.v2_312.png"
       Visible: true
@@ -8123,7 +8345,7 @@ Entities:
         Properties:
           - PropertyId: 1
             StableName: "Value"
-            Value: 6200000000000001073
+            Value: 6200000000000001075
       - TypeId: 11457157452030541826
         StableName: "TomCat.Tag"
         SchemaVersion: 1
@@ -8211,7 +8433,7 @@ Entities:
       NormalMap: 0
       CastShadows: false
       Material: 0
-  - Entity: 6200000000000001074
+  - Entity: 6200000000000001076
     Tag:
       Tag: "Asset_Assets/Art/sprite-industrial.v2_313.png"
       Visible: true
@@ -8234,7 +8456,7 @@ Entities:
         Properties:
           - PropertyId: 1
             StableName: "Value"
-            Value: 6200000000000001074
+            Value: 6200000000000001076
       - TypeId: 11457157452030541826
         StableName: "TomCat.Tag"
         SchemaVersion: 1
@@ -8322,7 +8544,7 @@ Entities:
       NormalMap: 0
       CastShadows: false
       Material: 0
-  - Entity: 6200000000000001075
+  - Entity: 6200000000000001077
     Tag:
       Tag: "Asset_Assets/Art/sprite-industrial.v2_32.png"
       Visible: true
@@ -8345,7 +8567,7 @@ Entities:
         Properties:
           - PropertyId: 1
             StableName: "Value"
-            Value: 6200000000000001075
+            Value: 6200000000000001077
       - TypeId: 11457157452030541826
         StableName: "TomCat.Tag"
         SchemaVersion: 1
@@ -8433,7 +8655,7 @@ Entities:
       NormalMap: 0
       CastShadows: false
       Material: 0
-  - Entity: 6200000000000001076
+  - Entity: 6200000000000001078
     Tag:
       Tag: "Asset_Assets/Art/sprite-industrial.v2_322.png"
       Visible: true
@@ -8456,7 +8678,7 @@ Entities:
         Properties:
           - PropertyId: 1
             StableName: "Value"
-            Value: 6200000000000001076
+            Value: 6200000000000001078
       - TypeId: 11457157452030541826
         StableName: "TomCat.Tag"
         SchemaVersion: 1
@@ -8544,7 +8766,7 @@ Entities:
       NormalMap: 0
       CastShadows: false
       Material: 0
-  - Entity: 6200000000000001077
+  - Entity: 6200000000000001079
     Tag:
       Tag: "Asset_Assets/Art/sprite-industrial.v2_323.png"
       Visible: true
@@ -8567,7 +8789,7 @@ Entities:
         Properties:
           - PropertyId: 1
             StableName: "Value"
-            Value: 6200000000000001077
+            Value: 6200000000000001079
       - TypeId: 11457157452030541826
         StableName: "TomCat.Tag"
         SchemaVersion: 1
@@ -8655,7 +8877,7 @@ Entities:
       NormalMap: 0
       CastShadows: false
       Material: 0
-  - Entity: 6200000000000001078
+  - Entity: 6200000000000001080
     Tag:
       Tag: "Asset_Assets/Art/sprite-industrial.v2_324.png"
       Visible: true
@@ -8678,7 +8900,7 @@ Entities:
         Properties:
           - PropertyId: 1
             StableName: "Value"
-            Value: 6200000000000001078
+            Value: 6200000000000001080
       - TypeId: 11457157452030541826
         StableName: "TomCat.Tag"
         SchemaVersion: 1
@@ -8766,7 +8988,7 @@ Entities:
       NormalMap: 0
       CastShadows: false
       Material: 0
-  - Entity: 6200000000000001079
+  - Entity: 6200000000000001081
     Tag:
       Tag: "Asset_Assets/Art/sprite-industrial.v2_325.png"
       Visible: true
@@ -8789,7 +9011,7 @@ Entities:
         Properties:
           - PropertyId: 1
             StableName: "Value"
-            Value: 6200000000000001079
+            Value: 6200000000000001081
       - TypeId: 11457157452030541826
         StableName: "TomCat.Tag"
         SchemaVersion: 1
@@ -8877,7 +9099,7 @@ Entities:
       NormalMap: 0
       CastShadows: false
       Material: 0
-  - Entity: 6200000000000001080
+  - Entity: 6200000000000001082
     Tag:
       Tag: "Asset_Assets/Art/sprite-industrial.v2_326.png"
       Visible: true
@@ -8900,7 +9122,7 @@ Entities:
         Properties:
           - PropertyId: 1
             StableName: "Value"
-            Value: 6200000000000001080
+            Value: 6200000000000001082
       - TypeId: 11457157452030541826
         StableName: "TomCat.Tag"
         SchemaVersion: 1
@@ -8988,7 +9210,7 @@ Entities:
       NormalMap: 0
       CastShadows: false
       Material: 0
-  - Entity: 6200000000000001081
+  - Entity: 6200000000000001083
     Tag:
       Tag: "Asset_Assets/Art/sprite-industrial.v2_327.png"
       Visible: true
@@ -9011,7 +9233,7 @@ Entities:
         Properties:
           - PropertyId: 1
             StableName: "Value"
-            Value: 6200000000000001081
+            Value: 6200000000000001083
       - TypeId: 11457157452030541826
         StableName: "TomCat.Tag"
         SchemaVersion: 1
@@ -9099,7 +9321,7 @@ Entities:
       NormalMap: 0
       CastShadows: false
       Material: 0
-  - Entity: 6200000000000001082
+  - Entity: 6200000000000001084
     Tag:
       Tag: "Asset_Assets/Art/sprite-industrial.v2_328.png"
       Visible: true
@@ -9122,7 +9344,7 @@ Entities:
         Properties:
           - PropertyId: 1
             StableName: "Value"
-            Value: 6200000000000001082
+            Value: 6200000000000001084
       - TypeId: 11457157452030541826
         StableName: "TomCat.Tag"
         SchemaVersion: 1
@@ -9210,7 +9432,7 @@ Entities:
       NormalMap: 0
       CastShadows: false
       Material: 0
-  - Entity: 6200000000000001083
+  - Entity: 6200000000000001085
     Tag:
       Tag: "Asset_Assets/Art/sprite-industrial.v2_329.png"
       Visible: true
@@ -9233,7 +9455,7 @@ Entities:
         Properties:
           - PropertyId: 1
             StableName: "Value"
-            Value: 6200000000000001083
+            Value: 6200000000000001085
       - TypeId: 11457157452030541826
         StableName: "TomCat.Tag"
         SchemaVersion: 1
@@ -9321,7 +9543,7 @@ Entities:
       NormalMap: 0
       CastShadows: false
       Material: 0
-  - Entity: 6200000000000001084
+  - Entity: 6200000000000001086
     Tag:
       Tag: "Asset_Assets/Art/sprite-industrial.v2_33.png"
       Visible: true
@@ -9344,7 +9566,7 @@ Entities:
         Properties:
           - PropertyId: 1
             StableName: "Value"
-            Value: 6200000000000001084
+            Value: 6200000000000001086
       - TypeId: 11457157452030541826
         StableName: "TomCat.Tag"
         SchemaVersion: 1
@@ -9432,7 +9654,7 @@ Entities:
       NormalMap: 0
       CastShadows: false
       Material: 0
-  - Entity: 6200000000000001085
+  - Entity: 6200000000000001087
     Tag:
       Tag: "Asset_Assets/Art/sprite-industrial.v2_332.png"
       Visible: true
@@ -9455,7 +9677,7 @@ Entities:
         Properties:
           - PropertyId: 1
             StableName: "Value"
-            Value: 6200000000000001085
+            Value: 6200000000000001087
       - TypeId: 11457157452030541826
         StableName: "TomCat.Tag"
         SchemaVersion: 1
@@ -9543,7 +9765,7 @@ Entities:
       NormalMap: 0
       CastShadows: false
       Material: 0
-  - Entity: 6200000000000001086
+  - Entity: 6200000000000001088
     Tag:
       Tag: "Asset_Assets/Art/sprite-industrial.v2_34.png"
       Visible: true
@@ -9566,7 +9788,7 @@ Entities:
         Properties:
           - PropertyId: 1
             StableName: "Value"
-            Value: 6200000000000001086
+            Value: 6200000000000001088
       - TypeId: 11457157452030541826
         StableName: "TomCat.Tag"
         SchemaVersion: 1
@@ -9654,7 +9876,7 @@ Entities:
       NormalMap: 0
       CastShadows: false
       Material: 0
-  - Entity: 6200000000000001087
+  - Entity: 6200000000000001089
     Tag:
       Tag: "Asset_Assets/Art/sprite-industrial.v2_35.png"
       Visible: true
@@ -9677,7 +9899,7 @@ Entities:
         Properties:
           - PropertyId: 1
             StableName: "Value"
-            Value: 6200000000000001087
+            Value: 6200000000000001089
       - TypeId: 11457157452030541826
         StableName: "TomCat.Tag"
         SchemaVersion: 1
@@ -9765,7 +9987,7 @@ Entities:
       NormalMap: 0
       CastShadows: false
       Material: 0
-  - Entity: 6200000000000001088
+  - Entity: 6200000000000001090
     Tag:
       Tag: "Asset_Assets/Art/sprite-industrial.v2_36.png"
       Visible: true
@@ -9788,7 +10010,7 @@ Entities:
         Properties:
           - PropertyId: 1
             StableName: "Value"
-            Value: 6200000000000001088
+            Value: 6200000000000001090
       - TypeId: 11457157452030541826
         StableName: "TomCat.Tag"
         SchemaVersion: 1
@@ -9876,7 +10098,7 @@ Entities:
       NormalMap: 0
       CastShadows: false
       Material: 0
-  - Entity: 6200000000000001089
+  - Entity: 6200000000000001091
     Tag:
       Tag: "Asset_Assets/Art/sprite-industrial.v2_45.png"
       Visible: true
@@ -9899,7 +10121,7 @@ Entities:
         Properties:
           - PropertyId: 1
             StableName: "Value"
-            Value: 6200000000000001089
+            Value: 6200000000000001091
       - TypeId: 11457157452030541826
         StableName: "TomCat.Tag"
         SchemaVersion: 1
@@ -9987,7 +10209,7 @@ Entities:
       NormalMap: 0
       CastShadows: false
       Material: 0
-  - Entity: 6200000000000001090
+  - Entity: 6200000000000001092
     Tag:
       Tag: "Asset_Assets/Art/sprite-industrial.v2_46.png"
       Visible: true
@@ -10010,7 +10232,7 @@ Entities:
         Properties:
           - PropertyId: 1
             StableName: "Value"
-            Value: 6200000000000001090
+            Value: 6200000000000001092
       - TypeId: 11457157452030541826
         StableName: "TomCat.Tag"
         SchemaVersion: 1
@@ -10098,7 +10320,7 @@ Entities:
       NormalMap: 0
       CastShadows: false
       Material: 0
-  - Entity: 6200000000000001091
+  - Entity: 6200000000000001093
     Tag:
       Tag: "Asset_Assets/Art/sprite-industrial.v2_47.png"
       Visible: true
@@ -10121,7 +10343,7 @@ Entities:
         Properties:
           - PropertyId: 1
             StableName: "Value"
-            Value: 6200000000000001091
+            Value: 6200000000000001093
       - TypeId: 11457157452030541826
         StableName: "TomCat.Tag"
         SchemaVersion: 1
@@ -10209,7 +10431,7 @@ Entities:
       NormalMap: 0
       CastShadows: false
       Material: 0
-  - Entity: 6200000000000001092
+  - Entity: 6200000000000001094
     Tag:
       Tag: "Asset_Assets/Art/sprite-industrial.v2_49.png"
       Visible: true
@@ -10232,7 +10454,7 @@ Entities:
         Properties:
           - PropertyId: 1
             StableName: "Value"
-            Value: 6200000000000001092
+            Value: 6200000000000001094
       - TypeId: 11457157452030541826
         StableName: "TomCat.Tag"
         SchemaVersion: 1
@@ -10320,7 +10542,7 @@ Entities:
       NormalMap: 0
       CastShadows: false
       Material: 0
-  - Entity: 6200000000000001093
+  - Entity: 6200000000000001095
     Tag:
       Tag: "Asset_Assets/Art/sprite-industrial.v2_5.png"
       Visible: true
@@ -10343,7 +10565,7 @@ Entities:
         Properties:
           - PropertyId: 1
             StableName: "Value"
-            Value: 6200000000000001093
+            Value: 6200000000000001095
       - TypeId: 11457157452030541826
         StableName: "TomCat.Tag"
         SchemaVersion: 1
@@ -10431,7 +10653,7 @@ Entities:
       NormalMap: 0
       CastShadows: false
       Material: 0
-  - Entity: 6200000000000001094
+  - Entity: 6200000000000001096
     Tag:
       Tag: "Asset_Assets/Art/sprite-industrial.v2_50.png"
       Visible: true
@@ -10454,7 +10676,7 @@ Entities:
         Properties:
           - PropertyId: 1
             StableName: "Value"
-            Value: 6200000000000001094
+            Value: 6200000000000001096
       - TypeId: 11457157452030541826
         StableName: "TomCat.Tag"
         SchemaVersion: 1
@@ -10542,7 +10764,7 @@ Entities:
       NormalMap: 0
       CastShadows: false
       Material: 0
-  - Entity: 6200000000000001095
+  - Entity: 6200000000000001097
     Tag:
       Tag: "Asset_Assets/Art/sprite-industrial.v2_53.png"
       Visible: true
@@ -10565,7 +10787,7 @@ Entities:
         Properties:
           - PropertyId: 1
             StableName: "Value"
-            Value: 6200000000000001095
+            Value: 6200000000000001097
       - TypeId: 11457157452030541826
         StableName: "TomCat.Tag"
         SchemaVersion: 1
@@ -10653,7 +10875,7 @@ Entities:
       NormalMap: 0
       CastShadows: false
       Material: 0
-  - Entity: 6200000000000001096
+  - Entity: 6200000000000001098
     Tag:
       Tag: "Asset_Assets/Art/sprite-industrial.v2_54.png"
       Visible: true
@@ -10676,7 +10898,7 @@ Entities:
         Properties:
           - PropertyId: 1
             StableName: "Value"
-            Value: 6200000000000001096
+            Value: 6200000000000001098
       - TypeId: 11457157452030541826
         StableName: "TomCat.Tag"
         SchemaVersion: 1
@@ -10764,7 +10986,7 @@ Entities:
       NormalMap: 0
       CastShadows: false
       Material: 0
-  - Entity: 6200000000000001097
+  - Entity: 6200000000000001099
     Tag:
       Tag: "Asset_Assets/Art/sprite-industrial.v2_55.png"
       Visible: true
@@ -10787,7 +11009,7 @@ Entities:
         Properties:
           - PropertyId: 1
             StableName: "Value"
-            Value: 6200000000000001097
+            Value: 6200000000000001099
       - TypeId: 11457157452030541826
         StableName: "TomCat.Tag"
         SchemaVersion: 1
@@ -10875,7 +11097,7 @@ Entities:
       NormalMap: 0
       CastShadows: false
       Material: 0
-  - Entity: 6200000000000001098
+  - Entity: 6200000000000001100
     Tag:
       Tag: "Asset_Assets/Art/sprite-industrial.v2_56.png"
       Visible: true
@@ -10898,7 +11120,7 @@ Entities:
         Properties:
           - PropertyId: 1
             StableName: "Value"
-            Value: 6200000000000001098
+            Value: 6200000000000001100
       - TypeId: 11457157452030541826
         StableName: "TomCat.Tag"
         SchemaVersion: 1
@@ -10986,7 +11208,7 @@ Entities:
       NormalMap: 0
       CastShadows: false
       Material: 0
-  - Entity: 6200000000000001099
+  - Entity: 6200000000000001101
     Tag:
       Tag: "Asset_Assets/Art/sprite-industrial.v2_57.png"
       Visible: true
@@ -11009,7 +11231,7 @@ Entities:
         Properties:
           - PropertyId: 1
             StableName: "Value"
-            Value: 6200000000000001099
+            Value: 6200000000000001101
       - TypeId: 11457157452030541826
         StableName: "TomCat.Tag"
         SchemaVersion: 1
@@ -11097,7 +11319,7 @@ Entities:
       NormalMap: 0
       CastShadows: false
       Material: 0
-  - Entity: 6200000000000001100
+  - Entity: 6200000000000001102
     Tag:
       Tag: "Asset_Assets/Art/sprite-industrial.v2_6.png"
       Visible: true
@@ -11120,7 +11342,7 @@ Entities:
         Properties:
           - PropertyId: 1
             StableName: "Value"
-            Value: 6200000000000001100
+            Value: 6200000000000001102
       - TypeId: 11457157452030541826
         StableName: "TomCat.Tag"
         SchemaVersion: 1
@@ -11208,7 +11430,7 @@ Entities:
       NormalMap: 0
       CastShadows: false
       Material: 0
-  - Entity: 6200000000000001101
+  - Entity: 6200000000000001103
     Tag:
       Tag: "Asset_Assets/Art/sprite-industrial.v2_64.png"
       Visible: true
@@ -11231,7 +11453,7 @@ Entities:
         Properties:
           - PropertyId: 1
             StableName: "Value"
-            Value: 6200000000000001101
+            Value: 6200000000000001103
       - TypeId: 11457157452030541826
         StableName: "TomCat.Tag"
         SchemaVersion: 1
@@ -11319,7 +11541,7 @@ Entities:
       NormalMap: 0
       CastShadows: false
       Material: 0
-  - Entity: 6200000000000001102
+  - Entity: 6200000000000001104
     Tag:
       Tag: "Asset_Assets/Art/sprite-industrial.v2_67.png"
       Visible: true
@@ -11342,7 +11564,7 @@ Entities:
         Properties:
           - PropertyId: 1
             StableName: "Value"
-            Value: 6200000000000001102
+            Value: 6200000000000001104
       - TypeId: 11457157452030541826
         StableName: "TomCat.Tag"
         SchemaVersion: 1
@@ -11430,7 +11652,7 @@ Entities:
       NormalMap: 0
       CastShadows: false
       Material: 0
-  - Entity: 6200000000000001103
+  - Entity: 6200000000000001105
     Tag:
       Tag: "Asset_Assets/Art/sprite-industrial.v2_68.png"
       Visible: true
@@ -11453,7 +11675,7 @@ Entities:
         Properties:
           - PropertyId: 1
             StableName: "Value"
-            Value: 6200000000000001103
+            Value: 6200000000000001105
       - TypeId: 11457157452030541826
         StableName: "TomCat.Tag"
         SchemaVersion: 1
@@ -11541,7 +11763,7 @@ Entities:
       NormalMap: 0
       CastShadows: false
       Material: 0
-  - Entity: 6200000000000001104
+  - Entity: 6200000000000001106
     Tag:
       Tag: "Asset_Assets/Art/sprite-industrial.v2_69.png"
       Visible: true
@@ -11564,7 +11786,7 @@ Entities:
         Properties:
           - PropertyId: 1
             StableName: "Value"
-            Value: 6200000000000001104
+            Value: 6200000000000001106
       - TypeId: 11457157452030541826
         StableName: "TomCat.Tag"
         SchemaVersion: 1
@@ -11652,7 +11874,7 @@ Entities:
       NormalMap: 0
       CastShadows: false
       Material: 0
-  - Entity: 6200000000000001105
+  - Entity: 6200000000000001107
     Tag:
       Tag: "Asset_Assets/Art/sprite-industrial.v2_70.png"
       Visible: true
@@ -11675,7 +11897,7 @@ Entities:
         Properties:
           - PropertyId: 1
             StableName: "Value"
-            Value: 6200000000000001105
+            Value: 6200000000000001107
       - TypeId: 11457157452030541826
         StableName: "TomCat.Tag"
         SchemaVersion: 1
@@ -11763,7 +11985,7 @@ Entities:
       NormalMap: 0
       CastShadows: false
       Material: 0
-  - Entity: 6200000000000001106
+  - Entity: 6200000000000001108
     Tag:
       Tag: "Asset_Assets/Art/sprite-industrial.v2_72.png"
       Visible: true
@@ -11786,7 +12008,7 @@ Entities:
         Properties:
           - PropertyId: 1
             StableName: "Value"
-            Value: 6200000000000001106
+            Value: 6200000000000001108
       - TypeId: 11457157452030541826
         StableName: "TomCat.Tag"
         SchemaVersion: 1
@@ -11874,7 +12096,7 @@ Entities:
       NormalMap: 0
       CastShadows: false
       Material: 0
-  - Entity: 6200000000000001107
+  - Entity: 6200000000000001109
     Tag:
       Tag: "Asset_Assets/Art/sprite-industrial.v2_73.png"
       Visible: true
@@ -11897,7 +12119,7 @@ Entities:
         Properties:
           - PropertyId: 1
             StableName: "Value"
-            Value: 6200000000000001107
+            Value: 6200000000000001109
       - TypeId: 11457157452030541826
         StableName: "TomCat.Tag"
         SchemaVersion: 1
@@ -11985,7 +12207,7 @@ Entities:
       NormalMap: 0
       CastShadows: false
       Material: 0
-  - Entity: 6200000000000001108
+  - Entity: 6200000000000001110
     Tag:
       Tag: "Asset_Assets/Art/sprite-industrial.v2_76.png"
       Visible: true
@@ -12008,7 +12230,7 @@ Entities:
         Properties:
           - PropertyId: 1
             StableName: "Value"
-            Value: 6200000000000001108
+            Value: 6200000000000001110
       - TypeId: 11457157452030541826
         StableName: "TomCat.Tag"
         SchemaVersion: 1
@@ -12096,7 +12318,7 @@ Entities:
       NormalMap: 0
       CastShadows: false
       Material: 0
-  - Entity: 6200000000000001109
+  - Entity: 6200000000000001111
     Tag:
       Tag: "Asset_Assets/Art/sprite-industrial.v2_78.png"
       Visible: true
@@ -12119,7 +12341,7 @@ Entities:
         Properties:
           - PropertyId: 1
             StableName: "Value"
-            Value: 6200000000000001109
+            Value: 6200000000000001111
       - TypeId: 11457157452030541826
         StableName: "TomCat.Tag"
         SchemaVersion: 1
@@ -12207,7 +12429,7 @@ Entities:
       NormalMap: 0
       CastShadows: false
       Material: 0
-  - Entity: 6200000000000001110
+  - Entity: 6200000000000001112
     Tag:
       Tag: "Asset_Assets/Art/sprite-industrial.v2_8.png"
       Visible: true
@@ -12230,7 +12452,7 @@ Entities:
         Properties:
           - PropertyId: 1
             StableName: "Value"
-            Value: 6200000000000001110
+            Value: 6200000000000001112
       - TypeId: 11457157452030541826
         StableName: "TomCat.Tag"
         SchemaVersion: 1
@@ -12318,7 +12540,7 @@ Entities:
       NormalMap: 0
       CastShadows: false
       Material: 0
-  - Entity: 6200000000000001111
+  - Entity: 6200000000000001113
     Tag:
       Tag: "Asset_Assets/Art/sprite-industrial.v2_87.png"
       Visible: true
@@ -12341,7 +12563,7 @@ Entities:
         Properties:
           - PropertyId: 1
             StableName: "Value"
-            Value: 6200000000000001111
+            Value: 6200000000000001113
       - TypeId: 11457157452030541826
         StableName: "TomCat.Tag"
         SchemaVersion: 1
@@ -12429,7 +12651,7 @@ Entities:
       NormalMap: 0
       CastShadows: false
       Material: 0
-  - Entity: 6200000000000001112
+  - Entity: 6200000000000001114
     Tag:
       Tag: "Asset_Assets/Art/sprite-industrial.v2_92.png"
       Visible: true
@@ -12452,7 +12674,7 @@ Entities:
         Properties:
           - PropertyId: 1
             StableName: "Value"
-            Value: 6200000000000001112
+            Value: 6200000000000001114
       - TypeId: 11457157452030541826
         StableName: "TomCat.Tag"
         SchemaVersion: 1
@@ -12540,7 +12762,7 @@ Entities:
       NormalMap: 0
       CastShadows: false
       Material: 0
-  - Entity: 6200000000000001113
+  - Entity: 6200000000000001115
     Tag:
       Tag: "Asset_Assets/Art/sprite-industrial.v2_93.png"
       Visible: true
@@ -12563,7 +12785,7 @@ Entities:
         Properties:
           - PropertyId: 1
             StableName: "Value"
-            Value: 6200000000000001113
+            Value: 6200000000000001115
       - TypeId: 11457157452030541826
         StableName: "TomCat.Tag"
         SchemaVersion: 1
@@ -12651,7 +12873,7 @@ Entities:
       NormalMap: 0
       CastShadows: false
       Material: 0
-  - Entity: 6200000000000001114
+  - Entity: 6200000000000001116
     Tag:
       Tag: "Asset_Assets/Art/sprite-industrial.v2_98.png"
       Visible: true
@@ -12674,7 +12896,7 @@ Entities:
         Properties:
           - PropertyId: 1
             StableName: "Value"
-            Value: 6200000000000001114
+            Value: 6200000000000001116
       - TypeId: 11457157452030541826
         StableName: "TomCat.Tag"
         SchemaVersion: 1
@@ -12762,7 +12984,7 @@ Entities:
       NormalMap: 0
       CastShadows: false
       Material: 0
-  - Entity: 6200000000000001115
+  - Entity: 6200000000000001117
     Tag:
       Tag: "Asset_Assets/Art/sprite-pixel--1-_0.png"
       Visible: true
@@ -12785,7 +13007,7 @@ Entities:
         Properties:
           - PropertyId: 1
             StableName: "Value"
-            Value: 6200000000000001115
+            Value: 6200000000000001117
       - TypeId: 11457157452030541826
         StableName: "TomCat.Tag"
         SchemaVersion: 1
@@ -12873,7 +13095,7 @@ Entities:
       NormalMap: 0
       CastShadows: false
       Material: 0
-  - Entity: 6200000000000001116
+  - Entity: 6200000000000001118
     Tag:
       Tag: "Asset_Assets/Art/sprite-pixel--2-_0.png"
       Visible: true
@@ -12896,7 +13118,7 @@ Entities:
         Properties:
           - PropertyId: 1
             StableName: "Value"
-            Value: 6200000000000001116
+            Value: 6200000000000001118
       - TypeId: 11457157452030541826
         StableName: "TomCat.Tag"
         SchemaVersion: 1
@@ -12984,7 +13206,118 @@ Entities:
       NormalMap: 0
       CastShadows: false
       Material: 0
-  - Entity: 6200000000000001117
+  - Entity: 6200000000000001119
+    Tag:
+      Tag: "Asset_Assets/Art/sprite-pixel11.png"
+      Visible: true
+    EntityMetadata:
+      GameplayTag: "Untagged"
+      Layer: 0
+      HierarchyIcon: "Entity"
+    Transform:
+      Translation: [10000, 10000, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+    LocalTransform:
+      Translation: [10000, 10000, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+    Components:
+      - TypeId: 11457157452030541825
+        StableName: "TomCat.ID"
+        SchemaVersion: 1
+        Properties:
+          - PropertyId: 1
+            StableName: "Value"
+            Value: 6200000000000001119
+      - TypeId: 11457157452030541826
+        StableName: "TomCat.Tag"
+        SchemaVersion: 1
+        Properties:
+          - PropertyId: 1
+            StableName: "Name"
+            Value: "Asset_Assets/Art/sprite-pixel11.png"
+          - PropertyId: 2
+            StableName: "Visible"
+            Value: true
+      - TypeId: 11457157452030541827
+        StableName: "TomCat.EntityMetadata"
+        SchemaVersion: 1
+        Properties:
+          - PropertyId: 1
+            StableName: "GameplayTag"
+            Value: "Untagged"
+          - PropertyId: 2
+            StableName: "Layer"
+            Value: 0
+          - PropertyId: 3
+            StableName: "HierarchyIcon"
+            Value: 1
+      - TypeId: 11457157452030541828
+        StableName: "TomCat.Transform"
+        SchemaVersion: 1
+        Properties:
+          - PropertyId: 1
+            StableName: "Translation"
+            Value: [10000, 10000, 0]
+          - PropertyId: 2
+            StableName: "Rotation"
+            Value: [0, 0, 0]
+          - PropertyId: 3
+            StableName: "Scale"
+            Value: [1, 1, 1]
+          - PropertyId: 4
+            StableName: "LocalTranslation"
+            Value: [10000, 10000, 0]
+          - PropertyId: 5
+            StableName: "LocalRotation"
+            Value: [0, 0, 0]
+          - PropertyId: 6
+            StableName: "LocalScale"
+            Value: [1, 1, 1]
+      - TypeId: 11457157452030541830
+        StableName: "TomCat.SpriteRenderer"
+        SchemaVersion: 2
+        Properties:
+          - PropertyId: 200
+            StableName: "Enabled"
+            Value: false
+          - PropertyId: 201
+            StableName: "Color"
+            Value: [1, 1, 1, 1]
+          - PropertyId: 202
+            StableName: "Sprite"
+            Value: 6200000000000010149
+          - PropertyId: 203
+            StableName: "TilingFactor"
+            Value: 1
+          - PropertyId: 204
+            StableName: "SortingLayer"
+            Value: 0
+          - PropertyId: 205
+            StableName: "OrderInLayer"
+            Value: 0
+          - PropertyId: 206
+            StableName: "NormalMap"
+            Value: 0
+          - PropertyId: 207
+            StableName: "CastShadows"
+            Value: false
+          - PropertyId: 208
+            StableName: "Material"
+            Value: 0
+    Parent: 0
+    SpriteRenderer:
+      Enabled: false
+      Color: [1, 1, 1, 1]
+      SpriteHandle: 6200000000000010149
+      TilingFactor: 1
+      SortingLayer: 0
+      OrderInLayer: 0
+      NormalMap: 0
+      CastShadows: false
+      Material: 0
+  - Entity: 6200000000000001120
     Tag:
       Tag: "Asset_Assets/Art/sprite-pixel_0.png"
       Visible: true
@@ -13007,7 +13340,7 @@ Entities:
         Properties:
           - PropertyId: 1
             StableName: "Value"
-            Value: 6200000000000001117
+            Value: 6200000000000001120
       - TypeId: 11457157452030541826
         StableName: "TomCat.Tag"
         SchemaVersion: 1
@@ -13095,7 +13428,7 @@ Entities:
       NormalMap: 0
       CastShadows: false
       Material: 0
-  - Entity: 6200000000000001118
+  - Entity: 6200000000000001121
     Tag:
       Tag: "Asset_Assets/Art/sprite-thx.png"
       Visible: true
@@ -13118,7 +13451,7 @@ Entities:
         Properties:
           - PropertyId: 1
             StableName: "Value"
-            Value: 6200000000000001118
+            Value: 6200000000000001121
       - TypeId: 11457157452030541826
         StableName: "TomCat.Tag"
         SchemaVersion: 1
@@ -13206,7 +13539,7 @@ Entities:
       NormalMap: 0
       CastShadows: false
       Material: 0
-  - Entity: 6200000000000001119
+  - Entity: 6200000000000001122
     Tag:
       Tag: "Asset_Assets/Art/tiled-sprite-industrial.v2_57-224x16.png"
       Visible: true
@@ -13229,7 +13562,7 @@ Entities:
         Properties:
           - PropertyId: 1
             StableName: "Value"
-            Value: 6200000000000001119
+            Value: 6200000000000001122
       - TypeId: 11457157452030541826
         StableName: "TomCat.Tag"
         SchemaVersion: 1
@@ -13317,7 +13650,7 @@ Entities:
       NormalMap: 0
       CastShadows: false
       Material: 0
-  - Entity: 6200000000000001120
+  - Entity: 6200000000000001123
     Tag:
       Tag: "Asset_Assets/Art/tiled-sprite-industrial.v2_57-32x16.png"
       Visible: true
@@ -13340,7 +13673,7 @@ Entities:
         Properties:
           - PropertyId: 1
             StableName: "Value"
-            Value: 6200000000000001120
+            Value: 6200000000000001123
       - TypeId: 11457157452030541826
         StableName: "TomCat.Tag"
         SchemaVersion: 1
@@ -13428,7 +13761,1006 @@ Entities:
       NormalMap: 0
       CastShadows: false
       Material: 0
-  - Entity: 6200000000000001121
+  - Entity: 6200000000000001124
+    Tag:
+      Tag: "Asset_Assets/Art/ui-pause-panel-0-0.png"
+      Visible: true
+    EntityMetadata:
+      GameplayTag: "Untagged"
+      Layer: 0
+      HierarchyIcon: "Entity"
+    Transform:
+      Translation: [10000, 10000, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+    LocalTransform:
+      Translation: [10000, 10000, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+    Components:
+      - TypeId: 11457157452030541825
+        StableName: "TomCat.ID"
+        SchemaVersion: 1
+        Properties:
+          - PropertyId: 1
+            StableName: "Value"
+            Value: 6200000000000001124
+      - TypeId: 11457157452030541826
+        StableName: "TomCat.Tag"
+        SchemaVersion: 1
+        Properties:
+          - PropertyId: 1
+            StableName: "Name"
+            Value: "Asset_Assets/Art/ui-pause-panel-0-0.png"
+          - PropertyId: 2
+            StableName: "Visible"
+            Value: true
+      - TypeId: 11457157452030541827
+        StableName: "TomCat.EntityMetadata"
+        SchemaVersion: 1
+        Properties:
+          - PropertyId: 1
+            StableName: "GameplayTag"
+            Value: "Untagged"
+          - PropertyId: 2
+            StableName: "Layer"
+            Value: 0
+          - PropertyId: 3
+            StableName: "HierarchyIcon"
+            Value: 1
+      - TypeId: 11457157452030541828
+        StableName: "TomCat.Transform"
+        SchemaVersion: 1
+        Properties:
+          - PropertyId: 1
+            StableName: "Translation"
+            Value: [10000, 10000, 0]
+          - PropertyId: 2
+            StableName: "Rotation"
+            Value: [0, 0, 0]
+          - PropertyId: 3
+            StableName: "Scale"
+            Value: [1, 1, 1]
+          - PropertyId: 4
+            StableName: "LocalTranslation"
+            Value: [10000, 10000, 0]
+          - PropertyId: 5
+            StableName: "LocalRotation"
+            Value: [0, 0, 0]
+          - PropertyId: 6
+            StableName: "LocalScale"
+            Value: [1, 1, 1]
+      - TypeId: 11457157452030541830
+        StableName: "TomCat.SpriteRenderer"
+        SchemaVersion: 2
+        Properties:
+          - PropertyId: 200
+            StableName: "Enabled"
+            Value: false
+          - PropertyId: 201
+            StableName: "Color"
+            Value: [1, 1, 1, 1]
+          - PropertyId: 202
+            StableName: "Sprite"
+            Value: 6200000000000010150
+          - PropertyId: 203
+            StableName: "TilingFactor"
+            Value: 1
+          - PropertyId: 204
+            StableName: "SortingLayer"
+            Value: 0
+          - PropertyId: 205
+            StableName: "OrderInLayer"
+            Value: 0
+          - PropertyId: 206
+            StableName: "NormalMap"
+            Value: 0
+          - PropertyId: 207
+            StableName: "CastShadows"
+            Value: false
+          - PropertyId: 208
+            StableName: "Material"
+            Value: 0
+    Parent: 0
+    SpriteRenderer:
+      Enabled: false
+      Color: [1, 1, 1, 1]
+      SpriteHandle: 6200000000000010150
+      TilingFactor: 1
+      SortingLayer: 0
+      OrderInLayer: 0
+      NormalMap: 0
+      CastShadows: false
+      Material: 0
+  - Entity: 6200000000000001125
+    Tag:
+      Tag: "Asset_Assets/Art/ui-pause-panel-0-1.png"
+      Visible: true
+    EntityMetadata:
+      GameplayTag: "Untagged"
+      Layer: 0
+      HierarchyIcon: "Entity"
+    Transform:
+      Translation: [10000, 10000, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+    LocalTransform:
+      Translation: [10000, 10000, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+    Components:
+      - TypeId: 11457157452030541825
+        StableName: "TomCat.ID"
+        SchemaVersion: 1
+        Properties:
+          - PropertyId: 1
+            StableName: "Value"
+            Value: 6200000000000001125
+      - TypeId: 11457157452030541826
+        StableName: "TomCat.Tag"
+        SchemaVersion: 1
+        Properties:
+          - PropertyId: 1
+            StableName: "Name"
+            Value: "Asset_Assets/Art/ui-pause-panel-0-1.png"
+          - PropertyId: 2
+            StableName: "Visible"
+            Value: true
+      - TypeId: 11457157452030541827
+        StableName: "TomCat.EntityMetadata"
+        SchemaVersion: 1
+        Properties:
+          - PropertyId: 1
+            StableName: "GameplayTag"
+            Value: "Untagged"
+          - PropertyId: 2
+            StableName: "Layer"
+            Value: 0
+          - PropertyId: 3
+            StableName: "HierarchyIcon"
+            Value: 1
+      - TypeId: 11457157452030541828
+        StableName: "TomCat.Transform"
+        SchemaVersion: 1
+        Properties:
+          - PropertyId: 1
+            StableName: "Translation"
+            Value: [10000, 10000, 0]
+          - PropertyId: 2
+            StableName: "Rotation"
+            Value: [0, 0, 0]
+          - PropertyId: 3
+            StableName: "Scale"
+            Value: [1, 1, 1]
+          - PropertyId: 4
+            StableName: "LocalTranslation"
+            Value: [10000, 10000, 0]
+          - PropertyId: 5
+            StableName: "LocalRotation"
+            Value: [0, 0, 0]
+          - PropertyId: 6
+            StableName: "LocalScale"
+            Value: [1, 1, 1]
+      - TypeId: 11457157452030541830
+        StableName: "TomCat.SpriteRenderer"
+        SchemaVersion: 2
+        Properties:
+          - PropertyId: 200
+            StableName: "Enabled"
+            Value: false
+          - PropertyId: 201
+            StableName: "Color"
+            Value: [1, 1, 1, 1]
+          - PropertyId: 202
+            StableName: "Sprite"
+            Value: 6200000000000010151
+          - PropertyId: 203
+            StableName: "TilingFactor"
+            Value: 1
+          - PropertyId: 204
+            StableName: "SortingLayer"
+            Value: 0
+          - PropertyId: 205
+            StableName: "OrderInLayer"
+            Value: 0
+          - PropertyId: 206
+            StableName: "NormalMap"
+            Value: 0
+          - PropertyId: 207
+            StableName: "CastShadows"
+            Value: false
+          - PropertyId: 208
+            StableName: "Material"
+            Value: 0
+    Parent: 0
+    SpriteRenderer:
+      Enabled: false
+      Color: [1, 1, 1, 1]
+      SpriteHandle: 6200000000000010151
+      TilingFactor: 1
+      SortingLayer: 0
+      OrderInLayer: 0
+      NormalMap: 0
+      CastShadows: false
+      Material: 0
+  - Entity: 6200000000000001126
+    Tag:
+      Tag: "Asset_Assets/Art/ui-pause-panel-0-2.png"
+      Visible: true
+    EntityMetadata:
+      GameplayTag: "Untagged"
+      Layer: 0
+      HierarchyIcon: "Entity"
+    Transform:
+      Translation: [10000, 10000, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+    LocalTransform:
+      Translation: [10000, 10000, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+    Components:
+      - TypeId: 11457157452030541825
+        StableName: "TomCat.ID"
+        SchemaVersion: 1
+        Properties:
+          - PropertyId: 1
+            StableName: "Value"
+            Value: 6200000000000001126
+      - TypeId: 11457157452030541826
+        StableName: "TomCat.Tag"
+        SchemaVersion: 1
+        Properties:
+          - PropertyId: 1
+            StableName: "Name"
+            Value: "Asset_Assets/Art/ui-pause-panel-0-2.png"
+          - PropertyId: 2
+            StableName: "Visible"
+            Value: true
+      - TypeId: 11457157452030541827
+        StableName: "TomCat.EntityMetadata"
+        SchemaVersion: 1
+        Properties:
+          - PropertyId: 1
+            StableName: "GameplayTag"
+            Value: "Untagged"
+          - PropertyId: 2
+            StableName: "Layer"
+            Value: 0
+          - PropertyId: 3
+            StableName: "HierarchyIcon"
+            Value: 1
+      - TypeId: 11457157452030541828
+        StableName: "TomCat.Transform"
+        SchemaVersion: 1
+        Properties:
+          - PropertyId: 1
+            StableName: "Translation"
+            Value: [10000, 10000, 0]
+          - PropertyId: 2
+            StableName: "Rotation"
+            Value: [0, 0, 0]
+          - PropertyId: 3
+            StableName: "Scale"
+            Value: [1, 1, 1]
+          - PropertyId: 4
+            StableName: "LocalTranslation"
+            Value: [10000, 10000, 0]
+          - PropertyId: 5
+            StableName: "LocalRotation"
+            Value: [0, 0, 0]
+          - PropertyId: 6
+            StableName: "LocalScale"
+            Value: [1, 1, 1]
+      - TypeId: 11457157452030541830
+        StableName: "TomCat.SpriteRenderer"
+        SchemaVersion: 2
+        Properties:
+          - PropertyId: 200
+            StableName: "Enabled"
+            Value: false
+          - PropertyId: 201
+            StableName: "Color"
+            Value: [1, 1, 1, 1]
+          - PropertyId: 202
+            StableName: "Sprite"
+            Value: 6200000000000010152
+          - PropertyId: 203
+            StableName: "TilingFactor"
+            Value: 1
+          - PropertyId: 204
+            StableName: "SortingLayer"
+            Value: 0
+          - PropertyId: 205
+            StableName: "OrderInLayer"
+            Value: 0
+          - PropertyId: 206
+            StableName: "NormalMap"
+            Value: 0
+          - PropertyId: 207
+            StableName: "CastShadows"
+            Value: false
+          - PropertyId: 208
+            StableName: "Material"
+            Value: 0
+    Parent: 0
+    SpriteRenderer:
+      Enabled: false
+      Color: [1, 1, 1, 1]
+      SpriteHandle: 6200000000000010152
+      TilingFactor: 1
+      SortingLayer: 0
+      OrderInLayer: 0
+      NormalMap: 0
+      CastShadows: false
+      Material: 0
+  - Entity: 6200000000000001127
+    Tag:
+      Tag: "Asset_Assets/Art/ui-pause-panel-1-0.png"
+      Visible: true
+    EntityMetadata:
+      GameplayTag: "Untagged"
+      Layer: 0
+      HierarchyIcon: "Entity"
+    Transform:
+      Translation: [10000, 10000, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+    LocalTransform:
+      Translation: [10000, 10000, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+    Components:
+      - TypeId: 11457157452030541825
+        StableName: "TomCat.ID"
+        SchemaVersion: 1
+        Properties:
+          - PropertyId: 1
+            StableName: "Value"
+            Value: 6200000000000001127
+      - TypeId: 11457157452030541826
+        StableName: "TomCat.Tag"
+        SchemaVersion: 1
+        Properties:
+          - PropertyId: 1
+            StableName: "Name"
+            Value: "Asset_Assets/Art/ui-pause-panel-1-0.png"
+          - PropertyId: 2
+            StableName: "Visible"
+            Value: true
+      - TypeId: 11457157452030541827
+        StableName: "TomCat.EntityMetadata"
+        SchemaVersion: 1
+        Properties:
+          - PropertyId: 1
+            StableName: "GameplayTag"
+            Value: "Untagged"
+          - PropertyId: 2
+            StableName: "Layer"
+            Value: 0
+          - PropertyId: 3
+            StableName: "HierarchyIcon"
+            Value: 1
+      - TypeId: 11457157452030541828
+        StableName: "TomCat.Transform"
+        SchemaVersion: 1
+        Properties:
+          - PropertyId: 1
+            StableName: "Translation"
+            Value: [10000, 10000, 0]
+          - PropertyId: 2
+            StableName: "Rotation"
+            Value: [0, 0, 0]
+          - PropertyId: 3
+            StableName: "Scale"
+            Value: [1, 1, 1]
+          - PropertyId: 4
+            StableName: "LocalTranslation"
+            Value: [10000, 10000, 0]
+          - PropertyId: 5
+            StableName: "LocalRotation"
+            Value: [0, 0, 0]
+          - PropertyId: 6
+            StableName: "LocalScale"
+            Value: [1, 1, 1]
+      - TypeId: 11457157452030541830
+        StableName: "TomCat.SpriteRenderer"
+        SchemaVersion: 2
+        Properties:
+          - PropertyId: 200
+            StableName: "Enabled"
+            Value: false
+          - PropertyId: 201
+            StableName: "Color"
+            Value: [1, 1, 1, 1]
+          - PropertyId: 202
+            StableName: "Sprite"
+            Value: 6200000000000010153
+          - PropertyId: 203
+            StableName: "TilingFactor"
+            Value: 1
+          - PropertyId: 204
+            StableName: "SortingLayer"
+            Value: 0
+          - PropertyId: 205
+            StableName: "OrderInLayer"
+            Value: 0
+          - PropertyId: 206
+            StableName: "NormalMap"
+            Value: 0
+          - PropertyId: 207
+            StableName: "CastShadows"
+            Value: false
+          - PropertyId: 208
+            StableName: "Material"
+            Value: 0
+    Parent: 0
+    SpriteRenderer:
+      Enabled: false
+      Color: [1, 1, 1, 1]
+      SpriteHandle: 6200000000000010153
+      TilingFactor: 1
+      SortingLayer: 0
+      OrderInLayer: 0
+      NormalMap: 0
+      CastShadows: false
+      Material: 0
+  - Entity: 6200000000000001128
+    Tag:
+      Tag: "Asset_Assets/Art/ui-pause-panel-1-1.png"
+      Visible: true
+    EntityMetadata:
+      GameplayTag: "Untagged"
+      Layer: 0
+      HierarchyIcon: "Entity"
+    Transform:
+      Translation: [10000, 10000, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+    LocalTransform:
+      Translation: [10000, 10000, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+    Components:
+      - TypeId: 11457157452030541825
+        StableName: "TomCat.ID"
+        SchemaVersion: 1
+        Properties:
+          - PropertyId: 1
+            StableName: "Value"
+            Value: 6200000000000001128
+      - TypeId: 11457157452030541826
+        StableName: "TomCat.Tag"
+        SchemaVersion: 1
+        Properties:
+          - PropertyId: 1
+            StableName: "Name"
+            Value: "Asset_Assets/Art/ui-pause-panel-1-1.png"
+          - PropertyId: 2
+            StableName: "Visible"
+            Value: true
+      - TypeId: 11457157452030541827
+        StableName: "TomCat.EntityMetadata"
+        SchemaVersion: 1
+        Properties:
+          - PropertyId: 1
+            StableName: "GameplayTag"
+            Value: "Untagged"
+          - PropertyId: 2
+            StableName: "Layer"
+            Value: 0
+          - PropertyId: 3
+            StableName: "HierarchyIcon"
+            Value: 1
+      - TypeId: 11457157452030541828
+        StableName: "TomCat.Transform"
+        SchemaVersion: 1
+        Properties:
+          - PropertyId: 1
+            StableName: "Translation"
+            Value: [10000, 10000, 0]
+          - PropertyId: 2
+            StableName: "Rotation"
+            Value: [0, 0, 0]
+          - PropertyId: 3
+            StableName: "Scale"
+            Value: [1, 1, 1]
+          - PropertyId: 4
+            StableName: "LocalTranslation"
+            Value: [10000, 10000, 0]
+          - PropertyId: 5
+            StableName: "LocalRotation"
+            Value: [0, 0, 0]
+          - PropertyId: 6
+            StableName: "LocalScale"
+            Value: [1, 1, 1]
+      - TypeId: 11457157452030541830
+        StableName: "TomCat.SpriteRenderer"
+        SchemaVersion: 2
+        Properties:
+          - PropertyId: 200
+            StableName: "Enabled"
+            Value: false
+          - PropertyId: 201
+            StableName: "Color"
+            Value: [1, 1, 1, 1]
+          - PropertyId: 202
+            StableName: "Sprite"
+            Value: 6200000000000010154
+          - PropertyId: 203
+            StableName: "TilingFactor"
+            Value: 1
+          - PropertyId: 204
+            StableName: "SortingLayer"
+            Value: 0
+          - PropertyId: 205
+            StableName: "OrderInLayer"
+            Value: 0
+          - PropertyId: 206
+            StableName: "NormalMap"
+            Value: 0
+          - PropertyId: 207
+            StableName: "CastShadows"
+            Value: false
+          - PropertyId: 208
+            StableName: "Material"
+            Value: 0
+    Parent: 0
+    SpriteRenderer:
+      Enabled: false
+      Color: [1, 1, 1, 1]
+      SpriteHandle: 6200000000000010154
+      TilingFactor: 1
+      SortingLayer: 0
+      OrderInLayer: 0
+      NormalMap: 0
+      CastShadows: false
+      Material: 0
+  - Entity: 6200000000000001129
+    Tag:
+      Tag: "Asset_Assets/Art/ui-pause-panel-1-2.png"
+      Visible: true
+    EntityMetadata:
+      GameplayTag: "Untagged"
+      Layer: 0
+      HierarchyIcon: "Entity"
+    Transform:
+      Translation: [10000, 10000, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+    LocalTransform:
+      Translation: [10000, 10000, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+    Components:
+      - TypeId: 11457157452030541825
+        StableName: "TomCat.ID"
+        SchemaVersion: 1
+        Properties:
+          - PropertyId: 1
+            StableName: "Value"
+            Value: 6200000000000001129
+      - TypeId: 11457157452030541826
+        StableName: "TomCat.Tag"
+        SchemaVersion: 1
+        Properties:
+          - PropertyId: 1
+            StableName: "Name"
+            Value: "Asset_Assets/Art/ui-pause-panel-1-2.png"
+          - PropertyId: 2
+            StableName: "Visible"
+            Value: true
+      - TypeId: 11457157452030541827
+        StableName: "TomCat.EntityMetadata"
+        SchemaVersion: 1
+        Properties:
+          - PropertyId: 1
+            StableName: "GameplayTag"
+            Value: "Untagged"
+          - PropertyId: 2
+            StableName: "Layer"
+            Value: 0
+          - PropertyId: 3
+            StableName: "HierarchyIcon"
+            Value: 1
+      - TypeId: 11457157452030541828
+        StableName: "TomCat.Transform"
+        SchemaVersion: 1
+        Properties:
+          - PropertyId: 1
+            StableName: "Translation"
+            Value: [10000, 10000, 0]
+          - PropertyId: 2
+            StableName: "Rotation"
+            Value: [0, 0, 0]
+          - PropertyId: 3
+            StableName: "Scale"
+            Value: [1, 1, 1]
+          - PropertyId: 4
+            StableName: "LocalTranslation"
+            Value: [10000, 10000, 0]
+          - PropertyId: 5
+            StableName: "LocalRotation"
+            Value: [0, 0, 0]
+          - PropertyId: 6
+            StableName: "LocalScale"
+            Value: [1, 1, 1]
+      - TypeId: 11457157452030541830
+        StableName: "TomCat.SpriteRenderer"
+        SchemaVersion: 2
+        Properties:
+          - PropertyId: 200
+            StableName: "Enabled"
+            Value: false
+          - PropertyId: 201
+            StableName: "Color"
+            Value: [1, 1, 1, 1]
+          - PropertyId: 202
+            StableName: "Sprite"
+            Value: 6200000000000010155
+          - PropertyId: 203
+            StableName: "TilingFactor"
+            Value: 1
+          - PropertyId: 204
+            StableName: "SortingLayer"
+            Value: 0
+          - PropertyId: 205
+            StableName: "OrderInLayer"
+            Value: 0
+          - PropertyId: 206
+            StableName: "NormalMap"
+            Value: 0
+          - PropertyId: 207
+            StableName: "CastShadows"
+            Value: false
+          - PropertyId: 208
+            StableName: "Material"
+            Value: 0
+    Parent: 0
+    SpriteRenderer:
+      Enabled: false
+      Color: [1, 1, 1, 1]
+      SpriteHandle: 6200000000000010155
+      TilingFactor: 1
+      SortingLayer: 0
+      OrderInLayer: 0
+      NormalMap: 0
+      CastShadows: false
+      Material: 0
+  - Entity: 6200000000000001130
+    Tag:
+      Tag: "Asset_Assets/Art/ui-pause-panel-2-0.png"
+      Visible: true
+    EntityMetadata:
+      GameplayTag: "Untagged"
+      Layer: 0
+      HierarchyIcon: "Entity"
+    Transform:
+      Translation: [10000, 10000, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+    LocalTransform:
+      Translation: [10000, 10000, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+    Components:
+      - TypeId: 11457157452030541825
+        StableName: "TomCat.ID"
+        SchemaVersion: 1
+        Properties:
+          - PropertyId: 1
+            StableName: "Value"
+            Value: 6200000000000001130
+      - TypeId: 11457157452030541826
+        StableName: "TomCat.Tag"
+        SchemaVersion: 1
+        Properties:
+          - PropertyId: 1
+            StableName: "Name"
+            Value: "Asset_Assets/Art/ui-pause-panel-2-0.png"
+          - PropertyId: 2
+            StableName: "Visible"
+            Value: true
+      - TypeId: 11457157452030541827
+        StableName: "TomCat.EntityMetadata"
+        SchemaVersion: 1
+        Properties:
+          - PropertyId: 1
+            StableName: "GameplayTag"
+            Value: "Untagged"
+          - PropertyId: 2
+            StableName: "Layer"
+            Value: 0
+          - PropertyId: 3
+            StableName: "HierarchyIcon"
+            Value: 1
+      - TypeId: 11457157452030541828
+        StableName: "TomCat.Transform"
+        SchemaVersion: 1
+        Properties:
+          - PropertyId: 1
+            StableName: "Translation"
+            Value: [10000, 10000, 0]
+          - PropertyId: 2
+            StableName: "Rotation"
+            Value: [0, 0, 0]
+          - PropertyId: 3
+            StableName: "Scale"
+            Value: [1, 1, 1]
+          - PropertyId: 4
+            StableName: "LocalTranslation"
+            Value: [10000, 10000, 0]
+          - PropertyId: 5
+            StableName: "LocalRotation"
+            Value: [0, 0, 0]
+          - PropertyId: 6
+            StableName: "LocalScale"
+            Value: [1, 1, 1]
+      - TypeId: 11457157452030541830
+        StableName: "TomCat.SpriteRenderer"
+        SchemaVersion: 2
+        Properties:
+          - PropertyId: 200
+            StableName: "Enabled"
+            Value: false
+          - PropertyId: 201
+            StableName: "Color"
+            Value: [1, 1, 1, 1]
+          - PropertyId: 202
+            StableName: "Sprite"
+            Value: 6200000000000010156
+          - PropertyId: 203
+            StableName: "TilingFactor"
+            Value: 1
+          - PropertyId: 204
+            StableName: "SortingLayer"
+            Value: 0
+          - PropertyId: 205
+            StableName: "OrderInLayer"
+            Value: 0
+          - PropertyId: 206
+            StableName: "NormalMap"
+            Value: 0
+          - PropertyId: 207
+            StableName: "CastShadows"
+            Value: false
+          - PropertyId: 208
+            StableName: "Material"
+            Value: 0
+    Parent: 0
+    SpriteRenderer:
+      Enabled: false
+      Color: [1, 1, 1, 1]
+      SpriteHandle: 6200000000000010156
+      TilingFactor: 1
+      SortingLayer: 0
+      OrderInLayer: 0
+      NormalMap: 0
+      CastShadows: false
+      Material: 0
+  - Entity: 6200000000000001131
+    Tag:
+      Tag: "Asset_Assets/Art/ui-pause-panel-2-1.png"
+      Visible: true
+    EntityMetadata:
+      GameplayTag: "Untagged"
+      Layer: 0
+      HierarchyIcon: "Entity"
+    Transform:
+      Translation: [10000, 10000, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+    LocalTransform:
+      Translation: [10000, 10000, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+    Components:
+      - TypeId: 11457157452030541825
+        StableName: "TomCat.ID"
+        SchemaVersion: 1
+        Properties:
+          - PropertyId: 1
+            StableName: "Value"
+            Value: 6200000000000001131
+      - TypeId: 11457157452030541826
+        StableName: "TomCat.Tag"
+        SchemaVersion: 1
+        Properties:
+          - PropertyId: 1
+            StableName: "Name"
+            Value: "Asset_Assets/Art/ui-pause-panel-2-1.png"
+          - PropertyId: 2
+            StableName: "Visible"
+            Value: true
+      - TypeId: 11457157452030541827
+        StableName: "TomCat.EntityMetadata"
+        SchemaVersion: 1
+        Properties:
+          - PropertyId: 1
+            StableName: "GameplayTag"
+            Value: "Untagged"
+          - PropertyId: 2
+            StableName: "Layer"
+            Value: 0
+          - PropertyId: 3
+            StableName: "HierarchyIcon"
+            Value: 1
+      - TypeId: 11457157452030541828
+        StableName: "TomCat.Transform"
+        SchemaVersion: 1
+        Properties:
+          - PropertyId: 1
+            StableName: "Translation"
+            Value: [10000, 10000, 0]
+          - PropertyId: 2
+            StableName: "Rotation"
+            Value: [0, 0, 0]
+          - PropertyId: 3
+            StableName: "Scale"
+            Value: [1, 1, 1]
+          - PropertyId: 4
+            StableName: "LocalTranslation"
+            Value: [10000, 10000, 0]
+          - PropertyId: 5
+            StableName: "LocalRotation"
+            Value: [0, 0, 0]
+          - PropertyId: 6
+            StableName: "LocalScale"
+            Value: [1, 1, 1]
+      - TypeId: 11457157452030541830
+        StableName: "TomCat.SpriteRenderer"
+        SchemaVersion: 2
+        Properties:
+          - PropertyId: 200
+            StableName: "Enabled"
+            Value: false
+          - PropertyId: 201
+            StableName: "Color"
+            Value: [1, 1, 1, 1]
+          - PropertyId: 202
+            StableName: "Sprite"
+            Value: 6200000000000010157
+          - PropertyId: 203
+            StableName: "TilingFactor"
+            Value: 1
+          - PropertyId: 204
+            StableName: "SortingLayer"
+            Value: 0
+          - PropertyId: 205
+            StableName: "OrderInLayer"
+            Value: 0
+          - PropertyId: 206
+            StableName: "NormalMap"
+            Value: 0
+          - PropertyId: 207
+            StableName: "CastShadows"
+            Value: false
+          - PropertyId: 208
+            StableName: "Material"
+            Value: 0
+    Parent: 0
+    SpriteRenderer:
+      Enabled: false
+      Color: [1, 1, 1, 1]
+      SpriteHandle: 6200000000000010157
+      TilingFactor: 1
+      SortingLayer: 0
+      OrderInLayer: 0
+      NormalMap: 0
+      CastShadows: false
+      Material: 0
+  - Entity: 6200000000000001132
+    Tag:
+      Tag: "Asset_Assets/Art/ui-pause-panel-2-2.png"
+      Visible: true
+    EntityMetadata:
+      GameplayTag: "Untagged"
+      Layer: 0
+      HierarchyIcon: "Entity"
+    Transform:
+      Translation: [10000, 10000, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+    LocalTransform:
+      Translation: [10000, 10000, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+    Components:
+      - TypeId: 11457157452030541825
+        StableName: "TomCat.ID"
+        SchemaVersion: 1
+        Properties:
+          - PropertyId: 1
+            StableName: "Value"
+            Value: 6200000000000001132
+      - TypeId: 11457157452030541826
+        StableName: "TomCat.Tag"
+        SchemaVersion: 1
+        Properties:
+          - PropertyId: 1
+            StableName: "Name"
+            Value: "Asset_Assets/Art/ui-pause-panel-2-2.png"
+          - PropertyId: 2
+            StableName: "Visible"
+            Value: true
+      - TypeId: 11457157452030541827
+        StableName: "TomCat.EntityMetadata"
+        SchemaVersion: 1
+        Properties:
+          - PropertyId: 1
+            StableName: "GameplayTag"
+            Value: "Untagged"
+          - PropertyId: 2
+            StableName: "Layer"
+            Value: 0
+          - PropertyId: 3
+            StableName: "HierarchyIcon"
+            Value: 1
+      - TypeId: 11457157452030541828
+        StableName: "TomCat.Transform"
+        SchemaVersion: 1
+        Properties:
+          - PropertyId: 1
+            StableName: "Translation"
+            Value: [10000, 10000, 0]
+          - PropertyId: 2
+            StableName: "Rotation"
+            Value: [0, 0, 0]
+          - PropertyId: 3
+            StableName: "Scale"
+            Value: [1, 1, 1]
+          - PropertyId: 4
+            StableName: "LocalTranslation"
+            Value: [10000, 10000, 0]
+          - PropertyId: 5
+            StableName: "LocalRotation"
+            Value: [0, 0, 0]
+          - PropertyId: 6
+            StableName: "LocalScale"
+            Value: [1, 1, 1]
+      - TypeId: 11457157452030541830
+        StableName: "TomCat.SpriteRenderer"
+        SchemaVersion: 2
+        Properties:
+          - PropertyId: 200
+            StableName: "Enabled"
+            Value: false
+          - PropertyId: 201
+            StableName: "Color"
+            Value: [1, 1, 1, 1]
+          - PropertyId: 202
+            StableName: "Sprite"
+            Value: 6200000000000010158
+          - PropertyId: 203
+            StableName: "TilingFactor"
+            Value: 1
+          - PropertyId: 204
+            StableName: "SortingLayer"
+            Value: 0
+          - PropertyId: 205
+            StableName: "OrderInLayer"
+            Value: 0
+          - PropertyId: 206
+            StableName: "NormalMap"
+            Value: 0
+          - PropertyId: 207
+            StableName: "CastShadows"
+            Value: false
+          - PropertyId: 208
+            StableName: "Material"
+            Value: 0
+    Parent: 0
+    SpriteRenderer:
+      Enabled: false
+      Color: [1, 1, 1, 1]
+      SpriteHandle: 6200000000000010158
+      TilingFactor: 1
+      SortingLayer: 0
+      OrderInLayer: 0
+      NormalMap: 0
+      CastShadows: false
+      Material: 0
+  - Entity: 6200000000000001133
     Tag:
       Tag: "Asset_Assets/Audio/coin.ogg"
       Visible: true
@@ -13451,7 +14783,7 @@ Entities:
         Properties:
           - PropertyId: 1
             StableName: "Value"
-            Value: 6200000000000001121
+            Value: 6200000000000001133
       - TypeId: 11457157452030541826
         StableName: "TomCat.Tag"
         SchemaVersion: 1
@@ -13551,7 +14883,7 @@ Entities:
       MaxDistance: 25
       MixerGroup: 1
       Bus: 4294967295
-  - Entity: 6200000000000001122
+  - Entity: 6200000000000001134
     Tag:
       Tag: "Asset_Assets/Audio/Crystaloid.wav"
       Visible: true
@@ -13574,7 +14906,7 @@ Entities:
         Properties:
           - PropertyId: 1
             StableName: "Value"
-            Value: 6200000000000001122
+            Value: 6200000000000001134
       - TypeId: 11457157452030541826
         StableName: "TomCat.Tag"
         SchemaVersion: 1
@@ -13674,7 +15006,7 @@ Entities:
       MaxDistance: 25
       MixerGroup: 1
       Bus: 4294967295
-  - Entity: 6200000000000001123
+  - Entity: 6200000000000001135
     Tag:
       Tag: "Asset_Assets/Audio/hit.ogg"
       Visible: true
@@ -13697,7 +15029,7 @@ Entities:
         Properties:
           - PropertyId: 1
             StableName: "Value"
-            Value: 6200000000000001123
+            Value: 6200000000000001135
       - TypeId: 11457157452030541826
         StableName: "TomCat.Tag"
         SchemaVersion: 1
@@ -13797,7 +15129,7 @@ Entities:
       MaxDistance: 25
       MixerGroup: 1
       Bus: 4294967295
-  - Entity: 6200000000000001124
+  - Entity: 6200000000000001136
     Tag:
       Tag: "Asset_Assets/Audio/jump.ogg"
       Visible: true
@@ -13820,7 +15152,7 @@ Entities:
         Properties:
           - PropertyId: 1
             StableName: "Value"
-            Value: 6200000000000001124
+            Value: 6200000000000001136
       - TypeId: 11457157452030541826
         StableName: "TomCat.Tag"
         SchemaVersion: 1
@@ -13920,7 +15252,7 @@ Entities:
       MaxDistance: 25
       MixerGroup: 1
       Bus: 4294967295
-  - Entity: 6200000000000001125
+  - Entity: 6200000000000001137
     Tag:
       Tag: "Asset_Assets/Audio/stair_down.ogg"
       Visible: true
@@ -13943,7 +15275,7 @@ Entities:
         Properties:
           - PropertyId: 1
             StableName: "Value"
-            Value: 6200000000000001125
+            Value: 6200000000000001137
       - TypeId: 11457157452030541826
         StableName: "TomCat.Tag"
         SchemaVersion: 1
@@ -14043,7 +15375,7 @@ Entities:
       MaxDistance: 25
       MixerGroup: 1
       Bus: 4294967295
-  - Entity: 6200000000000001126
+  - Entity: 6200000000000001138
     Tag:
       Tag: "Asset_Assets/Audio/Tutorial.wav"
       Visible: true
@@ -14066,7 +15398,7 @@ Entities:
         Properties:
           - PropertyId: 1
             StableName: "Value"
-            Value: 6200000000000001126
+            Value: 6200000000000001138
       - TypeId: 11457157452030541826
         StableName: "TomCat.Tag"
         SchemaVersion: 1
@@ -14166,7 +15498,7 @@ Entities:
       MaxDistance: 25
       MixerGroup: 1
       Bus: 4294967295
-  - Entity: 6200000000000001127
+  - Entity: 6200000000000001139
     Tag:
       Tag: "Asset_Assets/Fonts/nfdcsCN16.ttf"
       Visible: true
@@ -14189,7 +15521,7 @@ Entities:
         Properties:
           - PropertyId: 1
             StableName: "Value"
-            Value: 6200000000000001127
+            Value: 6200000000000001139
       - TypeId: 11457157452030541826
         StableName: "TomCat.Tag"
         SchemaVersion: 1

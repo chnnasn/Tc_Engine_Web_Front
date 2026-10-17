@@ -300,9 +300,9 @@ try {
   await page.goto(`${base}/games/return`)
   activePackage = readFileSync(fixture.packagePath)
   await page.getByRole('button', { name: '开始游玩', exact: true }).first().click()
-  await page.locator('.player-status').filter({ hasText: '已就绪' }).waitFor({ timeout: 180000 })
-  const ready = Date.now() + 30000
-  while (!logs.some(value => value.includes('[Return] ready')) && Date.now() < ready) await wait(100)
+  await page.locator('.player-status').filter({ hasText: '已就绪' }).waitFor({ timeout: Number(process.env.TEST_BOOT_TIMEOUT || 180000) })
+  const ready = Date.now() + Number(process.env.TEST_BOOT_TIMEOUT || 180000)
+  while (!logs.some(value => value.includes('[Return] ready')) && Date.now() < ready) { assertRuntimeHealthy(); await wait(100) }
   assert.ok(logs.some(value => value.includes('[Return] ready')))
   assert.equal(fixture.manifest.startup, 'production-menu-ready-then-selection-flush', 'Performance fixture must preserve real menu warmup')
   const initialized = Date.now() + 30000
@@ -316,7 +316,9 @@ try {
   receipt = await page.evaluate(() => window.__returnQaReceipt)
   assert.equal(receipt?.sha256, fixture.manifest.packageSha256)
   assert.equal(receipt.bytes, fixture.manifest.packageBytes)
-  frame = page.frames().find(value => value !== page.mainFrame()); canvas = frame.locator('canvas')
+  frame = page.frames().find(value => value.url() === new URL('/engine-host.html', base).href)
+  assert.ok(frame, 'native engine iframe must exist')
+  canvas = frame.locator('canvas')
   loadedEngine = await readLoadedEngine(frame)
   assert.ok([loadedEngine.manifest.commit, ...(loadedEngine.manifest.legacyCommits || [])].includes(fixture.manifest.engineCommit), 'fixture must match the engine actually loaded')
   await canvas.focus(); await wait(500)
@@ -351,6 +353,18 @@ try {
     assert.ok(initial.maps.some(map => map.visible), 'current realm must have visible native maps')
     assertLevel3Boxes(initial, true)
     run.snapshots.push(initial)
+    if (selection.stage === 6) {
+      const pauseLog = logs.length
+      for (const key of ['p', 'Escape']) {
+        await press(key)
+        const state = await snapshot(`final-ignores-${key}`)
+        assert.equal(state.stage, 6); assert.equal(state.realm, selection.realm)
+        assert.equal(state.paused, false, 'Original final scene must not open the pause menu')
+        run.snapshots.push(state)
+      }
+      assert.ok(!logs.slice(pauseLog).some(value => value.includes('[Return] paused:true')),
+        'Final P/Escape must not transiently pause and then resume')
+    }
     const prefix = `${selection.stage}-${selection.realm}`
     await canvas.screenshot({ path: `${output}/${prefix}-initial.png` })
     run.phases.push(await measure('idle', () => wait(seconds * 1000)))
@@ -405,7 +419,7 @@ try {
     await page.evaluate(() => document.exitFullscreen())
   }
   await page.getByRole('button', { name: '关闭播放器', exact: true }).click()
-  assert.equal(await page.locator('iframe').count(), 0)
+  assert.equal(await page.locator('iframe[title="TomCat 游戏播放器"]').count(), 0, 'closing removes the runtime iframe')
   await page.waitForFunction(() => top.__returnQaContexts.every(value => value.state === 'closed'))
   assertRuntimeHealthy()
   assert.equal(productionReceipt(), sourceReceipt, 'QA must never mutate the production project')

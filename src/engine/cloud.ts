@@ -102,19 +102,37 @@ export async function saveCloudProject(document: EngineDocument, binding: CloudB
   if (document.version !== 2) throw new Error('请在引擎中打开旧项目并保存完整配置后，再同步云端')
   const user = await currentUser()
   if (user.id !== binding.ownerId) throw new Error('此项目关联其他云端账号，请切换账号或解除关联')
-  const files: FileReference[] = []
-  for (const [path, encoded] of Object.entries(document.files)) {
-    const bytes = decodeFile(encoded)
-    const hash = await contentHash(bytes)
-    let uploaded: { uploadId: string; contentHash: string; size: number } | undefined
-    if (options.reuseUploads) {
-      try { uploaded = await (await api(`${idPath(binding.projectId)}/uploads/by-hash/${hash}`)).json() }
-      catch (error) { if (!(error instanceof CloudError && error.status === 404)) throw error }
+  const entries = Object.entries(document.files)
+  const files: FileReference[] = new Array(entries.length)
+  let nextFile = 0, failed = false
+  let uploadError: unknown
+  // Bound both decoded buffers and network work. Preserve manifest order even
+  // when responses arrive out of order, and never publish a partial upload.
+  async function uploadFiles() {
+    while (!failed && nextFile < entries.length) {
+      const index = nextFile++
+      try {
+        const [path, encoded] = entries[index]!
+        const bytes = decodeFile(encoded)
+        const hash = await contentHash(bytes)
+        if (failed) return
+        let uploaded: { uploadId: string; contentHash: string; size: number } | undefined
+        if (options.reuseUploads) {
+          try { uploaded = await (await api(`${idPath(binding.projectId)}/uploads/by-hash/${hash}`)).json() }
+          catch (error) { if (!(error instanceof CloudError && error.status === 404)) throw error }
+        }
+        if (failed) return
+        if (!uploaded) uploaded = await (await api(`${idPath(binding.projectId)}/uploads/${hash}`, { method: 'PUT', headers: { 'Content-Type': 'application/octet-stream' }, body: new Uint8Array(bytes).buffer })).json()
+        if (!uploaded || uploaded.contentHash !== hash || uploaded.size !== bytes.length || !/^[a-f0-9]{32}$/.test(uploaded.uploadId)) throw new Error('云端上传校验失败')
+        files[index] = { path, uploadId: uploaded.uploadId, contentHash: hash, size: bytes.length }
+      } catch (error) {
+        if (!failed) { failed = true; uploadError = error }
+      }
     }
-    if (!uploaded) uploaded = await (await api(`${idPath(binding.projectId)}/uploads/${hash}`, { method: 'PUT', headers: { 'Content-Type': 'application/octet-stream' }, body: new Uint8Array(bytes).buffer })).json()
-    if (!uploaded || uploaded.contentHash !== hash || uploaded.size !== bytes.length || !/^[a-f0-9]{32}$/.test(uploaded.uploadId)) throw new Error('云端上传校验失败')
-    files.push({ path, uploadId: uploaded.uploadId, contentHash: hash, size: bytes.length })
   }
+  // Drain requests already in flight before releasing the caller's save lock.
+  await Promise.all(Array.from({ length: Math.min(4, entries.length) }, () => uploadFiles()))
+  if (failed) throw uploadError
   const manifest: Manifest = { schemaVersion: 2, engineCommit: document.engineCommit, sceneHandle: document.sceneHandle, archive: document.archive, files, directories: document.directories }
   if (options.checkpoint) manifest.aiCheckpoint = options.checkpoint
   const headers = binding.etag === null ? { 'If-None-Match': '*' } : { 'If-Match': binding.etag }

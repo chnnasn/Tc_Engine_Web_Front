@@ -80,7 +80,7 @@ onBeforeUnmount(stop)
     <p v-if="loading" role="status">正在加载游戏资源…</p>
     <p v-else-if="error" role="alert">{{ error }}<span v-if="hint" class="player-hint">{{ hint }}</span></p>
     <p v-if="running" class="player-status" role="status">{{ game.packageUrl ? `${game.title} 已就绪` : `正在运行 ${game.title} 的游戏包` }}</p>
-    <div v-if="bytes" ref="stage" class="runtime-player"><EngineSurface :key="generation" kind="player" :bytes="bytes" @ready="running = true" @error="engineError" /></div>
+    <div v-if="bytes" ref="stage" class="runtime-player"><EngineSurface :key="generation" kind="player" :bytes="bytes" @ready="running = true" @error="engineError" @exit="emit('close')" /></div>
     <p v-if="fullscreenError" role="status">{{ fullscreenError }}</p>
     <div class="dialog-actions"><button v-if="running" class="button" @click="fullscreen">全屏游玩</button><button v-if="bytes" class="button" @click="stop">停止</button><button v-else-if="!loading" class="button" @click="load">{{ error ? '重试' : '重新加载' }}</button><button class="button button-primary" @click="emit('close')">关闭播放器</button></div>
   </AppModal>
