@@ -7,4 +7,7 @@ Asset:
     sRGB: false
     generateMipmaps: false
     compression: rgba8
+    filterMode: nearest
+    wrapU: clamp
+    wrapV: clamp
   SubAssets: []

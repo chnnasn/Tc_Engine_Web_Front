@@ -1,0 +1,4642 @@
+{
+  "schema": 1,
+  "source": "Assets/Scenes/Main.unity",
+  "sourceSha256": "be3fffdfcd42339c77a0a899907b44d5439bdbbf955f9a897078215305388890",
+  "canvasId": "673685729",
+  "canvas": {
+    "type": "Canvas",
+    "m_ObjectHideFlags": 0,
+    "m_CorrespondingSourceObject": {
+      "fileID": "0"
+    },
+    "m_PrefabInstance": {
+      "fileID": "0"
+    },
+    "m_PrefabAsset": {
+      "fileID": "0"
+    },
+    "m_GameObject": {
+      "fileID": "673685729"
+    },
+    "m_Enabled": 1,
+    "serializedVersion": 3,
+    "m_RenderMode": 0,
+    "m_Camera": {
+      "fileID": "0"
+    },
+    "m_PlaneDistance": 100,
+    "m_PixelPerfect": 0,
+    "m_ReceivesEvents": 1,
+    "m_OverrideSorting": 0,
+    "m_OverridePixelPerfect": 0,
+    "m_SortingBucketNormalizedSize": 0,
+    "m_VertexColorAlwaysGammaSpace": 0,
+    "m_AdditionalShaderChannelsFlag": 0,
+    "m_UpdateRectTransformForStandalone": 0,
+    "m_SortingLayerID": 0,
+    "m_SortingOrder": 1,
+    "m_TargetDisplay": 0
+  },
+  "scaler": {
+    "type": "MonoBehaviour",
+    "m_ObjectHideFlags": 0,
+    "m_CorrespondingSourceObject": {
+      "fileID": "0"
+    },
+    "m_PrefabInstance": {
+      "fileID": "0"
+    },
+    "m_PrefabAsset": {
+      "fileID": "0"
+    },
+    "m_GameObject": {
+      "fileID": "673685729"
+    },
+    "m_Enabled": 1,
+    "m_EditorHideFlags": 0,
+    "m_Script": {
+      "fileID": "11500000",
+      "guid": "0cd44c1031e13a943bb63640046fad76",
+      "type": 3
+    },
+    "m_Name": null,
+    "m_EditorClassIdentifier": null,
+    "m_UiScaleMode": 0,
+    "m_ReferencePixelsPerUnit": 50,
+    "m_ScaleFactor": 5,
+    "m_ReferenceResolution": {
+      "x": 800,
+      "y": 600
+    },
+    "m_ScreenMatchMode": 0,
+    "m_MatchWidthOrHeight": 0,
+    "m_PhysicalUnit": 3,
+    "m_FallbackScreenDPI": 96,
+    "m_DefaultSpriteDPI": 96,
+    "m_DynamicPixelsPerUnit": 1,
+    "m_PresetInfoIsWorld": 0
+  },
+  "fontHandle": "6200000000000000020",
+  "nodes": [
+    {
+      "id": "1180627484",
+      "transformId": "1180627485",
+      "path": "Menu/Panel",
+      "activeInHierarchy": true,
+      "transform": {
+        "type": "RectTransform",
+        "m_ObjectHideFlags": 0,
+        "m_CorrespondingSourceObject": {
+          "fileID": "0"
+        },
+        "m_PrefabInstance": {
+          "fileID": "0"
+        },
+        "m_PrefabAsset": {
+          "fileID": "0"
+        },
+        "m_GameObject": {
+          "fileID": "1180627484"
+        },
+        "m_LocalRotation": {
+          "x": 0,
+          "y": 0,
+          "z": 0,
+          "w": 1
+        },
+        "m_LocalPosition": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "m_LocalScale": {
+          "x": 1,
+          "y": 1,
+          "z": 1
+        },
+        "m_ConstrainProportionsScale": 0,
+        "m_Children": [
+          {
+            "fileID": "594579510"
+          },
+          {
+            "fileID": "244532495"
+          },
+          {
+            "fileID": "1451933221"
+          },
+          {
+            "fileID": "759763978"
+          },
+          {
+            "fileID": "1037711523"
+          }
+        ],
+        "m_Father": {
+          "fileID": "673685733"
+        },
+        "m_LocalEulerAnglesHint": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "m_AnchorMin": {
+          "x": 0,
+          "y": 0
+        },
+        "m_AnchorMax": {
+          "x": 1,
+          "y": 1
+        },
+        "m_AnchoredPosition": {
+          "x": 0,
+          "y": 0
+        },
+        "m_SizeDelta": {
+          "x": 0,
+          "y": 0
+        },
+        "m_Pivot": {
+          "x": 0.5,
+          "y": 0.5
+        }
+      },
+      "components": [
+        {
+          "type": "RectTransform",
+          "m_ObjectHideFlags": 0,
+          "m_CorrespondingSourceObject": {
+            "fileID": "0"
+          },
+          "m_PrefabInstance": {
+            "fileID": "0"
+          },
+          "m_PrefabAsset": {
+            "fileID": "0"
+          },
+          "m_GameObject": {
+            "fileID": "1180627484"
+          },
+          "m_LocalRotation": {
+            "x": 0,
+            "y": 0,
+            "z": 0,
+            "w": 1
+          },
+          "m_LocalPosition": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "m_LocalScale": {
+            "x": 1,
+            "y": 1,
+            "z": 1
+          },
+          "m_ConstrainProportionsScale": 0,
+          "m_Children": [
+            {
+              "fileID": "594579510"
+            },
+            {
+              "fileID": "244532495"
+            },
+            {
+              "fileID": "1451933221"
+            },
+            {
+              "fileID": "759763978"
+            },
+            {
+              "fileID": "1037711523"
+            }
+          ],
+          "m_Father": {
+            "fileID": "673685733"
+          },
+          "m_LocalEulerAnglesHint": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "m_AnchorMin": {
+            "x": 0,
+            "y": 0
+          },
+          "m_AnchorMax": {
+            "x": 1,
+            "y": 1
+          },
+          "m_AnchoredPosition": {
+            "x": 0,
+            "y": 0
+          },
+          "m_SizeDelta": {
+            "x": 0,
+            "y": 0
+          },
+          "m_Pivot": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "type": "CanvasRenderer",
+          "m_ObjectHideFlags": 0,
+          "m_CorrespondingSourceObject": {
+            "fileID": "0"
+          },
+          "m_PrefabInstance": {
+            "fileID": "0"
+          },
+          "m_PrefabAsset": {
+            "fileID": "0"
+          },
+          "m_GameObject": {
+            "fileID": "1180627484"
+          },
+          "m_CullTransparentMesh": 1
+        },
+        {
+          "type": "MonoBehaviour",
+          "m_ObjectHideFlags": 0,
+          "m_CorrespondingSourceObject": {
+            "fileID": "0"
+          },
+          "m_PrefabInstance": {
+            "fileID": "0"
+          },
+          "m_PrefabAsset": {
+            "fileID": "0"
+          },
+          "m_GameObject": {
+            "fileID": "1180627484"
+          },
+          "m_Enabled": 1,
+          "m_EditorHideFlags": 0,
+          "m_Script": {
+            "fileID": "11500000",
+            "guid": "fe87c0e1cc204ed48ad3b37840f39efc",
+            "type": 3
+          },
+          "m_Name": null,
+          "m_EditorClassIdentifier": null,
+          "m_Material": {
+            "fileID": "0"
+          },
+          "m_Color": {
+            "r": 1,
+            "g": 1,
+            "b": 1,
+            "a": 0.5686275
+          },
+          "m_RaycastTarget": 1,
+          "m_RaycastPadding": {
+            "x": 0,
+            "y": 0,
+            "z": 0,
+            "w": 0
+          },
+          "m_Maskable": 1,
+          "m_OnCullStateChanged": {
+            "m_PersistentCalls": {
+              "m_Calls": []
+            }
+          },
+          "m_Sprite": {
+            "fileID": "10907",
+            "guid": "0000000000000000f000000000000000",
+            "type": 0
+          },
+          "m_Type": 1,
+          "m_PreserveAspect": 0,
+          "m_FillCenter": 1,
+          "m_FillMethod": 4,
+          "m_FillAmount": 1,
+          "m_FillClockwise": 1,
+          "m_FillOrigin": 0,
+          "m_UseSpriteMesh": 0,
+          "m_PixelsPerUnitMultiplier": 1
+        }
+      ],
+      "runtime": {
+        "Id": "1180627484",
+        "Name": "Panel",
+        "Parent": -1,
+        "Active": true,
+        "X": 0,
+        "Y": 0,
+        "W": 0,
+        "H": 0,
+        "AnchorMinX": 0,
+        "AnchorMinY": 0,
+        "AnchorMaxX": 1,
+        "AnchorMaxY": 1,
+        "PivotX": 0.5,
+        "PivotY": 0.5,
+        "ScaleX": 1.0,
+        "ScaleY": 1.0,
+        "ScaleZ": 1,
+        "Rotation": 0.0,
+        "Texture": "0",
+        "Image": false,
+        "Text": null,
+        "R": 1,
+        "G": 1,
+        "B": 1,
+        "A": 0.5686275,
+        "Font": "6200000000000000020",
+        "FontSize": 0,
+        "Alignment": 1,
+        "VerticalAlignment": 1,
+        "LineSpacing": 1,
+        "Wrap": false,
+        "Raycast": true,
+        "PreserveAspect": false,
+        "Button": null,
+        "ButtonAnimation": false
+      }
+    },
+    {
+      "id": "1180627484:slice:0:0",
+      "sourceParentId": "1180627484",
+      "path": "Menu/Panel/Background Slice 0,0",
+      "generated": "UnityBuiltinBackgroundSlice",
+      "activeInHierarchy": true,
+      "runtime": {
+        "Id": "1180627484:slice:0:0",
+        "Name": "Background Slice 0,0",
+        "Parent": 0,
+        "Active": true,
+        "X": 0,
+        "Y": 0,
+        "W": 2.5,
+        "H": 2.5,
+        "AnchorMinX": 0,
+        "AnchorMinY": 0,
+        "AnchorMaxX": 0,
+        "AnchorMaxY": 0,
+        "PivotX": 0,
+        "PivotY": 0,
+        "ScaleX": 1,
+        "ScaleY": 1,
+        "ScaleZ": 1,
+        "Rotation": 0,
+        "Texture": "6200000000000010150",
+        "Image": true,
+        "Text": null,
+        "R": 1,
+        "G": 1,
+        "B": 1,
+        "A": 0.5686275,
+        "Font": "6200000000000000020",
+        "FontSize": 0,
+        "Alignment": 1,
+        "VerticalAlignment": 1,
+        "LineSpacing": 1,
+        "Wrap": false,
+        "Raycast": true,
+        "PreserveAspect": false,
+        "Button": null,
+        "ButtonAnimation": false
+      }
+    },
+    {
+      "id": "1180627484:slice:0:1",
+      "sourceParentId": "1180627484",
+      "path": "Menu/Panel/Background Slice 0,1",
+      "generated": "UnityBuiltinBackgroundSlice",
+      "activeInHierarchy": true,
+      "runtime": {
+        "Id": "1180627484:slice:0:1",
+        "Name": "Background Slice 0,1",
+        "Parent": 0,
+        "Active": true,
+        "X": 0.0,
+        "Y": 0,
+        "W": -5.0,
+        "H": 2.5,
+        "AnchorMinX": 0,
+        "AnchorMinY": 0,
+        "AnchorMaxX": 1,
+        "AnchorMaxY": 0,
+        "PivotX": 0.5,
+        "PivotY": 0,
+        "ScaleX": 1,
+        "ScaleY": 1,
+        "ScaleZ": 1,
+        "Rotation": 0,
+        "Texture": "6200000000000010151",
+        "Image": true,
+        "Text": null,
+        "R": 1,
+        "G": 1,
+        "B": 1,
+        "A": 0.5686275,
+        "Font": "6200000000000000020",
+        "FontSize": 0,
+        "Alignment": 1,
+        "VerticalAlignment": 1,
+        "LineSpacing": 1,
+        "Wrap": false,
+        "Raycast": true,
+        "PreserveAspect": false,
+        "Button": null,
+        "ButtonAnimation": false
+      }
+    },
+    {
+      "id": "1180627484:slice:0:2",
+      "sourceParentId": "1180627484",
+      "path": "Menu/Panel/Background Slice 0,2",
+      "generated": "UnityBuiltinBackgroundSlice",
+      "activeInHierarchy": true,
+      "runtime": {
+        "Id": "1180627484:slice:0:2",
+        "Name": "Background Slice 0,2",
+        "Parent": 0,
+        "Active": true,
+        "X": 0,
+        "Y": 0,
+        "W": 2.5,
+        "H": 2.5,
+        "AnchorMinX": 1,
+        "AnchorMinY": 0,
+        "AnchorMaxX": 1,
+        "AnchorMaxY": 0,
+        "PivotX": 1,
+        "PivotY": 0,
+        "ScaleX": 1,
+        "ScaleY": 1,
+        "ScaleZ": 1,
+        "Rotation": 0,
+        "Texture": "6200000000000010152",
+        "Image": true,
+        "Text": null,
+        "R": 1,
+        "G": 1,
+        "B": 1,
+        "A": 0.5686275,
+        "Font": "6200000000000000020",
+        "FontSize": 0,
+        "Alignment": 1,
+        "VerticalAlignment": 1,
+        "LineSpacing": 1,
+        "Wrap": false,
+        "Raycast": true,
+        "PreserveAspect": false,
+        "Button": null,
+        "ButtonAnimation": false
+      }
+    },
+    {
+      "id": "1180627484:slice:1:0",
+      "sourceParentId": "1180627484",
+      "path": "Menu/Panel/Background Slice 1,0",
+      "generated": "UnityBuiltinBackgroundSlice",
+      "activeInHierarchy": true,
+      "runtime": {
+        "Id": "1180627484:slice:1:0",
+        "Name": "Background Slice 1,0",
+        "Parent": 0,
+        "Active": true,
+        "X": 0,
+        "Y": 0.0,
+        "W": 2.5,
+        "H": -5.0,
+        "AnchorMinX": 0,
+        "AnchorMinY": 0,
+        "AnchorMaxX": 0,
+        "AnchorMaxY": 1,
+        "PivotX": 0,
+        "PivotY": 0.5,
+        "ScaleX": 1,
+        "ScaleY": 1,
+        "ScaleZ": 1,
+        "Rotation": 0,
+        "Texture": "6200000000000010153",
+        "Image": true,
+        "Text": null,
+        "R": 1,
+        "G": 1,
+        "B": 1,
+        "A": 0.5686275,
+        "Font": "6200000000000000020",
+        "FontSize": 0,
+        "Alignment": 1,
+        "VerticalAlignment": 1,
+        "LineSpacing": 1,
+        "Wrap": false,
+        "Raycast": true,
+        "PreserveAspect": false,
+        "Button": null,
+        "ButtonAnimation": false
+      }
+    },
+    {
+      "id": "1180627484:slice:1:1",
+      "sourceParentId": "1180627484",
+      "path": "Menu/Panel/Background Slice 1,1",
+      "generated": "UnityBuiltinBackgroundSlice",
+      "activeInHierarchy": true,
+      "runtime": {
+        "Id": "1180627484:slice:1:1",
+        "Name": "Background Slice 1,1",
+        "Parent": 0,
+        "Active": true,
+        "X": 0.0,
+        "Y": 0.0,
+        "W": -5.0,
+        "H": -5.0,
+        "AnchorMinX": 0,
+        "AnchorMinY": 0,
+        "AnchorMaxX": 1,
+        "AnchorMaxY": 1,
+        "PivotX": 0.5,
+        "PivotY": 0.5,
+        "ScaleX": 1,
+        "ScaleY": 1,
+        "ScaleZ": 1,
+        "Rotation": 0,
+        "Texture": "6200000000000010154",
+        "Image": true,
+        "Text": null,
+        "R": 1,
+        "G": 1,
+        "B": 1,
+        "A": 0.5686275,
+        "Font": "6200000000000000020",
+        "FontSize": 0,
+        "Alignment": 1,
+        "VerticalAlignment": 1,
+        "LineSpacing": 1,
+        "Wrap": false,
+        "Raycast": true,
+        "PreserveAspect": false,
+        "Button": null,
+        "ButtonAnimation": false
+      }
+    },
+    {
+      "id": "1180627484:slice:1:2",
+      "sourceParentId": "1180627484",
+      "path": "Menu/Panel/Background Slice 1,2",
+      "generated": "UnityBuiltinBackgroundSlice",
+      "activeInHierarchy": true,
+      "runtime": {
+        "Id": "1180627484:slice:1:2",
+        "Name": "Background Slice 1,2",
+        "Parent": 0,
+        "Active": true,
+        "X": 0,
+        "Y": 0.0,
+        "W": 2.5,
+        "H": -5.0,
+        "AnchorMinX": 1,
+        "AnchorMinY": 0,
+        "AnchorMaxX": 1,
+        "AnchorMaxY": 1,
+        "PivotX": 1,
+        "PivotY": 0.5,
+        "ScaleX": 1,
+        "ScaleY": 1,
+        "ScaleZ": 1,
+        "Rotation": 0,
+        "Texture": "6200000000000010155",
+        "Image": true,
+        "Text": null,
+        "R": 1,
+        "G": 1,
+        "B": 1,
+        "A": 0.5686275,
+        "Font": "6200000000000000020",
+        "FontSize": 0,
+        "Alignment": 1,
+        "VerticalAlignment": 1,
+        "LineSpacing": 1,
+        "Wrap": false,
+        "Raycast": true,
+        "PreserveAspect": false,
+        "Button": null,
+        "ButtonAnimation": false
+      }
+    },
+    {
+      "id": "1180627484:slice:2:0",
+      "sourceParentId": "1180627484",
+      "path": "Menu/Panel/Background Slice 2,0",
+      "generated": "UnityBuiltinBackgroundSlice",
+      "activeInHierarchy": true,
+      "runtime": {
+        "Id": "1180627484:slice:2:0",
+        "Name": "Background Slice 2,0",
+        "Parent": 0,
+        "Active": true,
+        "X": 0,
+        "Y": 0,
+        "W": 2.5,
+        "H": 2.5,
+        "AnchorMinX": 0,
+        "AnchorMinY": 1,
+        "AnchorMaxX": 0,
+        "AnchorMaxY": 1,
+        "PivotX": 0,
+        "PivotY": 1,
+        "ScaleX": 1,
+        "ScaleY": 1,
+        "ScaleZ": 1,
+        "Rotation": 0,
+        "Texture": "6200000000000010156",
+        "Image": true,
+        "Text": null,
+        "R": 1,
+        "G": 1,
+        "B": 1,
+        "A": 0.5686275,
+        "Font": "6200000000000000020",
+        "FontSize": 0,
+        "Alignment": 1,
+        "VerticalAlignment": 1,
+        "LineSpacing": 1,
+        "Wrap": false,
+        "Raycast": true,
+        "PreserveAspect": false,
+        "Button": null,
+        "ButtonAnimation": false
+      }
+    },
+    {
+      "id": "1180627484:slice:2:1",
+      "sourceParentId": "1180627484",
+      "path": "Menu/Panel/Background Slice 2,1",
+      "generated": "UnityBuiltinBackgroundSlice",
+      "activeInHierarchy": true,
+      "runtime": {
+        "Id": "1180627484:slice:2:1",
+        "Name": "Background Slice 2,1",
+        "Parent": 0,
+        "Active": true,
+        "X": 0.0,
+        "Y": 0,
+        "W": -5.0,
+        "H": 2.5,
+        "AnchorMinX": 0,
+        "AnchorMinY": 1,
+        "AnchorMaxX": 1,
+        "AnchorMaxY": 1,
+        "PivotX": 0.5,
+        "PivotY": 1,
+        "ScaleX": 1,
+        "ScaleY": 1,
+        "ScaleZ": 1,
+        "Rotation": 0,
+        "Texture": "6200000000000010157",
+        "Image": true,
+        "Text": null,
+        "R": 1,
+        "G": 1,
+        "B": 1,
+        "A": 0.5686275,
+        "Font": "6200000000000000020",
+        "FontSize": 0,
+        "Alignment": 1,
+        "VerticalAlignment": 1,
+        "LineSpacing": 1,
+        "Wrap": false,
+        "Raycast": true,
+        "PreserveAspect": false,
+        "Button": null,
+        "ButtonAnimation": false
+      }
+    },
+    {
+      "id": "1180627484:slice:2:2",
+      "sourceParentId": "1180627484",
+      "path": "Menu/Panel/Background Slice 2,2",
+      "generated": "UnityBuiltinBackgroundSlice",
+      "activeInHierarchy": true,
+      "runtime": {
+        "Id": "1180627484:slice:2:2",
+        "Name": "Background Slice 2,2",
+        "Parent": 0,
+        "Active": true,
+        "X": 0,
+        "Y": 0,
+        "W": 2.5,
+        "H": 2.5,
+        "AnchorMinX": 1,
+        "AnchorMinY": 1,
+        "AnchorMaxX": 1,
+        "AnchorMaxY": 1,
+        "PivotX": 1,
+        "PivotY": 1,
+        "ScaleX": 1,
+        "ScaleY": 1,
+        "ScaleZ": 1,
+        "Rotation": 0,
+        "Texture": "6200000000000010158",
+        "Image": true,
+        "Text": null,
+        "R": 1,
+        "G": 1,
+        "B": 1,
+        "A": 0.5686275,
+        "Font": "6200000000000000020",
+        "FontSize": 0,
+        "Alignment": 1,
+        "VerticalAlignment": 1,
+        "LineSpacing": 1,
+        "Wrap": false,
+        "Raycast": true,
+        "PreserveAspect": false,
+        "Button": null,
+        "ButtonAnimation": false
+      }
+    },
+    {
+      "id": "594579509",
+      "transformId": "594579510",
+      "path": "Menu/Panel/Win",
+      "activeInHierarchy": true,
+      "transform": {
+        "type": "RectTransform",
+        "m_ObjectHideFlags": 0,
+        "m_CorrespondingSourceObject": {
+          "fileID": "0"
+        },
+        "m_PrefabInstance": {
+          "fileID": "0"
+        },
+        "m_PrefabAsset": {
+          "fileID": "0"
+        },
+        "m_GameObject": {
+          "fileID": "594579509"
+        },
+        "m_LocalRotation": {
+          "x": 0,
+          "y": 0,
+          "z": 0,
+          "w": 1
+        },
+        "m_LocalPosition": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "m_LocalScale": {
+          "x": 0.489615,
+          "y": 0.489615,
+          "z": 0.489615
+        },
+        "m_ConstrainProportionsScale": 0,
+        "m_Children": [],
+        "m_Father": {
+          "fileID": "1180627485"
+        },
+        "m_LocalEulerAnglesHint": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "m_AnchorMin": {
+          "x": 0.5,
+          "y": 0.5
+        },
+        "m_AnchorMax": {
+          "x": 0.5,
+          "y": 0.5
+        },
+        "m_AnchoredPosition": {
+          "x": 1.5,
+          "y": 49.2
+        },
+        "m_SizeDelta": {
+          "x": 100,
+          "y": 100
+        },
+        "m_Pivot": {
+          "x": 0.5,
+          "y": 0.5
+        }
+      },
+      "components": [
+        {
+          "type": "RectTransform",
+          "m_ObjectHideFlags": 0,
+          "m_CorrespondingSourceObject": {
+            "fileID": "0"
+          },
+          "m_PrefabInstance": {
+            "fileID": "0"
+          },
+          "m_PrefabAsset": {
+            "fileID": "0"
+          },
+          "m_GameObject": {
+            "fileID": "594579509"
+          },
+          "m_LocalRotation": {
+            "x": 0,
+            "y": 0,
+            "z": 0,
+            "w": 1
+          },
+          "m_LocalPosition": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "m_LocalScale": {
+            "x": 0.489615,
+            "y": 0.489615,
+            "z": 0.489615
+          },
+          "m_ConstrainProportionsScale": 0,
+          "m_Children": [],
+          "m_Father": {
+            "fileID": "1180627485"
+          },
+          "m_LocalEulerAnglesHint": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "m_AnchorMin": {
+            "x": 0.5,
+            "y": 0.5
+          },
+          "m_AnchorMax": {
+            "x": 0.5,
+            "y": 0.5
+          },
+          "m_AnchoredPosition": {
+            "x": 1.5,
+            "y": 49.2
+          },
+          "m_SizeDelta": {
+            "x": 100,
+            "y": 100
+          },
+          "m_Pivot": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "type": "CanvasRenderer",
+          "m_ObjectHideFlags": 0,
+          "m_CorrespondingSourceObject": {
+            "fileID": "0"
+          },
+          "m_PrefabInstance": {
+            "fileID": "0"
+          },
+          "m_PrefabAsset": {
+            "fileID": "0"
+          },
+          "m_GameObject": {
+            "fileID": "594579509"
+          },
+          "m_CullTransparentMesh": 1
+        },
+        {
+          "type": "MonoBehaviour",
+          "m_ObjectHideFlags": 0,
+          "m_CorrespondingSourceObject": {
+            "fileID": "0"
+          },
+          "m_PrefabInstance": {
+            "fileID": "0"
+          },
+          "m_PrefabAsset": {
+            "fileID": "0"
+          },
+          "m_GameObject": {
+            "fileID": "594579509"
+          },
+          "m_Enabled": 1,
+          "m_EditorHideFlags": 0,
+          "m_Script": {
+            "fileID": "11500000",
+            "guid": "fe87c0e1cc204ed48ad3b37840f39efc",
+            "type": 3
+          },
+          "m_Name": null,
+          "m_EditorClassIdentifier": null,
+          "m_Material": {
+            "fileID": "0"
+          },
+          "m_Color": {
+            "r": 1,
+            "g": 1,
+            "b": 1,
+            "a": 1
+          },
+          "m_RaycastTarget": 1,
+          "m_RaycastPadding": {
+            "x": 0,
+            "y": 0,
+            "z": 0,
+            "w": 0
+          },
+          "m_Maskable": 1,
+          "m_OnCullStateChanged": {
+            "m_PersistentCalls": {
+              "m_Calls": []
+            }
+          },
+          "m_Sprite": {
+            "fileID": "-2000967925",
+            "guid": "094c61c07e7bba8439fd21e7669c5e8d",
+            "type": 3
+          },
+          "m_Type": 0,
+          "m_PreserveAspect": 0,
+          "m_FillCenter": 1,
+          "m_FillMethod": 4,
+          "m_FillAmount": 1,
+          "m_FillClockwise": 1,
+          "m_FillOrigin": 0,
+          "m_UseSpriteMesh": 0,
+          "m_PixelsPerUnitMultiplier": 1
+        }
+      ],
+      "runtime": {
+        "Id": "594579509",
+        "Name": "Win",
+        "Parent": 0,
+        "Active": true,
+        "X": 1.5,
+        "Y": 49.2,
+        "W": 100,
+        "H": 100,
+        "AnchorMinX": 0.5,
+        "AnchorMinY": 0.5,
+        "AnchorMaxX": 0.5,
+        "AnchorMaxY": 0.5,
+        "PivotX": 0.5,
+        "PivotY": 0.5,
+        "ScaleX": 0.489615,
+        "ScaleY": 0.489615,
+        "ScaleZ": 0.489615,
+        "Rotation": 0.0,
+        "Texture": "6200000000000010010",
+        "Image": true,
+        "Text": null,
+        "R": 1,
+        "G": 1,
+        "B": 1,
+        "A": 1,
+        "Font": "6200000000000000020",
+        "FontSize": 0,
+        "Alignment": 1,
+        "VerticalAlignment": 1,
+        "LineSpacing": 1,
+        "Wrap": false,
+        "Raycast": true,
+        "PreserveAspect": false,
+        "Button": null,
+        "ButtonAnimation": false
+      }
+    },
+    {
+      "id": "244532494",
+      "transformId": "244532495",
+      "path": "Menu/Panel/Continue",
+      "activeInHierarchy": true,
+      "transform": {
+        "type": "RectTransform",
+        "m_ObjectHideFlags": 0,
+        "m_CorrespondingSourceObject": {
+          "fileID": "0"
+        },
+        "m_PrefabInstance": {
+          "fileID": "0"
+        },
+        "m_PrefabAsset": {
+          "fileID": "0"
+        },
+        "m_GameObject": {
+          "fileID": "244532494"
+        },
+        "m_LocalRotation": {
+          "x": 0,
+          "y": 0,
+          "z": 0,
+          "w": 1
+        },
+        "m_LocalPosition": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "m_LocalScale": {
+          "x": 0.4,
+          "y": 0.4,
+          "z": 0.4
+        },
+        "m_ConstrainProportionsScale": 0,
+        "m_Children": [
+          {
+            "fileID": "984819778"
+          }
+        ],
+        "m_Father": {
+          "fileID": "1180627485"
+        },
+        "m_LocalEulerAnglesHint": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "m_AnchorMin": {
+          "x": 0.5,
+          "y": 0.5
+        },
+        "m_AnchorMax": {
+          "x": 0.5,
+          "y": 0.5
+        },
+        "m_AnchoredPosition": {
+          "x": 0,
+          "y": -4
+        },
+        "m_SizeDelta": {
+          "x": 118.5,
+          "y": 55
+        },
+        "m_Pivot": {
+          "x": 0.5,
+          "y": 0.5
+        }
+      },
+      "components": [
+        {
+          "type": "RectTransform",
+          "m_ObjectHideFlags": 0,
+          "m_CorrespondingSourceObject": {
+            "fileID": "0"
+          },
+          "m_PrefabInstance": {
+            "fileID": "0"
+          },
+          "m_PrefabAsset": {
+            "fileID": "0"
+          },
+          "m_GameObject": {
+            "fileID": "244532494"
+          },
+          "m_LocalRotation": {
+            "x": 0,
+            "y": 0,
+            "z": 0,
+            "w": 1
+          },
+          "m_LocalPosition": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "m_LocalScale": {
+            "x": 0.4,
+            "y": 0.4,
+            "z": 0.4
+          },
+          "m_ConstrainProportionsScale": 0,
+          "m_Children": [
+            {
+              "fileID": "984819778"
+            }
+          ],
+          "m_Father": {
+            "fileID": "1180627485"
+          },
+          "m_LocalEulerAnglesHint": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "m_AnchorMin": {
+            "x": 0.5,
+            "y": 0.5
+          },
+          "m_AnchorMax": {
+            "x": 0.5,
+            "y": 0.5
+          },
+          "m_AnchoredPosition": {
+            "x": 0,
+            "y": -4
+          },
+          "m_SizeDelta": {
+            "x": 118.5,
+            "y": 55
+          },
+          "m_Pivot": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "type": "CanvasRenderer",
+          "m_ObjectHideFlags": 0,
+          "m_CorrespondingSourceObject": {
+            "fileID": "0"
+          },
+          "m_PrefabInstance": {
+            "fileID": "0"
+          },
+          "m_PrefabAsset": {
+            "fileID": "0"
+          },
+          "m_GameObject": {
+            "fileID": "244532494"
+          },
+          "m_CullTransparentMesh": 1
+        },
+        {
+          "type": "MonoBehaviour",
+          "m_ObjectHideFlags": 0,
+          "m_CorrespondingSourceObject": {
+            "fileID": "0"
+          },
+          "m_PrefabInstance": {
+            "fileID": "0"
+          },
+          "m_PrefabAsset": {
+            "fileID": "0"
+          },
+          "m_GameObject": {
+            "fileID": "244532494"
+          },
+          "m_Enabled": 1,
+          "m_EditorHideFlags": 0,
+          "m_Script": {
+            "fileID": "11500000",
+            "guid": "4e29b1a8efbd4b44bb3f3716e73f07ff",
+            "type": 3
+          },
+          "m_Name": null,
+          "m_EditorClassIdentifier": null,
+          "m_Navigation": {
+            "m_Mode": 3,
+            "m_WrapAround": 0,
+            "m_SelectOnUp": {
+              "fileID": "0"
+            },
+            "m_SelectOnDown": {
+              "fileID": "0"
+            },
+            "m_SelectOnLeft": {
+              "fileID": "0"
+            },
+            "m_SelectOnRight": {
+              "fileID": "0"
+            }
+          },
+          "m_Transition": 1,
+          "m_Colors": {
+            "m_NormalColor": {
+              "r": 1,
+              "g": 1,
+              "b": 1,
+              "a": 1
+            },
+            "m_HighlightedColor": {
+              "r": 0.9607843,
+              "g": 0.9607843,
+              "b": 0.9607843,
+              "a": 1
+            },
+            "m_PressedColor": {
+              "r": 0.78431374,
+              "g": 0.78431374,
+              "b": 0.78431374,
+              "a": 1
+            },
+            "m_SelectedColor": {
+              "r": 0.9607843,
+              "g": 0.9607843,
+              "b": 0.9607843,
+              "a": 1
+            },
+            "m_DisabledColor": {
+              "r": 0.78431374,
+              "g": 0.78431374,
+              "b": 0.78431374,
+              "a": 0.5019608
+            },
+            "m_ColorMultiplier": 1,
+            "m_FadeDuration": 0.1
+          },
+          "m_SpriteState": {
+            "m_HighlightedSprite": {
+              "fileID": "0"
+            },
+            "m_PressedSprite": {
+              "fileID": "0"
+            },
+            "m_SelectedSprite": {
+              "fileID": "0"
+            },
+            "m_DisabledSprite": {
+              "fileID": "0"
+            }
+          },
+          "m_AnimationTriggers": {
+            "m_NormalTrigger": "Normal",
+            "m_HighlightedTrigger": "Highlighted",
+            "m_PressedTrigger": "Pressed",
+            "m_SelectedTrigger": "Selected",
+            "m_DisabledTrigger": "Disabled"
+          },
+          "m_Interactable": 1,
+          "m_TargetGraphic": {
+            "fileID": "0"
+          },
+          "m_OnClick": {
+            "m_PersistentCalls": {
+              "m_Calls": [
+                {
+                  "m_Target": {
+                    "fileID": "673685734"
+                  },
+                  "m_TargetAssemblyTypeName": "Menu, Assembly-CSharp",
+                  "m_MethodName": "Continue",
+                  "m_Mode": 1,
+                  "m_Arguments": {
+                    "m_ObjectArgument": {
+                      "fileID": "0"
+                    },
+                    "m_ObjectArgumentAssemblyTypeName": "UnityEngine.Object, UnityEngine",
+                    "m_IntArgument": 0,
+                    "m_FloatArgument": 0,
+                    "m_StringArgument": null,
+                    "m_BoolArgument": 0
+                  },
+                  "m_CallState": 2
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "runtime": {
+        "Id": "244532494",
+        "Name": "Continue",
+        "Parent": 0,
+        "Active": true,
+        "X": 0,
+        "Y": -4,
+        "W": 118.5,
+        "H": 55,
+        "AnchorMinX": 0.5,
+        "AnchorMinY": 0.5,
+        "AnchorMaxX": 0.5,
+        "AnchorMaxY": 0.5,
+        "PivotX": 0.5,
+        "PivotY": 0.5,
+        "ScaleX": 0.4,
+        "ScaleY": 0.4,
+        "ScaleZ": 0.4,
+        "Rotation": 0.0,
+        "Texture": "0",
+        "Image": false,
+        "Text": null,
+        "R": 1,
+        "G": 1,
+        "B": 1,
+        "A": 1,
+        "Font": "6200000000000000020",
+        "FontSize": 0,
+        "Alignment": 1,
+        "VerticalAlignment": 1,
+        "LineSpacing": 1,
+        "Wrap": false,
+        "Raycast": false,
+        "PreserveAspect": false,
+        "Button": "resume",
+        "ButtonAnimation": false
+      }
+    },
+    {
+      "id": "984819777",
+      "transformId": "984819778",
+      "path": "Menu/Panel/Continue/Text (Legacy)",
+      "activeInHierarchy": true,
+      "transform": {
+        "type": "RectTransform",
+        "m_ObjectHideFlags": 0,
+        "m_CorrespondingSourceObject": {
+          "fileID": "0"
+        },
+        "m_PrefabInstance": {
+          "fileID": "0"
+        },
+        "m_PrefabAsset": {
+          "fileID": "0"
+        },
+        "m_GameObject": {
+          "fileID": "984819777"
+        },
+        "m_LocalRotation": {
+          "x": 0,
+          "y": 0,
+          "z": 0,
+          "w": 1
+        },
+        "m_LocalPosition": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "m_LocalScale": {
+          "x": 2.5,
+          "y": 2.5,
+          "z": 2.5
+        },
+        "m_ConstrainProportionsScale": 0,
+        "m_Children": [],
+        "m_Father": {
+          "fileID": "244532495"
+        },
+        "m_LocalEulerAnglesHint": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "m_AnchorMin": {
+          "x": 0.5,
+          "y": 0.5
+        },
+        "m_AnchorMax": {
+          "x": 0.5,
+          "y": 0.5
+        },
+        "m_AnchoredPosition": {
+          "x": 0,
+          "y": 0
+        },
+        "m_SizeDelta": {
+          "x": 160,
+          "y": 30
+        },
+        "m_Pivot": {
+          "x": 0.5,
+          "y": 0.5
+        }
+      },
+      "components": [
+        {
+          "type": "RectTransform",
+          "m_ObjectHideFlags": 0,
+          "m_CorrespondingSourceObject": {
+            "fileID": "0"
+          },
+          "m_PrefabInstance": {
+            "fileID": "0"
+          },
+          "m_PrefabAsset": {
+            "fileID": "0"
+          },
+          "m_GameObject": {
+            "fileID": "984819777"
+          },
+          "m_LocalRotation": {
+            "x": 0,
+            "y": 0,
+            "z": 0,
+            "w": 1
+          },
+          "m_LocalPosition": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "m_LocalScale": {
+            "x": 2.5,
+            "y": 2.5,
+            "z": 2.5
+          },
+          "m_ConstrainProportionsScale": 0,
+          "m_Children": [],
+          "m_Father": {
+            "fileID": "244532495"
+          },
+          "m_LocalEulerAnglesHint": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "m_AnchorMin": {
+            "x": 0.5,
+            "y": 0.5
+          },
+          "m_AnchorMax": {
+            "x": 0.5,
+            "y": 0.5
+          },
+          "m_AnchoredPosition": {
+            "x": 0,
+            "y": 0
+          },
+          "m_SizeDelta": {
+            "x": 160,
+            "y": 30
+          },
+          "m_Pivot": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "type": "CanvasRenderer",
+          "m_ObjectHideFlags": 0,
+          "m_CorrespondingSourceObject": {
+            "fileID": "0"
+          },
+          "m_PrefabInstance": {
+            "fileID": "0"
+          },
+          "m_PrefabAsset": {
+            "fileID": "0"
+          },
+          "m_GameObject": {
+            "fileID": "984819777"
+          },
+          "m_CullTransparentMesh": 1
+        },
+        {
+          "type": "MonoBehaviour",
+          "m_ObjectHideFlags": 0,
+          "m_CorrespondingSourceObject": {
+            "fileID": "0"
+          },
+          "m_PrefabInstance": {
+            "fileID": "0"
+          },
+          "m_PrefabAsset": {
+            "fileID": "0"
+          },
+          "m_GameObject": {
+            "fileID": "984819777"
+          },
+          "m_Enabled": 1,
+          "m_EditorHideFlags": 0,
+          "m_Script": {
+            "fileID": "11500000",
+            "guid": "5f7201a12d95ffc409449d95f23cf332",
+            "type": 3
+          },
+          "m_Name": null,
+          "m_EditorClassIdentifier": "UnityEngine.UI::UnityEngine.UI.Text",
+          "m_Material": {
+            "fileID": "0"
+          },
+          "m_Color": {
+            "r": 0.13207531,
+            "g": 0.13207531,
+            "b": 0.13207531,
+            "a": 1
+          },
+          "m_RaycastTarget": 1,
+          "m_RaycastPadding": {
+            "x": 0,
+            "y": 0,
+            "z": 0,
+            "w": 0
+          },
+          "m_Maskable": 1,
+          "m_OnCullStateChanged": {
+            "m_PersistentCalls": {
+              "m_Calls": []
+            }
+          },
+          "m_FontData": {
+            "m_Font": {
+              "fileID": "12800000",
+              "guid": "9f8cd9a7b5bf63c4aa4ca9adf29047be",
+              "type": 3
+            },
+            "m_FontSize": 25,
+            "m_FontStyle": 0,
+            "m_BestFit": 0,
+            "m_MinSize": 2,
+            "m_MaxSize": 40,
+            "m_Alignment": 4,
+            "m_AlignByGeometry": 0,
+            "m_RichText": 1,
+            "m_HorizontalOverflow": 0,
+            "m_VerticalOverflow": 0,
+            "m_LineSpacing": 1
+          },
+          "m_Text": "继续"
+        }
+      ],
+      "runtime": {
+        "Id": "984819777",
+        "Name": "Text (Legacy)",
+        "Parent": 11,
+        "Active": true,
+        "X": 0,
+        "Y": 0,
+        "W": 160,
+        "H": 30,
+        "AnchorMinX": 0.5,
+        "AnchorMinY": 0.5,
+        "AnchorMaxX": 0.5,
+        "AnchorMaxY": 0.5,
+        "PivotX": 0.5,
+        "PivotY": 0.5,
+        "ScaleX": 2.5,
+        "ScaleY": 2.5,
+        "ScaleZ": 2.5,
+        "Rotation": 0.0,
+        "Texture": "0",
+        "Image": false,
+        "Text": "继续",
+        "R": 0.13207531,
+        "G": 0.13207531,
+        "B": 0.13207531,
+        "A": 1,
+        "Font": "6200000000000000020",
+        "FontSize": 25,
+        "Alignment": 1,
+        "VerticalAlignment": 1,
+        "LineSpacing": 1,
+        "Wrap": true,
+        "Raycast": true,
+        "PreserveAspect": false,
+        "Button": null,
+        "ButtonAnimation": false
+      }
+    },
+    {
+      "id": "1451933220",
+      "transformId": "1451933221",
+      "path": "Menu/Panel/Return",
+      "activeInHierarchy": true,
+      "transform": {
+        "type": "RectTransform",
+        "m_ObjectHideFlags": 0,
+        "m_CorrespondingSourceObject": {
+          "fileID": "0"
+        },
+        "m_PrefabInstance": {
+          "fileID": "0"
+        },
+        "m_PrefabAsset": {
+          "fileID": "0"
+        },
+        "m_GameObject": {
+          "fileID": "1451933220"
+        },
+        "m_LocalRotation": {
+          "x": 0,
+          "y": 0,
+          "z": 0,
+          "w": 1
+        },
+        "m_LocalPosition": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "m_LocalScale": {
+          "x": 0.4,
+          "y": 0.4,
+          "z": 0.4
+        },
+        "m_ConstrainProportionsScale": 0,
+        "m_Children": [
+          {
+            "fileID": "268816392"
+          }
+        ],
+        "m_Father": {
+          "fileID": "1180627485"
+        },
+        "m_LocalEulerAnglesHint": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "m_AnchorMin": {
+          "x": 0.5,
+          "y": 0.5
+        },
+        "m_AnchorMax": {
+          "x": 0.5,
+          "y": 0.5
+        },
+        "m_AnchoredPosition": {
+          "x": 0,
+          "y": -39.000004
+        },
+        "m_SizeDelta": {
+          "x": 118,
+          "y": 53.5
+        },
+        "m_Pivot": {
+          "x": 0.5,
+          "y": 0.5
+        }
+      },
+      "components": [
+        {
+          "type": "RectTransform",
+          "m_ObjectHideFlags": 0,
+          "m_CorrespondingSourceObject": {
+            "fileID": "0"
+          },
+          "m_PrefabInstance": {
+            "fileID": "0"
+          },
+          "m_PrefabAsset": {
+            "fileID": "0"
+          },
+          "m_GameObject": {
+            "fileID": "1451933220"
+          },
+          "m_LocalRotation": {
+            "x": 0,
+            "y": 0,
+            "z": 0,
+            "w": 1
+          },
+          "m_LocalPosition": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "m_LocalScale": {
+            "x": 0.4,
+            "y": 0.4,
+            "z": 0.4
+          },
+          "m_ConstrainProportionsScale": 0,
+          "m_Children": [
+            {
+              "fileID": "268816392"
+            }
+          ],
+          "m_Father": {
+            "fileID": "1180627485"
+          },
+          "m_LocalEulerAnglesHint": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "m_AnchorMin": {
+            "x": 0.5,
+            "y": 0.5
+          },
+          "m_AnchorMax": {
+            "x": 0.5,
+            "y": 0.5
+          },
+          "m_AnchoredPosition": {
+            "x": 0,
+            "y": -39.000004
+          },
+          "m_SizeDelta": {
+            "x": 118,
+            "y": 53.5
+          },
+          "m_Pivot": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "type": "CanvasRenderer",
+          "m_ObjectHideFlags": 0,
+          "m_CorrespondingSourceObject": {
+            "fileID": "0"
+          },
+          "m_PrefabInstance": {
+            "fileID": "0"
+          },
+          "m_PrefabAsset": {
+            "fileID": "0"
+          },
+          "m_GameObject": {
+            "fileID": "1451933220"
+          },
+          "m_CullTransparentMesh": 1
+        },
+        {
+          "type": "MonoBehaviour",
+          "m_ObjectHideFlags": 0,
+          "m_CorrespondingSourceObject": {
+            "fileID": "0"
+          },
+          "m_PrefabInstance": {
+            "fileID": "0"
+          },
+          "m_PrefabAsset": {
+            "fileID": "0"
+          },
+          "m_GameObject": {
+            "fileID": "1451933220"
+          },
+          "m_Enabled": 1,
+          "m_EditorHideFlags": 0,
+          "m_Script": {
+            "fileID": "11500000",
+            "guid": "4e29b1a8efbd4b44bb3f3716e73f07ff",
+            "type": 3
+          },
+          "m_Name": null,
+          "m_EditorClassIdentifier": null,
+          "m_Navigation": {
+            "m_Mode": 3,
+            "m_WrapAround": 0,
+            "m_SelectOnUp": {
+              "fileID": "0"
+            },
+            "m_SelectOnDown": {
+              "fileID": "0"
+            },
+            "m_SelectOnLeft": {
+              "fileID": "0"
+            },
+            "m_SelectOnRight": {
+              "fileID": "0"
+            }
+          },
+          "m_Transition": 1,
+          "m_Colors": {
+            "m_NormalColor": {
+              "r": 1,
+              "g": 1,
+              "b": 1,
+              "a": 1
+            },
+            "m_HighlightedColor": {
+              "r": 0.9607843,
+              "g": 0.9607843,
+              "b": 0.9607843,
+              "a": 1
+            },
+            "m_PressedColor": {
+              "r": 0.78431374,
+              "g": 0.78431374,
+              "b": 0.78431374,
+              "a": 1
+            },
+            "m_SelectedColor": {
+              "r": 0.9607843,
+              "g": 0.9607843,
+              "b": 0.9607843,
+              "a": 1
+            },
+            "m_DisabledColor": {
+              "r": 0.78431374,
+              "g": 0.78431374,
+              "b": 0.78431374,
+              "a": 0.5019608
+            },
+            "m_ColorMultiplier": 1,
+            "m_FadeDuration": 0.1
+          },
+          "m_SpriteState": {
+            "m_HighlightedSprite": {
+              "fileID": "0"
+            },
+            "m_PressedSprite": {
+              "fileID": "0"
+            },
+            "m_SelectedSprite": {
+              "fileID": "0"
+            },
+            "m_DisabledSprite": {
+              "fileID": "0"
+            }
+          },
+          "m_AnimationTriggers": {
+            "m_NormalTrigger": "Normal",
+            "m_HighlightedTrigger": "Highlighted",
+            "m_PressedTrigger": "Pressed",
+            "m_SelectedTrigger": "Selected",
+            "m_DisabledTrigger": "Disabled"
+          },
+          "m_Interactable": 1,
+          "m_TargetGraphic": {
+            "fileID": "0"
+          },
+          "m_OnClick": {
+            "m_PersistentCalls": {
+              "m_Calls": [
+                {
+                  "m_Target": {
+                    "fileID": "673685734"
+                  },
+                  "m_TargetAssemblyTypeName": "Menu, Assembly-CSharp",
+                  "m_MethodName": "Return",
+                  "m_Mode": 1,
+                  "m_Arguments": {
+                    "m_ObjectArgument": {
+                      "fileID": "0"
+                    },
+                    "m_ObjectArgumentAssemblyTypeName": "UnityEngine.Object, UnityEngine",
+                    "m_IntArgument": 0,
+                    "m_FloatArgument": 0,
+                    "m_StringArgument": null,
+                    "m_BoolArgument": 0
+                  },
+                  "m_CallState": 2
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "runtime": {
+        "Id": "1451933220",
+        "Name": "Return",
+        "Parent": 0,
+        "Active": true,
+        "X": 0,
+        "Y": -39.000004,
+        "W": 118,
+        "H": 53.5,
+        "AnchorMinX": 0.5,
+        "AnchorMinY": 0.5,
+        "AnchorMaxX": 0.5,
+        "AnchorMaxY": 0.5,
+        "PivotX": 0.5,
+        "PivotY": 0.5,
+        "ScaleX": 0.4,
+        "ScaleY": 0.4,
+        "ScaleZ": 0.4,
+        "Rotation": 0.0,
+        "Texture": "0",
+        "Image": false,
+        "Text": null,
+        "R": 1,
+        "G": 1,
+        "B": 1,
+        "A": 1,
+        "Font": "6200000000000000020",
+        "FontSize": 0,
+        "Alignment": 1,
+        "VerticalAlignment": 1,
+        "LineSpacing": 1,
+        "Wrap": false,
+        "Raycast": false,
+        "PreserveAspect": false,
+        "Button": "restart",
+        "ButtonAnimation": false
+      }
+    },
+    {
+      "id": "268816391",
+      "transformId": "268816392",
+      "path": "Menu/Panel/Return/Text (Legacy)",
+      "activeInHierarchy": true,
+      "transform": {
+        "type": "RectTransform",
+        "m_ObjectHideFlags": 0,
+        "m_CorrespondingSourceObject": {
+          "fileID": "0"
+        },
+        "m_PrefabInstance": {
+          "fileID": "0"
+        },
+        "m_PrefabAsset": {
+          "fileID": "0"
+        },
+        "m_GameObject": {
+          "fileID": "268816391"
+        },
+        "m_LocalRotation": {
+          "x": 0,
+          "y": 0,
+          "z": 0,
+          "w": 1
+        },
+        "m_LocalPosition": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "m_LocalScale": {
+          "x": 2.5,
+          "y": 2.5,
+          "z": 2.5
+        },
+        "m_ConstrainProportionsScale": 0,
+        "m_Children": [],
+        "m_Father": {
+          "fileID": "1451933221"
+        },
+        "m_LocalEulerAnglesHint": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "m_AnchorMin": {
+          "x": 0.5,
+          "y": 0.5
+        },
+        "m_AnchorMax": {
+          "x": 0.5,
+          "y": 0.5
+        },
+        "m_AnchoredPosition": {
+          "x": 0,
+          "y": 0
+        },
+        "m_SizeDelta": {
+          "x": 160,
+          "y": 30
+        },
+        "m_Pivot": {
+          "x": 0.5,
+          "y": 0.5
+        }
+      },
+      "components": [
+        {
+          "type": "RectTransform",
+          "m_ObjectHideFlags": 0,
+          "m_CorrespondingSourceObject": {
+            "fileID": "0"
+          },
+          "m_PrefabInstance": {
+            "fileID": "0"
+          },
+          "m_PrefabAsset": {
+            "fileID": "0"
+          },
+          "m_GameObject": {
+            "fileID": "268816391"
+          },
+          "m_LocalRotation": {
+            "x": 0,
+            "y": 0,
+            "z": 0,
+            "w": 1
+          },
+          "m_LocalPosition": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "m_LocalScale": {
+            "x": 2.5,
+            "y": 2.5,
+            "z": 2.5
+          },
+          "m_ConstrainProportionsScale": 0,
+          "m_Children": [],
+          "m_Father": {
+            "fileID": "1451933221"
+          },
+          "m_LocalEulerAnglesHint": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "m_AnchorMin": {
+            "x": 0.5,
+            "y": 0.5
+          },
+          "m_AnchorMax": {
+            "x": 0.5,
+            "y": 0.5
+          },
+          "m_AnchoredPosition": {
+            "x": 0,
+            "y": 0
+          },
+          "m_SizeDelta": {
+            "x": 160,
+            "y": 30
+          },
+          "m_Pivot": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "type": "CanvasRenderer",
+          "m_ObjectHideFlags": 0,
+          "m_CorrespondingSourceObject": {
+            "fileID": "0"
+          },
+          "m_PrefabInstance": {
+            "fileID": "0"
+          },
+          "m_PrefabAsset": {
+            "fileID": "0"
+          },
+          "m_GameObject": {
+            "fileID": "268816391"
+          },
+          "m_CullTransparentMesh": 1
+        },
+        {
+          "type": "MonoBehaviour",
+          "m_ObjectHideFlags": 0,
+          "m_CorrespondingSourceObject": {
+            "fileID": "0"
+          },
+          "m_PrefabInstance": {
+            "fileID": "0"
+          },
+          "m_PrefabAsset": {
+            "fileID": "0"
+          },
+          "m_GameObject": {
+            "fileID": "268816391"
+          },
+          "m_Enabled": 1,
+          "m_EditorHideFlags": 0,
+          "m_Script": {
+            "fileID": "11500000",
+            "guid": "5f7201a12d95ffc409449d95f23cf332",
+            "type": 3
+          },
+          "m_Name": null,
+          "m_EditorClassIdentifier": "UnityEngine.UI::UnityEngine.UI.Text",
+          "m_Material": {
+            "fileID": "0"
+          },
+          "m_Color": {
+            "r": 0.13333334,
+            "g": 0.13333334,
+            "b": 0.13333334,
+            "a": 1
+          },
+          "m_RaycastTarget": 1,
+          "m_RaycastPadding": {
+            "x": 0,
+            "y": 0,
+            "z": 0,
+            "w": 0
+          },
+          "m_Maskable": 1,
+          "m_OnCullStateChanged": {
+            "m_PersistentCalls": {
+              "m_Calls": []
+            }
+          },
+          "m_FontData": {
+            "m_Font": {
+              "fileID": "12800000",
+              "guid": "9f8cd9a7b5bf63c4aa4ca9adf29047be",
+              "type": 3
+            },
+            "m_FontSize": 25,
+            "m_FontStyle": 0,
+            "m_BestFit": 0,
+            "m_MinSize": 2,
+            "m_MaxSize": 40,
+            "m_Alignment": 4,
+            "m_AlignByGeometry": 0,
+            "m_RichText": 1,
+            "m_HorizontalOverflow": 0,
+            "m_VerticalOverflow": 0,
+            "m_LineSpacing": 1
+          },
+          "m_Text": "重置"
+        }
+      ],
+      "runtime": {
+        "Id": "268816391",
+        "Name": "Text (Legacy)",
+        "Parent": 13,
+        "Active": true,
+        "X": 0,
+        "Y": 0,
+        "W": 160,
+        "H": 30,
+        "AnchorMinX": 0.5,
+        "AnchorMinY": 0.5,
+        "AnchorMaxX": 0.5,
+        "AnchorMaxY": 0.5,
+        "PivotX": 0.5,
+        "PivotY": 0.5,
+        "ScaleX": 2.5,
+        "ScaleY": 2.5,
+        "ScaleZ": 2.5,
+        "Rotation": 0.0,
+        "Texture": "0",
+        "Image": false,
+        "Text": "重置",
+        "R": 0.13333334,
+        "G": 0.13333334,
+        "B": 0.13333334,
+        "A": 1,
+        "Font": "6200000000000000020",
+        "FontSize": 25,
+        "Alignment": 1,
+        "VerticalAlignment": 1,
+        "LineSpacing": 1,
+        "Wrap": true,
+        "Raycast": true,
+        "PreserveAspect": false,
+        "Button": null,
+        "ButtonAnimation": false
+      }
+    },
+    {
+      "id": "759763977",
+      "transformId": "759763978",
+      "path": "Menu/Panel/Quat",
+      "activeInHierarchy": true,
+      "transform": {
+        "type": "RectTransform",
+        "m_ObjectHideFlags": 0,
+        "m_CorrespondingSourceObject": {
+          "fileID": "0"
+        },
+        "m_PrefabInstance": {
+          "fileID": "0"
+        },
+        "m_PrefabAsset": {
+          "fileID": "0"
+        },
+        "m_GameObject": {
+          "fileID": "759763977"
+        },
+        "m_LocalRotation": {
+          "x": 0,
+          "y": 0,
+          "z": 0,
+          "w": 1
+        },
+        "m_LocalPosition": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "m_LocalScale": {
+          "x": 0.4,
+          "y": 0.4,
+          "z": 0.4
+        },
+        "m_ConstrainProportionsScale": 0,
+        "m_Children": [
+          {
+            "fileID": "1010445225"
+          }
+        ],
+        "m_Father": {
+          "fileID": "1180627485"
+        },
+        "m_LocalEulerAnglesHint": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "m_AnchorMin": {
+          "x": 0.5,
+          "y": 0.5
+        },
+        "m_AnchorMax": {
+          "x": 0.5,
+          "y": 0.5
+        },
+        "m_AnchoredPosition": {
+          "x": 0,
+          "y": -74
+        },
+        "m_SizeDelta": {
+          "x": 120,
+          "y": 60
+        },
+        "m_Pivot": {
+          "x": 0.5,
+          "y": 0.5
+        }
+      },
+      "components": [
+        {
+          "type": "RectTransform",
+          "m_ObjectHideFlags": 0,
+          "m_CorrespondingSourceObject": {
+            "fileID": "0"
+          },
+          "m_PrefabInstance": {
+            "fileID": "0"
+          },
+          "m_PrefabAsset": {
+            "fileID": "0"
+          },
+          "m_GameObject": {
+            "fileID": "759763977"
+          },
+          "m_LocalRotation": {
+            "x": 0,
+            "y": 0,
+            "z": 0,
+            "w": 1
+          },
+          "m_LocalPosition": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "m_LocalScale": {
+            "x": 0.4,
+            "y": 0.4,
+            "z": 0.4
+          },
+          "m_ConstrainProportionsScale": 0,
+          "m_Children": [
+            {
+              "fileID": "1010445225"
+            }
+          ],
+          "m_Father": {
+            "fileID": "1180627485"
+          },
+          "m_LocalEulerAnglesHint": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "m_AnchorMin": {
+            "x": 0.5,
+            "y": 0.5
+          },
+          "m_AnchorMax": {
+            "x": 0.5,
+            "y": 0.5
+          },
+          "m_AnchoredPosition": {
+            "x": 0,
+            "y": -74
+          },
+          "m_SizeDelta": {
+            "x": 120,
+            "y": 60
+          },
+          "m_Pivot": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "type": "CanvasRenderer",
+          "m_ObjectHideFlags": 0,
+          "m_CorrespondingSourceObject": {
+            "fileID": "0"
+          },
+          "m_PrefabInstance": {
+            "fileID": "0"
+          },
+          "m_PrefabAsset": {
+            "fileID": "0"
+          },
+          "m_GameObject": {
+            "fileID": "759763977"
+          },
+          "m_CullTransparentMesh": 1
+        },
+        {
+          "type": "MonoBehaviour",
+          "m_ObjectHideFlags": 0,
+          "m_CorrespondingSourceObject": {
+            "fileID": "0"
+          },
+          "m_PrefabInstance": {
+            "fileID": "0"
+          },
+          "m_PrefabAsset": {
+            "fileID": "0"
+          },
+          "m_GameObject": {
+            "fileID": "759763977"
+          },
+          "m_Enabled": 1,
+          "m_EditorHideFlags": 0,
+          "m_Script": {
+            "fileID": "11500000",
+            "guid": "4e29b1a8efbd4b44bb3f3716e73f07ff",
+            "type": 3
+          },
+          "m_Name": null,
+          "m_EditorClassIdentifier": null,
+          "m_Navigation": {
+            "m_Mode": 3,
+            "m_WrapAround": 0,
+            "m_SelectOnUp": {
+              "fileID": "0"
+            },
+            "m_SelectOnDown": {
+              "fileID": "0"
+            },
+            "m_SelectOnLeft": {
+              "fileID": "0"
+            },
+            "m_SelectOnRight": {
+              "fileID": "0"
+            }
+          },
+          "m_Transition": 1,
+          "m_Colors": {
+            "m_NormalColor": {
+              "r": 1,
+              "g": 1,
+              "b": 1,
+              "a": 1
+            },
+            "m_HighlightedColor": {
+              "r": 0.9607843,
+              "g": 0.9607843,
+              "b": 0.9607843,
+              "a": 1
+            },
+            "m_PressedColor": {
+              "r": 0.78431374,
+              "g": 0.78431374,
+              "b": 0.78431374,
+              "a": 1
+            },
+            "m_SelectedColor": {
+              "r": 0.9607843,
+              "g": 0.9607843,
+              "b": 0.9607843,
+              "a": 1
+            },
+            "m_DisabledColor": {
+              "r": 0.78431374,
+              "g": 0.78431374,
+              "b": 0.78431374,
+              "a": 0.5019608
+            },
+            "m_ColorMultiplier": 1,
+            "m_FadeDuration": 0.1
+          },
+          "m_SpriteState": {
+            "m_HighlightedSprite": {
+              "fileID": "0"
+            },
+            "m_PressedSprite": {
+              "fileID": "0"
+            },
+            "m_SelectedSprite": {
+              "fileID": "0"
+            },
+            "m_DisabledSprite": {
+              "fileID": "0"
+            }
+          },
+          "m_AnimationTriggers": {
+            "m_NormalTrigger": "Normal",
+            "m_HighlightedTrigger": "Highlighted",
+            "m_PressedTrigger": "Pressed",
+            "m_SelectedTrigger": "Selected",
+            "m_DisabledTrigger": "Disabled"
+          },
+          "m_Interactable": 1,
+          "m_TargetGraphic": {
+            "fileID": "0"
+          },
+          "m_OnClick": {
+            "m_PersistentCalls": {
+              "m_Calls": [
+                {
+                  "m_Target": {
+                    "fileID": "673685734"
+                  },
+                  "m_TargetAssemblyTypeName": "Menu, Assembly-CSharp",
+                  "m_MethodName": "quat",
+                  "m_Mode": 1,
+                  "m_Arguments": {
+                    "m_ObjectArgument": {
+                      "fileID": "0"
+                    },
+                    "m_ObjectArgumentAssemblyTypeName": "UnityEngine.Object, UnityEngine",
+                    "m_IntArgument": 0,
+                    "m_FloatArgument": 0,
+                    "m_StringArgument": null,
+                    "m_BoolArgument": 0
+                  },
+                  "m_CallState": 2
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "runtime": {
+        "Id": "759763977",
+        "Name": "Quat",
+        "Parent": 0,
+        "Active": true,
+        "X": 0,
+        "Y": -74,
+        "W": 120,
+        "H": 60,
+        "AnchorMinX": 0.5,
+        "AnchorMinY": 0.5,
+        "AnchorMaxX": 0.5,
+        "AnchorMaxY": 0.5,
+        "PivotX": 0.5,
+        "PivotY": 0.5,
+        "ScaleX": 0.4,
+        "ScaleY": 0.4,
+        "ScaleZ": 0.4,
+        "Rotation": 0.0,
+        "Texture": "0",
+        "Image": false,
+        "Text": null,
+        "R": 1,
+        "G": 1,
+        "B": 1,
+        "A": 1,
+        "Font": "6200000000000000020",
+        "FontSize": 0,
+        "Alignment": 1,
+        "VerticalAlignment": 1,
+        "LineSpacing": 1,
+        "Wrap": false,
+        "Raycast": false,
+        "PreserveAspect": false,
+        "Button": "quit",
+        "ButtonAnimation": false
+      }
+    },
+    {
+      "id": "1010445224",
+      "transformId": "1010445225",
+      "path": "Menu/Panel/Quat/Text (Legacy)",
+      "activeInHierarchy": true,
+      "transform": {
+        "type": "RectTransform",
+        "m_ObjectHideFlags": 0,
+        "m_CorrespondingSourceObject": {
+          "fileID": "0"
+        },
+        "m_PrefabInstance": {
+          "fileID": "0"
+        },
+        "m_PrefabAsset": {
+          "fileID": "0"
+        },
+        "m_GameObject": {
+          "fileID": "1010445224"
+        },
+        "m_LocalRotation": {
+          "x": 0,
+          "y": 0,
+          "z": 0,
+          "w": 1
+        },
+        "m_LocalPosition": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "m_LocalScale": {
+          "x": 2.5,
+          "y": 2.5,
+          "z": 2.5
+        },
+        "m_ConstrainProportionsScale": 0,
+        "m_Children": [],
+        "m_Father": {
+          "fileID": "759763978"
+        },
+        "m_LocalEulerAnglesHint": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "m_AnchorMin": {
+          "x": 0.5,
+          "y": 0.5
+        },
+        "m_AnchorMax": {
+          "x": 0.5,
+          "y": 0.5
+        },
+        "m_AnchoredPosition": {
+          "x": 0,
+          "y": 0
+        },
+        "m_SizeDelta": {
+          "x": 160,
+          "y": 30
+        },
+        "m_Pivot": {
+          "x": 0.5,
+          "y": 0.5
+        }
+      },
+      "components": [
+        {
+          "type": "RectTransform",
+          "m_ObjectHideFlags": 0,
+          "m_CorrespondingSourceObject": {
+            "fileID": "0"
+          },
+          "m_PrefabInstance": {
+            "fileID": "0"
+          },
+          "m_PrefabAsset": {
+            "fileID": "0"
+          },
+          "m_GameObject": {
+            "fileID": "1010445224"
+          },
+          "m_LocalRotation": {
+            "x": 0,
+            "y": 0,
+            "z": 0,
+            "w": 1
+          },
+          "m_LocalPosition": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "m_LocalScale": {
+            "x": 2.5,
+            "y": 2.5,
+            "z": 2.5
+          },
+          "m_ConstrainProportionsScale": 0,
+          "m_Children": [],
+          "m_Father": {
+            "fileID": "759763978"
+          },
+          "m_LocalEulerAnglesHint": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "m_AnchorMin": {
+            "x": 0.5,
+            "y": 0.5
+          },
+          "m_AnchorMax": {
+            "x": 0.5,
+            "y": 0.5
+          },
+          "m_AnchoredPosition": {
+            "x": 0,
+            "y": 0
+          },
+          "m_SizeDelta": {
+            "x": 160,
+            "y": 30
+          },
+          "m_Pivot": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "type": "CanvasRenderer",
+          "m_ObjectHideFlags": 0,
+          "m_CorrespondingSourceObject": {
+            "fileID": "0"
+          },
+          "m_PrefabInstance": {
+            "fileID": "0"
+          },
+          "m_PrefabAsset": {
+            "fileID": "0"
+          },
+          "m_GameObject": {
+            "fileID": "1010445224"
+          },
+          "m_CullTransparentMesh": 1
+        },
+        {
+          "type": "MonoBehaviour",
+          "m_ObjectHideFlags": 0,
+          "m_CorrespondingSourceObject": {
+            "fileID": "0"
+          },
+          "m_PrefabInstance": {
+            "fileID": "0"
+          },
+          "m_PrefabAsset": {
+            "fileID": "0"
+          },
+          "m_GameObject": {
+            "fileID": "1010445224"
+          },
+          "m_Enabled": 1,
+          "m_EditorHideFlags": 0,
+          "m_Script": {
+            "fileID": "11500000",
+            "guid": "5f7201a12d95ffc409449d95f23cf332",
+            "type": 3
+          },
+          "m_Name": null,
+          "m_EditorClassIdentifier": "UnityEngine.UI::UnityEngine.UI.Text",
+          "m_Material": {
+            "fileID": "0"
+          },
+          "m_Color": {
+            "r": 0.13333334,
+            "g": 0.13333334,
+            "b": 0.13333334,
+            "a": 1
+          },
+          "m_RaycastTarget": 1,
+          "m_RaycastPadding": {
+            "x": 0,
+            "y": 0,
+            "z": 0,
+            "w": 0
+          },
+          "m_Maskable": 1,
+          "m_OnCullStateChanged": {
+            "m_PersistentCalls": {
+              "m_Calls": []
+            }
+          },
+          "m_FontData": {
+            "m_Font": {
+              "fileID": "12800000",
+              "guid": "9f8cd9a7b5bf63c4aa4ca9adf29047be",
+              "type": 3
+            },
+            "m_FontSize": 25,
+            "m_FontStyle": 0,
+            "m_BestFit": 0,
+            "m_MinSize": 2,
+            "m_MaxSize": 40,
+            "m_Alignment": 4,
+            "m_AlignByGeometry": 0,
+            "m_RichText": 1,
+            "m_HorizontalOverflow": 0,
+            "m_VerticalOverflow": 0,
+            "m_LineSpacing": 1
+          },
+          "m_Text": "退出"
+        }
+      ],
+      "runtime": {
+        "Id": "1010445224",
+        "Name": "Text (Legacy)",
+        "Parent": 15,
+        "Active": true,
+        "X": 0,
+        "Y": 0,
+        "W": 160,
+        "H": 30,
+        "AnchorMinX": 0.5,
+        "AnchorMinY": 0.5,
+        "AnchorMaxX": 0.5,
+        "AnchorMaxY": 0.5,
+        "PivotX": 0.5,
+        "PivotY": 0.5,
+        "ScaleX": 2.5,
+        "ScaleY": 2.5,
+        "ScaleZ": 2.5,
+        "Rotation": 0.0,
+        "Texture": "0",
+        "Image": false,
+        "Text": "退出",
+        "R": 0.13333334,
+        "G": 0.13333334,
+        "B": 0.13333334,
+        "A": 1,
+        "Font": "6200000000000000020",
+        "FontSize": 25,
+        "Alignment": 1,
+        "VerticalAlignment": 1,
+        "LineSpacing": 1,
+        "Wrap": true,
+        "Raycast": true,
+        "PreserveAspect": false,
+        "Button": null,
+        "ButtonAnimation": false
+      }
+    },
+    {
+      "id": "1037711522",
+      "transformId": "1037711523",
+      "path": "Menu/Panel/Ti",
+      "activeInHierarchy": true,
+      "transform": {
+        "type": "RectTransform",
+        "m_ObjectHideFlags": 0,
+        "m_CorrespondingSourceObject": {
+          "fileID": "0"
+        },
+        "m_PrefabInstance": {
+          "fileID": "0"
+        },
+        "m_PrefabAsset": {
+          "fileID": "0"
+        },
+        "m_GameObject": {
+          "fileID": "1037711522"
+        },
+        "m_LocalRotation": {
+          "x": 0,
+          "y": 0,
+          "z": 0,
+          "w": 1
+        },
+        "m_LocalPosition": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "m_LocalScale": {
+          "x": 0.7768063,
+          "y": 0.7768063,
+          "z": 0.7768063
+        },
+        "m_ConstrainProportionsScale": 0,
+        "m_Children": [
+          {
+            "fileID": "1151391274"
+          },
+          {
+            "fileID": "336659353"
+          },
+          {
+            "fileID": "209068534"
+          },
+          {
+            "fileID": "1756643204"
+          },
+          {
+            "fileID": "2038629738"
+          },
+          {
+            "fileID": "452800435"
+          }
+        ],
+        "m_Father": {
+          "fileID": "1180627485"
+        },
+        "m_LocalEulerAnglesHint": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "m_AnchorMin": {
+          "x": 0.5,
+          "y": 0.5
+        },
+        "m_AnchorMax": {
+          "x": 0.5,
+          "y": 0.5
+        },
+        "m_AnchoredPosition": {
+          "x": 0.3,
+          "y": 50.5
+        },
+        "m_SizeDelta": {
+          "x": 100,
+          "y": 100
+        },
+        "m_Pivot": {
+          "x": 0.5,
+          "y": 0.5
+        }
+      },
+      "components": [
+        {
+          "type": "RectTransform",
+          "m_ObjectHideFlags": 0,
+          "m_CorrespondingSourceObject": {
+            "fileID": "0"
+          },
+          "m_PrefabInstance": {
+            "fileID": "0"
+          },
+          "m_PrefabAsset": {
+            "fileID": "0"
+          },
+          "m_GameObject": {
+            "fileID": "1037711522"
+          },
+          "m_LocalRotation": {
+            "x": 0,
+            "y": 0,
+            "z": 0,
+            "w": 1
+          },
+          "m_LocalPosition": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "m_LocalScale": {
+            "x": 0.7768063,
+            "y": 0.7768063,
+            "z": 0.7768063
+          },
+          "m_ConstrainProportionsScale": 0,
+          "m_Children": [
+            {
+              "fileID": "1151391274"
+            },
+            {
+              "fileID": "336659353"
+            },
+            {
+              "fileID": "209068534"
+            },
+            {
+              "fileID": "1756643204"
+            },
+            {
+              "fileID": "2038629738"
+            },
+            {
+              "fileID": "452800435"
+            }
+          ],
+          "m_Father": {
+            "fileID": "1180627485"
+          },
+          "m_LocalEulerAnglesHint": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "m_AnchorMin": {
+            "x": 0.5,
+            "y": 0.5
+          },
+          "m_AnchorMax": {
+            "x": 0.5,
+            "y": 0.5
+          },
+          "m_AnchoredPosition": {
+            "x": 0.3,
+            "y": 50.5
+          },
+          "m_SizeDelta": {
+            "x": 100,
+            "y": 100
+          },
+          "m_Pivot": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        }
+      ],
+      "runtime": {
+        "Id": "1037711522",
+        "Name": "Ti",
+        "Parent": 0,
+        "Active": true,
+        "X": 0.3,
+        "Y": 50.5,
+        "W": 100,
+        "H": 100,
+        "AnchorMinX": 0.5,
+        "AnchorMinY": 0.5,
+        "AnchorMaxX": 0.5,
+        "AnchorMaxY": 0.5,
+        "PivotX": 0.5,
+        "PivotY": 0.5,
+        "ScaleX": 0.7768063,
+        "ScaleY": 0.7768063,
+        "ScaleZ": 0.7768063,
+        "Rotation": 0.0,
+        "Texture": "0",
+        "Image": false,
+        "Text": null,
+        "R": 1,
+        "G": 1,
+        "B": 1,
+        "A": 1,
+        "Font": "6200000000000000020",
+        "FontSize": 0,
+        "Alignment": 1,
+        "VerticalAlignment": 1,
+        "LineSpacing": 1,
+        "Wrap": false,
+        "Raycast": false,
+        "PreserveAspect": false,
+        "Button": null,
+        "ButtonAnimation": false
+      }
+    },
+    {
+      "id": "1151391273",
+      "transformId": "1151391274",
+      "path": "Menu/Panel/Ti/1",
+      "activeInHierarchy": true,
+      "transform": {
+        "type": "RectTransform",
+        "m_ObjectHideFlags": 0,
+        "m_CorrespondingSourceObject": {
+          "fileID": "0"
+        },
+        "m_PrefabInstance": {
+          "fileID": "0"
+        },
+        "m_PrefabAsset": {
+          "fileID": "0"
+        },
+        "m_GameObject": {
+          "fileID": "1151391273"
+        },
+        "m_LocalRotation": {
+          "x": 0,
+          "y": 0,
+          "z": 0,
+          "w": 1
+        },
+        "m_LocalPosition": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "m_LocalScale": {
+          "x": 1,
+          "y": 1,
+          "z": 1
+        },
+        "m_ConstrainProportionsScale": 0,
+        "m_Children": [],
+        "m_Father": {
+          "fileID": "1037711523"
+        },
+        "m_LocalEulerAnglesHint": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "m_AnchorMin": {
+          "x": 0.5,
+          "y": 0.5
+        },
+        "m_AnchorMax": {
+          "x": 0.5,
+          "y": 0.5
+        },
+        "m_AnchoredPosition": {
+          "x": -71.3,
+          "y": 27.4
+        },
+        "m_SizeDelta": {
+          "x": 50,
+          "y": 50
+        },
+        "m_Pivot": {
+          "x": 0.5,
+          "y": 0.5
+        }
+      },
+      "components": [
+        {
+          "type": "RectTransform",
+          "m_ObjectHideFlags": 0,
+          "m_CorrespondingSourceObject": {
+            "fileID": "0"
+          },
+          "m_PrefabInstance": {
+            "fileID": "0"
+          },
+          "m_PrefabAsset": {
+            "fileID": "0"
+          },
+          "m_GameObject": {
+            "fileID": "1151391273"
+          },
+          "m_LocalRotation": {
+            "x": 0,
+            "y": 0,
+            "z": 0,
+            "w": 1
+          },
+          "m_LocalPosition": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "m_LocalScale": {
+            "x": 1,
+            "y": 1,
+            "z": 1
+          },
+          "m_ConstrainProportionsScale": 0,
+          "m_Children": [],
+          "m_Father": {
+            "fileID": "1037711523"
+          },
+          "m_LocalEulerAnglesHint": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "m_AnchorMin": {
+            "x": 0.5,
+            "y": 0.5
+          },
+          "m_AnchorMax": {
+            "x": 0.5,
+            "y": 0.5
+          },
+          "m_AnchoredPosition": {
+            "x": -71.3,
+            "y": 27.4
+          },
+          "m_SizeDelta": {
+            "x": 50,
+            "y": 50
+          },
+          "m_Pivot": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "type": "CanvasRenderer",
+          "m_ObjectHideFlags": 0,
+          "m_CorrespondingSourceObject": {
+            "fileID": "0"
+          },
+          "m_PrefabInstance": {
+            "fileID": "0"
+          },
+          "m_PrefabAsset": {
+            "fileID": "0"
+          },
+          "m_GameObject": {
+            "fileID": "1151391273"
+          },
+          "m_CullTransparentMesh": 1
+        },
+        {
+          "type": "MonoBehaviour",
+          "m_ObjectHideFlags": 0,
+          "m_CorrespondingSourceObject": {
+            "fileID": "0"
+          },
+          "m_PrefabInstance": {
+            "fileID": "0"
+          },
+          "m_PrefabAsset": {
+            "fileID": "0"
+          },
+          "m_GameObject": {
+            "fileID": "1151391273"
+          },
+          "m_Enabled": 1,
+          "m_EditorHideFlags": 0,
+          "m_Script": {
+            "fileID": "11500000",
+            "guid": "fe87c0e1cc204ed48ad3b37840f39efc",
+            "type": 3
+          },
+          "m_Name": null,
+          "m_EditorClassIdentifier": null,
+          "m_Material": {
+            "fileID": "0"
+          },
+          "m_Color": {
+            "r": 1,
+            "g": 1,
+            "b": 1,
+            "a": 1
+          },
+          "m_RaycastTarget": 1,
+          "m_RaycastPadding": {
+            "x": 0,
+            "y": 0,
+            "z": 0,
+            "w": 0
+          },
+          "m_Maskable": 1,
+          "m_OnCullStateChanged": {
+            "m_PersistentCalls": {
+              "m_Calls": []
+            }
+          },
+          "m_Sprite": {
+            "fileID": "454086625",
+            "guid": "094c61c07e7bba8439fd21e7669c5e8d",
+            "type": 3
+          },
+          "m_Type": 0,
+          "m_PreserveAspect": 0,
+          "m_FillCenter": 1,
+          "m_FillMethod": 4,
+          "m_FillAmount": 1,
+          "m_FillClockwise": 1,
+          "m_FillOrigin": 0,
+          "m_UseSpriteMesh": 0,
+          "m_PixelsPerUnitMultiplier": 1
+        }
+      ],
+      "runtime": {
+        "Id": "1151391273",
+        "Name": "1",
+        "Parent": 17,
+        "Active": true,
+        "X": -71.3,
+        "Y": 27.4,
+        "W": 50,
+        "H": 50,
+        "AnchorMinX": 0.5,
+        "AnchorMinY": 0.5,
+        "AnchorMaxX": 0.5,
+        "AnchorMaxY": 0.5,
+        "PivotX": 0.5,
+        "PivotY": 0.5,
+        "ScaleX": 1.0,
+        "ScaleY": 1.0,
+        "ScaleZ": 1,
+        "Rotation": 0.0,
+        "Texture": "6200000000000010016",
+        "Image": true,
+        "Text": null,
+        "R": 1,
+        "G": 1,
+        "B": 1,
+        "A": 1,
+        "Font": "6200000000000000020",
+        "FontSize": 0,
+        "Alignment": 1,
+        "VerticalAlignment": 1,
+        "LineSpacing": 1,
+        "Wrap": false,
+        "Raycast": true,
+        "PreserveAspect": false,
+        "Button": null,
+        "ButtonAnimation": false
+      }
+    },
+    {
+      "id": "336659352",
+      "transformId": "336659353",
+      "path": "Menu/Panel/Ti/2",
+      "activeInHierarchy": true,
+      "transform": {
+        "type": "RectTransform",
+        "m_ObjectHideFlags": 0,
+        "m_CorrespondingSourceObject": {
+          "fileID": "0"
+        },
+        "m_PrefabInstance": {
+          "fileID": "0"
+        },
+        "m_PrefabAsset": {
+          "fileID": "0"
+        },
+        "m_GameObject": {
+          "fileID": "336659352"
+        },
+        "m_LocalRotation": {
+          "x": 0,
+          "y": 0,
+          "z": 0,
+          "w": 1
+        },
+        "m_LocalPosition": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "m_LocalScale": {
+          "x": 1,
+          "y": 1,
+          "z": 1
+        },
+        "m_ConstrainProportionsScale": 0,
+        "m_Children": [],
+        "m_Father": {
+          "fileID": "1037711523"
+        },
+        "m_LocalEulerAnglesHint": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "m_AnchorMin": {
+          "x": 0.5,
+          "y": 0.5
+        },
+        "m_AnchorMax": {
+          "x": 0.5,
+          "y": 0.5
+        },
+        "m_AnchoredPosition": {
+          "x": -21.699991,
+          "y": 27.399996
+        },
+        "m_SizeDelta": {
+          "x": 50,
+          "y": 50
+        },
+        "m_Pivot": {
+          "x": 0.5,
+          "y": 0.5
+        }
+      },
+      "components": [
+        {
+          "type": "RectTransform",
+          "m_ObjectHideFlags": 0,
+          "m_CorrespondingSourceObject": {
+            "fileID": "0"
+          },
+          "m_PrefabInstance": {
+            "fileID": "0"
+          },
+          "m_PrefabAsset": {
+            "fileID": "0"
+          },
+          "m_GameObject": {
+            "fileID": "336659352"
+          },
+          "m_LocalRotation": {
+            "x": 0,
+            "y": 0,
+            "z": 0,
+            "w": 1
+          },
+          "m_LocalPosition": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "m_LocalScale": {
+            "x": 1,
+            "y": 1,
+            "z": 1
+          },
+          "m_ConstrainProportionsScale": 0,
+          "m_Children": [],
+          "m_Father": {
+            "fileID": "1037711523"
+          },
+          "m_LocalEulerAnglesHint": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "m_AnchorMin": {
+            "x": 0.5,
+            "y": 0.5
+          },
+          "m_AnchorMax": {
+            "x": 0.5,
+            "y": 0.5
+          },
+          "m_AnchoredPosition": {
+            "x": -21.699991,
+            "y": 27.399996
+          },
+          "m_SizeDelta": {
+            "x": 50,
+            "y": 50
+          },
+          "m_Pivot": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "type": "CanvasRenderer",
+          "m_ObjectHideFlags": 0,
+          "m_CorrespondingSourceObject": {
+            "fileID": "0"
+          },
+          "m_PrefabInstance": {
+            "fileID": "0"
+          },
+          "m_PrefabAsset": {
+            "fileID": "0"
+          },
+          "m_GameObject": {
+            "fileID": "336659352"
+          },
+          "m_CullTransparentMesh": 1
+        },
+        {
+          "type": "MonoBehaviour",
+          "m_ObjectHideFlags": 0,
+          "m_CorrespondingSourceObject": {
+            "fileID": "0"
+          },
+          "m_PrefabInstance": {
+            "fileID": "0"
+          },
+          "m_PrefabAsset": {
+            "fileID": "0"
+          },
+          "m_GameObject": {
+            "fileID": "336659352"
+          },
+          "m_Enabled": 1,
+          "m_EditorHideFlags": 0,
+          "m_Script": {
+            "fileID": "11500000",
+            "guid": "fe87c0e1cc204ed48ad3b37840f39efc",
+            "type": 3
+          },
+          "m_Name": null,
+          "m_EditorClassIdentifier": null,
+          "m_Material": {
+            "fileID": "0"
+          },
+          "m_Color": {
+            "r": 1,
+            "g": 1,
+            "b": 1,
+            "a": 1
+          },
+          "m_RaycastTarget": 1,
+          "m_RaycastPadding": {
+            "x": 0,
+            "y": 0,
+            "z": 0,
+            "w": 0
+          },
+          "m_Maskable": 1,
+          "m_OnCullStateChanged": {
+            "m_PersistentCalls": {
+              "m_Calls": []
+            }
+          },
+          "m_Sprite": {
+            "fileID": "1419164963",
+            "guid": "094c61c07e7bba8439fd21e7669c5e8d",
+            "type": 3
+          },
+          "m_Type": 0,
+          "m_PreserveAspect": 0,
+          "m_FillCenter": 1,
+          "m_FillMethod": 4,
+          "m_FillAmount": 1,
+          "m_FillClockwise": 1,
+          "m_FillOrigin": 0,
+          "m_UseSpriteMesh": 0,
+          "m_PixelsPerUnitMultiplier": 1
+        }
+      ],
+      "runtime": {
+        "Id": "336659352",
+        "Name": "2",
+        "Parent": 17,
+        "Active": true,
+        "X": -21.699991,
+        "Y": 27.399996,
+        "W": 50,
+        "H": 50,
+        "AnchorMinX": 0.5,
+        "AnchorMinY": 0.5,
+        "AnchorMaxX": 0.5,
+        "AnchorMaxY": 0.5,
+        "PivotX": 0.5,
+        "PivotY": 0.5,
+        "ScaleX": 1.0,
+        "ScaleY": 1.0,
+        "ScaleZ": 1,
+        "Rotation": 0.0,
+        "Texture": "6200000000000010017",
+        "Image": true,
+        "Text": null,
+        "R": 1,
+        "G": 1,
+        "B": 1,
+        "A": 1,
+        "Font": "6200000000000000020",
+        "FontSize": 0,
+        "Alignment": 1,
+        "VerticalAlignment": 1,
+        "LineSpacing": 1,
+        "Wrap": false,
+        "Raycast": true,
+        "PreserveAspect": false,
+        "Button": null,
+        "ButtonAnimation": false
+      }
+    },
+    {
+      "id": "209068533",
+      "transformId": "209068534",
+      "path": "Menu/Panel/Ti/3",
+      "activeInHierarchy": true,
+      "transform": {
+        "type": "RectTransform",
+        "m_ObjectHideFlags": 0,
+        "m_CorrespondingSourceObject": {
+          "fileID": "0"
+        },
+        "m_PrefabInstance": {
+          "fileID": "0"
+        },
+        "m_PrefabAsset": {
+          "fileID": "0"
+        },
+        "m_GameObject": {
+          "fileID": "209068533"
+        },
+        "m_LocalRotation": {
+          "x": 0,
+          "y": 0,
+          "z": 0,
+          "w": 1
+        },
+        "m_LocalPosition": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "m_LocalScale": {
+          "x": 1,
+          "y": 1,
+          "z": 1
+        },
+        "m_ConstrainProportionsScale": 0,
+        "m_Children": [],
+        "m_Father": {
+          "fileID": "1037711523"
+        },
+        "m_LocalEulerAnglesHint": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "m_AnchorMin": {
+          "x": 0.5,
+          "y": 0.5
+        },
+        "m_AnchorMax": {
+          "x": 0.5,
+          "y": 0.5
+        },
+        "m_AnchoredPosition": {
+          "x": 25.90001,
+          "y": 27.399996
+        },
+        "m_SizeDelta": {
+          "x": 50,
+          "y": 50
+        },
+        "m_Pivot": {
+          "x": 0.5,
+          "y": 0.5
+        }
+      },
+      "components": [
+        {
+          "type": "RectTransform",
+          "m_ObjectHideFlags": 0,
+          "m_CorrespondingSourceObject": {
+            "fileID": "0"
+          },
+          "m_PrefabInstance": {
+            "fileID": "0"
+          },
+          "m_PrefabAsset": {
+            "fileID": "0"
+          },
+          "m_GameObject": {
+            "fileID": "209068533"
+          },
+          "m_LocalRotation": {
+            "x": 0,
+            "y": 0,
+            "z": 0,
+            "w": 1
+          },
+          "m_LocalPosition": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "m_LocalScale": {
+            "x": 1,
+            "y": 1,
+            "z": 1
+          },
+          "m_ConstrainProportionsScale": 0,
+          "m_Children": [],
+          "m_Father": {
+            "fileID": "1037711523"
+          },
+          "m_LocalEulerAnglesHint": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "m_AnchorMin": {
+            "x": 0.5,
+            "y": 0.5
+          },
+          "m_AnchorMax": {
+            "x": 0.5,
+            "y": 0.5
+          },
+          "m_AnchoredPosition": {
+            "x": 25.90001,
+            "y": 27.399996
+          },
+          "m_SizeDelta": {
+            "x": 50,
+            "y": 50
+          },
+          "m_Pivot": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "type": "CanvasRenderer",
+          "m_ObjectHideFlags": 0,
+          "m_CorrespondingSourceObject": {
+            "fileID": "0"
+          },
+          "m_PrefabInstance": {
+            "fileID": "0"
+          },
+          "m_PrefabAsset": {
+            "fileID": "0"
+          },
+          "m_GameObject": {
+            "fileID": "209068533"
+          },
+          "m_CullTransparentMesh": 1
+        },
+        {
+          "type": "MonoBehaviour",
+          "m_ObjectHideFlags": 0,
+          "m_CorrespondingSourceObject": {
+            "fileID": "0"
+          },
+          "m_PrefabInstance": {
+            "fileID": "0"
+          },
+          "m_PrefabAsset": {
+            "fileID": "0"
+          },
+          "m_GameObject": {
+            "fileID": "209068533"
+          },
+          "m_Enabled": 1,
+          "m_EditorHideFlags": 0,
+          "m_Script": {
+            "fileID": "11500000",
+            "guid": "fe87c0e1cc204ed48ad3b37840f39efc",
+            "type": 3
+          },
+          "m_Name": null,
+          "m_EditorClassIdentifier": null,
+          "m_Material": {
+            "fileID": "0"
+          },
+          "m_Color": {
+            "r": 1,
+            "g": 1,
+            "b": 1,
+            "a": 1
+          },
+          "m_RaycastTarget": 1,
+          "m_RaycastPadding": {
+            "x": 0,
+            "y": 0,
+            "z": 0,
+            "w": 0
+          },
+          "m_Maskable": 1,
+          "m_OnCullStateChanged": {
+            "m_PersistentCalls": {
+              "m_Calls": []
+            }
+          },
+          "m_Sprite": {
+            "fileID": "-1512635328",
+            "guid": "094c61c07e7bba8439fd21e7669c5e8d",
+            "type": 3
+          },
+          "m_Type": 0,
+          "m_PreserveAspect": 0,
+          "m_FillCenter": 1,
+          "m_FillMethod": 4,
+          "m_FillAmount": 1,
+          "m_FillClockwise": 1,
+          "m_FillOrigin": 0,
+          "m_UseSpriteMesh": 0,
+          "m_PixelsPerUnitMultiplier": 1
+        }
+      ],
+      "runtime": {
+        "Id": "209068533",
+        "Name": "3",
+        "Parent": 17,
+        "Active": true,
+        "X": 25.90001,
+        "Y": 27.399996,
+        "W": 50,
+        "H": 50,
+        "AnchorMinX": 0.5,
+        "AnchorMinY": 0.5,
+        "AnchorMaxX": 0.5,
+        "AnchorMaxY": 0.5,
+        "PivotX": 0.5,
+        "PivotY": 0.5,
+        "ScaleX": 1.0,
+        "ScaleY": 1.0,
+        "ScaleZ": 1,
+        "Rotation": 0.0,
+        "Texture": "6200000000000010018",
+        "Image": true,
+        "Text": null,
+        "R": 1,
+        "G": 1,
+        "B": 1,
+        "A": 1,
+        "Font": "6200000000000000020",
+        "FontSize": 0,
+        "Alignment": 1,
+        "VerticalAlignment": 1,
+        "LineSpacing": 1,
+        "Wrap": false,
+        "Raycast": true,
+        "PreserveAspect": false,
+        "Button": null,
+        "ButtonAnimation": false
+      }
+    },
+    {
+      "id": "1756643203",
+      "transformId": "1756643204",
+      "path": "Menu/Panel/Ti/4",
+      "activeInHierarchy": true,
+      "transform": {
+        "type": "RectTransform",
+        "m_ObjectHideFlags": 0,
+        "m_CorrespondingSourceObject": {
+          "fileID": "0"
+        },
+        "m_PrefabInstance": {
+          "fileID": "0"
+        },
+        "m_PrefabAsset": {
+          "fileID": "0"
+        },
+        "m_GameObject": {
+          "fileID": "1756643203"
+        },
+        "m_LocalRotation": {
+          "x": 0,
+          "y": 0,
+          "z": 0,
+          "w": 1
+        },
+        "m_LocalPosition": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "m_LocalScale": {
+          "x": 1,
+          "y": 1,
+          "z": 1
+        },
+        "m_ConstrainProportionsScale": 0,
+        "m_Children": [],
+        "m_Father": {
+          "fileID": "1037711523"
+        },
+        "m_LocalEulerAnglesHint": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "m_AnchorMin": {
+          "x": 0.5,
+          "y": 0.5
+        },
+        "m_AnchorMax": {
+          "x": 0.5,
+          "y": 0.5
+        },
+        "m_AnchoredPosition": {
+          "x": 75.50001,
+          "y": 27.399996
+        },
+        "m_SizeDelta": {
+          "x": 50,
+          "y": 50
+        },
+        "m_Pivot": {
+          "x": 0.5,
+          "y": 0.5
+        }
+      },
+      "components": [
+        {
+          "type": "RectTransform",
+          "m_ObjectHideFlags": 0,
+          "m_CorrespondingSourceObject": {
+            "fileID": "0"
+          },
+          "m_PrefabInstance": {
+            "fileID": "0"
+          },
+          "m_PrefabAsset": {
+            "fileID": "0"
+          },
+          "m_GameObject": {
+            "fileID": "1756643203"
+          },
+          "m_LocalRotation": {
+            "x": 0,
+            "y": 0,
+            "z": 0,
+            "w": 1
+          },
+          "m_LocalPosition": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "m_LocalScale": {
+            "x": 1,
+            "y": 1,
+            "z": 1
+          },
+          "m_ConstrainProportionsScale": 0,
+          "m_Children": [],
+          "m_Father": {
+            "fileID": "1037711523"
+          },
+          "m_LocalEulerAnglesHint": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "m_AnchorMin": {
+            "x": 0.5,
+            "y": 0.5
+          },
+          "m_AnchorMax": {
+            "x": 0.5,
+            "y": 0.5
+          },
+          "m_AnchoredPosition": {
+            "x": 75.50001,
+            "y": 27.399996
+          },
+          "m_SizeDelta": {
+            "x": 50,
+            "y": 50
+          },
+          "m_Pivot": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "type": "CanvasRenderer",
+          "m_ObjectHideFlags": 0,
+          "m_CorrespondingSourceObject": {
+            "fileID": "0"
+          },
+          "m_PrefabInstance": {
+            "fileID": "0"
+          },
+          "m_PrefabAsset": {
+            "fileID": "0"
+          },
+          "m_GameObject": {
+            "fileID": "1756643203"
+          },
+          "m_CullTransparentMesh": 1
+        },
+        {
+          "type": "MonoBehaviour",
+          "m_ObjectHideFlags": 0,
+          "m_CorrespondingSourceObject": {
+            "fileID": "0"
+          },
+          "m_PrefabInstance": {
+            "fileID": "0"
+          },
+          "m_PrefabAsset": {
+            "fileID": "0"
+          },
+          "m_GameObject": {
+            "fileID": "1756643203"
+          },
+          "m_Enabled": 1,
+          "m_EditorHideFlags": 0,
+          "m_Script": {
+            "fileID": "11500000",
+            "guid": "fe87c0e1cc204ed48ad3b37840f39efc",
+            "type": 3
+          },
+          "m_Name": null,
+          "m_EditorClassIdentifier": null,
+          "m_Material": {
+            "fileID": "0"
+          },
+          "m_Color": {
+            "r": 1,
+            "g": 1,
+            "b": 1,
+            "a": 1
+          },
+          "m_RaycastTarget": 1,
+          "m_RaycastPadding": {
+            "x": 0,
+            "y": 0,
+            "z": 0,
+            "w": 0
+          },
+          "m_Maskable": 1,
+          "m_OnCullStateChanged": {
+            "m_PersistentCalls": {
+              "m_Calls": []
+            }
+          },
+          "m_Sprite": {
+            "fileID": "175002593",
+            "guid": "094c61c07e7bba8439fd21e7669c5e8d",
+            "type": 3
+          },
+          "m_Type": 0,
+          "m_PreserveAspect": 0,
+          "m_FillCenter": 1,
+          "m_FillMethod": 4,
+          "m_FillAmount": 1,
+          "m_FillClockwise": 1,
+          "m_FillOrigin": 0,
+          "m_UseSpriteMesh": 0,
+          "m_PixelsPerUnitMultiplier": 1
+        }
+      ],
+      "runtime": {
+        "Id": "1756643203",
+        "Name": "4",
+        "Parent": 17,
+        "Active": true,
+        "X": 75.50001,
+        "Y": 27.399996,
+        "W": 50,
+        "H": 50,
+        "AnchorMinX": 0.5,
+        "AnchorMinY": 0.5,
+        "AnchorMaxX": 0.5,
+        "AnchorMaxY": 0.5,
+        "PivotX": 0.5,
+        "PivotY": 0.5,
+        "ScaleX": 1.0,
+        "ScaleY": 1.0,
+        "ScaleZ": 1,
+        "Rotation": 0.0,
+        "Texture": "6200000000000010019",
+        "Image": true,
+        "Text": null,
+        "R": 1,
+        "G": 1,
+        "B": 1,
+        "A": 1,
+        "Font": "6200000000000000020",
+        "FontSize": 0,
+        "Alignment": 1,
+        "VerticalAlignment": 1,
+        "LineSpacing": 1,
+        "Wrap": false,
+        "Raycast": true,
+        "PreserveAspect": false,
+        "Button": null,
+        "ButtonAnimation": false
+      }
+    },
+    {
+      "id": "2038629737",
+      "transformId": "2038629738",
+      "path": "Menu/Panel/Ti/5",
+      "activeInHierarchy": true,
+      "transform": {
+        "type": "RectTransform",
+        "m_ObjectHideFlags": 0,
+        "m_CorrespondingSourceObject": {
+          "fileID": "0"
+        },
+        "m_PrefabInstance": {
+          "fileID": "0"
+        },
+        "m_PrefabAsset": {
+          "fileID": "0"
+        },
+        "m_GameObject": {
+          "fileID": "2038629737"
+        },
+        "m_LocalRotation": {
+          "x": 0,
+          "y": 0,
+          "z": 0,
+          "w": 1
+        },
+        "m_LocalPosition": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "m_LocalScale": {
+          "x": 1,
+          "y": 1,
+          "z": 1
+        },
+        "m_ConstrainProportionsScale": 0,
+        "m_Children": [],
+        "m_Father": {
+          "fileID": "1037711523"
+        },
+        "m_LocalEulerAnglesHint": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "m_AnchorMin": {
+          "x": 0.5,
+          "y": 0.5
+        },
+        "m_AnchorMax": {
+          "x": 0.5,
+          "y": 0.5
+        },
+        "m_AnchoredPosition": {
+          "x": -21.699991,
+          "y": -22.400003
+        },
+        "m_SizeDelta": {
+          "x": 50,
+          "y": 50
+        },
+        "m_Pivot": {
+          "x": 0.5,
+          "y": 0.5
+        }
+      },
+      "components": [
+        {
+          "type": "RectTransform",
+          "m_ObjectHideFlags": 0,
+          "m_CorrespondingSourceObject": {
+            "fileID": "0"
+          },
+          "m_PrefabInstance": {
+            "fileID": "0"
+          },
+          "m_PrefabAsset": {
+            "fileID": "0"
+          },
+          "m_GameObject": {
+            "fileID": "2038629737"
+          },
+          "m_LocalRotation": {
+            "x": 0,
+            "y": 0,
+            "z": 0,
+            "w": 1
+          },
+          "m_LocalPosition": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "m_LocalScale": {
+            "x": 1,
+            "y": 1,
+            "z": 1
+          },
+          "m_ConstrainProportionsScale": 0,
+          "m_Children": [],
+          "m_Father": {
+            "fileID": "1037711523"
+          },
+          "m_LocalEulerAnglesHint": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "m_AnchorMin": {
+            "x": 0.5,
+            "y": 0.5
+          },
+          "m_AnchorMax": {
+            "x": 0.5,
+            "y": 0.5
+          },
+          "m_AnchoredPosition": {
+            "x": -21.699991,
+            "y": -22.400003
+          },
+          "m_SizeDelta": {
+            "x": 50,
+            "y": 50
+          },
+          "m_Pivot": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "type": "CanvasRenderer",
+          "m_ObjectHideFlags": 0,
+          "m_CorrespondingSourceObject": {
+            "fileID": "0"
+          },
+          "m_PrefabInstance": {
+            "fileID": "0"
+          },
+          "m_PrefabAsset": {
+            "fileID": "0"
+          },
+          "m_GameObject": {
+            "fileID": "2038629737"
+          },
+          "m_CullTransparentMesh": 1
+        },
+        {
+          "type": "MonoBehaviour",
+          "m_ObjectHideFlags": 0,
+          "m_CorrespondingSourceObject": {
+            "fileID": "0"
+          },
+          "m_PrefabInstance": {
+            "fileID": "0"
+          },
+          "m_PrefabAsset": {
+            "fileID": "0"
+          },
+          "m_GameObject": {
+            "fileID": "2038629737"
+          },
+          "m_Enabled": 1,
+          "m_EditorHideFlags": 0,
+          "m_Script": {
+            "fileID": "11500000",
+            "guid": "fe87c0e1cc204ed48ad3b37840f39efc",
+            "type": 3
+          },
+          "m_Name": null,
+          "m_EditorClassIdentifier": null,
+          "m_Material": {
+            "fileID": "0"
+          },
+          "m_Color": {
+            "r": 1,
+            "g": 1,
+            "b": 1,
+            "a": 1
+          },
+          "m_RaycastTarget": 1,
+          "m_RaycastPadding": {
+            "x": 0,
+            "y": 0,
+            "z": 0,
+            "w": 0
+          },
+          "m_Maskable": 1,
+          "m_OnCullStateChanged": {
+            "m_PersistentCalls": {
+              "m_Calls": []
+            }
+          },
+          "m_Sprite": {
+            "fileID": "-1767834626",
+            "guid": "094c61c07e7bba8439fd21e7669c5e8d",
+            "type": 3
+          },
+          "m_Type": 0,
+          "m_PreserveAspect": 0,
+          "m_FillCenter": 1,
+          "m_FillMethod": 4,
+          "m_FillAmount": 1,
+          "m_FillClockwise": 1,
+          "m_FillOrigin": 0,
+          "m_UseSpriteMesh": 0,
+          "m_PixelsPerUnitMultiplier": 1
+        }
+      ],
+      "runtime": {
+        "Id": "2038629737",
+        "Name": "5",
+        "Parent": 17,
+        "Active": true,
+        "X": -21.699991,
+        "Y": -22.400003,
+        "W": 50,
+        "H": 50,
+        "AnchorMinX": 0.5,
+        "AnchorMinY": 0.5,
+        "AnchorMaxX": 0.5,
+        "AnchorMaxY": 0.5,
+        "PivotX": 0.5,
+        "PivotY": 0.5,
+        "ScaleX": 1.0,
+        "ScaleY": 1.0,
+        "ScaleZ": 1,
+        "Rotation": 0.0,
+        "Texture": "6200000000000010012",
+        "Image": true,
+        "Text": null,
+        "R": 1,
+        "G": 1,
+        "B": 1,
+        "A": 1,
+        "Font": "6200000000000000020",
+        "FontSize": 0,
+        "Alignment": 1,
+        "VerticalAlignment": 1,
+        "LineSpacing": 1,
+        "Wrap": false,
+        "Raycast": true,
+        "PreserveAspect": false,
+        "Button": null,
+        "ButtonAnimation": false
+      }
+    },
+    {
+      "id": "452800434",
+      "transformId": "452800435",
+      "path": "Menu/Panel/Ti/6",
+      "activeInHierarchy": true,
+      "transform": {
+        "type": "RectTransform",
+        "m_ObjectHideFlags": 0,
+        "m_CorrespondingSourceObject": {
+          "fileID": "0"
+        },
+        "m_PrefabInstance": {
+          "fileID": "0"
+        },
+        "m_PrefabAsset": {
+          "fileID": "0"
+        },
+        "m_GameObject": {
+          "fileID": "452800434"
+        },
+        "m_LocalRotation": {
+          "x": 0,
+          "y": 0,
+          "z": 0,
+          "w": 1
+        },
+        "m_LocalPosition": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "m_LocalScale": {
+          "x": 1,
+          "y": 1,
+          "z": 1
+        },
+        "m_ConstrainProportionsScale": 0,
+        "m_Children": [],
+        "m_Father": {
+          "fileID": "1037711523"
+        },
+        "m_LocalEulerAnglesHint": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "m_AnchorMin": {
+          "x": 0.5,
+          "y": 0.5
+        },
+        "m_AnchorMax": {
+          "x": 0.5,
+          "y": 0.5
+        },
+        "m_AnchoredPosition": {
+          "x": 25.800007,
+          "y": -22.700003
+        },
+        "m_SizeDelta": {
+          "x": 50,
+          "y": 50
+        },
+        "m_Pivot": {
+          "x": 0.5,
+          "y": 0.5
+        }
+      },
+      "components": [
+        {
+          "type": "RectTransform",
+          "m_ObjectHideFlags": 0,
+          "m_CorrespondingSourceObject": {
+            "fileID": "0"
+          },
+          "m_PrefabInstance": {
+            "fileID": "0"
+          },
+          "m_PrefabAsset": {
+            "fileID": "0"
+          },
+          "m_GameObject": {
+            "fileID": "452800434"
+          },
+          "m_LocalRotation": {
+            "x": 0,
+            "y": 0,
+            "z": 0,
+            "w": 1
+          },
+          "m_LocalPosition": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "m_LocalScale": {
+            "x": 1,
+            "y": 1,
+            "z": 1
+          },
+          "m_ConstrainProportionsScale": 0,
+          "m_Children": [],
+          "m_Father": {
+            "fileID": "1037711523"
+          },
+          "m_LocalEulerAnglesHint": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "m_AnchorMin": {
+            "x": 0.5,
+            "y": 0.5
+          },
+          "m_AnchorMax": {
+            "x": 0.5,
+            "y": 0.5
+          },
+          "m_AnchoredPosition": {
+            "x": 25.800007,
+            "y": -22.700003
+          },
+          "m_SizeDelta": {
+            "x": 50,
+            "y": 50
+          },
+          "m_Pivot": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "type": "CanvasRenderer",
+          "m_ObjectHideFlags": 0,
+          "m_CorrespondingSourceObject": {
+            "fileID": "0"
+          },
+          "m_PrefabInstance": {
+            "fileID": "0"
+          },
+          "m_PrefabAsset": {
+            "fileID": "0"
+          },
+          "m_GameObject": {
+            "fileID": "452800434"
+          },
+          "m_CullTransparentMesh": 1
+        },
+        {
+          "type": "MonoBehaviour",
+          "m_ObjectHideFlags": 0,
+          "m_CorrespondingSourceObject": {
+            "fileID": "0"
+          },
+          "m_PrefabInstance": {
+            "fileID": "0"
+          },
+          "m_PrefabAsset": {
+            "fileID": "0"
+          },
+          "m_GameObject": {
+            "fileID": "452800434"
+          },
+          "m_Enabled": 1,
+          "m_EditorHideFlags": 0,
+          "m_Script": {
+            "fileID": "11500000",
+            "guid": "fe87c0e1cc204ed48ad3b37840f39efc",
+            "type": 3
+          },
+          "m_Name": null,
+          "m_EditorClassIdentifier": null,
+          "m_Material": {
+            "fileID": "0"
+          },
+          "m_Color": {
+            "r": 1,
+            "g": 1,
+            "b": 1,
+            "a": 1
+          },
+          "m_RaycastTarget": 1,
+          "m_RaycastPadding": {
+            "x": 0,
+            "y": 0,
+            "z": 0,
+            "w": 0
+          },
+          "m_Maskable": 1,
+          "m_OnCullStateChanged": {
+            "m_PersistentCalls": {
+              "m_Calls": []
+            }
+          },
+          "m_Sprite": {
+            "fileID": "2124504786",
+            "guid": "094c61c07e7bba8439fd21e7669c5e8d",
+            "type": 3
+          },
+          "m_Type": 0,
+          "m_PreserveAspect": 0,
+          "m_FillCenter": 1,
+          "m_FillMethod": 4,
+          "m_FillAmount": 1,
+          "m_FillClockwise": 1,
+          "m_FillOrigin": 0,
+          "m_UseSpriteMesh": 0,
+          "m_PixelsPerUnitMultiplier": 1
+        }
+      ],
+      "runtime": {
+        "Id": "452800434",
+        "Name": "6",
+        "Parent": 17,
+        "Active": true,
+        "X": 25.800007,
+        "Y": -22.700003,
+        "W": 50,
+        "H": 50,
+        "AnchorMinX": 0.5,
+        "AnchorMinY": 0.5,
+        "AnchorMaxX": 0.5,
+        "AnchorMaxY": 0.5,
+        "PivotX": 0.5,
+        "PivotY": 0.5,
+        "ScaleX": 1.0,
+        "ScaleY": 1.0,
+        "ScaleZ": 1,
+        "Rotation": 0.0,
+        "Texture": "6200000000000010013",
+        "Image": true,
+        "Text": null,
+        "R": 1,
+        "G": 1,
+        "B": 1,
+        "A": 1,
+        "Font": "6200000000000000020",
+        "FontSize": 0,
+        "Alignment": 1,
+        "VerticalAlignment": 1,
+        "LineSpacing": 1,
+        "Wrap": false,
+        "Raycast": true,
+        "PreserveAspect": false,
+        "Button": null,
+        "ButtonAnimation": false
+      }
+    }
+  ],
+  "controllers": {},
+  "coordinates": "Original local RectTransform coordinates; Parent=-1 is the root Canvas. Nodes use source DFS order. Preserve inactive ancestors.",
+  "buttonAnimation": null,
+  "generatedGraphics": [
+    {
+      "method": "Nine native UIImage children using original pixel crops, borders and PPU; no flat-color substitute.",
+      "source": "Reference/UnityBuiltins/Background.png",
+      "sourceSha256": "975b976cd1c9cd879ad150ad49b164375d8e9b99223f025e33e54e9c7f0f3bea",
+      "metadata": "Reference/UnityBuiltins/Background.json",
+      "metadataSha256": "4cb2dc4a97ad31b300288a59cdd5736a2c011035ba20ecce9ec8121efaed3bff",
+      "export": {
+        "unityVersion": "6000.2.14f1",
+        "resource": "UI/Skin/Background.psd",
+        "name": "Background",
+        "guid": "0000000000000000f000000000000000",
+        "textureName": "Background",
+        "textureFormat": "RGBA32",
+        "graphicsFormat": "R8G8B8A8_UNorm",
+        "activeColorSpace": "Gamma",
+        "filterMode": "Bilinear",
+        "wrapModeU": "Clamp",
+        "wrapModeV": "Clamp",
+        "image": "Background.png",
+        "sha256": "975b976cd1c9cd879ad150ad49b164375d8e9b99223f025e33e54e9c7f0f3bea",
+        "fileID": 10907,
+        "isDataSRGB": true,
+        "isReadable": false,
+        "width": 32,
+        "height": 32,
+        "mipmapCount": 6,
+        "centerRGBA32": [
+          214,
+          214,
+          214,
+          255
+        ],
+        "nativePrefix": [
+          42,
+          42,
+          42,
+          0,
+          42,
+          42,
+          42,
+          0,
+          42,
+          42,
+          42,
+          0,
+          42,
+          42,
+          42,
+          0,
+          50,
+          50,
+          50,
+          0,
+          52,
+          52,
+          52,
+          0,
+          52,
+          52,
+          52,
+          0,
+          50,
+          50,
+          50,
+          0,
+          50,
+          50,
+          50,
+          0,
+          50,
+          50,
+          50,
+          0,
+          50,
+          50,
+          50,
+          0,
+          50,
+          50,
+          50,
+          0,
+          50,
+          50,
+          50,
+          0,
+          50,
+          50,
+          50,
+          0,
+          50,
+          50,
+          50,
+          0,
+          50,
+          50,
+          50,
+          0
+        ],
+        "pixelsPerUnit": 200.0,
+        "rect": {
+          "serializedVersion": "2",
+          "x": 0.0,
+          "y": 0.0,
+          "width": 32.0,
+          "height": 32.0
+        },
+        "border": {
+          "x": 10.0,
+          "y": 10.0,
+          "z": 10.0,
+          "w": 10.0
+        },
+        "pivot": {
+          "x": 16.0,
+          "y": 16.0
+        }
+      },
+      "origin": "AssetDatabase.GetBuiltinExtraResource<Sprite>, verified GUID/fileID, and AsyncGPUReadback RGBA32 in an isolated Unity 6000.2.14f1 project; the original Return project was not edited.",
+      "effectivePixelsPerUnit": 4.0,
+      "layoutBorders": [
+        2.5,
+        2.5,
+        2.5,
+        2.5
+      ],
+      "slices": [
+        {
+          "id": "1180627484:slice:0:0",
+          "cropBottomLeftPixels": [
+            0,
+            0,
+            10,
+            10
+          ],
+          "texture": "6200000000000010150",
+          "path": "Assets/Art/ui-pause-panel-0-0.png"
+        },
+        {
+          "id": "1180627484:slice:0:1",
+          "cropBottomLeftPixels": [
+            10,
+            0,
+            12,
+            10
+          ],
+          "texture": "6200000000000010151",
+          "path": "Assets/Art/ui-pause-panel-0-1.png"
+        },
+        {
+          "id": "1180627484:slice:0:2",
+          "cropBottomLeftPixels": [
+            22,
+            0,
+            10,
+            10
+          ],
+          "texture": "6200000000000010152",
+          "path": "Assets/Art/ui-pause-panel-0-2.png"
+        },
+        {
+          "id": "1180627484:slice:1:0",
+          "cropBottomLeftPixels": [
+            0,
+            10,
+            10,
+            12
+          ],
+          "texture": "6200000000000010153",
+          "path": "Assets/Art/ui-pause-panel-1-0.png"
+        },
+        {
+          "id": "1180627484:slice:1:1",
+          "cropBottomLeftPixels": [
+            10,
+            10,
+            12,
+            12
+          ],
+          "texture": "6200000000000010154",
+          "path": "Assets/Art/ui-pause-panel-1-1.png"
+        },
+        {
+          "id": "1180627484:slice:1:2",
+          "cropBottomLeftPixels": [
+            22,
+            10,
+            10,
+            12
+          ],
+          "texture": "6200000000000010155",
+          "path": "Assets/Art/ui-pause-panel-1-2.png"
+        },
+        {
+          "id": "1180627484:slice:2:0",
+          "cropBottomLeftPixels": [
+            0,
+            22,
+            10,
+            10
+          ],
+          "texture": "6200000000000010156",
+          "path": "Assets/Art/ui-pause-panel-2-0.png"
+        },
+        {
+          "id": "1180627484:slice:2:1",
+          "cropBottomLeftPixels": [
+            10,
+            22,
+            12,
+            10
+          ],
+          "texture": "6200000000000010157",
+          "path": "Assets/Art/ui-pause-panel-2-1.png"
+        },
+        {
+          "id": "1180627484:slice:2:2",
+          "cropBottomLeftPixels": [
+            22,
+            22,
+            10,
+            10
+          ],
+          "texture": "6200000000000010158",
+          "path": "Assets/Art/ui-pause-panel-2-2.png"
+        }
+      ]
+    }
+  ],
+  "limitations": []
+}

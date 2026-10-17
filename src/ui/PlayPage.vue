@@ -12,6 +12,7 @@ const bytes = ref<Uint8Array>()
 const loading = ref(true)
 const error = ref('')
 const running = ref(false)
+const exited = ref(false)
 const controller = new AbortController()
 
 const compatibility = computed(() => game.value ? engineCompatibility(game.value.engineCommit) : 'match')
@@ -26,6 +27,7 @@ async function load() {
   error.value = ''
   bytes.value = undefined
   running.value = false
+  exited.value = false
   try {
     game.value = await publishedGame(props.gameId)
     if (engineCompatibility(game.value.engineCommit) !== 'match') throw new Error('作品使用旧引擎，请作者重新保存并发布')
@@ -57,8 +59,9 @@ onBeforeUnmount(() => controller.abort())
       <p v-if="warning" class="local-note" role="alert"><TriangleAlert :size="15" /> {{ warning }}</p>
       <p v-if="running" class="local-note" role="status">作品正在运行，Esc 无法退出；关闭页面即可结束。</p>
       <div v-if="bytes" class="play-surface">
-        <EngineSurface kind="player" :bytes="bytes" @ready="running = true" @error="error = $event; running = false" />
+        <EngineSurface kind="player" :bytes="bytes" @ready="running = true" @error="error = $event; running = false" @exit="bytes = undefined; running = false; exited = true" />
       </div>
+      <div v-else-if="exited" class="local-note" role="status">游戏已退出。<button class="button" @click="load">重新开始</button></div>
       <div v-else class="local-note">正在下载游戏包…</div>
     </template>
   </main>

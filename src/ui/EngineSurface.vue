@@ -3,7 +3,7 @@ import { onBeforeUnmount, ref } from 'vue'
 import { EngineError, type Snapshot, type SceneState } from '../engine/protocol'
 import type { EngineDocument } from '../engine/storage'
 const props = defineProps<{ kind: 'editor' | 'player'; cloudProjectId?: string; name?: string; template?: string; document?: EngineDocument; bytes?: Uint8Array }>()
-const emit = defineEmits<{ ready: [snapshot?: Snapshot]; state: [state: SceneState]; actions: [actions: number]; error: [message: string] }>()
+const emit = defineEmits<{ ready: [snapshot?: Snapshot]; state: [state: SceneState]; actions: [actions: number]; error: [message: string]; exit: [] }>()
 const iframe = ref<HTMLIFrameElement>()
 const active = ref(true)
 const loading = ref(true)
@@ -47,6 +47,7 @@ function connect() {
       else downloadStatus.value = `正在校验本地引擎（${data.loaded}/${data.total}）…`
     }
     else if (data.event === 'ready') { clearTimeout(bootTimer); loading.value = false; emit('ready', data.snapshot) }
+    else if (data.event === 'exit' && props.kind === 'player') { loading.value = false; stop(); emit('exit') }
     else if (data.event === 'fatal') fail(data.message)
     else if (data.event === 'state') emit('state', data.state)
     else if (data.event === 'actions') emit('actions', data.actions)

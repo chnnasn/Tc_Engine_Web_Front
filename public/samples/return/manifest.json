@@ -2,11 +2,11 @@
   "id": "return",
   "title": "Return",
   "engine": "TomCat",
-  "engineCommit": "9a0ccad79bb4ec33225bd8210fe9b47438bb06bc",
+  "engineCommit": "b04d81d80a92fdf28ce7c27d37e24005e8a8f984",
   "packageVersion": 8,
-  "byteLength": 15192735,
-  "sha256": "f93ddc5c83c5130a025430bff6723ed9f7368ccc404fe2fb4a16f940e4fc7d54",
-  "entries": 129,
+  "byteLength": 15840191,
+  "sha256": "282f3ef7c4db0011324ec346ca3242eca2802e8cd17d777220ced88dd82ec808",
+  "entries": 141,
   "packageUrl": "/samples/return/return.tcpak",
   "sourceUrl": "/samples/return/return-source.zip"
 }

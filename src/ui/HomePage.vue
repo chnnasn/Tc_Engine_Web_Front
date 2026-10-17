@@ -39,14 +39,14 @@ const filtered = computed(() => {
     <section class="discover-section" aria-labelledby="discover-title">
       <div class="section-index"><span>TRY THE ENGINE</span><span>{{ games.length }} 个内置示例</span></div>
       <div class="section-heading"><div><h2 id="discover-title">示例体验<span class="subtle-count">{{ games.length }}</span></h2><p>通过内置场景体验引擎，示例不计入玩家发布作品。</p></div></div>
-    <section class="feature return-feature" aria-label="精选引擎示例：Return 归途">
+    <section class="feature return-feature" :aria-label="`精选引擎示例：${featured.title}`">
       <div class="feature-copy">
         <div class="feature-label"><span class="feature-badge">新示例 · Tc 引擎复原</span><span class="feature-number">01 / {{ games.length.toString().padStart(2, '0') }}</span></div>
-        <div><span class="feature-genre">像素平台 · 生死切换 · 机关解谜</span><h2>Return<span class="return-title">归途</span></h2><p>观察两侧的地形，解开箱子与按钮的机关。<br />穿过两个世界，寻找归途。</p></div>
-        <div class="feature-bottom"><AppLink class="button button-dark" :href="`/games/${featured.id}`">踏上归途<ArrowUpRight :size="17" /></AppLink><span>桌面键盘操作</span></div>
+        <div><span class="feature-genre">像素平台 · 生死切换 · 机关解谜</span><h2 :aria-label="featured.title">Return<span class="return-title">Echo World</span></h2><p>切换生死世界，推动箱子、压住按钮。<br />包含教学关、五个关卡与最终场景。</p></div>
+        <div class="feature-bottom"><AppLink class="button button-dark" :href="`/games/${featured.id}`">体验 Echo World<ArrowUpRight :size="17" /></AppLink><span>桌面键盘操作</span></div>
       </div>
-      <AppLink :href="`/games/${featured.id}`" class="feature-art" aria-label="体验 Return 归途">
-        <ArtworkView :src="featured.image" alt="Return 归途游戏场景" eager />
+      <AppLink :href="`/games/${featured.id}`" class="feature-art" :aria-label="`体验 ${featured.title}`">
+        <ArtworkView :src="featured.image" :alt="`${featured.title} 游戏场景`" eager />
         <span class="image-label"><span />在生与死之间，寻找通路</span>
       </AppLink>
     </section>

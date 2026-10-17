@@ -190,6 +190,13 @@ function tick(time: number) {
     if (kind === 'editor') exports().EditorFrame(delta)
     else exports().PlayerFrame(delta)
     const error = kind === 'editor' ? exports().EditorError() : exports().PlayerError()
+    // WebPlayer reports Application.Quit through its existing status channel.
+    // This exact native status ends the session normally; other errors stay fatal.
+    if (kind === 'player' && error === 'Player requested shutdown') {
+      send({ event: 'exit' })
+      dispose()
+      return
+    }
     if (error) throw new Error(error)
     if (kind === 'editor') {
       const actions = exports().EditorTakeActions()

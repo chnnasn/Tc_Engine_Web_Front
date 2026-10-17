@@ -87,7 +87,7 @@ await page.addInitScript(() => {
     return response
   }
   if (window === top) return
-  const state = window.__returnOrientation = { uploads: [], draws: [], recording: false, generation: 0 }
+  const state = window.__returnOrientation = { uploads: [], draws: [], parameters: {}, recording: false, generation: 0 }
   const ids = new WeakMap(), slots = new Map(), bound = new Map(), attributes = new Map(), buffers = new Map()
   let next = 1, unit = 33984, vao = 0
   const id = object => object ? (ids.has(object) ? ids.get(object) : (ids.set(object, next), next++)) : 0
@@ -98,6 +98,9 @@ await page.addInitScript(() => {
   }
   hook('activeTexture', args => { unit = args[0] })
   hook('bindTexture', args => { if (args[0] === 3553) slots.set(unit, id(args[1])) })
+  hook('texParameteri', args => {
+    if (args[0] === 3553) (state.parameters[slots.get(unit)] ||= {})[args[1]] = args[2]
+  })
   hook('bindBuffer', args => bound.set(args[0], id(args[1])))
   hook('bindVertexArray', args => { vao = id(args[0]) })
   hook('vertexAttribPointer', args => {
@@ -138,8 +141,8 @@ await page.addInitScript(() => {
 })
 const wait = ms => page.waitForTimeout(ms)
 const count = text => logs.filter(value => value.includes(text)).length
-async function logAfter(text, before = 0) {
-  const until = Date.now() + 15000
+async function logAfter(text, before = 0, timeout = 15000) {
+  const until = Date.now() + timeout
   while (count(text) <= before && Date.now() < until) { healthy(); await wait(20) }
   assert.ok(count(text) > before, `Expected ${text}: ${logs.slice(-15).join('\n')}`)
 }
@@ -156,7 +159,7 @@ async function capture(label, expectedFacing, { screenshot = false, jumping = fa
     return state.generation
   })
   await frame.waitForFunction(value => window.__returnOrientation.generation > value, generation)
-  const observed = await frame.evaluate(() => ({ draws: window.__returnOrientation.draws, uploads: window.__returnOrientation.uploads }))
+  const observed = await frame.evaluate(() => ({ draws: window.__returnOrientation.draws, uploads: window.__returnOrientation.uploads, parameters: window.__returnOrientation.parameters }))
   const uploads = observed.uploads.map(({ bytes, ...entry }) => ({ ...entry, sha256: sha256(Buffer.from(bytes)) }))
   const textureMap = new Map(uploads.map(upload => [upload.texture, upload]))
   const mipMap = new Map(expectedMips.map(mip => [mip.sha256, mip]))
@@ -168,11 +171,18 @@ async function capture(label, expectedFacing, { screenshot = false, jumping = fa
       const mip = mipMap.get(upload?.sha256)
       if (!mip) continue
       assert.equal(upload.flipY, false, `${label}: OpenGL must upload cooked bottom-first bytes unchanged`)
+      const sampling = observed.parameters[upload.texture]
+      if (!legacyFlip) {
+        assert.equal(sampling?.[10240], 9728, `${label}: original avatar magnification must use nearest filtering`)
+        assert.equal(sampling?.[10241], 9728, `${label}: original avatar minification must use nearest filtering`)
+        assert.equal(sampling?.[10242], 33071, `${label}: sprite U edge must clamp instead of leaking opposite-edge pixels`)
+        assert.equal(sampling?.[10243], 33071, `${label}: sprite V edge must clamp instead of producing the reported white line`)
+      }
       const average = (uv, component) => vertices.filter(vertex => Math.abs(vertex[2][component] - uv) < .001)
         .reduce((sum, vertex) => sum + vertex[0][component], 0) / 2
       const vertical = average(1, 1) - average(0, 1), horizontal = average(1, 0) - average(0, 0)
       const center = vertices.reduce((sum, vertex) => [sum[0] + vertex[0][0] / 4, sum[1] + vertex[0][1] / 4], [0, 0])
-      characters.push({ ...mip, texture: upload.texture, vertical, horizontal, center, vertices })
+      characters.push({ ...mip, texture: upload.texture, sampling, vertical, horizontal, center, vertices })
     }
   }
   // Retain the rejected GPU vertices too, so the old-engine negative control
@@ -214,8 +224,8 @@ try {
   provenance.package = expectedPackage
   await page.goto(`${base}/games/return`)
   await page.getByRole('button', { name: '开始游玩', exact: true }).first().click()
-  await page.locator('.player-status').filter({ hasText: '已就绪' }).waitFor({ timeout: 180000 })
-  await logAfter('[Return] ready')
+  await page.locator('.player-status').filter({ hasText: '已就绪' }).waitFor({ timeout: Number(process.env.TEST_BOOT_TIMEOUT || 180000) })
+  await logAfter('[Return] ready', 0, Number(process.env.TEST_BOOT_TIMEOUT || 180000))
   frame = page.frames().find(candidate => candidate.url() === new URL('/engine-host.html', base).href); assert.ok(frame)
   canvas = frame.locator('canvas')
   provenance.loadedEngine = await readLoadedEngine(frame)
