@@ -130,3 +130,10 @@
 此前在 9a0 引擎上，真实旧引擎 `5734c56a` 和 `0b8829a8` 分别创建项目、保存到隔离云端 fixture、清除本地项目，再由 9a0 恢复并保存，场景字段和 uint64 标识保持一致。身份旋转的序列化由 `-0` 变为数值等价的 `0`，所以兼容检查使用精确 YAML 类型值比较。`0b8829a8` 编译的 CoinRunner 与现有 `5734c56a` Rougelike 发布包也在 9a0 播放器正常运行、输出声音并完成清理；这些历史结果不冒充 c284 的重复测试。
 
 逐阶段统计、资源哈希和原始证据摘要见 [return-validation.json](return-validation.json)。
+
+
+## 保留已发布示例（2026-10-17）
+
+Return PR #3 的自动部署基于 Git 主分支，而此前 Shelter 和首页目录更新仅在手动部署 `6ad3637c85e10d28709df848` 中存在。因此另行恢复已发布的 Shelter、Physics Lab、真实截图轮播与旧路由 404，保留本次 Return 的 UI、源工程、TCPAK 及 b04 引擎。原始工作目录不作修改。
+
+Shelter 的包和下载 ZIP 与原线上验收记录逐字节匹配，继续标记真实的 c284 cooker 来源；不以修改 manifest 冒充重新构建。资源核对见 [保留记录](preserved-catalog-validation.json)。本次 67 项单元测试通过。实际 Chrome 的首页轮播、Return 移动端和 ZIP 下载、四个示例启动/输入/停止、Shelter 鼠标交互回归均通过。证据为 `.engine/catalog-qa/2026-10-17T13-51-51-937Z`、`.engine/catalog-qa/player-2026-10-17T13-52-23-047Z` 与 `.engine/shelter-ui-qa/2026-10-17T13-52-40.016Z`。

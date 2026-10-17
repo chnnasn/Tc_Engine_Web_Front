@@ -1,0 +1,1676 @@
+{
+  "schema": 2,
+  "evidencePath": ".engine/shelter-performance-qa/2026-10-17T11-57-00.475Z-4988/evidence.json",
+  "evidenceSha256": "8912a500c3784356678a99012aba2f7a3a873e3e82c79a703e1371f98f19accc",
+  "status": "passed",
+  "startedAt": "2026-10-17T11:57:00.475Z",
+  "testSha256": "a7d21256e7aa75cacabacdf182d7c12eeb3773defa13bac88cbbfc95cf1c15b3",
+  "base": "http://127.0.0.1:5200",
+  "browser": "155.0.8059.82",
+  "viewport": {
+    "width": 1440,
+    "height": 1000
+  },
+  "deviceScaleFactor": 1,
+  "package": {
+    "id": "shelter",
+    "title": "Shelter",
+    "engine": "TomCat",
+    "engineCommit": "c28487215bd5df89b35c1d68252ba240231d9c4f",
+    "packageVersion": 8,
+    "byteLength": 54589589,
+    "sha256": "803042e74343c8220664f52f2afec41a7b8d5b0d0f5f15f80b5343ed4529d8f0",
+    "entries": 30,
+    "packageUrl": "/samples/shelter/shelter.tcpak",
+    "sourceUrl": "/samples/shelter/shelter-source.zip"
+  },
+  "packageReceipt": {
+    "url": "http://127.0.0.1:5200/samples/shelter/shelter.tcpak",
+    "byteLength": 54589589,
+    "sha256": "803042e74343c8220664f52f2afec41a7b8d5b0d0f5f15f80b5343ed4529d8f0"
+  },
+  "provenance": {
+    "url": "http://127.0.0.1:5200/engine-cache-versions/8f71d13105965ddc72de90989971b33c9521e6482b2633f4becb16179629eb19",
+    "sha256": "339ee5eb31a609d12b5ee7def123b09317f94aa53ece26c49091338899f8b47d",
+    "manifest": {
+      "repository": "https://github.com/chnnasn/TomCat_Engine.git",
+      "commit": "c28487215bd5df89b35c1d68252ba240231d9c4f",
+      "kind": "managed",
+      "protocol": "tomcat.web.v1",
+      "legacyCommits": [
+        "9a0ccad79bb4ec33225bd8210fe9b47438bb06bc",
+        "5734c56ae05241b01a684afb8e62f2b164c69ba2",
+        "0b8829a864ff53ad0ad2c7ded56ef433325a836a"
+      ],
+      "toolchain": {
+        "dotnet": "10.0",
+        "workload": "wasm-tools",
+        "cmake": "3.20",
+        "ninja": "required",
+        "emscripten": "provided by the dotnet wasm-tools workload pack"
+      },
+      "builtAt": "2026-10-16T18:37:35.258Z",
+      "dotnetSdk": "10.0.103",
+      "entry": "main.js",
+      "framework": "_framework",
+      "refs": "refs",
+      "refsList": [
+        "mscorlib.dll",
+        "netstandard.dll",
+        "System.Runtime.dll",
+        "System.Runtime.Extensions.dll",
+        "System.Runtime.InteropServices.dll",
+        "System.Collections.dll",
+        "System.Linq.dll",
+        "System.ObjectModel.dll",
+        "System.Console.dll",
+        "System.Memory.dll",
+        "System.Threading.dll",
+        "System.Threading.Tasks.dll",
+        "System.Text.Encoding.dll",
+        "System.Text.Encoding.Extensions.dll",
+        "System.Text.Json.dll",
+        "System.ComponentModel.Primitives.dll",
+        "TomCat.Managed.dll"
+      ],
+      "cacheSchema": 1,
+      "files": [
+        {
+          "path": "TomCat.WebHost.runtimeconfig.json",
+          "size": 2417,
+          "sha256": "df354c9bb82e80c24474a734728afac285dc42b55859f167f485948f9eae1b3b",
+          "contentType": "application/json"
+        },
+        {
+          "path": "_framework/Microsoft.CodeAnalysis.CSharp.wasm",
+          "size": 6778137,
+          "sha256": "64ee2e29a702563261b38f33ec0b3fc69611c691b23bb76c52cdbe8955f65180",
+          "contentType": "application/wasm"
+        },
+        {
+          "path": "_framework/Microsoft.CodeAnalysis.wasm",
+          "size": 3021593,
+          "sha256": "67b11e66ce5d7842231922d65c7e9494cadd2ee1f2af0c275b09c36b9b620652",
+          "contentType": "application/wasm"
+        },
+        {
+          "path": "_framework/Microsoft.Win32.Primitives.wasm",
+          "size": 4885,
+          "sha256": "f3cd2a9cb6205ecc635ea079fdaf2cb3672c104de78cdad5db31cdafa0c262e4",
+          "contentType": "application/wasm"
+        },
+        {
+          "path": "_framework/System.Collections.Concurrent.wasm",
+          "size": 32021,
+          "sha256": "64597aa3f03dd368c23df12cbc1db0e67d33d42ddc3668759f92667ef4d5d366",
+          "contentType": "application/wasm"
+        },
+        {
+          "path": "_framework/System.Collections.Immutable.wasm",
+          "size": 129813,
+          "sha256": "5a39f0a49843e93eee952a5b7c3bec429b54246a31050ec6df63395540344fad",
+          "contentType": "application/wasm"
+        },
+        {
+          "path": "_framework/System.Collections.NonGeneric.wasm",
+          "size": 8469,
+          "sha256": "71db7406e961098cd60ddcb25908bb5aa03c25c38da220580b23643e0e0825c5",
+          "contentType": "application/wasm"
+        },
+        {
+          "path": "_framework/System.Collections.Specialized.wasm",
+          "size": 12053,
+          "sha256": "9352ceb4ea0bf69d82519bc7ac69e97f62c6c91c7174730ee072d56b797b9caf",
+          "contentType": "application/wasm"
+        },
+        {
+          "path": "_framework/System.Collections.wasm",
+          "size": 96533,
+          "sha256": "f35eabe94ae1fa2ef7efad6e22ee0a602ad0c0c0a1fdc389e56a28f98e5f4166",
+          "contentType": "application/wasm"
+        },
+        {
+          "path": "_framework/System.ComponentModel.Primitives.wasm",
+          "size": 27413,
+          "sha256": "9bfbe36c045bb5b0dbf75be7fd45de209bb48480549df9a13e124a8fcdac7a6e",
+          "contentType": "application/wasm"
+        },
+        {
+          "path": "_framework/System.ComponentModel.TypeConverter.wasm",
+          "size": 86293,
+          "sha256": "37c979877bec8824ea7793b3606fb17c3b6525b25a25f64551aea422b3bcd81d",
+          "contentType": "application/wasm"
+        },
+        {
+          "path": "_framework/System.ComponentModel.wasm",
+          "size": 4885,
+          "sha256": "e7a8e70137d92448f7a33889d00992d14cad601a6da58c5366f01e1792e0d74d",
+          "contentType": "application/wasm"
+        },
+        {
+          "path": "_framework/System.Console.wasm",
+          "size": 35605,
+          "sha256": "113e2fedf430b5446d6adf44188a78a7d152892da8bbdf74092bc0b1d9fb37fa",
+          "contentType": "application/wasm"
+        },
+        {
+          "path": "_framework/System.Diagnostics.Contracts.wasm",
+          "size": 5397,
+          "sha256": "69c077740f8e9fcc7c0e852574c46627c30b8ec855258c8ba81b8d5ec6b9a85c",
+          "contentType": "application/wasm"
+        },
+        {
+          "path": "_framework/System.Diagnostics.DiagnosticSource.wasm",
+          "size": 99093,
+          "sha256": "cd8ac19708499fb4176163c4433cc492f73498df789f01bfc6c70be762b25741",
+          "contentType": "application/wasm"
+        },
+        {
+          "path": "_framework/System.Diagnostics.StackTrace.wasm",
+          "size": 4885,
+          "sha256": "7e579a51b1cbe712f763085d1363fae4701ae0f0930c9dce680c85a4a45ef9d6",
+          "contentType": "application/wasm"
+        },
+        {
+          "path": "_framework/System.Diagnostics.Tracing.wasm",
+          "size": 5909,
+          "sha256": "ce86a5329c4cb1b47ae0d122ec88187ff4b719d50e0cafed2cfd22cb1cab376d",
+          "contentType": "application/wasm"
+        },
+        {
+          "path": "_framework/System.Globalization.wasm",
+          "size": 4885,
+          "sha256": "1b5be3db73fcd27c35eedc241e2630aa48e7b52754efbf296acb742ec05844c6",
+          "contentType": "application/wasm"
+        },
+        {
+          "path": "_framework/System.IO.Compression.wasm",
+          "size": 27925,
+          "sha256": "29baa7e9962e48f60ed51937a42908632f759c067610b74f3b6d1a535f08cd76",
+          "contentType": "application/wasm"
+        },
+        {
+          "path": "_framework/System.IO.MemoryMappedFiles.wasm",
+          "size": 25877,
+          "sha256": "df24840d2a2280b7917b310b5ec4abdeaf8a3194587261e03c30ee589f868e03",
+          "contentType": "application/wasm"
+        },
+        {
+          "path": "_framework/System.IO.Pipelines.wasm",
+          "size": 9493,
+          "sha256": "f06f316d607c79b87acafb163868f89a475da053f66c7294c27dfedc5b3a01c2",
+          "contentType": "application/wasm"
+        },
+        {
+          "path": "_framework/System.Linq.Expressions.wasm",
+          "size": 90901,
+          "sha256": "dea95759e88faadaa8b005b566578d1e50c31b408b8780a3847499af0b4141c3",
+          "contentType": "application/wasm"
+        },
+        {
+          "path": "_framework/System.Linq.wasm",
+          "size": 187157,
+          "sha256": "923f51dc2bdd01b20ea3f2c9721e52ed0093968c4ab98c4e4de7ee59efe88b13",
+          "contentType": "application/wasm"
+        },
+        {
+          "path": "_framework/System.Memory.wasm",
+          "size": 42261,
+          "sha256": "6f4efc2c58ec568053f653201805463d5e20cfec10455e27e44834e00a8e77a6",
+          "contentType": "application/wasm"
+        },
+        {
+          "path": "_framework/System.Net.Http.wasm",
+          "size": 149781,
+          "sha256": "07c3e13ba0f4cdf621b472b990b2b06db718cdb23ffcb1c4c750d2c4d3729877",
+          "contentType": "application/wasm"
+        },
+        {
+          "path": "_framework/System.Net.Primitives.wasm",
+          "size": 7957,
+          "sha256": "2a0fcf6eef7996afa3b88e38bb66014b47cc13389fbc5b1deff76742bdf7b0bf",
+          "contentType": "application/wasm"
+        },
+        {
+          "path": "_framework/System.Numerics.Vectors.wasm",
+          "size": 4885,
+          "sha256": "db457f5156a0a2ad67f987646190f03c6d0391c7c3b7a8aaf647a66e5d2859fa",
+          "contentType": "application/wasm"
+        },
+        {
+          "path": "_framework/System.ObjectModel.wasm",
+          "size": 27413,
+          "sha256": "0ea31d5e5119abdf39b4e64b8d187843bf70aae6764417b13390fb9d85cd6ea0",
+          "contentType": "application/wasm"
+        },
+        {
+          "path": "_framework/System.Private.CoreLib.wasm",
+          "size": 4581145,
+          "sha256": "bad131a5e7c0929ffeb26342d4794f43f00c84a3b1d77bad1c516222ef8e0b5a",
+          "contentType": "application/wasm"
+        },
+        {
+          "path": "_framework/System.Private.Uri.wasm",
+          "size": 69909,
+          "sha256": "d1d9522b5b4c5a6d535e03531b4234bd8e00284c1d2192a51818988f14468a8e",
+          "contentType": "application/wasm"
+        },
+        {
+          "path": "_framework/System.Private.Xml.Linq.wasm",
+          "size": 50965,
+          "sha256": "8a39ef0c1d45f83af18db5a9c2ca7cf82262159f2d6e3cdea738f766300c5cbb",
+          "contentType": "application/wasm"
+        },
+        {
+          "path": "_framework/System.Private.Xml.wasm",
+          "size": 611093,
+          "sha256": "332840a1578c9173f66c08716331b8514dadcc23c6f57940723c1dcc4b20c4a1",
+          "contentType": "application/wasm"
+        },
+        {
+          "path": "_framework/System.Reflection.Emit.ILGeneration.wasm",
+          "size": 4885,
+          "sha256": "ed7b38035297ef38f15b1f24e3ae40199014eb1e9e3983781b976eba2e9bb311",
+          "contentType": "application/wasm"
+        },
+        {
+          "path": "_framework/System.Reflection.Emit.Lightweight.wasm",
+          "size": 4885,
+          "sha256": "645cf5aa366c44c373698d83b2de5082848c756652a3d47bbc98c1a529f1fed5",
+          "contentType": "application/wasm"
+        },
+        {
+          "path": "_framework/System.Reflection.Emit.wasm",
+          "size": 14613,
+          "sha256": "e00788e9d5223ecf042b586fcbb8151e0bfecfdbf9b0a93b7e5b6589301c8ca1",
+          "contentType": "application/wasm"
+        },
+        {
+          "path": "_framework/System.Reflection.Metadata.wasm",
+          "size": 279829,
+          "sha256": "6fc7c4eaca4778ffab2a0f621fe8c720bc44d0ac04488da97627d47707820356",
+          "contentType": "application/wasm"
+        },
+        {
+          "path": "_framework/System.Reflection.Primitives.wasm",
+          "size": 4885,
+          "sha256": "fcb2915860471cc3919824e325f2f5bd689c124dbe926fe627f916b007c9d7c1",
+          "contentType": "application/wasm"
+        },
+        {
+          "path": "_framework/System.Resources.Writer.wasm",
+          "size": 5397,
+          "sha256": "8bdc6626296ea7ccccb5eba089c5611cfb02c9e6d1cba0a1a3a02d587da07548",
+          "contentType": "application/wasm"
+        },
+        {
+          "path": "_framework/System.Runtime.Extensions.wasm",
+          "size": 6933,
+          "sha256": "b10abbe6143c7423df28c347e30e45d463e322036538fed2bda670d9659e2429",
+          "contentType": "application/wasm"
+        },
+        {
+          "path": "_framework/System.Runtime.InteropServices.JavaScript.wasm",
+          "size": 43797,
+          "sha256": "f7761daa8bee1eebdcc3e16627c056b0c68fcaf9ac9869cc4ae9abb1ecd1705b",
+          "contentType": "application/wasm"
+        },
+        {
+          "path": "_framework/System.Runtime.InteropServices.wasm",
+          "size": 49941,
+          "sha256": "583be2e2d3528b5132b9a014f39854059f9458ea622e2926586b2cf05f2b1220",
+          "contentType": "application/wasm"
+        },
+        {
+          "path": "_framework/System.Runtime.Intrinsics.wasm",
+          "size": 5397,
+          "sha256": "0b7c78022e66bf7649172f3aadef7106ffce0dd6814f7aa70a65410c512a111b",
+          "contentType": "application/wasm"
+        },
+        {
+          "path": "_framework/System.Runtime.Loader.wasm",
+          "size": 4885,
+          "sha256": "4cd9b736ff56a8e360cb5689f78ef8829aebcd0ed9451a68a026bf576c0c49a1",
+          "contentType": "application/wasm"
+        },
+        {
+          "path": "_framework/System.Runtime.Numerics.wasm",
+          "size": 105749,
+          "sha256": "9d9d672b461a0b48e050e6c97aaf5b4c6dbefb3736f812e1fedf741a82254f86",
+          "contentType": "application/wasm"
+        },
+        {
+          "path": "_framework/System.Runtime.Serialization.Formatters.wasm",
+          "size": 6933,
+          "sha256": "6d427a951d63b279c8c0f5858edf8b34b7a5a3ba85e3cf06ce22d2fc2872013b",
+          "contentType": "application/wasm"
+        },
+        {
+          "path": "_framework/System.Runtime.Serialization.Json.wasm",
+          "size": 4885,
+          "sha256": "bbb408e6cc30bdf57f825efd8f4decf08f326a8468cf2cbb03e18da3806897d9",
+          "contentType": "application/wasm"
+        },
+        {
+          "path": "_framework/System.Runtime.Serialization.Primitives.wasm",
+          "size": 5909,
+          "sha256": "0a31df3194cf6e01b54bdae7d0f8b7673a3dfab379606851f90f981478d88e25",
+          "contentType": "application/wasm"
+        },
+        {
+          "path": "_framework/System.Runtime.Serialization.Xml.wasm",
+          "size": 5909,
+          "sha256": "20d52f53c58753117fb8871b31b0c141bcc7e656ab39e98a3ab982aab13c25fb",
+          "contentType": "application/wasm"
+        },
+        {
+          "path": "_framework/System.Runtime.wasm",
+          "size": 34581,
+          "sha256": "c8f485c7a3593bdbcd6278de62b4b8124df81d0a637ad09197e6d4e5132eac2c",
+          "contentType": "application/wasm"
+        },
+        {
+          "path": "_framework/System.Security.Claims.wasm",
+          "size": 15637,
+          "sha256": "828749631b9ba3186c29160bd28cb33f9115f692082d908b72d81c70e71fd546",
+          "contentType": "application/wasm"
+        },
+        {
+          "path": "_framework/System.Security.Cryptography.wasm",
+          "size": 26389,
+          "sha256": "47941befe032d23a642ba82d40e25b5f5376ad5681ceaefde80b4794c2f05084",
+          "contentType": "application/wasm"
+        },
+        {
+          "path": "_framework/System.Text.Encoding.CodePages.wasm",
+          "size": 702229,
+          "sha256": "889db2e4821c117d61a9cebb3ea5ef299095607e735c93c7738f603b6f483da6",
+          "contentType": "application/wasm"
+        },
+        {
+          "path": "_framework/System.Text.Encoding.Extensions.wasm",
+          "size": 4885,
+          "sha256": "04e068a15ed5b93b1176ae44a5e586fd1a0e1438f04262ea717150723c6e8fc0",
+          "contentType": "application/wasm"
+        },
+        {
+          "path": "_framework/System.Text.Encoding.wasm",
+          "size": 5397,
+          "sha256": "9bd0536880b02be0e0d13d3295189daffe59eb69af8f62bdc4d29b81565ab791",
+          "contentType": "application/wasm"
+        },
+        {
+          "path": "_framework/System.Text.Encodings.Web.wasm",
+          "size": 29461,
+          "sha256": "1d6f1d8c337e0223266093b437cb8a4255d93c9e2ef9c9c4e78eb9f4e3106425",
+          "contentType": "application/wasm"
+        },
+        {
+          "path": "_framework/System.Text.Json.wasm",
+          "size": 595733,
+          "sha256": "46fc7dfd19c9171adbe3540a6533991cbd88977073108e24eb0ee100df82fa94",
+          "contentType": "application/wasm"
+        },
+        {
+          "path": "_framework/System.Text.RegularExpressions.wasm",
+          "size": 250133,
+          "sha256": "61c59fd63bd824e8b262e083ee8344dd4e576796a3db34a4f8d9b2e63ce9437c",
+          "contentType": "application/wasm"
+        },
+        {
+          "path": "_framework/System.Threading.Overlapped.wasm",
+          "size": 4885,
+          "sha256": "e9cdb23fe13678515a029a5ccd9c45b5d83dcc6952d5d3e73223c896eaa55153",
+          "contentType": "application/wasm"
+        },
+        {
+          "path": "_framework/System.Threading.Tasks.Parallel.wasm",
+          "size": 18197,
+          "sha256": "e204a147224c59a240031a94858219148e74078d62782b014dca1a4356086795",
+          "contentType": "application/wasm"
+        },
+        {
+          "path": "_framework/System.Threading.Tasks.wasm",
+          "size": 5909,
+          "sha256": "cc4e0fc421abc579e0c8ca402eaa9666eebd9b985d2ca87ce799a87b5b0dd553",
+          "contentType": "application/wasm"
+        },
+        {
+          "path": "_framework/System.Threading.Thread.wasm",
+          "size": 5397,
+          "sha256": "f735fbf98ae81bda18e9bdead543bcbb4b005e2b73050f43509fd4ca79f3ad52",
+          "contentType": "application/wasm"
+        },
+        {
+          "path": "_framework/System.Threading.ThreadPool.wasm",
+          "size": 4885,
+          "sha256": "dadca8b48a9c9ce75576e19a0d3b1f8fd667a8e1911b73fc2ed9c026e61ac539",
+          "contentType": "application/wasm"
+        },
+        {
+          "path": "_framework/System.Threading.wasm",
+          "size": 26901,
+          "sha256": "8b145f1f0a96ee40ee4c97af73a613fc7f68192397eb51ced865b937d60e8792",
+          "contentType": "application/wasm"
+        },
+        {
+          "path": "_framework/System.Xml.Linq.wasm",
+          "size": 4373,
+          "sha256": "0dc2b19c908850ffe5c87d2333671672c79ca6f5c2b202a7918605f94c8d16a3",
+          "contentType": "application/wasm"
+        },
+        {
+          "path": "_framework/System.Xml.ReaderWriter.wasm",
+          "size": 11029,
+          "sha256": "beb12a39d67fa91af91482574add3b3b787279894c046318339fe59baa4640ff",
+          "contentType": "application/wasm"
+        },
+        {
+          "path": "_framework/System.Xml.XDocument.wasm",
+          "size": 5397,
+          "sha256": "63ea1c1d7b1bbc193ed0ac30b476449967f4fd8d8504cef549072cc196a4d2a5",
+          "contentType": "application/wasm"
+        },
+        {
+          "path": "_framework/System.Xml.XPath.XDocument.wasm",
+          "size": 4885,
+          "sha256": "23a65531c805c29dd27848e7d2cea2736b9332ebe9fe3a967ca9150d528c9163",
+          "contentType": "application/wasm"
+        },
+        {
+          "path": "_framework/System.Xml.XPath.wasm",
+          "size": 4885,
+          "sha256": "d1b2e93a971f4588c014464acc25148b063edb022fc6ac6ca937058e3756c8da",
+          "contentType": "application/wasm"
+        },
+        {
+          "path": "_framework/System.Xml.XmlSerializer.wasm",
+          "size": 6933,
+          "sha256": "2bd22fa713d47e5bbeb8ded638985a80189d042b940949e4775283b20eaad3b4",
+          "contentType": "application/wasm"
+        },
+        {
+          "path": "_framework/System.wasm",
+          "size": 4885,
+          "sha256": "f9cd1b27c76899001e15d3a070afbcee96d9b50aa2bcbb0fc6602171c213c6dd",
+          "contentType": "application/wasm"
+        },
+        {
+          "path": "_framework/TomCat.Managed.wasm",
+          "size": 214293,
+          "sha256": "0143bf930009cc2477617b67f68bdbadeb15e7c67f9882fe79b4771fdc1d071d",
+          "contentType": "application/wasm"
+        },
+        {
+          "path": "_framework/TomCat.ScriptGenerator.wasm",
+          "size": 57621,
+          "sha256": "3eba10f9690b57f3a910ef4d00d94e91d2369b6508cd994c42fa5120629d83d0",
+          "contentType": "application/wasm"
+        },
+        {
+          "path": "_framework/TomCat.ScriptHost.wasm",
+          "size": 101141,
+          "sha256": "e4d9c74ef97cea836edcfa0b8360ec59b614c4d6c2bcda738d18c7453773ee76",
+          "contentType": "application/wasm"
+        },
+        {
+          "path": "_framework/TomCat.WebHost.wasm",
+          "size": 66837,
+          "sha256": "946a4dc6375834597b1349092b13948aaed5b7a6a679ebb19e44f296b54ef653",
+          "contentType": "application/wasm"
+        },
+        {
+          "path": "_framework/cs/Microsoft.CodeAnalysis.CSharp.resources.wasm",
+          "size": 433429,
+          "sha256": "398cfc9dd53dd4c5b871334d2128cdc14bcc721a3e5ae2bb2faca6e987d28b90",
+          "contentType": "application/wasm"
+        },
+        {
+          "path": "_framework/cs/Microsoft.CodeAnalysis.resources.wasm",
+          "size": 29461,
+          "sha256": "9682bad93c49514205ea6a90313fe2d66d87b2d404e70765799cbab6e897c78f",
+          "contentType": "application/wasm"
+        },
+        {
+          "path": "_framework/de/Microsoft.CodeAnalysis.CSharp.resources.wasm",
+          "size": 466197,
+          "sha256": "25426b377a8d2f31fa45aa126143e09acd0f6a163982a7f63c0ea60c26152737",
+          "contentType": "application/wasm"
+        },
+        {
+          "path": "_framework/de/Microsoft.CodeAnalysis.resources.wasm",
+          "size": 30997,
+          "sha256": "5557d235100560e795dcd79be4ad941ccfb4f00898c089e6a167d84453881018",
+          "contentType": "application/wasm"
+        },
+        {
+          "path": "_framework/dotnet.boot.js",
+          "size": 28698,
+          "sha256": "29f40bd98bc089b98fe2359de9f1fbc1508e4fd4630a8b21a8181eefc936f6fe",
+          "contentType": "text/javascript"
+        },
+        {
+          "path": "_framework/dotnet.js",
+          "size": 37898,
+          "sha256": "ba72088a45591210f9a08fec223b0f848a0a4d3245026ae9479353596c7fa89d",
+          "contentType": "text/javascript"
+        },
+        {
+          "path": "_framework/dotnet.native.js",
+          "size": 437622,
+          "sha256": "f342bf3d020915701174a6a3359ae0eabec04af0b08d470003f2c8db8681a337",
+          "contentType": "text/javascript"
+        },
+        {
+          "path": "_framework/dotnet.native.wasm",
+          "size": 10794092,
+          "sha256": "1b3b726bb571f885eeb47bfd132483de7c8c3ee3d63420bda06322fc5736314c",
+          "contentType": "application/wasm"
+        },
+        {
+          "path": "_framework/dotnet.runtime.js",
+          "size": 198480,
+          "sha256": "41b9eaad9187b46abbc2e752d7bfc06043e91fd264a61aecc959650fa24799db",
+          "contentType": "text/javascript"
+        },
+        {
+          "path": "_framework/es/Microsoft.CodeAnalysis.CSharp.resources.wasm",
+          "size": 455445,
+          "sha256": "77b4a7741fe6141427f150c5e98b52901da3fd7844f9ede8091657d7880fc84a",
+          "contentType": "application/wasm"
+        },
+        {
+          "path": "_framework/es/Microsoft.CodeAnalysis.resources.wasm",
+          "size": 30485,
+          "sha256": "a3a7636f01a685e33f901efd5e89da745afd034ab4eae6183a4188194470e08f",
+          "contentType": "application/wasm"
+        },
+        {
+          "path": "_framework/fr/Microsoft.CodeAnalysis.CSharp.resources.wasm",
+          "size": 468757,
+          "sha256": "c4ff743b90f649db6cffb65ae5e8826d861f02f43145715c438b2c9c11b82c85",
+          "contentType": "application/wasm"
+        },
+        {
+          "path": "_framework/fr/Microsoft.CodeAnalysis.resources.wasm",
+          "size": 30997,
+          "sha256": "d029a331b3685c3ec007388a9ac9883133c7a4ea608fee1c2d56b632d3da7889",
+          "contentType": "application/wasm"
+        },
+        {
+          "path": "_framework/it/Microsoft.CodeAnalysis.CSharp.resources.wasm",
+          "size": 462101,
+          "sha256": "04a37be77f5cd5a7db1b1f5eba03eeeee614d38b6f50340424b012b0665c210d",
+          "contentType": "application/wasm"
+        },
+        {
+          "path": "_framework/it/Microsoft.CodeAnalysis.resources.wasm",
+          "size": 30997,
+          "sha256": "66d1168069c7eaedcb5ce0600e04bc8ceff8e73665a14fb76b659d8d6ea93b8d",
+          "contentType": "application/wasm"
+        },
+        {
+          "path": "_framework/ja/Microsoft.CodeAnalysis.CSharp.resources.wasm",
+          "size": 509717,
+          "sha256": "8a35fe7110d7f8420404091b0aeeb82b3f974e8ea8d2a81c8219cd3e8292ce8b",
+          "contentType": "application/wasm"
+        },
+        {
+          "path": "_framework/ja/Microsoft.CodeAnalysis.resources.wasm",
+          "size": 33557,
+          "sha256": "6bcac40b88e5ac8c5e9ff7af8baa2ae7f013bc3bcf4e96ead67699f0bb77b4f2",
+          "contentType": "application/wasm"
+        },
+        {
+          "path": "_framework/ko/Microsoft.CodeAnalysis.CSharp.resources.wasm",
+          "size": 466709,
+          "sha256": "0d7535d1d408e1906c350d2caefac94a541496b63ed410e527f98031bf137d5f",
+          "contentType": "application/wasm"
+        },
+        {
+          "path": "_framework/ko/Microsoft.CodeAnalysis.resources.wasm",
+          "size": 30997,
+          "sha256": "c5215c9362c1276771f8ddda1733a5425979c442b8b248aa33c0f89b6eb45f01",
+          "contentType": "application/wasm"
+        },
+        {
+          "path": "_framework/mscorlib.wasm",
+          "size": 48917,
+          "sha256": "2773462bae3e7e55777b4ad53908f493026e4fb5c8234c3676f904f6711d510f",
+          "contentType": "application/wasm"
+        },
+        {
+          "path": "_framework/netstandard.wasm",
+          "size": 89877,
+          "sha256": "1b95e94c2e5540f1925fa683c37415856d5e79c94197644052a17f2906fc7a14",
+          "contentType": "application/wasm"
+        },
+        {
+          "path": "_framework/pl/Microsoft.CodeAnalysis.CSharp.resources.wasm",
+          "size": 468245,
+          "sha256": "cebe20f52a7a7569a80cdb2fd78fea1daee81b4d6f11f480c88442c9fecb164e",
+          "contentType": "application/wasm"
+        },
+        {
+          "path": "_framework/pl/Microsoft.CodeAnalysis.resources.wasm",
+          "size": 30997,
+          "sha256": "b8636993a218909677497ed7a40bc94c230629fdd16d80736f8181fdcecde89a",
+          "contentType": "application/wasm"
+        },
+        {
+          "path": "_framework/pt-BR/Microsoft.CodeAnalysis.CSharp.resources.wasm",
+          "size": 447765,
+          "sha256": "909c8be721a99710caa4b04f4abb1e242f74854469bc8689f60836f2674d6535",
+          "contentType": "application/wasm"
+        },
+        {
+          "path": "_framework/pt-BR/Microsoft.CodeAnalysis.resources.wasm",
+          "size": 29973,
+          "sha256": "39a21da9900c4c46f55a987478b54835d5f7a7a5805ac26fb985b50b44afc78f",
+          "contentType": "application/wasm"
+        },
+        {
+          "path": "_framework/ru/Microsoft.CodeAnalysis.CSharp.resources.wasm",
+          "size": 617237,
+          "sha256": "904c1f3ae8fbc75d1d4d94a2e50c97de7ec771c9cd8a14471530b4a4364ed75d",
+          "contentType": "application/wasm"
+        },
+        {
+          "path": "_framework/ru/Microsoft.CodeAnalysis.resources.wasm",
+          "size": 38677,
+          "sha256": "1a5b97403f6b61f24f19934a2edf211b511baf079a8f161a9c8d532d149aba87",
+          "contentType": "application/wasm"
+        },
+        {
+          "path": "_framework/supportFiles/0_Project.tcproj",
+          "size": 158,
+          "sha256": "acacec53e83c15991fd8b2f3e00088f086dcd8b9f4a92966e042283fa08b0e5a",
+          "contentType": "application/json"
+        },
+        {
+          "path": "_framework/supportFiles/10_Logo.ico",
+          "size": 16958,
+          "sha256": "f1a88c6bbf139b8b0d5f40f22b0c2b2c38c70e870c22d92eef9a0dbc33ed5e5e",
+          "contentType": "image/x-icon"
+        },
+        {
+          "path": "_framework/supportFiles/11_PauseButton.png",
+          "size": 1538,
+          "sha256": "85dc2ce208044c6ba300a9f3b9fa1ff640dd3b26601b2aee1fabd696f44bba3b",
+          "contentType": "image/png"
+        },
+        {
+          "path": "_framework/supportFiles/12_PlayButton.png",
+          "size": 1004,
+          "sha256": "e487485a73cd9ede6a1e3b2ddb43efd772088099e609fa5f2a2a8fec035bee57",
+          "contentType": "image/png"
+        },
+        {
+          "path": "_framework/supportFiles/13_SimulateButton.png",
+          "size": 4561,
+          "sha256": "77dbd26a8624e743ac60c88e34660b79278a55347706ea1638387b28ad076270",
+          "contentType": "image/png"
+        },
+        {
+          "path": "_framework/supportFiles/14_StepButton.png",
+          "size": 1157,
+          "sha256": "b7266bb88d3c8d83cdbd2df216c9b988f6f2b70615667e3a5f06d9e08b21f15b",
+          "contentType": "image/png"
+        },
+        {
+          "path": "_framework/supportFiles/15_StopButton.png",
+          "size": 1758,
+          "sha256": "eb973f484d3ef8c86949698a07f3d1ee8291a5d7298f17f9caee06a65840127f",
+          "contentType": "image/png"
+        },
+        {
+          "path": "_framework/supportFiles/16_add.png",
+          "size": 36035,
+          "sha256": "43431c3be469716658137f4d393b819f20dd15a69006843914bec80ce916bd06",
+          "contentType": "image/png"
+        },
+        {
+          "path": "_framework/supportFiles/17_audio.png",
+          "size": 40170,
+          "sha256": "52bf21ab3dc055314be30ef93af71741b24017f00be2f9230766a219f99b578a",
+          "contentType": "image/png"
+        },
+        {
+          "path": "_framework/supportFiles/18_folder-closed.png",
+          "size": 22238,
+          "sha256": "1cdd1d3d79a11c5e7096f35a5083b18ff9f081156ff5fa025dc118e831f6d620",
+          "contentType": "image/png"
+        },
+        {
+          "path": "_framework/supportFiles/19_folder-open.png",
+          "size": 26539,
+          "sha256": "b3824a704fecab12e3a15c13485eadbff37ecfc5810f05496948e7e4c5994ae7",
+          "contentType": "image/png"
+        },
+        {
+          "path": "_framework/supportFiles/1_sample.tomcat",
+          "size": 13308,
+          "sha256": "888ea2100f466126a05dfd7f17f1a663b40fca7e2b5e7d033e63c9ec5ffadfaf",
+          "contentType": "text/plain"
+        },
+        {
+          "path": "_framework/supportFiles/20_font.png",
+          "size": 28617,
+          "sha256": "22e53809dc7ef84bfe7cbb40bec6c7ed7426eebc7b19b42204201648e95e07e2",
+          "contentType": "image/png"
+        },
+        {
+          "path": "_framework/supportFiles/21_generic-file.png",
+          "size": 39120,
+          "sha256": "56d1ffffca9db89444115f1a95f7fae583b8ad60912237ba1ae5ec2840005f68",
+          "contentType": "image/png"
+        },
+        {
+          "path": "_framework/supportFiles/22_link.png",
+          "size": 33355,
+          "sha256": "fcf55dbfb109b0f9e2a8614be8d3707c0536f21a112c6ae7ed540f43ffd1e2ee",
+          "contentType": "image/png"
+        },
+        {
+          "path": "_framework/supportFiles/23_material.png",
+          "size": 53195,
+          "sha256": "0f5de6230453ec57861a056f6dd2f9517fb6bd9b0e4d0dd62fd03da8ab4990a2",
+          "contentType": "image/png"
+        },
+        {
+          "path": "_framework/supportFiles/24_mesh.png",
+          "size": 40601,
+          "sha256": "0b3003eaa9c6ab8871eaa2f50d937ddca749f65d3b9720d4387ea9a5ada6e774",
+          "contentType": "image/png"
+        },
+        {
+          "path": "_framework/supportFiles/25_missing.png",
+          "size": 43192,
+          "sha256": "e1cc019a5750739506397265aa34a87d7519df58f19f8e1a538e99f710660d07",
+          "contentType": "image/png"
+        },
+        {
+          "path": "_framework/supportFiles/26_package.png",
+          "size": 39310,
+          "sha256": "e31ac44fa4ffc8cdcf3376084e562a0c86c015aefa0fc16954028eb4ffed8ebb",
+          "contentType": "image/png"
+        },
+        {
+          "path": "_framework/supportFiles/27_project.png",
+          "size": 54785,
+          "sha256": "18688c2ca20f7e8b841cff98c49eaa611fedb79c7a12165d0876bdf596ccb01b",
+          "contentType": "image/png"
+        },
+        {
+          "path": "_framework/supportFiles/28_read-only.png",
+          "size": 40075,
+          "sha256": "3e7a249ea78982dc716519ccfd409d2ca26e4281abc829b380cd1e64f1c7b872",
+          "contentType": "image/png"
+        },
+        {
+          "path": "_framework/supportFiles/29_scene-closed.png",
+          "size": 36001,
+          "sha256": "cc8eb809d35cb5d4e148f535decd7d8360bbb057a9f6772d92529a9e7a58400b",
+          "contentType": "image/png"
+        },
+        {
+          "path": "_framework/supportFiles/2_sample.tomcat.tcmeta",
+          "size": 120,
+          "sha256": "7849365e17118634221c55dce352b9ab4d70cddb431cad3b0f7602058aa9fd42",
+          "contentType": "text/plain"
+        },
+        {
+          "path": "_framework/supportFiles/30_scene-open.png",
+          "size": 69359,
+          "sha256": "dfbc1e1ff3b716d1665717815cebae5f4128825c291ce834e8cd86438384fbd9",
+          "contentType": "image/png"
+        },
+        {
+          "path": "_framework/supportFiles/31_script.png",
+          "size": 51123,
+          "sha256": "fb2cc760d4322d5bee51f087644f1bb09983690b3fbdf290bb661669a9bcd31c",
+          "contentType": "image/png"
+        },
+        {
+          "path": "_framework/supportFiles/32_search.png",
+          "size": 28379,
+          "sha256": "b1698fa5e69da4f647e2837f832ec06774a981e6e6793ad07170dcc82adc42d9",
+          "contentType": "image/png"
+        },
+        {
+          "path": "_framework/supportFiles/33_shader.png",
+          "size": 44688,
+          "sha256": "279012f56269ccef32c43c87fad6f01f71d69d6687a609288cedb141677ffe06",
+          "contentType": "image/png"
+        },
+        {
+          "path": "_framework/supportFiles/34_texture.png",
+          "size": 32119,
+          "sha256": "f2eaee04e62eb0d6064d57a750ec78387a065d2df9c1f1529153e68bf1f430c6",
+          "contentType": "image/png"
+        },
+        {
+          "path": "_framework/supportFiles/35_box-collider-2d.png",
+          "size": 4032,
+          "sha256": "2af7574d7ba54181f05e3aa8f2e18e9408175b745d1d19b086482d8fec68d2e3",
+          "contentType": "image/png"
+        },
+        {
+          "path": "_framework/supportFiles/36_camera.png",
+          "size": 3220,
+          "sha256": "4c72d0701b754f3826bd4d28cf0c970973797889d963f4848307dd5f3840fc76",
+          "contentType": "image/png"
+        },
+        {
+          "path": "_framework/supportFiles/37_entity.png",
+          "size": 4222,
+          "sha256": "deac1fad9efaf660a4a5c431b1977725e5227a1cfaccb00d2dcb79fd849b0d10",
+          "contentType": "image/png"
+        },
+        {
+          "path": "_framework/supportFiles/38_eye-off.png",
+          "size": 3874,
+          "sha256": "1afdd48d63c19208da3078fd6970abba4e2261335de2d9b97f90f00fcb91e3e8",
+          "contentType": "image/png"
+        },
+        {
+          "path": "_framework/supportFiles/39_eye-on.png",
+          "size": 3310,
+          "sha256": "3c09d8abee7f6a7b795b1acb712e93fd04be0b5cd4e6a4a9485bb12af2fdc7ad",
+          "contentType": "image/png"
+        },
+        {
+          "path": "_framework/supportFiles/3_BuildSettings.json",
+          "size": 212,
+          "sha256": "fa9516644143fd8810a8f327695a4a97b9b566c91d35a923aa39f31fe659db43",
+          "contentType": "application/json"
+        },
+        {
+          "path": "_framework/supportFiles/40_game-view.png",
+          "size": 2910,
+          "sha256": "ea198b2aa9ffbdfea025d4ecfa37f903a6b86f067aea2fb88b91a99eb6d2be26",
+          "contentType": "image/png"
+        },
+        {
+          "path": "_framework/supportFiles/41_hand.png",
+          "size": 3301,
+          "sha256": "9fb602f4b30bf2d351b47299054cb0ba1e4ae59630264b6d966b7fd68a9e3856",
+          "contentType": "image/png"
+        },
+        {
+          "path": "_framework/supportFiles/42_hierarchy.png",
+          "size": 3241,
+          "sha256": "27a440c06cd326c10df25c5ad8727de3624feccd49f7ec55e52cc5fd9a3af3b5",
+          "contentType": "image/png"
+        },
+        {
+          "path": "_framework/supportFiles/43_inspector.png",
+          "size": 4191,
+          "sha256": "f4e35bd0b900739c1a92cd72f256a9f9ee9b5709f531d706adc200483ce5145d",
+          "contentType": "image/png"
+        },
+        {
+          "path": "_framework/supportFiles/44_lock.png",
+          "size": 3476,
+          "sha256": "6097730d648b48edacf0e71fcf9a6ce60d9512ce35641a8b5eb7b0be2c293b26",
+          "contentType": "image/png"
+        },
+        {
+          "path": "_framework/supportFiles/45_move.png",
+          "size": 2099,
+          "sha256": "997e55bf921b0bdac9cfa4d0dab5715e98f7f70b92274d6013dc63ac89f96e65",
+          "contentType": "image/png"
+        },
+        {
+          "path": "_framework/supportFiles/46_pause.png",
+          "size": 3366,
+          "sha256": "0bdbb834d316cf72637c95b5c854b01daa444bf66f3e3bfe90c6d5ebfbd9fe51",
+          "contentType": "image/png"
+        },
+        {
+          "path": "_framework/supportFiles/47_play.png",
+          "size": 2489,
+          "sha256": "28ddf756a4cd78e03036e2de320fd1fb8babf2c9d966c74cd74490d7878f3e54",
+          "contentType": "image/png"
+        },
+        {
+          "path": "_framework/supportFiles/48_project-browser.png",
+          "size": 2327,
+          "sha256": "61c427af43c19a6d47163afca0b208b8db8153b3aec9ea76a35a41d0e0bcdc4a",
+          "contentType": "image/png"
+        },
+        {
+          "path": "_framework/supportFiles/49_rect-tool.png",
+          "size": 3369,
+          "sha256": "eefbd631cc294b10af6f086ddeff2b4b208e02aa5d2749aa534ec4083304eee5",
+          "contentType": "image/png"
+        },
+        {
+          "path": "_framework/supportFiles/4_PlayerSettings.json",
+          "size": 368,
+          "sha256": "d4d640e36a1a632605ab5a558d378d38533b03ab20c669a3c00092ad84f5356e",
+          "contentType": "application/json"
+        },
+        {
+          "path": "_framework/supportFiles/50_rigidbody-2d.png",
+          "size": 2429,
+          "sha256": "890a87ed6bd96f585968ea0adc514ed3d5de1a0663ccbfd70d56ad81e4ccc491",
+          "contentType": "image/png"
+        },
+        {
+          "path": "_framework/supportFiles/51_rotate.png",
+          "size": 3184,
+          "sha256": "093540d11719d24a8eea083c1edceb6cd7ccff016f18dd9224303b3034db6e51",
+          "contentType": "image/png"
+        },
+        {
+          "path": "_framework/supportFiles/52_scale.png",
+          "size": 2149,
+          "sha256": "f3b095753c2a4e61a0553e6d669595b4df45b2109995d590b5c80b809a9d689d",
+          "contentType": "image/png"
+        },
+        {
+          "path": "_framework/supportFiles/53_scene-view.png",
+          "size": 2937,
+          "sha256": "66de2e64436af50a705eab999796cbdb9de92ffc7203f2138cdaaee9a30e460f",
+          "contentType": "image/png"
+        },
+        {
+          "path": "_framework/supportFiles/54_sprite.png",
+          "size": 4753,
+          "sha256": "429762edc81ee065c9818f6f5c67b427787c38c6072169b2f36e0ac71454c22b",
+          "contentType": "image/png"
+        },
+        {
+          "path": "_framework/supportFiles/55_step.png",
+          "size": 3154,
+          "sha256": "ee629aeca511ce8a0d066bfac905ab7ccea6f8000fd0ea8165301f79c7ef12fa",
+          "contentType": "image/png"
+        },
+        {
+          "path": "_framework/supportFiles/56_stop.png",
+          "size": 2964,
+          "sha256": "9ccc085c1d46c7c2714647d5724ea67aae7a117f646cdd45c0bf173e32b9395c",
+          "contentType": "image/png"
+        },
+        {
+          "path": "_framework/supportFiles/57_Circle.tga",
+          "size": 16402,
+          "sha256": "7311e9e354a196633cc7a8f352f472da080279229b3c9c34ca718460cd09fd42",
+          "contentType": "application/octet-stream"
+        },
+        {
+          "path": "_framework/supportFiles/58_Square.tga",
+          "size": 16402,
+          "sha256": "3bf79e70ca08b06b2a3ae171f0b53c94f0638252ba74b562f055a8bd96902ec8",
+          "contentType": "application/octet-stream"
+        },
+        {
+          "path": "_framework/supportFiles/59_FlatColor.glsl",
+          "size": 395,
+          "sha256": "69ddad4493ba6dcc05709b6ea8e7ef3de818510ac9559ebcac3d86989b7cf699",
+          "contentType": "text/plain"
+        },
+        {
+          "path": "_framework/supportFiles/5_ProjectSettings.json",
+          "size": 334,
+          "sha256": "49f736c4c222db562bcc7af87c4f52d6a2cc54ab44f805bd036e5c2d7774f593",
+          "contentType": "application/json"
+        },
+        {
+          "path": "_framework/supportFiles/60_Texture.glsl",
+          "size": 4406,
+          "sha256": "159c942ea5c1a2caca23ae1dd906ff82e08a42664bc394191a13fe86e0f47fd9",
+          "contentType": "text/plain"
+        },
+        {
+          "path": "_framework/supportFiles/61_LICENSE",
+          "size": 4393,
+          "sha256": "88f117575237307bdd86a17ef15e21790fc9a662fe4dfb103ca1ca077f0d9982",
+          "contentType": "application/octet-stream"
+        },
+        {
+          "path": "_framework/supportFiles/62_NotoSansSC-Regular.otf",
+          "size": 8331336,
+          "sha256": "faa6c9df652116dde789d351359f3d7e5d2285a2b2a1f04a2d7244df706d5ea9",
+          "contentType": "font/otf"
+        },
+        {
+          "path": "_framework/supportFiles/63_README.md",
+          "size": 1398,
+          "sha256": "a32152d55903fea66c00fc03974c2419390f773ef8aded91ab46a59557f78377",
+          "contentType": "text/plain"
+        },
+        {
+          "path": "_framework/supportFiles/64_README.zh-CN.md",
+          "size": 1454,
+          "sha256": "5764951badb32088945bf533cb72c3170bd3b3b03e379fba473503fc263eebab",
+          "contentType": "text/plain"
+        },
+        {
+          "path": "_framework/supportFiles/6_OpenSans-Bold.ttf",
+          "size": 104120,
+          "sha256": "f7916a37377e38527d4306303cfe89b653b49b0a6b0b05c6b7593f7ab0248da8",
+          "contentType": "font/ttf"
+        },
+        {
+          "path": "_framework/supportFiles/7_OpenSans-Regular.ttf",
+          "size": 96932,
+          "sha256": "037236ed4bf58a85f67074c165d308260fd6be01c86d7df4e79ea16eb273f8c5",
+          "contentType": "font/ttf"
+        },
+        {
+          "path": "_framework/supportFiles/8_DirectoryIcon.png",
+          "size": 5176,
+          "sha256": "2b619a77bb4be9a29d9dccf698cf1e83e286260b842c1acd9749d10d97d4894a",
+          "contentType": "image/png"
+        },
+        {
+          "path": "_framework/supportFiles/9_FileIcon.png",
+          "size": 14466,
+          "sha256": "437d34b0ab6dbd77a704d0fe7eda9592b079a74f647eb339815dafe190cc06d7",
+          "contentType": "image/png"
+        },
+        {
+          "path": "_framework/tr/Microsoft.CodeAnalysis.CSharp.resources.wasm",
+          "size": 442133,
+          "sha256": "e4981ab7efbe9d91600f24bb264c7f0c89ff1d4747859136cee6047981041169",
+          "contentType": "application/wasm"
+        },
+        {
+          "path": "_framework/tr/Microsoft.CodeAnalysis.resources.wasm",
+          "size": 29461,
+          "sha256": "65692d14c03368ecfcfe5892c823c3417fec9bc56dfb20b84661fb66ee6679a6",
+          "contentType": "application/wasm"
+        },
+        {
+          "path": "_framework/zh-Hans/Microsoft.CodeAnalysis.CSharp.resources.wasm",
+          "size": 393493,
+          "sha256": "2ebccab758f67925595560fdcde9a3826782615e26f37d33e62326047bad8fe2",
+          "contentType": "application/wasm"
+        },
+        {
+          "path": "_framework/zh-Hans/Microsoft.CodeAnalysis.resources.wasm",
+          "size": 26901,
+          "sha256": "f48f0f3ce0f9335965af1dbeccdf5468d45b262346e72c157f1875a6d5f3df7a",
+          "contentType": "application/wasm"
+        },
+        {
+          "path": "_framework/zh-Hant/Microsoft.CodeAnalysis.CSharp.resources.wasm",
+          "size": 393493,
+          "sha256": "8085b9d0128e8f1f60ee07b570ab61ddc431d191705f31ac19d7fe91b166a741",
+          "contentType": "application/wasm"
+        },
+        {
+          "path": "_framework/zh-Hant/Microsoft.CodeAnalysis.resources.wasm",
+          "size": 27413,
+          "sha256": "5ab47cd3638dd9076fcb9cf348e1eef2dc4e6e00164dc253cb8f45adab4bb1fb",
+          "contentType": "application/wasm"
+        },
+        {
+          "path": "main.js",
+          "size": 3276,
+          "sha256": "795b93673f67f24dd0f9fe7bd979bce5fabc6e4af52b7ffc5a0da20787636f4c",
+          "contentType": "text/javascript"
+        },
+        {
+          "path": "refs/System.Collections.dll",
+          "size": 55560,
+          "sha256": "a7c5b431e40a32e5cf3d6c84371823bf09f82d577b33c22f962ffc19c051ff5a",
+          "contentType": "application/octet-stream"
+        },
+        {
+          "path": "refs/System.ComponentModel.Primitives.dll",
+          "size": 26384,
+          "sha256": "027e7a617430d64b63c3506c593c58b737aaddf93b2ca14db89e0954c24e2d8a",
+          "contentType": "application/octet-stream"
+        },
+        {
+          "path": "refs/System.Console.dll",
+          "size": 26936,
+          "sha256": "8cf5d62d5e7fb4924e06004bfde2656ece81420daad0ce1a0762f9eae51dc4e3",
+          "contentType": "application/octet-stream"
+        },
+        {
+          "path": "refs/System.Linq.dll",
+          "size": 34056,
+          "sha256": "5bab6b7620c2ed193e7d8f898813077fb058a7881234198380f498c6ccead340",
+          "contentType": "application/octet-stream"
+        },
+        {
+          "path": "refs/System.Memory.dll",
+          "size": 57656,
+          "sha256": "b7b5b1777aa3647b1864834651dd57047003337ea4aae60d0e65ad9a24fb66f9",
+          "contentType": "application/octet-stream"
+        },
+        {
+          "path": "refs/System.ObjectModel.dll",
+          "size": 23824,
+          "sha256": "e935a52d122f9467a02d2d9f58d90df67baca59f2a56e96e84f597c8136de1d9",
+          "contentType": "application/octet-stream"
+        },
+        {
+          "path": "refs/System.Runtime.Extensions.dll",
+          "size": 18232,
+          "sha256": "6ce27f4beb0a5f8dbff7a67fe4fead7235dc9f817bd630379c84bbfeb85c627c",
+          "contentType": "application/octet-stream"
+        },
+        {
+          "path": "refs/System.Runtime.InteropServices.dll",
+          "size": 101640,
+          "sha256": "ae24d8dbee946df34b1c185f818a2ad1e2bdbb5501cc22255d7cda4055358a2f",
+          "contentType": "application/octet-stream"
+        },
+        {
+          "path": "refs/System.Runtime.dll",
+          "size": 862984,
+          "sha256": "d0261125d3d7d7a11d404b9165b87591b73d26c004fbe8eb007b5b44e6494acc",
+          "contentType": "application/octet-stream"
+        },
+        {
+          "path": "refs/System.Text.Encoding.Extensions.dll",
+          "size": 21264,
+          "sha256": "cf1cf4d2f70d2e8432306c6a6809ce8057ff0b3e2d9f01cc68fb11010ca55975",
+          "contentType": "application/octet-stream"
+        },
+        {
+          "path": "refs/System.Text.Encoding.dll",
+          "size": 16144,
+          "sha256": "ce4583a80a852f7f43ec390df7b8c06e6b76bba1e6a8447607a57bb7e2714ae4",
+          "contentType": "application/octet-stream"
+        },
+        {
+          "path": "refs/System.Text.Json.dll",
+          "size": 82696,
+          "sha256": "1b82bebfc5bb14eba5cf0c97ac568220e0482452ba19502419d033a4a2d287ef",
+          "contentType": "application/octet-stream"
+        },
+        {
+          "path": "refs/System.Threading.Tasks.dll",
+          "size": 17160,
+          "sha256": "bb271a61438c326ee41cc0d3a7b52c120ac754d0c32db4a83a26968d4ab0b2d9",
+          "contentType": "application/octet-stream"
+        },
+        {
+          "path": "refs/System.Threading.dll",
+          "size": 34056,
+          "sha256": "efef6689b82a4d24ab46501fca728172bb2723b0ba9d7050bbd8cce83f258c78",
+          "contentType": "application/octet-stream"
+        },
+        {
+          "path": "refs/TomCat.Managed.dll",
+          "size": 217600,
+          "sha256": "8f63bfc049e0203fb171cebe71e8b6382f277e231049b1b634a7ab7c33269421",
+          "contentType": "application/octet-stream"
+        },
+        {
+          "path": "refs/mscorlib.dll",
+          "size": 56072,
+          "sha256": "3d272c88d289a11bd38e5bd1df6a08ac1d7b67aec8bc775d191aca9517bc5e5f",
+          "contentType": "application/octet-stream"
+        },
+        {
+          "path": "refs/netstandard.dll",
+          "size": 101136,
+          "sha256": "9a0296faf333af31a73d1527f4efb82a60e14f7c23a43a3c37477eb258253e53",
+          "contentType": "application/octet-stream"
+        }
+      ],
+      "hash": "8f71d13105965ddc72de90989971b33c9521e6482b2633f4becb16179629eb19"
+    },
+    "entryUrl": "http://127.0.0.1:5200/engine-cache/8f71d13105965ddc72de90989971b33c9521e6482b2633f4becb16179629eb19/main.js",
+    "cacheHash": "8f71d13105965ddc72de90989971b33c9521e6482b2633f4becb16179629eb19",
+    "resources": [
+      {
+        "path": "main.js",
+        "url": "http://127.0.0.1:5200/engine-cache/8f71d13105965ddc72de90989971b33c9521e6482b2633f4becb16179629eb19/main.js",
+        "byteLength": 3276,
+        "sha256": "795b93673f67f24dd0f9fe7bd979bce5fabc6e4af52b7ffc5a0da20787636f4c"
+      },
+      {
+        "path": "_framework/dotnet.native.js",
+        "url": "http://127.0.0.1:5200/engine-cache/8f71d13105965ddc72de90989971b33c9521e6482b2633f4becb16179629eb19/_framework/dotnet.native.js",
+        "byteLength": 437622,
+        "sha256": "f342bf3d020915701174a6a3359ae0eabec04af0b08d470003f2c8db8681a337"
+      },
+      {
+        "path": "_framework/dotnet.native.wasm",
+        "url": "http://127.0.0.1:5200/engine-cache/8f71d13105965ddc72de90989971b33c9521e6482b2633f4becb16179629eb19/_framework/dotnet.native.wasm",
+        "byteLength": 10794092,
+        "sha256": "1b3b726bb571f885eeb47bfd132483de7c8c3ee3d63420bda06322fc5736314c"
+      }
+    ],
+    "verification": "Read manifest for the actual loaded entry; re-read its immutable virtual resource URLs and verified their byte hashes before timing."
+  },
+  "renderer": "ANGLE (Intel, Intel(R) UHD Graphics (0x0000A78B) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+  "cpuP95BudgetMs": 8,
+  "budgetFailures": [],
+  "phases": [
+    {
+      "name": "initial-1x",
+      "cpu": {
+        "count": 97,
+        "mean": 3.304226804409445,
+        "p50": 3.189999997615814,
+        "p95": 5.889999993145466,
+        "p99": 9.285000003874302,
+        "max": 9.285000003874302,
+        "over33_84ms": 0,
+        "over50ms": 0
+      },
+      "intervals": {
+        "count": 96,
+        "mean": 30.80661458335817,
+        "p50": 27.80000000447035,
+        "p95": 66.35000000149012,
+        "p99": 94.61500000208616,
+        "max": 94.61500000208616,
+        "over33_84ms": 39,
+        "over50ms": 11
+      },
+      "cadenceHz": 32.460561263365925
+    },
+    {
+      "name": "settings-paused",
+      "cpu": {
+        "count": 94,
+        "mean": 2.9592553190886974,
+        "p50": 2.8299999982118607,
+        "p95": 4.814999997615814,
+        "p99": 6.46000000089407,
+        "max": 6.46000000089407,
+        "over33_84ms": 0,
+        "over50ms": 0
+      },
+      "intervals": {
+        "count": 93,
+        "mean": 31.93989247315994,
+        "p50": 30.405000001192093,
+        "p95": 65.80499999970198,
+        "p99": 73.95999999344349,
+        "max": 73.95999999344349,
+        "over33_84ms": 45,
+        "over50ms": 16
+      },
+      "cadenceHz": 31.308809221581768
+    },
+    {
+      "name": "production-16x",
+      "cpu": {
+        "count": 106,
+        "mean": 3.118254716736528,
+        "p50": 2.719999998807907,
+        "p95": 6.324999995529652,
+        "p99": 7.030000001192093,
+        "max": 7.649999998509884,
+        "over33_84ms": 0,
+        "over50ms": 0
+      },
+      "intervals": {
+        "count": 105,
+        "mean": 28.609095238078208,
+        "p50": 24.404999993741512,
+        "p95": 62.97000000625849,
+        "p99": 66.64999999850988,
+        "max": 72.93500000238419,
+        "over33_84ms": 43,
+        "over50ms": 13
+      },
+      "cadenceHz": 34.9539190833626
+    },
+    {
+      "name": "fullscreen-16x",
+      "cpu": {
+        "count": 46,
+        "mean": 4.085217391019282,
+        "p50": 3.459999993443489,
+        "p95": 7.1400000005960464,
+        "p99": 9.5,
+        "max": 9.5,
+        "over33_84ms": 0,
+        "over50ms": 0
+      },
+      "intervals": {
+        "count": 45,
+        "mean": 64.37966666668653,
+        "p50": 61.399999998509884,
+        "p95": 126.55499999970198,
+        "p99": 138.91999999433756,
+        "max": 138.91999999433756,
+        "over33_84ms": 35,
+        "over50ms": 26
+      },
+      "cadenceHz": 15.532854576233046
+    },
+    {
+      "name": "storm-entry-16x",
+      "cpu": {
+        "count": 1594,
+        "mean": 2.6511731492437263,
+        "p50": 2.3049999997019768,
+        "p95": 4.535000003874302,
+        "p99": 6.445000000298023,
+        "max": 13.854999996721745,
+        "over33_84ms": 0,
+        "over50ms": 0
+      },
+      "intervals": {
+        "count": 1593,
+        "mean": 55.32356246076735,
+        "p50": 53.99000000208616,
+        "p95": 107.43999999761581,
+        "p99": 142.70000000298023,
+        "max": 251.42500000447035,
+        "over33_84ms": 1268,
+        "over50ms": 867
+      },
+      "cadenceHz": 18.07548096182615
+    },
+    {
+      "name": "storm",
+      "cpu": {
+        "count": 92,
+        "mean": 3.655978261290685,
+        "p50": 3.480000004172325,
+        "p95": 5.469999998807907,
+        "p99": 5.969999998807907,
+        "max": 5.969999998807907,
+        "over33_84ms": 0,
+        "over50ms": 0
+      },
+      "intervals": {
+        "count": 91,
+        "mean": 65.19664835168437,
+        "p50": 65.96000000089407,
+        "p95": 114.60999999940395,
+        "p99": 141.53499999642372,
+        "max": 141.53499999642372,
+        "over33_84ms": 76,
+        "over50ms": 63
+      },
+      "cadenceHz": 15.338211783614865
+    },
+    {
+      "name": "result-transition",
+      "cpu": {
+        "count": 69,
+        "mean": 3.4621014488132102,
+        "p50": 3.3049999997019768,
+        "p95": 5.254999995231628,
+        "p99": 23.149999998509884,
+        "max": 23.149999998509884,
+        "over33_84ms": 0,
+        "over50ms": 0
+      },
+      "intervals": {
+        "count": 68,
+        "mean": 53.873602941194,
+        "p50": 55.74000000208616,
+        "p95": 103.43500000238419,
+        "p99": 147.5050000026822,
+        "max": 147.5050000026822,
+        "over33_84ms": 56,
+        "over50ms": 36
+      },
+      "cadenceHz": 18.561966258160883
+    }
+  ],
+  "snapshots": [
+    {
+      "label": "initial-1x:before",
+      "heapBytes": 193331200,
+      "jsHeapBytes": 181130296,
+      "stats": null,
+      "audioStates": [
+        "running"
+      ],
+      "drawingBuffer": [
+        758,
+        550
+      ],
+      "hidden": false
+    },
+    {
+      "label": "initial-1x:after",
+      "heapBytes": 193331200,
+      "jsHeapBytes": 181778749,
+      "stats": null,
+      "audioStates": [
+        "running"
+      ],
+      "drawingBuffer": [
+        758,
+        550
+      ],
+      "hidden": false
+    },
+    {
+      "label": "settings-paused:before",
+      "heapBytes": 193331200,
+      "jsHeapBytes": 181968455,
+      "stats": null,
+      "audioStates": [
+        "running"
+      ],
+      "drawingBuffer": [
+        758,
+        550
+      ],
+      "hidden": false
+    },
+    {
+      "label": "settings-paused:after",
+      "heapBytes": 193331200,
+      "jsHeapBytes": 181212366,
+      "stats": null,
+      "audioStates": [
+        "running"
+      ],
+      "drawingBuffer": [
+        758,
+        550
+      ],
+      "hidden": false
+    },
+    {
+      "label": "production-16x:before",
+      "heapBytes": 193331200,
+      "jsHeapBytes": 182220913,
+      "stats": null,
+      "audioStates": [
+        "running"
+      ],
+      "drawingBuffer": [
+        758,
+        550
+      ],
+      "hidden": false
+    },
+    {
+      "label": "production-16x:after",
+      "heapBytes": 193331200,
+      "jsHeapBytes": 181218958,
+      "stats": null,
+      "audioStates": [
+        "running"
+      ],
+      "drawingBuffer": [
+        758,
+        550
+      ],
+      "hidden": false
+    },
+    {
+      "label": "fullscreen-16x:before",
+      "heapBytes": 193331200,
+      "jsHeapBytes": 181562867,
+      "stats": null,
+      "audioStates": [
+        "running"
+      ],
+      "drawingBuffer": [
+        1440,
+        1000
+      ],
+      "hidden": false
+    },
+    {
+      "label": "fullscreen-16x:after",
+      "heapBytes": 193331200,
+      "jsHeapBytes": 181848463,
+      "stats": null,
+      "audioStates": [
+        "running"
+      ],
+      "drawingBuffer": [
+        1440,
+        1000
+      ],
+      "hidden": false
+    },
+    {
+      "label": "storm-entry-16x:before",
+      "heapBytes": 193331200,
+      "jsHeapBytes": 181848463,
+      "stats": null,
+      "audioStates": [
+        "running"
+      ],
+      "drawingBuffer": [
+        1440,
+        1000
+      ],
+      "hidden": false
+    },
+    {
+      "label": "storm-entry-16x:after",
+      "heapBytes": 193331200,
+      "jsHeapBytes": 172105234,
+      "stats": null,
+      "audioStates": [
+        "running"
+      ],
+      "drawingBuffer": [
+        1440,
+        1000
+      ],
+      "hidden": false
+    },
+    {
+      "label": "storm:before",
+      "heapBytes": 193331200,
+      "jsHeapBytes": 172203633,
+      "stats": null,
+      "audioStates": [
+        "running"
+      ],
+      "drawingBuffer": [
+        1440,
+        1000
+      ],
+      "hidden": false
+    },
+    {
+      "label": "storm:after",
+      "heapBytes": 193331200,
+      "jsHeapBytes": 170989733,
+      "stats": null,
+      "audioStates": [
+        "running"
+      ],
+      "drawingBuffer": [
+        1440,
+        1000
+      ],
+      "hidden": false
+    },
+    {
+      "label": "result-transition:before",
+      "heapBytes": 193331200,
+      "jsHeapBytes": 170989733,
+      "stats": null,
+      "audioStates": [
+        "running"
+      ],
+      "drawingBuffer": [
+        1440,
+        1000
+      ],
+      "hidden": false
+    },
+    {
+      "label": "result-transition:after",
+      "heapBytes": 193331200,
+      "jsHeapBytes": 171391049,
+      "stats": null,
+      "audioStates": [
+        "running"
+      ],
+      "drawingBuffer": [
+        1440,
+        1000
+      ],
+      "hidden": false
+    },
+    {
+      "label": "result",
+      "heapBytes": 193331200,
+      "jsHeapBytes": 171484613,
+      "stats": null,
+      "audioStates": [
+        "running"
+      ],
+      "drawingBuffer": [
+        1440,
+        1000
+      ],
+      "hidden": false
+    }
+  ],
+  "cleanup": {
+    "iframeCount": 0,
+    "audioStates": [
+      "closed"
+    ]
+  },
+  "errors": [],
+  "notes": "Run this script alone, without another GPU/browser benchmark or DevTools profiler. API auth/list calls are mocked; the verified native TCPAK and locked engine are real. All game progress uses normal mouse UI controls, including the 16x setting; no private state or resource injection. Hashing, GPU queries, screenshots and heap/stat snapshots are outside timed phases. CPU is synchronous PlayerFrame submission and can include driver waits; intervals are observed call cadence, not direct GPU/compositor frame-time measurements. A passed run without a configured CPU budget means observation/functional completion, not a universal FPS guarantee.",
+  "statusMeaning": "The configured synchronous PlayerFrame CPU P95 budget of 8 ms and functional completion passed. Observed frame intervals do not establish stable 60 FPS; cadence has no passing threshold in this run.",
+  "captureScope": {
+    "execution": "Independent Chrome headless performance run against the final production build and published c284 runtime bytes; no parallel benchmark or profiler.",
+    "systemContext": "The same QA session observed GPU activity from the user-owned Return Unity 6 editor, wallpaper application and desktop compositor. These applications were left running. This is environmental context, not a controlled isolation of each process contribution.",
+    "excludedFromTiming": "Engine/package hash verification, screenshots and heap/stat snapshots. First download and engine startup are not steady-state samples.",
+    "rawSamplesOmitted": true
+  },
+  "sourceHashes": {
+    "samples/shelter/Assets/Scripts/ShelterGame.cs": {
+      "sha256": "af047b066ecb67fd45a5d2f76978210dc9e0c8a5e9eeb1fbef96ca10c4bbe6db",
+      "byteLength": 21998,
+      "archiveEntry": "Shelter/Assets/Scripts/ShelterGame.cs",
+      "archiveMatches": true
+    },
+    "samples/shelter/Assets/Scripts/ShelterModel.cs": {
+      "sha256": "8e1d41ab386782a293b90454fe4d06bd3f2fbc0aee683ee0c7074af38436773f",
+      "byteLength": 2831,
+      "archiveEntry": "Shelter/Assets/Scripts/ShelterModel.cs",
+      "archiveMatches": true
+    },
+    "samples/shelter/README.md": {
+      "sha256": "f159eb33e6e3b2f841f32877b7bf89992b6f490d0b6ddc13c7846dc0359e6148",
+      "byteLength": 5832,
+      "archiveEntry": "Shelter/README.md",
+      "archiveMatches": true
+    }
+  },
+  "sourceHashVerification": "Computed while preparing this summary after the performance run; current game scripts and README were byte-compared with the final downloadable source archive. These fields supplement the original evidence and were not emitted by the timing harness.",
+  "sourceArchive": {
+    "path": "public/samples/shelter/shelter-source.zip",
+    "sha256": "052fb67a1e2f3345043a7ec9d5fa93998243fcc23e82abbce6c93052964da6ab",
+    "byteLength": 21269628
+  },
+  "heapSummary": {
+    "wasmMinBytes": 193331200,
+    "wasmMaxBytes": 193331200,
+    "snapshotCount": 15
+  }
+}

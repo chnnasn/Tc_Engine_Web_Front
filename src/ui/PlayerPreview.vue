@@ -74,7 +74,7 @@ async function fullscreen() {
 onBeforeUnmount(stop)
 </script>
 <template>
-  <AppModal :title="`${game.title} · 播放器`" wide @close="emit('close')">
+  <AppModal class="player-dialog" :title="`${game.title} · 播放器`" wide @close="emit('close')">
     <p class="local-note">{{ game.controls ? '请使用桌面键盘与鼠标，点击游戏画面后操作。首次打开需要加载引擎，请稍候。' : '首次打开需要加载引擎，请稍候。点击游戏画面后即可操作。' }}</p>
     <details v-if="game.controls?.length" class="player-controls"><summary>查看操作说明</summary><div><span v-for="control in game.controls" :key="control.key"><kbd>{{ control.key }}</kbd>{{ control.action }}</span></div></details>
     <p v-if="loading" role="status">正在加载游戏资源…</p>

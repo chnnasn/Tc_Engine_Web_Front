@@ -35,6 +35,24 @@
     Cache-Control = "public, max-age=31536000, immutable"
 
 [[redirects]]
+  from = "/games/forest"
+  to = "/404.html"
+  status = 404
+  force = true
+
+[[redirects]]
+  from = "/games/desert"
+  to = "/404.html"
+  status = 404
+  force = true
+
+[[redirects]]
+  from = "/games/puzzle"
+  to = "/404.html"
+  status = 404
+  force = true
+
+[[redirects]]
   from = "/v1/*"
   to = "https://tcenginewebbackend-production.up.railway.app/v1/:splat"
   status = 200

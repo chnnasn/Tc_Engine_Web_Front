@@ -1,0 +1,337 @@
+{
+  "renderer": "ANGLE (Intel, Intel(R) UHD Graphics (0x0000A78B) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+  "package": {
+    "id": "shelter",
+    "title": "Shelter",
+    "engine": "TomCat",
+    "engineCommit": "5734c56ae05241b01a684afb8e62f2b164c69ba2",
+    "packageVersion": 8,
+    "byteLength": 30157291,
+    "sha256": "813c5b31aadbeecb3c5924b5a3d4e7cc5eb39b3bf7f28199e74176b2ce5ac51c",
+    "entries": 15,
+    "packageUrl": "/samples/shelter/shelter.tcpak",
+    "sourceUrl": "/samples/shelter/shelter-source.zip"
+  },
+  "snapshots": [
+    {
+      "name": "settlement-1x:before",
+      "heapBytes": 161087488,
+      "stats": null,
+      "audio": [
+        "running"
+      ]
+    },
+    {
+      "name": "settlement-1x:after",
+      "heapBytes": 161087488,
+      "stats": null,
+      "audio": [
+        "running"
+      ]
+    },
+    {
+      "name": "paused:before",
+      "heapBytes": 161087488,
+      "stats": null,
+      "audio": [
+        "running"
+      ]
+    },
+    {
+      "name": "paused:after",
+      "heapBytes": 161087488,
+      "stats": null,
+      "audio": [
+        "running"
+      ]
+    },
+    {
+      "name": "production-16x:before",
+      "heapBytes": 161087488,
+      "stats": null,
+      "audio": [
+        "running"
+      ]
+    },
+    {
+      "name": "production-16x:after",
+      "heapBytes": 161087488,
+      "stats": null,
+      "audio": [
+        "running"
+      ]
+    },
+    {
+      "name": "input-burst:before",
+      "heapBytes": 161087488,
+      "stats": null,
+      "audio": [
+        "running"
+      ]
+    },
+    {
+      "name": "input-burst:after",
+      "heapBytes": 161087488,
+      "stats": null,
+      "audio": [
+        "running"
+      ]
+    },
+    {
+      "name": "fullscreen-16x:before",
+      "heapBytes": 161087488,
+      "stats": null,
+      "audio": [
+        "running"
+      ]
+    },
+    {
+      "name": "fullscreen-16x:after",
+      "heapBytes": 161087488,
+      "stats": null,
+      "audio": [
+        "running"
+      ]
+    },
+    {
+      "name": "storm-entry:before",
+      "heapBytes": 161087488,
+      "stats": null,
+      "audio": [
+        "running"
+      ]
+    },
+    {
+      "name": "storm-entry:after",
+      "heapBytes": 161087488,
+      "stats": null,
+      "audio": [
+        "running"
+      ]
+    },
+    {
+      "name": "storm:before",
+      "heapBytes": 161087488,
+      "stats": null,
+      "audio": [
+        "running"
+      ]
+    },
+    {
+      "name": "storm:after",
+      "heapBytes": 161087488,
+      "stats": null,
+      "audio": [
+        "running"
+      ]
+    }
+  ],
+  "notes": "CPU is synchronous PlayerFrame submission, not GPU/compositor time. Intervals are observed call cadence; this hardware/headless result cannot guarantee other devices. API list/auth mocked; released game and native engine are real.",
+  "date": "2026-10-17 Asia/Shanghai",
+  "mode": "production Vite preview, Chrome headless, 1440x1000, Intel UHD D3D11",
+  "engine": {
+    "entryUrl": "http://127.0.0.1:5200/engine-cache/f3932c487a9d4466b556a990b433119e4ab28e4ecc0cb9a126285dab2226d3a4/main.js",
+    "sha256": "6ba164c43f044226a0c67048936cdfea73f7efc80cc6ec81b9fa95b96a524f3b",
+    "resources": [
+      {
+        "path": "main.js",
+        "url": "http://127.0.0.1:5200/engine-cache/f3932c487a9d4466b556a990b433119e4ab28e4ecc0cb9a126285dab2226d3a4/main.js",
+        "byteLength": 3276,
+        "sha256": "795b93673f67f24dd0f9fe7bd979bce5fabc6e4af52b7ffc5a0da20787636f4c"
+      },
+      {
+        "path": "_framework/dotnet.native.js",
+        "url": "http://127.0.0.1:5200/engine-cache/f3932c487a9d4466b556a990b433119e4ab28e4ecc0cb9a126285dab2226d3a4/_framework/dotnet.native.js",
+        "byteLength": 437622,
+        "sha256": "376937fc9ac182588dc0b4e64c1b24ecd4fe8bbe9e4a804dfc282ab0bda1204d"
+      },
+      {
+        "path": "_framework/dotnet.native.wasm",
+        "url": "http://127.0.0.1:5200/engine-cache/f3932c487a9d4466b556a990b433119e4ab28e4ecc0cb9a126285dab2226d3a4/_framework/dotnet.native.wasm",
+        "byteLength": 10780470,
+        "sha256": "b4ebd6a2cf955fa33b1edc60c2ea4605bebe620b34269f52d4ad2c5b78aad815"
+      }
+    ]
+  },
+  "phases": [
+    {
+      "name": "settlement-1x",
+      "cpu": {
+        "count": 1411,
+        "median": 2.625,
+        "p95": 5.070000000298023,
+        "p99": 8.269999999552965,
+        "max": 17.445000000298023,
+        "over33ms": 0,
+        "over50ms": 0
+      },
+      "interval": {
+        "count": 1410,
+        "median": 5.554999999701977,
+        "p95": 6.03999999910593,
+        "p99": 10.654999997466803,
+        "max": 17.679999999701977,
+        "over33ms": 0,
+        "over50ms": 0
+      },
+      "cadenceHz": 176.26222819207425
+    },
+    {
+      "name": "paused",
+      "cpu": {
+        "count": 541,
+        "median": 2.5049999989569187,
+        "p95": 4.855000000447035,
+        "p99": 7.714999999850988,
+        "max": 9.604999996721745,
+        "over33ms": 0,
+        "over50ms": 0
+      },
+      "interval": {
+        "count": 540,
+        "median": 5.550000000745058,
+        "p95": 5.930000003427267,
+        "p99": 8.179999999701977,
+        "max": 9.919999998062849,
+        "over33ms": 0,
+        "over50ms": 0
+      },
+      "cadenceHz": 179.33705070257838
+    },
+    {
+      "name": "production-16x",
+      "cpu": {
+        "count": 1436,
+        "median": 2.6649999991059303,
+        "p95": 5.449999999254942,
+        "p99": 7.884999997913837,
+        "max": 11.125,
+        "over33ms": 0,
+        "over50ms": 0
+      },
+      "interval": {
+        "count": 1435,
+        "median": 5.545000001788139,
+        "p95": 6.2349999994039536,
+        "p99": 8.425000000745058,
+        "max": 11.814999997615814,
+        "over33ms": 0,
+        "over50ms": 0
+      },
+      "cadenceHz": 179.2687832459635
+    },
+    {
+      "name": "input-burst",
+      "cpu": {
+        "count": 1859,
+        "median": 2.830000001937151,
+        "p95": 6.3900000005960464,
+        "p99": 8.510000001639128,
+        "max": 12.910000000149012,
+        "over33ms": 0,
+        "over50ms": 0
+      },
+      "interval": {
+        "count": 1858,
+        "median": 5.545000001788139,
+        "p95": 6.894999999552965,
+        "p99": 9.220000002533197,
+        "max": 16.570000000298023,
+        "over33ms": 0,
+        "over50ms": 0
+      },
+      "cadenceHz": 177.64952845903207
+    },
+    {
+      "name": "fullscreen-16x",
+      "cpu": {
+        "count": 1441,
+        "median": 2.1950000002980232,
+        "p95": 3.4649999998509884,
+        "p99": 4.83500000089407,
+        "max": 6.894999999552965,
+        "over33ms": 0,
+        "over50ms": 0
+      },
+      "interval": {
+        "count": 1440,
+        "median": 5.554999999701977,
+        "p95": 5.850000001490116,
+        "p99": 6.3099999986588955,
+        "max": 7.379999998956919,
+        "over33ms": 0,
+        "over50ms": 0
+      },
+      "cadenceHz": 180.02407822046868
+    },
+    {
+      "name": "storm-entry",
+      "cpu": {
+        "count": 10702,
+        "median": 2.2149999998509884,
+        "p95": 3.269999999552965,
+        "p99": 4.365000002086163,
+        "max": 14.004999998956919,
+        "over33ms": 0,
+        "over50ms": 0
+      },
+      "interval": {
+        "count": 10701,
+        "median": 5.554999999701977,
+        "p95": 5.829999998211861,
+        "p99": 6.274999998509884,
+        "max": 17.430000003427267,
+        "over33ms": 0,
+        "over50ms": 0
+      },
+      "cadenceHz": 178.54976743146923
+    },
+    {
+      "name": "storm",
+      "cpu": {
+        "count": 1171,
+        "median": 3.4899999983608723,
+        "p95": 4.324999999254942,
+        "p99": 4.550000000745058,
+        "max": 5.474999997764826,
+        "over33ms": 0,
+        "over50ms": 0
+      },
+      "interval": {
+        "count": 1170,
+        "median": 5.5599999986588955,
+        "p95": 5.83500000089407,
+        "p99": 6.024999998509884,
+        "max": 6.469999998807907,
+        "over33ms": 0,
+        "over50ms": 0
+      },
+      "cadenceHz": 180.02395703423684
+    }
+  ],
+  "sourceHashes": {
+    "samples\\shelter\\Assets\\Scripts\\ShelterGame.cs": "e7357ed33dc612c3a20d20e80d12c7c1c504b9d58dd87668166106216c5bfc54",
+    "samples\\shelter\\Assets\\Scripts\\ShelterModel.cs": "8e1d41ab386782a293b90454fe4d06bd3f2fbc0aee683ee0c7074af38436773f",
+    "tests\\shelter-browser.mjs": "ec8314cea433691df0f1c9a95aac16557ddcf3dae097c729e645319eb7d0d568"
+  },
+  "rawEvidence": ".engine\\shelter-qa\\2026-10-17T06-46-34.432Z\\evidence.json",
+  "runtimeLogs": [
+    "[14:46:38] APP: [Shelter] initialized",
+    "[14:46:39] APP: [Shelter] ready",
+    "[14:46:40] APP: [Shelter] start",
+    "[14:46:50] APP: [Shelter] build:7",
+    "[14:46:50] APP: [Shelter] dispatch:1",
+    "[14:46:56] APP: [Shelter] collect",
+    "[14:46:56] APP: [Shelter] paused:True",
+    "[14:46:59] APP: [Shelter] paused:False",
+    "[14:47:08] APP: [Shelter] build:0",
+    "[14:47:08] APP: [Shelter] build:1",
+    "[14:47:09] APP: [Shelter] build:2",
+    "[14:47:09] APP: [Shelter] build:3",
+    "[14:47:10] APP: [Shelter] build:6",
+    "[14:47:11] APP: [Shelter] build:8",
+    "[14:48:27] APP: [Shelter] storm:5",
+    "[14:48:36] APP: [Shelter] storm result:survived",
+    "[14:48:36] APP: [Shelter] restart"
+  ]
+}

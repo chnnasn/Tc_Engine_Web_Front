@@ -15,7 +15,9 @@
     "prebuild": "node scripts/engine-manifest.mjs --optional",
     "build": "vue-tsc -b && vite build",
     "preview": "vite preview",
-    "engine:return": "node scripts/build-return.mjs"
+    "engine:return": "node scripts/build-return.mjs",
+    "engine:shelter": "node scripts/build-shelter.mjs",
+    "engine:physics": "node scripts/build-sample-games.mjs public/samples/physics-lab"
   },
   "dependencies": {
     "@lucide/vue": "latest",
