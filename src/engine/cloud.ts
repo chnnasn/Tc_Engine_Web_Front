@@ -1,6 +1,6 @@
 import { assertDocument, compatibleEngineCommit, validFilePath, requiredFiles, type CloudBinding, type EngineDocument } from './storage.ts'
 
-export interface CloudUser { id: string; email: string; emailVerified: boolean; isAdmin?: boolean }
+export interface CloudUser { id: string; email: string; emailVerified: boolean; isAdmin?: boolean; displayName?: string; avatarUrl?: string | null }
 export interface CloudProject { id: string; name: string; description: string; template: '2D' | '空白'; currentRevisionId: string | null; etag: string | null }
 export interface AiCheckpoint { runId: string; phase: 'start' | 'end'; sceneVersion: string }
 export interface CloudRevision { revisionId: string; etag: string; createdAt: string; aiCheckpoint?: AiCheckpoint }
@@ -20,8 +20,8 @@ async function api(path: string, init: RequestInit = {}) {
     let message = '云端请求失败'
     try { message = (await response.json()).error || message } catch { /* Empty precondition responses. */ }
     if (response.status === 401) {
-      message = path === '/auth/login' ? '邮箱或密码错误' : '请先登录云端账号'
-      if (!['/auth/login', '/auth/register'].includes(path) && typeof window !== 'undefined') window.dispatchEvent(new Event('tomcat-auth-expired'))
+      message = path === '/auth/login' ? '邮箱或密码错误' : path === '/auth/switch' ? '此账号的保存登录已失效，请重新输入密码' : '请先登录云端账号'
+      if (!['/auth/login', '/auth/register', '/auth/switch'].includes(path) && typeof window !== 'undefined') window.dispatchEvent(new Event('tomcat-auth-expired'))
     }
     if (response.status === 404) message = '云端项目或文件不存在，或当前账号没有访问权限'
     if (response.status === 412) message = '云端已有新修订，本地内容已保留。请从项目列表恢复最新版本进行比较，或另建云端项目'
@@ -33,8 +33,16 @@ async function api(path: string, init: RequestInit = {}) {
 const json = (method: string, body: unknown, headers = {}) => ({ method, headers: { 'Content-Type': 'application/json', ...headers }, body: JSON.stringify(body) })
 const idPath = (id: string) => `/projects/${encodeURIComponent(id)}`
 export const currentUser = async (): Promise<CloudUser> => (await api('/auth/me')).json()
-export const authenticate = async (_mode: 'login', login: string, password: string): Promise<CloudUser> => {
-  const user = await (await api('/auth/login', json('POST', { email: login, password }))).json()
+export const authenticate = async (_mode: 'login', login: string, password: string, rememberMe = false): Promise<CloudUser> => {
+  const user = await (await api('/auth/login', json('POST', { email: login, password, rememberMe }))).json()
+  if (typeof window !== 'undefined') window.dispatchEvent(new Event('tomcat-auth-changed'))
+  return user
+}
+export interface RememberedAccount extends CloudUser { expiresAt: string }
+export const rememberedAccounts = async (): Promise<RememberedAccount[]> => (await api('/auth/remembered')).json()
+export const forgetAccount = async (id: string) => { await api(`/auth/remembered/${encodeURIComponent(id)}`, { method: 'DELETE' }) }
+export const switchAccount = async (id: string): Promise<CloudUser> => {
+  const user = await (await api('/auth/switch', json('POST', { id }))).json()
   if (typeof window !== 'undefined') window.dispatchEvent(new Event('tomcat-auth-changed'))
   return user
 }
@@ -42,8 +50,8 @@ export const requestEmailCode = async (email: string, password: string): Promise
   (await api('/auth/register', json('POST', { email, password }))).json()
 export const verifyEmailCode = async (challengeId: string, code: string): Promise<{ token: string }> =>
   (await api('/auth/verify-email', json('POST', { challengeId, code }))).json()
-export const completeRegistration = async (token: string): Promise<CloudUser> => {
-  const user = await (await api('/auth/complete-registration', json('POST', { token }))).json()
+export const completeRegistration = async (token: string, rememberMe = false): Promise<CloudUser> => {
+  const user = await (await api('/auth/complete-registration', json('POST', { token, rememberMe }))).json()
   if (typeof window !== 'undefined') window.dispatchEvent(new Event('tomcat-auth-changed'))
   return user
 }

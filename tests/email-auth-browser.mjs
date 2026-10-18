@@ -23,7 +23,7 @@ await page.route('**/v1/**', async route => {
     return reply({ token: 'verified-token' })
   }
   if (path.endsWith('/auth/complete-registration')) {
-    assert.deepEqual(body, { token: 'verified-token' })
+    assert.deepEqual(body, { token: 'verified-token', rememberMe: false })
     user = { id: 'new-id', email: pendingEmail, emailVerified: true }
     return reply(user)
   }
@@ -54,6 +54,7 @@ try {
   await page.getByRole('button', { name: '登录 / 注册', exact: true }).click()
   await page.locator('#cloud-email').waitFor()
   assert.equal(await page.locator('#cloud-email').getAttribute('type'), 'email')
+  assert.equal(await page.getByRole('checkbox', { name: /在此浏览器记住此账号/ }).isChecked(), false)
   await capture('login-desktop')
   await page.setViewportSize({width:390,height:844}); await capture('login-mobile')
   await page.setViewportSize({width:1440,height:1000})

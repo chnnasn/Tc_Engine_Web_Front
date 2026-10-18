@@ -1,7 +1,7 @@
 import type { Topic } from './data'
 
 export interface Page<T> { items: T[]; total: number }
-export interface Reply { id: string; text: string; author: string; time: string }
+export interface Reply { id: string; text: string; author: string; time: string; ownerId?: string; avatarUrl?: string | null; isAdmin?: boolean }
 export async function siteApi<T>(path: string, method = 'GET', body?: unknown): Promise<T> {
   const response = await fetch(`/v1${path}`, {
     method, credentials: 'same-origin', signal: AbortSignal.timeout(30000),

@@ -1,7 +1,10 @@
 <script setup lang="ts">
 import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
-import { ArrowRight, ArrowLeft, Mail, LockKeyhole, Eye, EyeOff, Check, ShieldCheck, LogOut, FolderOpen, Cloud, RefreshCw, ChevronRight } from '@lucide/vue'
+import { ArrowRight, ArrowLeft, Mail, LockKeyhole, Eye, EyeOff, Check, ShieldCheck, LogOut, FolderOpen, Cloud, RefreshCw, ChevronRight, UserRound, Users } from '@lucide/vue'
 import AppModal from './AppModal.vue'
+import AppLink from './AppLink.vue'
+import UserIdentity from './UserIdentity.vue'
+import { rememberedAccounts, switchAccount, forgetAccount, type RememberedAccount } from '../engine/cloud'
 import { authenticate, forgotPassword, resetPassword, changePassword, requestEmailCode, verifyEmailCode, completeRegistration, currentUser, logout, listCloudProjects, listRevisions, createCloudProject, restoreCloudProject, CloudError, type CloudUser, type CloudProject, type CloudRevision, type RestoredProject } from '../engine/cloud'
 import type { CloudBinding } from '../engine/storage'
 import type { Project } from './data'
@@ -9,6 +12,22 @@ const props = defineProps<{ project?: Project; binding?: CloudBinding; allowRest
 const emit = defineEmits<{ close: []; attach: [binding: CloudBinding]; restored: [restored: RestoredProject] }>()
 const user = ref<CloudUser>()
 const password = ref('')
+const rememberMe = ref(false)
+const switchingAccount = ref(false)
+const savedAccounts = ref<RememberedAccount[]>([])
+async function loadSaved() {
+  try { const result = await rememberedAccounts(); savedAccounts.value = Array.isArray(result) ? result : [] }
+  catch { savedAccounts.value = [] }
+}
+function selectSaved(account: RememberedAccount) { void perform(async () => {
+  user.value = await switchAccount(account.id); switchingAccount.value = false; password.value = ''; selected.value = undefined; revisions.value = []
+  await refresh(); await loadSaved()
+}) }
+function removeSaved(account: RememberedAccount) { void perform(async () => {
+  await forgetAccount(account.id)
+  if (user.value?.id === account.id) { clearAccount(); window.dispatchEvent(new Event('tomcat-auth-expired')) }
+  await loadSaved()
+}) }
 const email = ref('')
 const code = ref('')
 const challengeId = ref('')
@@ -70,15 +89,15 @@ async function sendCode() {
 function signIn() { void perform(async () => {
   if (stage.value === 'verify') {
     if (!token.value) token.value = (await verifyEmailCode(challengeId.value, code.value)).token
-    user.value = await completeRegistration(token.value)
-    token.value = ''; password.value = ''; code.value = ''; notice.value = ''; stage.value = 'credentials'; await refresh()
+    user.value = await completeRegistration(token.value, rememberMe.value)
+    token.value = ''; password.value = ''; code.value = ''; notice.value = ''; stage.value = 'credentials'; switchingAccount.value = false; await refresh(); await loadSaved()
   } else if (mode.value === 'register') await sendCode()
   else {
-    try { user.value = await authenticate('login', email.value, password.value); if (!gone) await refresh() }
+    try { user.value = await authenticate('login', email.value, password.value, rememberMe.value); switchingAccount.value = false; selected.value = undefined; revisions.value = []; if (!gone) { await refresh(); await loadSaved() } }
     finally { password.value = '' }
   }
 }) }
-function signOut() { void perform(async () => { await logout(); mode.value = 'login'; stage.value = 'credentials'; notice.value = ''; token.value = ''; password.value = ''; user.value = undefined; projects.value = []; selected.value = undefined }) }
+function signOut() { void perform(async () => { await logout(); mode.value = 'login'; stage.value = 'credentials'; notice.value = ''; token.value = ''; password.value = ''; user.value = undefined; projects.value = []; selected.value = undefined; await loadSaved() }) }
 function create() { void perform(async () => {
   if (!props.project || !user.value) return
   const project = await createCloudProject(props.project)
@@ -93,6 +112,7 @@ function restore() { void perform(async () => {
 onMounted(() => { void perform(async () => {
   try { user.value = await currentUser(); await refresh() }
   catch (cause) { if (!(cause instanceof CloudError && cause.status === 401)) throw cause }
+  await loadSaved()
 }) })
 onBeforeUnmount(() => { gone = true; window.clearInterval(ticker) })
 const showPassword = ref(false)
@@ -100,11 +120,11 @@ const now = ref(Date.now())
 const ticker = window.setInterval(() => { now.value = Date.now() }, 1000)
 const resendSeconds = computed(() => Math.max(0, Math.ceil((resendAt.value - now.value) / 1000)))
 const resetSeconds = computed(() => Math.max(0, Math.ceil((resetResendAt.value - now.value) / 1000)))
-const title = computed(() => passwordMode.value === 'change' ? '更新你的密码' : passwordMode.value !== 'none' ? '找回你的账号' : user.value ? '我的账号' : stage.value === 'verify' ? '检查你的收件箱' : mode.value === 'login' ? '欢迎回到创作现场。' : '从一个想法开始。')
+const title = computed(() => passwordMode.value === 'change' ? '更新你的密码' : passwordMode.value !== 'none' ? '找回你的账号' : switchingAccount.value ? '选择一个账号' : user.value ? '我的账号' : stage.value === 'verify' ? '检查你的收件箱' : mode.value === 'login' ? '欢迎回到创作现场。' : '从一个想法开始。')
 </script>
 <template>
   <AppModal :title="title" wide class="account-dialog" @close="!busy && emit('close')">
-    <div class="account-layout" :class="{ 'account-layout-signed': user && passwordMode === 'none' }">
+    <div class="account-layout" :class="{ 'account-layout-signed': user && !switchingAccount && passwordMode === 'none' }">
       <aside class="account-story" aria-hidden="true">
         <div class="account-wordmark"><img src="/HubLogo.ico" alt="" />tomcat<span>.</span></div>
         <div class="account-story-copy"><span class="account-eyebrow">A LITTLE SPACE FOR BIG IDEAS</span><h2>好玩的世界，<br />从你开始。</h2><p>收好灵感，搭起场景。<br />让下一个小世界慢慢长出来。</p></div>
@@ -135,13 +155,15 @@ const title = computed(() => passwordMode.value === 'change' ? '更新你的密�
           <button type="button" class="account-back" :disabled="busy" @click="openPassword('none')"><ArrowLeft :size="15" />{{ user ? '返回账号' : '返回登录' }}</button>
         </form>
 
-        <form v-else-if="!user" class="account-form" @submit.prevent="signIn">
+        <form v-else-if="!user || switchingAccount" class="account-form" @submit.prevent="signIn">
           <template v-if="stage === 'credentials'">
+            <section v-if="mode === 'login' && savedAccounts.length" class="remembered-accounts" aria-label="选择已保存账号"><h3>选择已保存的账号</h3><div v-for="item in savedAccounts" :key="item.id" class="remembered-account"><button type="button" :disabled="busy" :aria-label="`登录已保存账号 ${item.email}`" @click="selectSaved(item)"><span class="saved-avatar"><img v-if="item.avatarUrl" :src="item.avatarUrl" alt="" /><span v-else>{{ (item.displayName || item.email).slice(0, 1) }}</span></span><span><strong>{{ item.displayName || item.email }}</strong><small>{{ item.email }}</small></span></button><button type="button" class="account-text-link" :disabled="busy" :aria-label="`移除已保存账号 ${item.email}`" @click="removeSaved(item)">移除</button></div><p class="account-hint">有效期内点选即可登录，最多保存 8 个账号。</p></section>
             <div class="account-tabs" aria-label="选择登录方式"><button type="button" aria-label="切换到登录" :aria-pressed="mode === 'login'" :class="{ selected: mode === 'login' }" :disabled="busy" @click="mode !== 'login' && switchMode()">登录</button><button type="button" aria-label="切换到注册" :aria-pressed="mode === 'register'" :class="{ selected: mode === 'register' }" :disabled="busy" @click="mode !== 'register' && switchMode()">创建账号</button></div>
             <label for="cloud-email">邮箱地址</label><div class="account-input"><Mail :size="18" /><input id="cloud-email" v-model="email" type="email" autocomplete="email" placeholder="you@example.com" required maxlength="254" :disabled="busy" /></div>
             <div class="account-label-row"><label for="cloud-password">密码</label><button v-if="mode === 'login'" type="button" class="account-text-link" :disabled="busy" @click="openPassword('forgot')">忘记密码</button></div>
             <div class="account-input"><LockKeyhole :size="18" /><input id="cloud-password" v-model="password" :type="showPassword ? 'text' : 'password'" :autocomplete="mode === 'login' ? 'current-password' : 'new-password'" :placeholder="mode === 'login' ? '输入你的密码' : '至少 12 个字符'" required :minlength="mode === 'register' ? 12 : undefined" maxlength="128" :disabled="busy" /><button type="button" :aria-label="showPassword ? '隐藏密码' : '显示密码'" :aria-pressed="showPassword" @click="showPassword = !showPassword"><EyeOff v-if="showPassword" :size="17" /><Eye v-else :size="17" /></button></div>
             <p v-if="mode === 'register'" class="account-hint">我们会发送一封验证邮件，验证后即可开始创作。</p>
+            <label class="remember-account"><input v-model="rememberMe" type="checkbox" :disabled="busy" />在此浏览器记住此账号，30 天内免重复登录</label>
           </template>
           <template v-else>
             <div class="verification-address"><Mail :size="18" /><span>{{ email }}</span></div>
@@ -154,7 +176,9 @@ const title = computed(() => passwordMode.value === 'change' ? '更新你的密�
         </form>
 
         <div v-else class="account-dashboard">
-          <div class="account-identity"><span class="account-monogram">{{ user.email.slice(0, 1).toUpperCase() }}</span><div><strong>{{ user.email }}</strong><span><span class="verified-dot"></span>邮箱已验证</span></div></div>
+          <div class="account-identity"><UserIdentity :id="user.id" :name="user.displayName || user.email" :avatar-url="user.avatarUrl" :is-admin="user.isAdmin" @click="emit('close')" /></div>
+          <AppLink href="/profile" class="account-setting" @click="emit('close')"><span class="setting-icon"><UserRound :size="19" /></span><span><strong>个人主页与资料</strong><small>上传头像，修改昵称</small></span><ChevronRight :size="18" /></AppLink>
+          <button class="account-setting" :disabled="busy" @click="switchingAccount = true; mode = 'login'; stage = 'credentials'; rememberMe = false; email = ''; password = ''; loadSaved()"><span class="setting-icon"><Users :size="19" /></span><span><strong>切换账号</strong><small>选择已保存账号或使用其他账号登录</small></span><ChevronRight :size="18" /></button>
           <div class="account-section-label">账号与安全</div>
           <button class="account-setting" aria-label="修改密码" :disabled="busy" @click="openPassword('change')"><span class="setting-icon"><LockKeyhole :size="19" /></span><span><strong>登录密码</strong><small>更新密码，保护你的创作空间</small></span><ChevronRight :size="18" /></button>
           <template v-if="project"><div class="account-project-card"><FolderOpen :size="22" /><h3>{{ project.name }}</h3><p>{{ binding ? '项目已关联云端，编辑器中可随时保存。' : '关联云端，保存场景、配置和资源。' }}</p><button class="account-submit" :disabled="busy" @click="create">{{ binding ? '另建云端项目' : '创建云端项目并关联' }}<ArrowRight :size="17" /></button></div></template>
@@ -171,3 +195,6 @@ const title = computed(() => passwordMode.value === 'change' ? '更新你的密�
   </AppModal>
 </template>
 <style src="./account.css"></style>
+<style scoped>
+.remember-account{display:flex!important;align-items:center;gap:9px;font-size:12px!important;line-height:1.8;cursor:pointer}.remember-account input{width:16px;height:16px;flex-shrink:0;accent-color:#a65036}.remembered-accounts{padding:16px;background:#f1eee7;border:1px solid #e0d9ce;border-radius:10px;max-height:300px;overflow:auto}.remembered-accounts h3{font-size:13px;margin:0 0 10px}.remembered-account{display:flex;gap:9px;align-items:center;border-bottom:1px solid #e1dace;padding:7px 0}.remembered-account>button:first-child{display:flex;align-items:center;gap:10px;flex:1;min-width:0;text-align:left;background:none;border:0;padding:6px}.remembered-account strong,.remembered-account small{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:220px}.remembered-account strong{font-size:12px}.remembered-account small{font-size:11px;color:#827769;margin-top:4px}.saved-avatar{display:grid;place-items:center;width:34px;height:34px;flex-shrink:0;border-radius:50%;background:#e1e8d8;overflow:hidden}.saved-avatar img{width:100%;height:100%;object-fit:cover}@media(max-width:540px){.remembered-account strong,.remembered-account small{max-width:160px}}
+</style>

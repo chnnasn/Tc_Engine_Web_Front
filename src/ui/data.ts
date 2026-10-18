@@ -49,7 +49,7 @@ export const initialProjects: Project[] = [
   { id: 'my-puzzle', name: '碰撞练习', template: '2D', image: '/samples/physics-lab/cover.png', status: 'published', updated: '昨天 18:06', description: '试着从另一个角度看世界。' },
   { id: 'my-first-game', name: '我的第一个游戏', template: '空白', image: '', status: 'draft', updated: '9 月 8 日', description: '从一个想法开始。' },
 ]
-export type Topic = { id: string; title: string; category: string; author: string; avatar: string; color: string; time: string; replies: number; content: string; pinned?: boolean }
+export type Topic = { id: string; title: string; category: string; author: string; avatar: string; color: string; time: string; replies: number; content: string; pinned?: boolean; ownerId?: string; avatarUrl?: string | null; isAdmin?: boolean }
 export const initialTopics: Topic[] = [
   { id: 'welcome', title: '欢迎来到 TomCat，聊聊你想做的第一个游戏', category: '综合讨论', author: 'TomCat', avatar: 'T', color: '#e5ece4', time: '2 小时前', replies: 24, pinned: true, content: '每个游戏都从一个小小的想法开始。也许是一段想讲的故事，也许是一个突然冒出的玩法，或者只是想造一个可以四处走走的世界。\n\n这里是大家交流创作的地方。欢迎分享你的想法，也欢迎从试玩和留言开始。\n\n如果时间、技术都不是问题，你最想做一个什么样的游戏？' },
   { id: 'forest-devlog', title: '《物理实验室》开发手记：让森林里多一点生活的痕迹', category: '开发日志', author: '木木', avatar: '木', color: '#ece5d9', time: '36 分钟前', replies: 12, content: '这周没有添加新关卡，而是回头补了一些很小的细节：门口没有收走的鞋子，晾衣绳上的围巾，还有桥边那块总是被踩松的木板。\n\n很有意思的是，这些没有直接参与玩法的物件，反而让这个地方更像有人生活。接下来想试试让居民有自己的小日程。\n\n你们会注意游戏里这些不起眼的细节吗？' },

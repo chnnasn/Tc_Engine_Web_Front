@@ -23,11 +23,13 @@ import { currentUser, createCloudProject, CloudError, type CloudUser } from '../
 import PlayPage from './PlayPage.vue'
 import TopicDetailPage from './TopicDetailPage.vue'
 import AdminPage from './AdminPage.vue'
+import { useActivity } from './activity'
 
 const path = ref(normalizePath(location.pathname))
 const editor = ref<InstanceType<typeof EditorPage>>()
 let navigationPending = false
 const account = ref<CloudUser>()
+useActivity(account)
 const accountReady = ref(false)
 const creating = ref(false)
 const accountScope = computed(() => account.value?.id || 'guest')
@@ -84,6 +86,7 @@ let toastTimer: number | undefined
 
 const game = computed(() => games.find(item => path.value === `/games/${item.id}`))
 const topicId = computed(() => /^\/community\/[a-zA-Z0-9_-]+$/.test(path.value) ? path.value.slice('/community/'.length) : undefined)
+const profileId = computed(() => /^\/users\/[a-zA-Z0-9_-]+$/.test(path.value) ? path.value.slice('/users/'.length) : undefined)
 const previewProject = computed(() => projects.value.find(item => item.status === 'published' && path.value === `/preview/${item.id}`))
 const playId = computed(() => path.value.startsWith('/play/') ? path.value.slice('/play/'.length) || undefined : undefined)
 const editorProject = computed(() => projects.value.find(item => path.value === `/editor/${item.id}`) || (path.value === '/editor' ? projects.value[0] : undefined))
@@ -178,7 +181,7 @@ watch(toast, value => {
 
 watch(path, async () => {
   const title = editorProject.value?.name || previewProject.value?.name || game.value?.title ||
-    (path.value === '/admin' ? '管理后台' : path.value === '/projects' ? '我的项目' : path.value.startsWith('/community') ? '创作者社区' : path.value === '/profile' ? '我的收藏' : path.value === '/play' || playId.value ? '玩家作品' : '发现游戏')
+    (path.value === '/admin' ? '管理后台' : path.value === '/projects' ? '我的项目' : path.value.startsWith('/community') ? '创作者社区' : path.value === '/profile' || profileId.value ? '个人主页' : path.value === '/play' || playId.value ? '玩家作品' : '发现游戏')
   document.title = `${title} · TomCat`
   await nextTick()
   const main = document.getElementById('main-content')
@@ -219,11 +222,11 @@ onBeforeUnmount(() => {
       <div class="header-actions">
         <button class="button button-primary header-create" @click="openCreate"><Plus :size="16" />新建项目</button>
         <div ref="accountArea" class="account-area">
-          <button ref="accountTrigger" class="account-trigger" aria-label="打开我的账户" aria-controls="account-popover" :aria-expanded="accountOpen" @click="toggleAccount"><span class="avatar"><template v-if="account">{{ account.email.slice(0, 1).toUpperCase() }}</template><UserRound v-else :size="17" /></span><ChevronDown :size="13" /></button>
+          <button ref="accountTrigger" class="account-trigger" aria-label="打开我的账户" aria-controls="account-popover" :aria-expanded="accountOpen" @click="toggleAccount"><span class="avatar"><template v-if="account"><img v-if="account.avatarUrl" :src="account.avatarUrl" alt="" class="account-avatar-image" /><template v-else>{{ (account.displayName || account.email).slice(0, 1).toUpperCase() }}</template></template><UserRound v-else :size="17" /></span><ChevronDown :size="13" /></button>
           <div v-if="accountOpen" id="account-popover" class="account-menu" aria-label="我的账户">
-            <div class="menu-identity"><span class="menu-avatar"><template v-if="account">{{ account.email.slice(0, 1).toUpperCase() }}</template><UserRound v-else :size="21" /></span><div><span class="menu-caption">{{ account ? '个人账号' : '欢迎来到 TomCat' }}</span><strong :title="account?.email">{{ account ? account.email : '开始你的创作之旅' }}</strong><span class="menu-status">{{ accountStatus }}</span></div></div>
+            <div class="menu-identity"><span class="menu-avatar"><template v-if="account"><img v-if="account.avatarUrl" :src="account.avatarUrl" alt="" class="account-avatar-image" /><template v-else>{{ (account.displayName || account.email).slice(0, 1).toUpperCase() }}</template></template><UserRound v-else :size="21" /></span><div><span class="menu-caption">{{ account ? (account.isAdmin ? '管理员' : '普通用户') : '欢迎来到 TomCat' }}</span><strong :title="account?.email">{{ account ? (account.displayName || account.email) : '开始你的创作之旅' }}</strong><span class="menu-status">{{ accountStatus }}</span></div></div>
             <div class="menu-group"><button class="menu-row" :aria-label="account ? '管理云端账号' : '登录 / 注册'" @click="cloudAccountOpen = true; accountOpen = false"><Settings2 :size="18" /><span><strong>{{ account ? '管理云端账号' : '登录 / 注册' }}</strong><small>{{ account ? '邮箱、安全与登录设置' : '保存项目，同步你的创作' }}</small></span><ChevronRight :size="15" /></button></div>
-            <div class="menu-group"><AppLink class="menu-row" href="/projects"><FolderOpen :size="18" /><span><strong>项目工作台</strong><small>继续未完成的想法</small></span><ChevronRight :size="15" /></AppLink><AppLink class="menu-row" href="/profile"><Bookmark :size="18" /><span><strong>我的收藏</strong><small>随时回到喜欢的世界</small></span><ChevronRight :size="15" /></AppLink></div>
+            <div class="menu-group"><AppLink class="menu-row" href="/projects"><FolderOpen :size="18" /><span><strong>项目工作台</strong><small>继续未完成的想法</small></span><ChevronRight :size="15" /></AppLink><AppLink class="menu-row" href="/profile"><Bookmark :size="18" /><span><strong>个人主页</strong><small>头像、昵称与我的收藏</small></span><ChevronRight :size="15" /></AppLink></div>
             <div v-if="account?.isAdmin" class="menu-group"><AppLink class="menu-row" href="/admin"><Settings2 :size="18" /><span><strong>管理后台</strong><small>数据概览与社区维护</small></span><ChevronRight :size="15" /></AppLink></div>
             <div class="menu-footer"><Cloud :size="13" /><span>{{ account ? '你的专属创作空间' : '登录后开启云端工作空间' }}</span><span class="menu-footer-mark">TC</span></div>
           </div>
@@ -246,7 +249,8 @@ onBeforeUnmount(() => {
   <ProjectsPage :key="accountScope" v-else-if="path === '/projects'" :projects="projects" @update:projects="projects = $event" @create="openCreate" @notify="notify" />
   <CommunityPage v-else-if="path === '/community'" @notify="notify" />
   <AdminPage v-else-if="path === '/admin'" :key="accountScope" @notify="notify" />
-  <ProfilePage v-else-if="path === '/profile'" :saved="saved" @toggle-save="toggleSave" />
+  <ProfilePage v-else-if="path === '/profile'" :key="accountScope" :saved="saved" @toggle-save="toggleSave" @notify="notify" />
+  <ProfilePage v-else-if="profileId" :key="profileId" :profile-id="profileId" :saved="saved" @toggle-save="toggleSave" @notify="notify" />
   <PublishedPreviewPage v-else-if="previewProject" :key="previewProject.id" :project="previewProject" />
   <GameDetailPage v-else-if="game" :key="game.id" :game="game" :saved="saved.includes(game.id)" @toggle-save="toggleSave(game.id)" @notify="notify" />
   <ArcadePage v-else-if="path === '/play'" />

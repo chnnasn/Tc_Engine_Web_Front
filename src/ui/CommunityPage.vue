@@ -8,6 +8,7 @@ import { useNavigation } from './navigation'
 import AppLink from './AppLink.vue'
 import AppModal from './AppModal.vue'
 import EmptyState from './EmptyState.vue'
+import UserIdentity from './UserIdentity.vue'
 import SearchField from './SearchField.vue'
 
 const { user, requireLogin } = useAccess()
@@ -63,7 +64,7 @@ async function publish() {
         <div class="section-index"><span>THE CONVERSATION</span><span>{{ total }} 个话题 · 创作手记</span></div>
         <div class="community-filter"><div class="filter-tabs"><button v-for="item in topicCategories" :key="item" :class="{ active: category === item }" :aria-pressed="category === item" @click="category = item">{{ item }}</button></div><SearchField v-model="query" placeholder="搜索话题或创作者" /></div>
         <div class="topics-list">
-          <AppLink v-for="topic in topics" :key="topic.id" class="topic-row" :href="`/community/${topic.id}`"><span class="topic-avatar" :style="{ background: topic.color }">{{ topic.avatar }}</span><div class="topic-main"><h3><Pin v-if="topic.pinned" :size="13" class="pin-icon" />{{ topic.title }}</h3><div class="topic-meta"><span class="topic-category">{{ topic.category }}</span><span>{{ topic.author }}</span><span>{{ communityTime(topic.time) }}</span></div></div><span class="topic-replies"><MessageSquare :size="16" /><span>{{ topic.replies }}</span></span><ChevronRight :size="16" class="topic-chevron" /></AppLink>
+          <div v-for="topic in topics" :key="topic.id" class="topic-row"><UserIdentity :id="topic.ownerId" :name="topic.author" :avatar-url="topic.avatarUrl" :is-admin="topic.isAdmin" avatar-only /><div class="topic-main"><h3><AppLink :href="`/community/${topic.id}`"><Pin v-if="topic.pinned" :size="13" class="pin-icon" />{{ topic.title }}</AppLink></h3><div class="topic-meta"><span class="topic-category">{{ topic.category }}</span><UserIdentity :id="topic.ownerId" :name="topic.author" :is-admin="topic.isAdmin" :show-avatar="false" /><span>{{ communityTime(topic.time) }}</span></div></div><AppLink class="topic-replies" :href="`/community/${topic.id}`"><MessageSquare :size="16" /><span>{{ topic.replies }}</span><ChevronRight :size="16" class="topic-chevron" /></AppLink></div>
           <p v-if="loading" role="status">正在加载话题…</p>
           <EmptyState v-if="!loading && !error && !topics.length" title="还没有找到这个话题" text="换个关键词，或发起一个新的讨论。" />
         </div>
