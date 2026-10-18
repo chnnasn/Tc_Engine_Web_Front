@@ -52,7 +52,7 @@ async function submitComment() {
           <a v-if="game.sourceUrl" class="button sample-download" :href="game.sourceUrl" download>下载示例工程</a>
           <span class="play-footnote">{{ game.controls ? '桌面键盘 / 鼠标 · 首次加载请稍候' : '点击即可游玩，首次加载请稍候' }}</span><div class="play-stats"><span><Gamepad2 :size="15" />{{ game.category }}示例</span><span>浏览器直接体验</span></div>
         </div>
-        <div class="creator-panel"><span class="creator-avatar"><Gamepad2 :size="23" /></span><div><span>内置内容</span><strong>{{ game.packageUrl ? 'Tc 引擎复原示例' : '引擎示例体验' }}</strong></div><p>用于体验引擎与游玩流程，<br />不计入玩家发布作品。</p><TextLink v-if="!game.packageUrl" :href="game.id === 'puzzle' ? '/community/first-puzzle' : game.id === 'desert' ? '/community/weekend' : '/community/forest-devlog'">查看示例话题</TextLink></div>
+        <div class="creator-panel"><span class="creator-avatar"><Gamepad2 :size="23" /></span><div><span>内置内容</span><strong>{{ game.packageUrl ? 'Tc 引擎复原示例' : '引擎示例体验' }}</strong></div><p>用于体验引擎与游玩流程，<br />不计入玩家发布作品。</p><TextLink v-if="!game.packageUrl" href="/community">前往创作者社区</TextLink></div>
         <div class="detail-facts"><div><span>游玩方式</span><span>{{ game.controls ? '桌面浏览器 · 键鼠' : '浏览器' }}</span></div><div><span>支持语言</span><span>简体中文</span></div><div><span>作品状态</span><span>示例作品</span></div></div>
       </aside>
     </div>

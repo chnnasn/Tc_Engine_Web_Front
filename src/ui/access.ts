@@ -14,5 +14,5 @@ export function useAccess() {
 }
 
 export function requiresAccount(path: string) {
-  return /^\/(editor|projects|profile|preview)(\/|$)/.test(path)
+  return /^\/(editor|projects|profile|preview|admin)(\/|$)/.test(path)
 }

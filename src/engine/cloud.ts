@@ -1,6 +1,6 @@
 import { assertDocument, compatibleEngineCommit, validFilePath, requiredFiles, type CloudBinding, type EngineDocument } from './storage.ts'
 
-export interface CloudUser { id: string; email: string; emailVerified: boolean }
+export interface CloudUser { id: string; email: string; emailVerified: boolean; isAdmin?: boolean }
 export interface CloudProject { id: string; name: string; description: string; template: '2D' | '空白'; currentRevisionId: string | null; etag: string | null }
 export interface AiCheckpoint { runId: string; phase: 'start' | 'end'; sceneVersion: string }
 export interface CloudRevision { revisionId: string; etag: string; createdAt: string; aiCheckpoint?: AiCheckpoint }

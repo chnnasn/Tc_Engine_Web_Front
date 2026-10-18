@@ -8,6 +8,8 @@ let user
 let projectAccess = true
 let cloudReads = 0
 let engineLoads = 0
+const topic = { id: 'welcome', title: '社区欢迎话题', content: '欢迎参与讨论', category: '综合讨论', author: '创作者', avatar: 'T', color: '#e5ece4', time: '2026-10-18T00:00:00Z', replies: 0 }
+const replies = []
 const errors = []
 page.on('pageerror', error => errors.push(error.message))
 const project = { id: 'owned', name: '账号 A 的项目', description: '', template: '2D', image: '', status: 'draft', updated: '今天' }
@@ -19,6 +21,17 @@ await page.route('**/v1/**', async route => {
   const reply = (body, status = 200) => route.fulfill({ status, json: body })
   if (path === '/v1/auth/login') { user = { id: 'alice', email: 'alice@example.com', emailVerified: true }; return reply(user) }
   if (path === '/v1/auth/me') return reply(user || {}, user ? 200 : 401)
+  if (path === '/v1/community/topics') return reply({ total: 1, items: [topic] })
+  if (path === '/v1/community/topics/welcome') return reply(topic)
+  if (path === '/v1/community/topics/welcome/replies') {
+    if (route.request().method() === 'POST') {
+      if (!user) return reply({}, 401)
+      const item = { id: 'reply', text: route.request().postDataJSON().content, author: '创作者', time: topic.time }
+      replies.push(item)
+      return reply(item, 201)
+    }
+    return reply({ total: replies.length, items: replies })
+  }
   if (!user) return reply({}, 401)
   if (path === '/v1/auth/logout') { user = undefined; return reply({}) }
   if (path === '/v1/projects') {

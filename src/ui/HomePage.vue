@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import { ArrowRight, MessageSquare, Sparkles } from '@lucide/vue'
-import { games, initialTopics } from './data'
+import { games, type Topic } from './data'
+import { listTopics } from './community-api'
 import AppLink from './AppLink.vue'
 import EmptyState from './EmptyState.vue'
 import GameCard from './GameCard.vue'
@@ -12,6 +13,12 @@ import HomeIntro from './HomeIntro.vue'
 import FeaturedSamples from './FeaturedSamples.vue'
 
 const props = defineProps<{ saved: string[] }>()
+const topics = ref<Topic[]>([])
+const topicError = ref(false)
+onMounted(async () => {
+  try { topics.value = (await listTopics()).items.slice(0, 3) }
+  catch { topicError.value = true }
+})
 const emit = defineEmits<{ toggleSave: [id: string]; create: [] }>()
 const category = ref('全部示例')
 const query = ref('')
@@ -50,8 +57,8 @@ const filtered = computed(() => {
 
     <section class="home-bottom">
       <div class="community-preview">
-        <div class="section-heading"><h2>社区界面演示</h2><TextLink href="/community">去社区逛逛</TextLink></div>
-        <div class="compact-topics"><AppLink v-for="topic in initialTopics.slice(1, 4)" :key="topic.id" :href="`/community/${topic.id}`" class="compact-topic"><span class="topic-category">{{ topic.category }}</span><span class="compact-topic-title">{{ topic.title }}</span><span class="reply-count"><MessageSquare :size="14" />{{ topic.replies }}</span></AppLink></div>
+        <div class="section-heading"><h2>创作者社区</h2><TextLink href="/community">去社区逛逛</TextLink></div>
+        <div class="compact-topics"><AppLink v-for="topic in topics" :key="topic.id" :href="`/community/${topic.id}`" class="compact-topic"><span class="topic-category">{{ topic.category }}</span><span class="compact-topic-title">{{ topic.title }}</span><span class="reply-count"><MessageSquare :size="14" />{{ topic.replies }}</span></AppLink><p v-if="!topics.length" class="muted-small">{{ topicError ? '社区暂时无法加载，点击上方链接重试。' : '分享你的创作，发起第一个话题。' }}</p></div>
       </div>
       <aside class="create-aside"><div class="aside-icon"><Sparkles :size="21" :stroke-width="1.5" /></div><h3>不止游玩，也来创造。</h3><p>给那个还没完成的想法，<br />一个开始的地方。</p><button class="text-link" @click="emit('create')">创建我的第一个项目<ArrowRight :size="17" /></button></aside>
     </section>
