@@ -4,8 +4,7 @@ permissions:
   contents: read
 jobs:
   build:
-    # Match the locked engine's Managed Web workflow. Its include paths still
-    # require Windows casing; the Railway cooker has a separate Linux patch.
+    # Match the locked engine's Managed Web workflow and .NET toolchain.
     runs-on: windows-latest
     timeout-minutes: 45
     defaults:
@@ -80,3 +79,17 @@ jobs:
         with:
           name: tomcat-web-with-engine
           path: dist
+      - name: Package verified engine for Netlify release
+        run: |
+          $commit = (Get-Content engine.lock.json | ConvertFrom-Json).commit
+          $short = $commit.Substring(0, 8)
+          node scripts/prepare-engine-artifact.mjs "public/engine/$commit"
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          tar -czf ".engine/tomcat-web-$short.tar.gz" -C "public/engine/$commit" .
+          exit $LASTEXITCODE
+      - uses: actions/upload-artifact@v4
+        with:
+          name: tomcat-engine-release
+          include-hidden-files: true
+          path: .engine/tomcat-web-*.tar.gz
+          if-no-files-found: error

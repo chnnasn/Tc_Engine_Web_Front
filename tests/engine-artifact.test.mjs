@@ -7,7 +7,8 @@ import { prepareEngineArtifact } from '../scripts/prepare-engine-artifact.mjs'
 import { manifestPayload, sha256, validateManifest } from '../public/engine-cache-core.mjs'
 
 const lock = JSON.parse(readFileSync(new URL('../engine.lock.json', import.meta.url)))
-async function fixture(t, commit = lock.artifactReuse.sourceCommit) {
+const rewriteLock = { ...lock, commit: 'b'.repeat(40), artifactReuse: { sourceCommit: 'a'.repeat(40), targetCommit: 'b'.repeat(40), equivalentCommit: 'c'.repeat(40), sourceTree: 'd'.repeat(40) } }
+async function fixture(t, commit = lock.commit) {
   const directory = mkdtempSync(join(tmpdir(), 'tomcat-artifact-'))
   t.after(() => rmSync(directory, { recursive: true, force: true }))
   const files = []
@@ -25,15 +26,15 @@ async function fixture(t, commit = lock.artifactReuse.sourceCommit) {
 }
 
 test('history rewrite verifies bytes, retains build provenance and is idempotent', async t => {
-  const { directory, manifest } = await fixture(t)
-  const result = await prepareEngineArtifact(directory, lock)
-  await validateManifest(result, lock.commit)
+  const { directory, manifest } = await fixture(t, rewriteLock.artifactReuse.sourceCommit)
+  const result = await prepareEngineArtifact(directory, rewriteLock)
+  await validateManifest(result, rewriteLock.commit)
   assert.equal(result.provenance.builtFromCommit, manifest.commit)
   assert.equal(result.provenance.originalManifestHash, manifest.hash)
   assert.equal(result.builtAt, manifest.builtAt)
   assert.deepEqual(result.files, manifest.files)
   assert.deepEqual(result.legacyCommits, lock.legacyCommits)
-  assert.deepEqual(await prepareEngineArtifact(directory, lock), result)
+  assert.deepEqual(await prepareEngineArtifact(directory, rewriteLock), result)
 })
 
 test('current builds verify without inventing rewrite provenance', async t => {
@@ -53,8 +54,10 @@ test('corrupt or incomplete bundles fail before the manifest changes', async t =
 })
 
 test('project compatibility never grants artifact equivalence; future pins require new evidence', async t => {
-  const { directory } = await fixture(t, lock.legacyCommits.at(-1))
-  await assert.rejects(prepareEngineArtifact(directory, lock), /explicit history rewrite/)
+  for (const commit of lock.legacyCommits) {
+    const { directory } = await fixture(t, commit)
+    await assert.rejects(prepareEngineArtifact(directory, lock), /explicit history rewrite/)
+  }
   const original = await fixture(t)
   await assert.rejects(prepareEngineArtifact(original.directory, { ...lock, commit: 'a'.repeat(40) }), /explicit history rewrite/)
   await assert.rejects(prepareEngineArtifact(original.directory, { ...lock, protocol: 'other' }), /explicit history rewrite/)

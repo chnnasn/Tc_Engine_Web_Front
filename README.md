@@ -46,7 +46,7 @@ Vue 3 创作工作台，使用固定版本的上游 TomCat Web Editor / Player�
 
 ## 开发与构建
 
-当前浏览器引擎源码与 Railway 编译打包器统一锁定 `26b6b11a9211ad6380c754a6fada2b4f508a918f`。上游将原 `b04d81d8` 重写为 Git tree 完全相同的 `65f38cfb`，随后仅整理文档；本次没有运行时代码或 API 升级。已有纹理采样、GPU 纹理就绪查询、source-over alpha、WebAudio 和脚本优化均保留，继续使用 Managed API v6、TCPAK v8、Scene v11、Project v4。明确兼容的旧提交以 `engine.lock.json` 的 `legacyCommits` 为准；未知提交和旧 API v5 继续拒绝，历史云端数据保留。Netlify 复用原发布包时逐文件校验 SHA-256，并在清单中保留实际构建来源；后续升级须重新核对 `artifactReuse` 与发布包。
+当前浏览器引擎与 Railway 编译打包器统一锁定 `29ffd832f5468e45db06af868e3d989156c5613f`。本次同步上游 Linux 主线集成及共享代码的可移植性修复，Managed API v6、TCPAK v8、Scene v11、Project v4 和 `tomcat.web.v1` 保持不变。此前已支持的项目提交继续列入 `engine.lock.json` 的 `legacyCommits`；未知提交和旧 API v5 继续拒绝。此次包含源码变化，已移除旧发布包的哈希映射复用配置，必须从当前提交重新构建并发布 `web-engine-29ffd832/tomcat-web-29ffd832.tar.gz`。Netlify 会核对版本并逐文件校验 SHA-256。
 
 托管 Web 构建支持分帧场景加载、文字塑形、虚拟列表、2D 光照与后处理。浏览器 AudioSource 通过 WebAudio 播放驻留音频，首次用户操作后解锁声音，并在退出运行时关闭音频上下文；流式音频仍不支持。动态 C# 脚本的常用 BCL 实现与类型转发元数据会保留，多字体在浏览器单线程中依次完成准备和上传。原生 DLL 模块、浏览器存档持久化和完整 ICU/IME 的既有限制仍然适用。
 
@@ -66,7 +66,7 @@ npm run engine:build
 npm run dev
 ```
 
-`engine.lock.json` 固定引擎提交 `26b6b11a9211ad6380c754a6fada2b4f508a918f`，并记录 `kind: managed`。构建脚本检出到 `.engine/source`、初始化四个依赖子模块，然后用 **托管（C#）管线** 生成引擎产物：先用 Emscripten 编出 C++ 静态库（`tomcat_managed_web_entrypoints`、`tc_player_core`、`tc_yaml`、`box2d`），再 `dotnet publish -r browser-wasm` 发布 `Managed/TomCat.WebHost`——**最终 `.wasm` 由 .NET 运行时拥有**，C++ 引擎归档被链接进同一块 WebAssembly 内存，原生与托管共享函数表。最后把完整的 `main.js`、`_framework/` 与 C# 编译引用集 `refs/` 复制到 `public/engine/<commit>/`。没有本地 C++ 移植补丁。
+`engine.lock.json` 固定引擎提交 `29ffd832f5468e45db06af868e3d989156c5613f`，并记录 `kind: managed`。构建脚本检出到 `.engine/source`、初始化四个依赖子模块，然后用 **托管（C#）管线** 生成引擎产物：先用 Emscripten 编出 C++ 静态库（`tomcat_managed_web_entrypoints`、`tc_player_core`、`tc_yaml`、`box2d`），再 `dotnet publish -r browser-wasm` 发布 `Managed/TomCat.WebHost`——**最终 `.wasm` 由 .NET 运行时拥有**，C++ 引擎归档被链接进同一块 WebAssembly 内存，原生与托管共享函数表。最后把完整的 `main.js`、`_framework/` 与 C# 编译引用集 `refs/` 复制到 `public/engine/<commit>/`。没有本地 C++ 移植补丁。
 
 托管模块是单线程构建（`WasmEnableThreads=false`），产物中不含 `SharedArrayBuffer`/pthread，因此**不再要求跨源隔离**；`vite.config.ts` 与 `netlify.toml` 仍保留 COOP/COEP 以便将来启用线程构建。
 
