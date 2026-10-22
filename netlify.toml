@@ -4,6 +4,8 @@
 
 [build.environment]
   NODE_VERSION = "22"
+  # Same runtime source after upstream history rewrite; verified byte-by-byte
+  # and retains builtFromCommit provenance by prepare-engine-artifact.mjs.
   ENGINE_ARTIFACT_URL = "https://github.com/chnnasn/Tc_Engine_Web_Front/releases/download/web-engine-b04d81d8/tomcat-web-b04d81d8.tar.gz"
 
 [[headers]]

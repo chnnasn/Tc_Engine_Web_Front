@@ -46,7 +46,7 @@ Vue 3 创作工作台，使用固定版本的上游 TomCat Web Editor / Player�
 
 ## 开发与构建
 
-当前浏览器引擎与 Railway 编译打包器统一锁定 `c2848721`（上游 [PR #36](https://github.com/chnnasn/TomCat_Engine/pull/36)，包含 [PR #31](https://github.com/chnnasn/TomCat_Engine/pull/31)、[PR #33](https://github.com/chnnasn/TomCat_Engine/pull/33)）。该版本优化频繁创建/销毁实体、延迟命令投影、名称查重、Web 渲染状态查询及字体源复用；保留已有 WebAudio、动态脚本 BCL、多字体、Return 辅助脚本烘焙及带符号变换能力，继续使用 Managed API v6、TCPAK v8、Scene v11、Project v4。`9a0ccad79bb4ec33225bd8210fe9b47438bb06bc`、`5734c56ae05241b01a684afb8e62f2b164c69ba2` 与 `0b8829a864ff53ad0ad2c7ded56ef433325a836a` 保留在明确兼容列表中；未知提交和旧 Managed API v5 不通用放行，历史云端数据保留。性能测量方法、结果和边界见 [Rougelike 性能回归](docs/rougelike-performance.md)。
+当前浏览器引擎源码与 Railway 编译打包器统一锁定 `26b6b11a9211ad6380c754a6fada2b4f508a918f`。上游将原 `b04d81d8` 重写为 Git tree 完全相同的 `65f38cfb`，随后仅整理文档；本次没有运行时代码或 API 升级。已有纹理采样、GPU 纹理就绪查询、source-over alpha、WebAudio 和脚本优化均保留，继续使用 Managed API v6、TCPAK v8、Scene v11、Project v4。明确兼容的旧提交以 `engine.lock.json` 的 `legacyCommits` 为准；未知提交和旧 API v5 继续拒绝，历史云端数据保留。Netlify 复用原发布包时逐文件校验 SHA-256，并在清单中保留实际构建来源；后续升级须重新核对 `artifactReuse` 与发布包。
 
 托管 Web 构建支持分帧场景加载、文字塑形、虚拟列表、2D 光照与后处理。浏览器 AudioSource 通过 WebAudio 播放驻留音频，首次用户操作后解锁声音，并在退出运行时关闭音频上下文；流式音频仍不支持。动态 C# 脚本的常用 BCL 实现与类型转发元数据会保留，多字体在浏览器单线程中依次完成准备和上传。原生 DLL 模块、浏览器存档持久化和完整 ICU/IME 的既有限制仍然适用。
 
@@ -66,7 +66,7 @@ npm run engine:build
 npm run dev
 ```
 
-`engine.lock.json` 固定引擎提交 `c28487215bd5df89b35c1d68252ba240231d9c4f`，并记录 `kind: managed`。构建脚本检出到 `.engine/source`、初始化四个依赖子模块，然后用 **托管（C#）管线** 生成引擎产物：先用 Emscripten 编出 C++ 静态库（`tomcat_managed_web_entrypoints`、`tc_player_core`、`tc_yaml`、`box2d`），再 `dotnet publish -r browser-wasm` 发布 `Managed/TomCat.WebHost`——**最终 `.wasm` 由 .NET 运行时拥有**，C++ 引擎归档被链接进同一块 WebAssembly 内存，原生与托管共享函数表。最后把完整的 `main.js`、`_framework/` 与 C# 编译引用集 `refs/` 复制到 `public/engine/<commit>/`。没有本地 C++ 移植补丁。
+`engine.lock.json` 固定引擎提交 `26b6b11a9211ad6380c754a6fada2b4f508a918f`，并记录 `kind: managed`。构建脚本检出到 `.engine/source`、初始化四个依赖子模块，然后用 **托管（C#）管线** 生成引擎产物：先用 Emscripten 编出 C++ 静态库（`tomcat_managed_web_entrypoints`、`tc_player_core`、`tc_yaml`、`box2d`），再 `dotnet publish -r browser-wasm` 发布 `Managed/TomCat.WebHost`——**最终 `.wasm` 由 .NET 运行时拥有**，C++ 引擎归档被链接进同一块 WebAssembly 内存，原生与托管共享函数表。最后把完整的 `main.js`、`_framework/` 与 C# 编译引用集 `refs/` 复制到 `public/engine/<commit>/`。没有本地 C++ 移植补丁。
 
 托管模块是单线程构建（`WasmEnableThreads=false`），产物中不含 `SharedArrayBuffer`/pthread，因此**不再要求跨源隔离**；`vite.config.ts` 与 `netlify.toml` 仍保留 COOP/COEP 以便将来启用线程构建。
 
@@ -95,7 +95,7 @@ npm run test:browser
 - `/editor/:id` 使用独立同源 iframe，内部加载托管 Web 引擎（`globalThis.TomCatWeb`），展示上游 Hierarchy、Inspector、Project、Scene / Game 面板。
 - `tomcat.web.v1` 是唯一编辑协议。快照包含归档和组件 schema；添加对象、原生属性编辑、撤销和重做均经过引擎事务。uint64 ID 始终为十进制字符串，场景修订号为安全整数。
 - 工具栏保存及原生 Ctrl/Cmd+S 保存实际场景归档、`Project.tcproj`、全部 ProjectSettings 与 Assets（包括图片和 `.tcmeta`）。只有云端保存及 IndexedDB 事务完成且场景/配置/资源仍与捕获时一致，才确认 `scene.markSaved`。保存期间发生编辑时会保留未保存状态。
-- 导出格式为 `tomcat-project` v2，包含引擎文档及版本；导入、复制、删除使用同一存储。仅接受当前锁定引擎版本；旧项目不再自动迁移。
+- 导出格式为 `tomcat-project` v2，包含引擎文档及版本；导入、复制、删除使用同一存储。接受当前锁定版本及明确兼容列表中的旧提交；未知版本不自动迁移。
 - 旧 `tomcat-static-project` v1 文件仍可导入、导出和备份，但不会自动转成引擎场景。打开旧项目会说明正在使用新场景，原 localStorage 数据保留。
 - 上游 Web 会话只支持内置项目挂载根，因此本版通过独立会话恢复规范化归档与资源；不是任意桌面目录导入器。场景会话 Handle 由引擎新建，实体和资产 ID 保留。
 

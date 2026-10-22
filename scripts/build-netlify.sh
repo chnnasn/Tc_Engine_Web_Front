@@ -42,14 +42,7 @@ else
 fi
 
 [ -f "${engine_dir}/manifest.json" ] || { echo "构建后仍缺少 ${engine_dir}/manifest.json" >&2; exit 1; }
-node --input-type=module -e '
-  import { readFileSync } from "node:fs";
-  const lock = JSON.parse(readFileSync("engine.lock.json", "utf8"));
-  const manifest = JSON.parse(readFileSync(`public/engine/${lock.commit}/manifest.json`, "utf8"));
-  if (manifest.commit !== lock.commit || manifest.kind !== lock.kind || manifest.protocol !== lock.protocol) {
-    throw new Error(`引擎产物与锁文件不一致：期望 ${lock.commit}，实际 ${manifest.commit}`);
-  }
-'
+node scripts/prepare-engine-artifact.mjs "${engine_dir}"
 
 npm run build
 node scripts/compress-engine.mjs
