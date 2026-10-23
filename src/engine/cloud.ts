@@ -92,6 +92,7 @@ export const cloudSyncStatus = async (id: string): Promise<{ etag: string | null
 export interface PublishState {
   projectId: string; revisionId: string; engineCommit: string; title: string; description: string
   status: 'pending' | 'published' | 'failed'; error: string; byteLength: number
+  buildStage?: 'queued' | 'running' | 'completed' | 'failed' | 'cancelled' | null
   etag: string | null; requestedAt: string; publishedAt: string
 }
 /** 发布使用最近一次云端保存的修订；未保存的编辑不会包含在内。 */

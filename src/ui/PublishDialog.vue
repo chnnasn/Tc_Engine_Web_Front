@@ -16,6 +16,7 @@ let pollTimer: ReturnType<typeof setTimeout> | undefined
 let request = 0
 
 const pending = computed(() => state.value?.status === 'pending')
+const queued = computed(() => pending.value && state.value?.buildStage === 'queued')
 const published = computed(() => state.value?.status === 'published')
 const failed = computed(() => state.value?.status === 'failed')
 
@@ -50,6 +51,7 @@ async function withdraw() {
   withdrawing.value = true
   try {
     await unpublishProject(props.projectId)
+    request++; stopPolling()
     state.value = undefined
     emit('notify', '已取消发布')
   } catch (error) { emit('notify', error instanceof Error ? error.message : '取消发布失败，请重试') }
@@ -74,7 +76,7 @@ onBeforeUnmount(() => { request++; stopPolling() })
       <p v-if="dirty" class="local-note">项目有尚未同步到云端的内容。请先打开编辑器并“保存到云端”，再回来发布。</p>
       <div v-if="pending" class="publish-state" role="status">
         <LoaderCircle :size="20" class="spin" />
-        <div><strong>正在打包作品…</strong><p>服务器正在把你的项目打包成游戏包，通常需要几十秒到几分钟。可以关闭对话框，稍后再回来看结果。</p></div>
+        <div><strong>{{ queued ? '等待构建…' : '正在打包作品…' }}</strong><p>{{ queued ? '发布任务已排队，构建资源可用后会自动开始。' : '正在把你的项目打包成游戏包。' }}可以关闭对话框，稍后再回来看结果。</p></div>
       </div>
       <div v-else-if="failed" class="publish-state failed" role="alert">
         <TriangleAlert :size="20" />
@@ -91,10 +93,10 @@ onBeforeUnmount(() => { request++; stopPolling() })
         <textarea id="publish-description" v-model="description" class="text-input compose-textarea" maxlength="1000" placeholder="向玩家介绍你的世界。"></textarea>
         <p class="local-note">发布的是最近一次云端保存的完整项目；已发布后可随时更新或取消发布。</p>
         <div class="dialog-actions">
-          <button v-if="published || failed" type="button" class="button" :disabled="withdrawing" @click="withdraw"><Undo2 :size="15" />{{ withdrawing ? '取消中…' : '取消发布' }}</button>
+          <button v-if="published || failed || pending" type="button" class="button" :disabled="withdrawing" @click="withdraw"><Undo2 :size="15" />{{ withdrawing ? '取消中…' : '取消发布' }}</button>
           <AppLink v-if="published" :href="`/play/${projectId}`" class="button button-primary">打开游玩页面<ExternalLink :size="15" /></AppLink>
           <button type="submit" class="button button-primary" :disabled="dirty || submitting || pending || !title.trim()">
-            <CloudUpload :size="15" />{{ pending ? '打包中…' : failed ? '重新发布' : published ? '更新发布' : '发布' }}
+            <CloudUpload :size="15" />{{ queued ? '排队中…' : pending ? '打包中…' : failed ? '重新发布' : published ? '更新发布' : '发布' }}
           </button>
         </div>
       </form>
