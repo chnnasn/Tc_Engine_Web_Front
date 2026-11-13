@@ -1,3 +1,4 @@
+import { fulfillSamples } from './sample-routes.mjs'
 // One separate QA fixture covers every source stage/realm using private F9/F10
 // navigation in a project copy; this is not evidence of
 // naturally completing all puzzles. The production smoke uses return-browser.
@@ -76,9 +77,9 @@ function assertRuntimeHealthy() {
 page.setDefaultTimeout(30000)
 page.on('pageerror', error => errors.push(error.message))
 page.on('console', message => { const value = message.text(); logs.push(value); if (value.includes('[Return]')) console.log(value) })
-await page.route('**/v1/**', route => route.fulfill({ status: route.request().url().includes('/auth/me') ? 401 : 200, json: [] }))
+await page.route('**/v1/**', route => { if (fulfillSamples(route)) return; return route.fulfill({ status: route.request().url().includes('/auth/me') ? 401 : 200, json: [] }) })
 let activePackage, failure, frame, canvas, renderer, receipt, loadedEngine, cover, startup
-await page.route(url => new URL(url).pathname === '/samples/return/return.tcpak', route => route.fulfill({ status: 200, contentType: 'application/octet-stream', body: activePackage }))
+await page.route(url => new URL(url).pathname === '/v1/games/return/package', route => route.fulfill({ status: 200, contentType: 'application/octet-stream', body: activePackage }))
 await page.addInitScript(() => {
   if (window === top) { window.__returnQaContexts = []; return }
   const state = window.__returnQaPerf = { recording: false, samples: [], current: null }
@@ -97,7 +98,7 @@ await page.addInitScript(() => {
   const fetchNative = globalThis.fetch.bind(globalThis)
   globalThis.fetch = async (...args) => {
     const response = await fetchNative(...args), requested = typeof args[0] === 'string' ? args[0] : args[0].url
-    if (new URL(response.url || requested, location.href).pathname === '/samples/return/return.tcpak') {
+    if (new URL(response.url || requested, location.href).pathname === '/v1/games/return/package') {
       const bytes = await response.clone().arrayBuffer(), digest = await crypto.subtle.digest('SHA-256', bytes)
       top.__returnQaReceipt = { bytes: bytes.byteLength, sha256: [...new Uint8Array(digest)].map(value => value.toString(16).padStart(2, '0')).join('') }
     }
@@ -110,7 +111,7 @@ await page.addInitScript(() => {
   const nativeFetch = fetch.bind(window)
   window.fetch = async (...args) => {
     const response = await nativeFetch(...args), requested = typeof args[0] === 'string' ? args[0] : args[0].url
-    if (new URL(response.url || requested, location.href).pathname === '/samples/return/return.tcpak') {
+    if (new URL(response.url || requested, location.href).pathname === '/v1/games/return/package') {
       const bytes = await response.clone().arrayBuffer(), digest = await crypto.subtle.digest('SHA-256', bytes)
       window.__returnQaReceipt = { bytes: bytes.byteLength, sha256: [...new Uint8Array(digest)].map(value => value.toString(16).padStart(2, '0')).join('') }
     }

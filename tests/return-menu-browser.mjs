@@ -1,3 +1,4 @@
+import { fulfillSamples } from './sample-routes.mjs'
 // Original Unity Main UI, exercised through the shipped package and real clicks.
 import assert from 'node:assert/strict'
 import { createHash } from 'node:crypto'
@@ -32,7 +33,7 @@ page.on('console', message => logs.push(message.text()))
 page.on('pageerror', error => errors.push(error.message))
 const fatal = /\[tomcat-host\] fail|Unhandled exception|callback\s+\w+\s+threw|Deferred[^\r\n]*(?:aborted|failed)/i
 const healthy = () => { assert.deepEqual(errors, []); assert.deepEqual(logs.filter(value => fatal.test(value)), []) }
-if (process.env.TEST_LIVE_BACKEND !== '1') await page.route('**/v1/**', route => route.fulfill({ status: route.request().url().includes('/auth/me') ? 401 : 200, json: [] }))
+if (process.env.TEST_LIVE_BACKEND !== '1') await page.route('**/v1/**', route => { if (fulfillSamples(route)) return; return route.fulfill({ status: route.request().url().includes('/auth/me') ? 401 : 200, json: [] }) })
 await page.addInitScript(() => {
   if (window === top) { window.__returnMenuContexts = []; return }
   const Native = window.AudioContext

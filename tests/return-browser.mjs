@@ -1,3 +1,4 @@
+import { fulfillSamples } from './sample-routes.mjs'
 // Real published package + ordinary player input. No game-state mutation or QA
 // scene substitution. Timing reports CPU submission and rAF cadence separately;
 // neither metric proves that the compositor displayed every frame.
@@ -54,7 +55,7 @@ await page.addInitScript(() => {
   globalThis.fetch = async (...args) => {
     const response = await nativeFetch(...args)
     const requestUrl = typeof args[0] === 'string' ? args[0] : args[0].url || String(args[0])
-    if (new URL(response.url || requestUrl, location.href).pathname === '/samples/return/return.tcpak') {
+    if (new URL(response.url || requestUrl, location.href).pathname === '/v1/games/return/package') {
       const bytes = await response.clone().arrayBuffer(), digest = await crypto.subtle.digest('SHA-256', bytes)
       top.__returnPackageReceipt = { url: response.url, byteLength: bytes.byteLength,
         sha256: [...new Uint8Array(digest)].map(value => value.toString(16).padStart(2, '0')).join('') }
@@ -123,7 +124,7 @@ await page.addInitScript(() => {
     }
   }
 })
-if (process.env.TEST_LIVE_BACKEND !== '1') await page.route('**/v1/**', route => route.fulfill({ status: route.request().url().includes('/auth/me') ? 401 : 200, json: [] }))
+if (process.env.TEST_LIVE_BACKEND !== '1') await page.route('**/v1/**', route => { if (fulfillSamples(route)) return; return route.fulfill({ status: route.request().url().includes('/auth/me') ? 401 : 200, json: [] }) })
 const wait = milliseconds => page.waitForTimeout(milliseconds)
 const occurrences = text => logs.filter(value => value.includes(text)).length
 async function logAfter(text, count = 0, timeout = 15000) {

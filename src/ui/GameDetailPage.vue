@@ -7,7 +7,6 @@ import { useLocalState } from './local-state'
 import AppLink from './AppLink.vue'
 import ArtworkView from './ArtworkView.vue'
 import PlayerPreview from './PlayerPreview.vue'
-import TextLink from './TextLink.vue'
 
 const { user, requireLogin, openLogin } = useAccess()
 const props = defineProps<{ game: Game; saved: boolean }>()
@@ -31,7 +30,7 @@ async function submitComment() {
     <div class="detail-heading"><div><div class="detail-eyebrow"><span class="topic-category">{{ game.category }}</span><span>示例体验 · 内置引擎场景</span></div><h1>{{ game.title }}</h1><p>{{ game.subtitle }}</p></div><button class="button" :class="{ 'saved-button': saved }" :aria-pressed="saved" @click="emit('toggleSave')"><Bookmark :size="16" :fill="saved ? 'currentColor' : 'none'" />{{ saved ? '已收藏' : '收藏作品' }}</button></div>
     <div class="detail-layout">
       <div>
-        <div class="detail-cover"><ArtworkView :src="game.image" :alt="`${game.title}游戏场景`" eager /><button class="cover-preview-button" @click="player = true"><Play :size="15" />{{ game.packageUrl ? '开始游玩' : '查看游玩界面' }}</button></div>
+        <div class="detail-cover"><ArtworkView :src="game.image" :alt="`${game.title}游戏场景`" eager /><button class="cover-preview-button" @click="player = true"><Play :size="15" />开始游玩</button></div>
         <section class="content-section"><h2>关于这个示例</h2><p>{{ game.description }}</p><div class="game-tags"><span>{{ game.category }}</span><span>单人体验</span><span>中文</span><span>浏览器游戏</span></div></section>
         <section v-if="game.controls?.length" class="content-section" aria-labelledby="controls-title">
           <h2 id="controls-title">操作说明</h2><p>请使用桌面浏览器与键盘鼠标。进入后点击游戏画面，即可开始操作。</p>
@@ -48,11 +47,11 @@ async function submitComment() {
       <aside class="detail-sidebar">
         <div class="play-panel">
           <span class="small-tag">内置示例</span><h3>准备好出发了吗？</h3><p>打开这个示例，亲自体验它的玩法。</p>
-          <button class="button button-primary" @click="player = true"><Play :size="16" fill="currentColor" />{{ game.packageUrl ? '开始游玩' : '打开游玩预览' }}</button>
+          <button class="button button-primary" @click="player = true"><Play :size="16" fill="currentColor" />开始游玩</button>
           <a v-if="game.sourceUrl" class="button sample-download" :href="game.sourceUrl" download>下载示例工程</a>
           <span class="play-footnote">{{ game.controls ? '桌面键盘 / 鼠标 · 首次加载请稍候' : '点击即可游玩，首次加载请稍候' }}</span><div class="play-stats"><span><Gamepad2 :size="15" />{{ game.category }}示例</span><span>浏览器直接体验</span></div>
         </div>
-        <div class="creator-panel"><span class="creator-avatar"><Gamepad2 :size="23" /></span><div><span>内置内容</span><strong>{{ game.packageUrl ? 'Tc 引擎复原示例' : '引擎示例体验' }}</strong></div><p>用于体验引擎与游玩流程，<br />不计入玩家发布作品。</p><TextLink v-if="!game.packageUrl" href="/community">前往创作者社区</TextLink></div>
+        <div class="creator-panel"><span class="creator-avatar"><Gamepad2 :size="23" /></span><div><span>内置内容</span><strong>Tc 引擎复原示例</strong></div><p>用于体验引擎与游玩流程，<br />不计入玩家发布作品。示例内容和游戏包由云端提供。</p></div>
         <div class="detail-facts"><div><span>游玩方式</span><span>{{ game.controls ? '桌面浏览器 · 键鼠' : '浏览器' }}</span></div><div><span>支持语言</span><span>简体中文</span></div><div><span>作品状态</span><span>示例作品</span></div></div>
       </aside>
     </div>

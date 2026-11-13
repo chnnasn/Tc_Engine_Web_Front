@@ -23,6 +23,12 @@ await page.route('**/v1/**', async route => {
     await gate
     return route.fulfill({ status: failure ? 503 : 200, json: failure ? { error: '暂时不可用，请重试' } : data })
   }
+  if (path === '/v1/games') return route.fulfill({ json: [
+    { id: 'return', title: 'Return / Echo World', subtitle: '切换', author: 'Tc 引擎示例', category: '解谜', image: '/samples/return/cover.png', color: '#cbd8d2', description: '示例' },
+    { id: 'shelter', title: 'Shelter · 避难所', subtitle: '风暴', author: 'Tc 引擎示例', category: '策略', image: '/samples/shelter/gameplay.png', color: '#bd9c6d', description: '示例' },
+    { id: 'rougelike', title: 'Rougelike · 几何竞技场', subtitle: '刀光', author: 'Tc 引擎示例', category: '动作', image: '/samples/rougelike/cover.png', color: '#f7f7e2', description: '示例' },
+    { id: 'physics-lab', title: 'Physics Lab · 物理实验室', subtitle: '重力', author: 'Tc 引擎示例', category: '物理', image: '/samples/physics-lab/cover.png', color: '#d8e1d0', description: '示例' },
+  ] })
   if (path === '/v1/auth/me') return route.fulfill({ status: 401, json: {} })
   return route.fulfill({ json: [] })
 })
@@ -35,10 +41,10 @@ try {
   release()
   await recommendations.getByRole('heading', { name: '还没有已发布的玩家作品' }).waitFor()
   assert.equal(await recommendations.locator('a[href^="/games/"]').count(), 0, 'never substitute examples for real recommendations')
-  assert.equal(await page.locator('.discover-section .game-card').count(), 3)
+  assert.equal(await page.locator('.discover-section .game-card').count(), 4)
   assert.match(await page.locator('#discover-title').innerText(), /示例体验/)
   assert.equal(await page.getByRole('combobox', { name: '游戏排序' }).count(), 0)
-  await page.getByPlaceholder('搜索示例').fill('方寸')
+  await page.getByPlaceholder('搜索示例').fill('物理')
   assert.equal(await page.locator('.discover-section .game-card').count(), 1)
   assert.equal(await recommendations.locator('.published-empty').count(), 1)
   await page.getByPlaceholder('搜索示例').fill('')

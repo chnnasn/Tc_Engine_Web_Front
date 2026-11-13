@@ -1,3 +1,4 @@
+import { fulfillSamples } from './sample-routes.mjs'
 // Real shipped TCPAK, ordinary mouse input, rendered-pixel/log assertions.
 import assert from 'node:assert/strict'
 import { createHash } from 'node:crypto'
@@ -17,7 +18,7 @@ let frame, canvas, failure, provenance, renderer
 page.on('console', message => { logs.push(message.text()); if (message.text().includes('[Shelter]')) console.log(message.text()) })
 page.on('pageerror', error => errors.push(error.message))
 page.on('requestfailed', request => networkFailures.push({ url: request.url(), error: request.failure()?.errorText }))
-await page.route('**/v1/**', route => route.fulfill({ status: route.request().url().includes('/auth/me') ? 401 : 200, json: [] }))
+await page.route('**/v1/**', route => { if (fulfillSamples(route)) return; return route.fulfill({ status: route.request().url().includes('/auth/me') ? 401 : 200, json: [] }) })
 const wait = milliseconds => page.waitForTimeout(milliseconds)
 const count = text => logs.filter(line => line.includes(text)).length
 function healthy() {
@@ -82,14 +83,14 @@ async function selectPartyOne() {
   await page.mouse.move(to.x, to.y, { steps: 15 }); await wait(150); await page.mouse.up(); await wait(180)
 }
 try {
-  const response = await page.request.get(`${base}/samples/shelter/shelter.tcpak`)
+  const response = await page.request.get(`${base}/v1/games/shelter/package`)
   assert.equal(response.status(), 200)
   const packageBytes = await response.body()
   assert.equal(createHash('sha256').update(packageBytes).digest('hex'), manifest.sha256, 'serve the current production package')
   console.log(`Verified deployed package: ${packageBytes.length} bytes / ${manifest.sha256}`)
   // Hold this exact verified package for the complete run even if another cook
   // replaces the public file while the browser is loading the native engine.
-  await page.route(url => new URL(url).pathname === '/samples/shelter/shelter.tcpak', route => route.fulfill({ status: 200, contentType: 'application/octet-stream', body: packageBytes }))
+  await page.route(url => new URL(url).pathname === '/v1/games/shelter/package', route => route.fulfill({ status: 200, contentType: 'application/octet-stream', body: packageBytes }))
   await page.goto(`${base}/games/shelter`)
   await page.getByRole('button', { name: '开始游玩', exact: true }).first().click()
   await waitForPlayer()

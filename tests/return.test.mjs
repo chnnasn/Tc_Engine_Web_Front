@@ -5,15 +5,10 @@ import { readFileSync } from 'node:fs'
 import { execFileSync } from 'node:child_process'
 import { parse } from 'yaml'
 import { assetList, validatePackage } from '../scripts/build-return.mjs'
-import { games } from '../src/ui/data.ts'
 
 const read = path => readFileSync(new URL(`../${path}`, import.meta.url))
 test('Return homepage entry ships a verified Tc package and editable project', () => {
-  const game=games.find(g=>g.id==='return')
-  assert.equal(games[0],game)
-  assert.equal(game.packageUrl,'/samples/return/return.tcpak')
-  assert.equal(game.sourceUrl,'/samples/return/return-source.zip')
-  const bytes=read(`public${game.packageUrl}`),manifest=JSON.parse(read('public/samples/return/manifest.json'))
+  const bytes=read('public/samples/return/return.tcpak'),manifest=JSON.parse(read('public/samples/return/manifest.json'))
   assert.equal(validatePackage(bytes),manifest.entries)
   assert.equal(bytes.length,manifest.byteLength)
   assert.equal(createHash('sha256').update(bytes).digest('hex'),manifest.sha256)

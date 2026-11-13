@@ -3,12 +3,9 @@ import assert from 'node:assert/strict'
 import { createHash } from 'node:crypto'
 import { readFileSync } from 'node:fs'
 import { validatePackage, handles } from '../scripts/build-rougelike.mjs'
-import { games } from '../src/ui/data.ts'
 
 test('homepage Rougelike ships a complete verified native Tc package for a supported engine', () => {
-  const game = games.find(game => game.id === 'rougelike')
-  assert.ok(game?.packageUrl && game.sourceUrl)
-  const bytes = readFileSync(new URL(`../public${game.packageUrl}`, import.meta.url))
+  const bytes = readFileSync(new URL('../public/samples/rougelike/rougelike.tcpak', import.meta.url))
   const manifest = JSON.parse(readFileSync(new URL('../public/samples/rougelike/manifest.json', import.meta.url)))
   const lock = JSON.parse(readFileSync(new URL('../engine.lock.json', import.meta.url)))
   assert.equal(validatePackage(bytes), manifest.entries)

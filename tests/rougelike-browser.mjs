@@ -1,3 +1,4 @@
+import { fulfillSamples } from './sample-routes.mjs'
 import { chromium } from 'playwright'
 import assert from 'node:assert/strict'
 import { mkdirSync, writeFileSync } from 'node:fs'
@@ -29,7 +30,7 @@ await page.addInitScript(() => {
 page.on('console', message => { const text = message.text(); if (!text.includes('GL_INVALID_OPERATION')) { logs.push(text); if (/Rougelike|exception|error|failed/i.test(text)) console.log(text) } })
 page.on('pageerror', error => { errors.push(error.message); console.error(error.message) })
 page.on('dialog', dialog => dialog.accept())
-if(process.env.TEST_LIVE_BACKEND!=='1')await page.route('**/v1/**', route => route.fulfill({status: route.request().url().includes('/auth/me') ? 401 : 200, json: []}))
+if(process.env.TEST_LIVE_BACKEND!=='1')await page.route('**/v1/**', route => { if (fulfillSamples(route)) return; return route.fulfill({status: route.request().url().includes('/auth/me') ? 401 : 200, json: []}) })
 const base = process.env.TEST_BASE_URL || 'http://127.0.0.1:5173'
 mkdirSync('.engine/rougelike-qa', { recursive: true })
 async function visibleBodies(canvas) {

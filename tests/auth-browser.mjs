@@ -21,6 +21,7 @@ await page.route('**/v1/**', async route => {
   const reply = (body, status = 200) => route.fulfill({ status, json: body })
   if (path === '/v1/auth/login') { user = { id: 'alice', email: 'alice@example.com', emailVerified: true }; return reply(user) }
   if (path === '/v1/auth/me') return reply(user || {}, user ? 200 : 401)
+  if (path === '/v1/games') return reply([{ id: 'physics-lab', title: 'Physics Lab · 物理实验室', subtitle: '观察重力', author: 'Tc 引擎示例', category: '物理', image: '/samples/physics-lab/cover.png', color: '#d8e1d0', description: '物理实验室' }])
   if (path === '/v1/community/topics') return reply({ total: 1, items: [topic] })
   if (path === '/v1/community/topics/welcome') return reply(topic)
   if (path === '/v1/community/topics/welcome/replies') {

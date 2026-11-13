@@ -1,48 +1,9 @@
 export type Game = {
   id: string; title: string; subtitle: string; author: string; category: string;
   image: string; color: string; plays?: string; likes?: number; duration?: string; description: string;
-  packageUrl?: string;
-  sourceUrl?: string;
+  sourceUrl?: string | null;
   controls?: { key: string; action: string }[];
 }
-export const games: Game[] = [
-  {
-    id: 'return', title: 'Return / Echo World', subtitle: '切换生死世界，推动箱子、触发机关。',
-    author: 'Tc 引擎示例', category: '解谜', image: '/samples/return/cover.png', color: '#cbd8d2',
-    packageUrl: '/samples/return/return.tcpak',
-    sourceUrl: '/samples/return/return-source.zip',
-    description: '基于 Unity Return 工程的像素平台解谜示例。触碰尖刺切换生死世界，观察两侧地形，推动箱子、压住按钮。包含教学关、五个关卡与最终场景，以 Tc 引擎复原。',
-    controls: [
-      { key: 'A / D 或 ← / →', action: '左右移动' }, { key: 'Space', action: '跳跃' },
-      { key: 'R', action: '重新开始当前关卡' }, { key: 'Enter', action: '开始游戏' },
-      { key: 'P', action: '暂停 / 继续' }, { key: 'M', action: '静音 / 开启声音' },
-    ],
-  },
-  {
-    id: 'shelter', title: 'Shelter · 避难所', subtitle: '风暴将至，为居民留下一处家园。',
-    author: 'Tc 引擎示例', category: '策略', image: '/samples/shelter/gameplay.png', color: '#bd9c6d',
-    packageUrl: '/samples/shelter/shelter.tcpak', sourceUrl: '/samples/shelter/shelter-source.zip',
-    description: '派遣居民探索，收集木材与石材，在内圈建造农场、外圈建造城墙。应对每日食物消耗与逐渐增强的风暴，守住避难所直到第 29 天。保留 Shelter 原始手绘素材、音乐和资源循环，以 Tc 原生 C# 复原。',
-    controls: [{ key: '点击空地', action: '打开建造预览，再确认或取消' }, { key: '右下角派遣', action: '打开窗口，拖动滑块选人数后确认' }, { key: '探索完成', action: '在结果窗口领取资源' }, { key: '右上角设置', action: '暂停、调整速度与声音、返回菜单' }, { key: 'Esc', action: '取消当前操作 / 打开设置' }, { key: 'Enter', action: '确认当前窗口' }],
-  },
-  {
-    id: 'rougelike', title: 'Rougelike · 几何竞技场', subtitle: '挥出刀光，在十波围攻中找到自己的节奏。',
-    author: 'Tc 引擎示例', category: '动作', image: '/samples/rougelike/cover.png', color: '#f7f7e2',
-    packageUrl: '/samples/rougelike/rougelike.tcpak',
-    sourceUrl: '/samples/rougelike/rougelike-source.zip',
-    description: '走进几何竞技场，用前斩与后斩迎击不断涌来的敌人。不断走位，抓准时机放慢时间或释放黑洞，在每一波战斗之后选择升级，挑战全部十波敌人。靠近菜单和升级选项，挥刀击破即可选择；也可以使用键盘快捷键。基于原始 Rougelike demo，以 Tc 引擎复原。',
-    controls: [
-      { key: 'W A S D', action: '移动' }, { key: '鼠标', action: '瞄准方向' },
-      { key: '左键', action: '前斩' }, { key: '右键', action: '后斩' },
-      { key: '按住 Shift', action: '时间凝滞（强化解锁）' }, { key: 'R', action: '黑洞（强化解锁）' },
-      { key: '长按左键', action: '蓄力斩（强化解锁）' },
-      { key: '1 / 2 / 3', action: '选择升级' }, { key: 'E', action: '重抽强化（共 3 次）' },
-      { key: 'Enter', action: '开始 / 重试' }, { key: 'M', action: '结束后返回菜单' },
-      { key: 'P', action: '暂停 / 继续' },
-    ],
-  },
-  { id: 'physics-lab', title: 'Physics Lab · 物理实验室', subtitle: '观察重力、旋转与碰撞如何发生。', author: 'Tc 引擎示例', category: '物理', image: '/samples/physics-lab/cover.png', color: '#d8e1d0', packageUrl: '/samples/physics-lab/physics-lab.tcpak', description: '一个自动运行的 2D 刚体实验：四个不同大小和角度的方块从空中落下，与静态地面碰撞，逐渐停稳。用于观察 Tc 引擎的重力、旋转与接触响应。停止后重新加载即可再次观察，没有额外的角色或关卡玩法。' },
-]
 export type Project = { id: string; name: string; template: '2D' | '空白'; image: string; status: 'draft' | 'published'; updated: string; description: string }
 export const initialProjects: Project[] = [
   { id: 'my-forest', name: '物理实验室', template: '2D', image: '/samples/physics-lab/cover.png', status: 'draft', updated: '今天 14:32', description: '观察刚体下落与地面碰撞。' },
@@ -64,8 +25,9 @@ export function nowLabel() { return new Date().toLocaleString('zh-CN', { month: 
 const record = (value: unknown): value is Record<string, unknown> => typeof value === 'object' && value !== null && !Array.isArray(value)
 const strings = (value: Record<string, unknown>, keys: string[]) => keys.every(key => typeof value[key] === 'string')
 export const isStringArray = (value: unknown): value is string[] => Array.isArray(value) && value.every(x => typeof x === 'string')
-const legacyArtwork = new Set(['/images/forest.webp', '/images/puzzle.webp', '/images/desert.webp', '/images/rougelike.png', '/samples/shelter/cover.png'])
-const knownArtwork = (image: unknown) => image === '' || (typeof image === 'string' && (legacyArtwork.has(image) || games.some(game => game.image === image)))
+const legacyArtwork = new Set(['/images/forest.webp', '/images/puzzle.webp', '/images/desert.webp', '/images/rougelike.png', '/samples/shelter/cover.png', '/samples/return/cover.png', '/samples/shelter/gameplay.png', '/samples/rougelike/cover.png', '/samples/physics-lab/cover.png'])
+export const acceptArtwork = (image: unknown) => image === '' || (typeof image === 'string' && (legacyArtwork.has(image) || /^\/v1\/games\/[a-z0-9][a-z0-9-]{0,31}\/cover$/.test(image)))
+const knownArtwork = acceptArtwork
 export const isProjects = (value: unknown): value is Project[] => Array.isArray(value) && value.every(p => record(p) && strings(p, ['id', 'name', 'image', 'updated', 'description']) && /^[a-zA-Z0-9_-]+$/.test(p.id as string) && ['draft', 'published'].includes(p.status as string) && ['2D', '空白'].includes(p.template as string) && knownArtwork(p.image)) && new Set(value.map(p => p.id)).size === value.length
 export const isTopics = (value: unknown): value is Topic[] => Array.isArray(value) && value.every(t => record(t) && strings(t, ['id', 'title', 'category', 'author', 'avatar', 'color', 'time', 'content']) && /^[a-zA-Z0-9_-]+$/.test(t.id as string) && typeof t.replies === 'number' && Number.isFinite(t.replies) && t.replies >= 0) && new Set(value.map(t => t.id)).size === value.length
 export type LocalComment = { id: string; text: string }

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, onBeforeUnmount, ref, watch } from 'vue'
 import { ArrowRight, ArrowUpRight, Camera, Save } from '@lucide/vue'
-import { games, type Topic } from './data'
+import type { Game, Topic } from './data'
 import { useAccess } from './access'
 import { userProfile, userTopics, updateDisplayName, uploadAvatar, type UserProfile } from './profile-api'
 import { communityTime } from './community-api'
@@ -11,7 +11,7 @@ import EmptyState from './EmptyState.vue'
 import GameCard from './GameCard.vue'
 import TextLink from './TextLink.vue'
 
-const props = withDefaults(defineProps<{ saved?: string[]; profileId?: string }>(), { saved: () => [] })
+const props = withDefaults(defineProps<{ saved?: string[]; profileId?: string; samples?: Game[] }>(), { saved: () => [], samples: () => [] })
 const emit = defineEmits<{ toggleSave: [id: string]; notify: [message: string] }>()
 const { user } = useAccess()
 const id = computed(() => props.profileId || user.value?.id)
@@ -25,7 +25,7 @@ const error = ref('')
 const editError = ref('')
 const loading = ref(false)
 const saving = ref(false)
-const favorites = computed(() => games.filter(game => props.saved.includes(game.id)))
+const favorites = computed(() => props.samples.filter(game => props.saved.includes(game.id)))
 let request = 0
 async function load() {
   const current = ++request

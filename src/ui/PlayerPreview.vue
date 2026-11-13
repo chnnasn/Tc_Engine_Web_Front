@@ -26,7 +26,7 @@ const hint = computed(() => {
   if (/tcpak|package|corrupt|invalid|版本|version/i.test(message)) return '资源包损坏或引擎版本不匹配，请使用当前引擎重新打包。'
   return ''
 })
-// 内置示例可直接加载同站资源；已发布作品仍由后端按作品 id 提供。
+// 示例和已发布作品都按作品 id 向后端取游戏包。
 async function load() {
   controller?.abort()
   const request = new AbortController()
@@ -38,7 +38,7 @@ async function load() {
   bytes.value = undefined
   running.value = false
   try {
-    const url = new URL(props.game.packageUrl ?? `/v1/games/${encodeURIComponent(props.game.id)}/package`, location.origin)
+    const url = new URL(`/v1/games/${encodeURIComponent(props.game.id)}/package`, location.origin)
     url.searchParams.set('engine', engineLock.commit)
     const response = await fetch(url, {
       credentials: 'same-origin', headers: { 'X-TomCat-Request': '1' }, signal: request.signal,
@@ -47,7 +47,7 @@ async function load() {
     if (response.status === 404) {
       let payload: unknown
       if (response.headers.get('content-type')?.includes('json')) { try { payload = await response.json() } catch { /* A real missing package has no platform body. */ } }
-      error.value = platformUnavailable(payload) ? serviceUnavailableMessage : props.game.packageUrl ? '这个示例的游戏资源暂时无法找到，请稍后重试' : '后端尚未提供这个作品的游戏包'
+      error.value = platformUnavailable(payload) ? serviceUnavailableMessage : '后端尚未提供这个示例的游戏包'
       return
     }
     if (!response.ok) { error.value = `游戏包下载失败（HTTP ${response.status}）`; return }
@@ -85,7 +85,7 @@ onBeforeUnmount(stop)
     <details v-if="game.controls?.length" class="player-controls"><summary>查看操作说明</summary><div><span v-for="control in game.controls" :key="control.key"><kbd>{{ control.key }}</kbd>{{ control.action }}</span></div></details>
     <p v-if="loading" role="status">正在加载游戏资源…</p>
     <p v-else-if="error" role="alert">{{ error }}<span v-if="hint" class="player-hint">{{ hint }}</span></p>
-    <p v-if="running" class="player-status" role="status">{{ game.packageUrl ? `${game.title} 已就绪` : `正在运行 ${game.title} 的游戏包` }}</p>
+    <p v-if="running" class="player-status" role="status">{{ game.title }} 已就绪</p>
     <div v-if="bytes" ref="stage" class="runtime-player"><EngineSurface :key="generation" kind="player" :bytes="bytes" @ready="running = true" @error="engineError" @exit="emit('close')" /></div>
     <p v-if="fullscreenError" role="status">{{ fullscreenError }}</p>
     <div class="dialog-actions"><button v-if="running" class="button" @click="fullscreen">全屏游玩</button><button v-if="bytes" class="button" @click="stop">停止</button><button v-else-if="!loading" class="button" @click="load">{{ error ? '重试' : '重新加载' }}</button><button class="button button-primary" @click="emit('close')">关闭播放器</button></div>

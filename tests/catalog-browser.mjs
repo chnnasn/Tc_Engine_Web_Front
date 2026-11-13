@@ -9,7 +9,18 @@ const browser = await chromium.launch({ channel: process.env.TEST_BROWSER_CHANNE
 const page = await browser.newPage({ viewport: { width: 1440, height: 1000 } })
 const errors = [], checks = []
 page.on('pageerror', e => errors.push(e.message))
-await page.route('**/v1/**', r => r.fulfill({ status: r.request().url().includes('/auth/me') ? 401 : 200, json: [] }))
+const samples = [
+  { id: 'return', title: 'Return / Echo World', subtitle: '切换生死世界，推动箱子、触发机关。', author: 'Tc 引擎示例', category: '解谜', image: '/samples/return/cover.png', color: '#cbd8d2', description: '像素平台解谜示例。' },
+  { id: 'shelter', title: 'Shelter · 避难所', subtitle: '风暴将至，为居民留下一处家园。', author: 'Tc 引擎示例', category: '策略', image: '/samples/shelter/gameplay.png', color: '#bd9c6d', description: '避难所示例。' },
+  { id: 'rougelike', title: 'Rougelike · 几何竞技场', subtitle: '挥出刀光，在十波围攻中找到自己的节奏。', author: 'Tc 引擎示例', category: '动作', image: '/samples/rougelike/cover.png', color: '#f7f7e2', description: '几何竞技场示例。' },
+  { id: 'physics-lab', title: 'Physics Lab · 物理实验室', subtitle: '观察重力、旋转与碰撞如何发生。', author: 'Tc 引擎示例', category: '物理', image: '/samples/physics-lab/cover.png', color: '#d8e1d0', description: '物理实验室示例。' },
+]
+await page.route('**/v1/**', r => {
+  const path = new URL(r.request().url()).pathname
+  if (path === '/v1/auth/me') return r.fulfill({ status: 401, json: {} })
+  if (path === '/v1/games') return r.fulfill({ json: samples })
+  return r.fulfill({ status: 200, json: [] })
+})
 const titles = ['Return / Echo World', 'Shelter · 避难所', 'Rougelike · 几何竞技场', 'Physics Lab · 物理实验室']
 const ids = ['return', 'shelter', 'rougelike', 'physics-lab']
 try {

@@ -1,3 +1,4 @@
+import { fulfillSamples } from './sample-routes.mjs'
 // Independent production smoke: ordinary mouse gameplay from the original
 // resources to the first successful storm and the Continue button. No model
 // access, injected resources, private state, or accelerated clock API.
@@ -20,7 +21,7 @@ let frame,canvas,provenance,packageReceipt,failure,residents=1
 page.on('console',m=>{logs.push(m.text());if(m.text().includes('[Shelter]'))console.log(m.text())})
 page.on('pageerror',e=>errors.push(e.message))
 page.on('requestfailed',r=>networkFailures.push({url:r.url(),error:r.failure()?.errorText}))
-await page.route('**/v1/**',r=>r.fulfill({status:r.request().url().includes('/auth/me')?401:200,json:[]}))
+await page.route('**/v1/**',r=>{ if (fulfillSamples(r)) return; return r.fulfill({status:r.request().url().includes('/auth/me')?401:200,json:[]}) })
 const wait=ms=>page.waitForTimeout(ms),count=s=>logs.filter(l=>l.includes(s)).length
 function healthy(){assert.deepEqual(errors,[]);assert.deepEqual(logs.filter(l=>/Unhandled exception|callback.*threw|\[tomcat-host\] fail|Deferred.*(?:failed|aborted)/i.test(l)),[])}
 async function cue(s,previous=0,timeout=30000){const begin=Date.now();let progress=begin+15000;while(count(s)<=previous&&Date.now()-begin<timeout){healthy();if(Date.now()>progress){console.log(`Waiting for ${s}: ${Math.round((Date.now()-begin)/1000)}s`);progress+=15000}await wait(100)}assert.ok(count(s)>previous,`Expected ${s}`)}
@@ -32,8 +33,8 @@ async function dispatchOne(){await click(1811,950);await cue('[Shelter] window:D
 async function pixelState(){const png=await canvas.screenshot();return page.evaluate(async b64=>{const img=new Image();img.src=`data:image/png;base64,${b64}`;await img.decode();const c=document.createElement('canvas');c.width=img.width;c.height=img.height;const ctx=c.getContext('2d');ctx.drawImage(img,0,0);const s=Math.min(img.width/1920,img.height/1080),ox=(img.width-1920*s)/2,oy=(img.height-1080*s)/2,result={};for(const [k,[x,y,w,h]]of Object.entries({food:[875,85,230,65],countdown:[20,945,410,90]})){const p=ctx.getImageData(Math.round(ox+x*s),Math.round(oy+y*s),Math.round(w*s),Math.round(h*s)).data;result[k]=[...new Uint8Array(await crypto.subtle.digest('SHA-256',p))].map(n=>n.toString(16).padStart(2,'0')).join('')}return result},png.toString('base64'))}
 try{
  console.log('Downloading deployed Shelter package for hash verification')
- const response=await page.request.get(`${base}/samples/shelter/shelter.tcpak`,{timeout:240000});assert.equal(response.status(),200);const bytes=await response.body();packageReceipt={url:response.url(),byteLength:bytes.length,sha256:createHash('sha256').update(bytes).digest('hex')};assert.equal(packageReceipt.byteLength,manifest.byteLength);assert.equal(packageReceipt.sha256,manifest.sha256)
- await page.route(url=>new URL(url).pathname==='/samples/shelter/shelter.tcpak',r=>r.fulfill({status:200,contentType:'application/octet-stream',body:bytes}))
+ const response=await page.request.get(`${base}/v1/games/shelter/package`,{timeout:240000});assert.equal(response.status(),200);const bytes=await response.body();packageReceipt={url:response.url(),byteLength:bytes.length,sha256:createHash('sha256').update(bytes).digest('hex')};assert.equal(packageReceipt.byteLength,manifest.byteLength);assert.equal(packageReceipt.sha256,manifest.sha256)
+ await page.route(url=>new URL(url).pathname==='/v1/games/shelter/package',r=>r.fulfill({status:200,contentType:'application/octet-stream',body:bytes}))
  await page.goto(`${base}/games/shelter`);await page.getByRole('button',{name:'开始游玩',exact:true}).first().click();await waitForPlayer();await cue('[Shelter] ready');frame=page.frames().find(f=>f!==page.mainFrame());canvas=frame.locator('canvas');provenance=await readLoadedEngine(frame);assert.equal(provenance.manifest.commit,lock.commit)
  await click(960,600);await cue('[Shelter] start');await capture('initial')
  for(const i of [6,7,0,1,2])assert.equal(await build(i),true)

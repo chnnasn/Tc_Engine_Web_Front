@@ -1,3 +1,4 @@
+import { fulfillSamples } from './sample-routes.mjs'
 // Standalone performance observation of the real Shelter package. Gameplay is
 // advanced only through ordinary UI controls; no model state is injected.
 import assert from 'node:assert/strict'
@@ -27,7 +28,7 @@ const logs = [], errors = [], phases = [], snapshots = [], screenshots = [], bud
 let frame, canvas, provenance, renderer, failure, cleanup, packageReceipt
 page.on('console', message => { const value = message.text(); logs.push(value); if (value.includes('[Shelter]')) console.log(value) })
 page.on('pageerror', error => errors.push(error.message))
-await page.route('**/v1/**', route => route.fulfill({ status: route.request().url().includes('/auth/me') ? 401 : 200, json: [] }))
+await page.route('**/v1/**', route => { if (fulfillSamples(route)) return; return route.fulfill({ status: route.request().url().includes('/auth/me') ? 401 : 200, json: [] }) })
 await page.addInitScript(() => {
   if (window === top) window.__shelterPerfAudio = []
   const Native = window.AudioContext
@@ -102,14 +103,14 @@ async function measure(name, action = () => wait(3000)) {
 
 try {
   // Hashes and actual loaded provenance are checked before any measurement.
-  const packageResponse = await page.request.get(`${base}/samples/shelter/shelter.tcpak`)
+  const packageResponse = await page.request.get(`${base}/v1/games/shelter/package`)
   assert.equal(packageResponse.status(), 200)
   const packageBytes = await packageResponse.body()
   packageReceipt = { url: packageResponse.url(), byteLength: packageBytes.length, sha256: sha256(packageBytes) }
   assert.equal(packageReceipt.byteLength, manifest.byteLength)
   assert.equal(packageReceipt.sha256, manifest.sha256)
   assert.equal(manifest.engineCommit, engineLock.commit)
-  await page.route(url => new URL(url).pathname === '/samples/shelter/shelter.tcpak', route => route.fulfill({ status: 200, contentType: 'application/octet-stream', body: packageBytes }))
+  await page.route(url => new URL(url).pathname === '/v1/games/shelter/package', route => route.fulfill({ status: 200, contentType: 'application/octet-stream', body: packageBytes }))
   await page.goto(`${base}/games/shelter`)
   await page.getByRole('button', { name: '开始游玩', exact: true }).first().click()
   await page.locator('.player-status').filter({ hasText: '已就绪' }).waitFor({ timeout: 180000 })

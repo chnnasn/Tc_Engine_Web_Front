@@ -3,12 +3,13 @@ import { computed, ref } from 'vue'
 import { ArrowDown, ArrowRight, ArrowUpRight, Check, Layers, MousePointer2, Play, Plus } from '@lucide/vue'
 import AppLink from './AppLink.vue'
 import ArtworkView from './ArtworkView.vue'
-import { games } from './data'
+import type { Game } from './data'
 
+const props = defineProps<{ samples: Game[] }>()
 const emit = defineEmits<{ create: [] }>()
 const mode = ref<'play' | 'create'>('play')
 const selected = ref(0)
-const sample = computed(() => games[selected.value])
+const sample = computed(() => props.samples[selected.value])
 const step = ref(0)
 const steps = [
   { title: '放下第一个对象', description: '在场景里添加角色，为你的游戏选一个起点。' },
@@ -36,7 +37,8 @@ function explore() { document.getElementById('discover-title')?.scrollIntoView({
         <button v-for="tab in (['play', 'create'] as const)" :id="`intro-tab-${tab}`" :key="tab" role="tab" :aria-selected="mode === tab" :tabindex="mode === tab ? 0 : -1" aria-controls="intro-experience" @click="chooseMode(tab)" @keydown="switchTab">{{ tab === 'play' ? '先玩一会儿' : '开始创作' }}</button>
       </div>
       <div class="intro-action">
-        <template v-if="mode === 'play'"><AppLink class="button button-dark" :href="`/games/${sample.id}`">打开{{ sample.title }} <ArrowUpRight :size="17" /></AppLink><span>无需下载 · 从内置示例开始</span></template>
+        <template v-if="mode === 'play' && sample"><AppLink class="button button-dark" :href="`/games/${sample.id}`">打开{{ sample.title }} <ArrowUpRight :size="17" /></AppLink><span>无需下载 · 从云端示例开始</span></template>
+        <template v-else-if="mode === 'play'"><span>云端示例加载后即可试玩</span></template>
         <template v-else><button class="button button-dark" @click="emit('create')">创建我的项目 <Plus :size="17" /></button><span>登录后创作 · 项目保存到云端</span></template>
       </div>
     </div>
@@ -44,9 +46,12 @@ function explore() { document.getElementById('discover-title')?.scrollIntoView({
     <div id="intro-experience" class="intro-experience" role="tabpanel" :aria-labelledby="`intro-tab-${mode}`" tabindex="0">
       <Transition name="experience" mode="out-in">
         <div v-if="mode === 'play'" key="play" class="intro-play">
+          <template v-if="sample">
           <AppLink :href="`/games/${sample.id}`" class="intro-art" :aria-label="`体验${sample.title}`"><ArtworkView :src="sample.image" :alt="sample.title" eager /><span class="intro-play-button"><Play :size="18" fill="currentColor" /> 即刻体验</span></AppLink>
           <div class="intro-game-caption"><span><small>内置引擎示例 / {{ String(selected + 1).padStart(2, '0') }}</small><strong>{{ sample.title }}</strong></span><span>{{ sample.category }} <ArrowUpRight :size="17" /></span></div>
-          <div class="intro-samples" aria-label="选择示例"><button v-for="(game, index) in games" :key="game.id" :aria-pressed="selected === index" @click="selected = index">{{ game.title }}</button></div>
+          <div class="intro-samples" aria-label="选择示例"><button v-for="(game, index) in samples" :key="game.id" :aria-pressed="selected === index" @click="selected = index">{{ game.title }}</button></div>
+          </template>
+          <p v-else>云端示例加载后即可试玩</p>
         </div>
         <div v-else key="create" class="intro-create">
           <div class="preview-topline"><span><Layers :size="14" /> 我的第一个游戏</span><span>交互预览</span></div>

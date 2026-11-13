@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import { computed, nextTick, onBeforeUnmount, onMounted, provide, ref, watch } from 'vue'
 import { ArrowRight, Bookmark, Check, ChevronDown, ChevronRight, Cloud, FolderOpen, Gamepad2, Plus, Settings2, UserRound } from '@lucide/vue'
-import { games, isProjects, isStringArray, nowLabel, uid, type Project } from './data'
+import { isProjects, isStringArray, nowLabel, uid, type Game, type Project } from './data'
+import { listSamples } from './samples'
 import { useLocalState } from './local-state'
 import { navigationKey } from './navigation'
 import { accessKey, requiresAccount } from './access'
@@ -84,7 +85,9 @@ function toggleAccount() { accountOpen.value = !accountOpen.value; if (accountOp
 function closeCloudAccount() { cloudAccountOpen.value = false; void refreshAccount() }
 let toastTimer: number | undefined
 
-const game = computed(() => games.find(item => path.value === `/games/${item.id}`))
+const samples = ref<Game[]>([])
+const samplesReady = ref(false)
+const game = computed(() => samples.value.find(item => path.value === `/games/${item.id}`))
 const topicId = computed(() => /^\/community\/[a-zA-Z0-9_-]+$/.test(path.value) ? path.value.slice('/community/'.length) : undefined)
 const profileId = computed(() => /^\/users\/[a-zA-Z0-9_-]+$/.test(path.value) ? path.value.slice('/users/'.length) : undefined)
 const previewProject = computed(() => projects.value.find(item => item.status === 'published' && path.value === `/preview/${item.id}`))
@@ -197,6 +200,7 @@ onMounted(() => {
   window.addEventListener('tomcat-auth-changed', recheckAccount)
   window.addEventListener('tomcat-auth-expired', expireAccount)
   void refreshAccount()
+  void listSamples().then(list => { samples.value = list }).catch(() => { samples.value = [] }).finally(() => { samplesReady.value = true })
   accountTimer = setInterval(recheckAccount, 30000)
 })
 onBeforeUnmount(() => {
@@ -245,14 +249,15 @@ onBeforeUnmount(() => {
     <AppLink href="/" class="button">返回游戏大厅</AppLink>
     </div>
   </main>
-  <HomePage v-else-if="path === '/'" :saved="saved" @toggle-save="toggleSave" @create="openCreate" />
+  <HomePage v-else-if="path === '/'" :saved="saved" :samples="samples" :samples-ready="samplesReady" @toggle-save="toggleSave" @create="openCreate" />
   <ProjectsPage :key="accountScope" v-else-if="path === '/projects'" :projects="projects" @update:projects="projects = $event" @create="openCreate" @notify="notify" />
   <CommunityPage v-else-if="path === '/community'" @notify="notify" />
   <AdminPage v-else-if="path === '/admin'" :key="accountScope" @notify="notify" />
-  <ProfilePage v-else-if="path === '/profile'" :key="accountScope" :saved="saved" @toggle-save="toggleSave" @notify="notify" />
-  <ProfilePage v-else-if="profileId" :key="profileId" :profile-id="profileId" :saved="saved" @toggle-save="toggleSave" @notify="notify" />
+  <ProfilePage v-else-if="path === '/profile'" :key="accountScope" :saved="saved" :samples="samples" @toggle-save="toggleSave" @notify="notify" />
+  <ProfilePage v-else-if="profileId" :key="profileId" :profile-id="profileId" :saved="saved" :samples="samples" @toggle-save="toggleSave" @notify="notify" />
   <PublishedPreviewPage v-else-if="previewProject" :key="previewProject.id" :project="previewProject" />
   <GameDetailPage v-else-if="game" :key="game.id" :game="game" :saved="saved.includes(game.id)" @toggle-save="toggleSave(game.id)" @notify="notify" />
+  <main v-else-if="path.startsWith('/games/') && !samplesReady" id="main-content" class="page"><p role="status">正在加载示例…</p></main>
   <ArcadePage v-else-if="path === '/play'" />
   <PlayPage v-else-if="playId" :key="playId" :game-id="playId" @notify="notify" />
   <TopicDetailPage v-else-if="topicId" :key="topicId" :topic-id="topicId" @notify="notify" />

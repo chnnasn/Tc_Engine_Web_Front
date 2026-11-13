@@ -1,3 +1,4 @@
+import { fulfillSamples } from './sample-routes.mjs'
 import assert from 'node:assert/strict'
 import { mkdirSync, writeFileSync } from 'node:fs'
 import { chromium } from 'playwright'
@@ -9,7 +10,7 @@ const browser = await chromium.launch({ channel: process.env.TEST_BROWSER_CHANNE
 const page = await browser.newPage({ viewport: { width: 1440, height: 1000 } })
 const errors = [], logs = [], games = []
 page.on('pageerror', e => errors.push(e.message)); page.on('console', m => logs.push(m.text()))
-if (process.env.TEST_LIVE_BACKEND !== '1') await page.route('**/v1/**', r => r.fulfill({ status: r.request().url().includes('/auth/me') ? 401 : 200, json: [] }))
+if (process.env.TEST_LIVE_BACKEND !== '1') await page.route('**/v1/**', r => { if (fulfillSamples(r)) return; return r.fulfill({ status: r.request().url().includes('/auth/me') ? 401 : 200, json: [] }) })
 try {
   for (const id of ['return', 'shelter', 'rougelike', 'physics-lab']) {
     console.log(`Opening ${id}`)
@@ -26,10 +27,10 @@ try {
     assert.equal(await page.locator('iframe').count(), 0)
     games.push(id); console.log(`${id}: real engine ready, input and stop passed`)
   }
-  await page.route('**/samples/physics-lab/physics-lab.tcpak*', r => r.fulfill({ status: 404, body: 'missing' }))
+  await page.route('**/v1/games/physics-lab/package*', r => r.fulfill({ status: 404, contentType: 'application/json', body: JSON.stringify({ error: '没有这个示例游戏包。' }) }))
   await page.goto(`${base}/games/physics-lab`)
   await page.getByRole('button', { name: '开始游玩', exact: true }).first().click()
-  await page.getByRole('alert').filter({ hasText: '这个示例的游戏资源暂时无法找到' }).waitFor()
+  await page.getByRole('alert').filter({ hasText: '后端尚未提供这个示例的游戏包' }).waitFor()
   assert.equal(await page.locator('iframe').count(), 0)
   assert.deepEqual(errors, [])
   writeFileSync(`${output}/evidence.json`, JSON.stringify({ status: 'passed', base, games, errors, logs, missingPackage: 'passed' }, null, 2))

@@ -1,3 +1,4 @@
+import { fulfillSamples } from './sample-routes.mjs'
 // Explicit QA fixture, never a natural ten-wave playthrough. Production gameplay
 // stays unchanged; the existing fixture builder sets wave 10, unlocked skills,
 // and 1000 HP. Default hardware GPU; no cross-machine pass/fail timing limits.
@@ -72,7 +73,7 @@ await page.addInitScript(() => {
     const response = await nativeFetch(...args)
     const requested = typeof args[0] === 'string' ? args[0] : args[0].url || String(args[0])
     const url = new URL(response.url || requested, location.href)
-    if (url.pathname === '/samples/rougelike/rougelike.tcpak') {
+    if (url.pathname === '/v1/games/rougelike/package') {
       const bytes = await response.clone().arrayBuffer(), digest = await crypto.subtle.digest('SHA-256', bytes)
       top.__stressReceipt = { bytes: bytes.byteLength, sha256: [...new Uint8Array(digest)].map(value => value.toString(16).padStart(2, '0')).join('') }
     }
@@ -106,9 +107,9 @@ await page.addInitScript(() => {
     }
   }
 })
-await page.route('**/v1/**', route => route.fulfill({ status: route.request().url().includes('/auth/me') ? 401 : 200, json: [] }))
+await page.route('**/v1/**', route => { if (fulfillSamples(route)) return; return route.fulfill({ status: route.request().url().includes('/auth/me') ? 401 : 200, json: [] }) })
 let packageRequests = 0
-await page.route(url => new URL(url).pathname === '/samples/rougelike/rougelike.tcpak', route => {
+await page.route(url => new URL(url).pathname === '/v1/games/rougelike/package', route => {
   packageRequests++
   return route.fulfill({ status: 200, contentType: 'application/octet-stream', body: packageBytes })
 })

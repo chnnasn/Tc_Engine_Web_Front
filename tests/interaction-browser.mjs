@@ -1,3 +1,4 @@
+import { fulfillSamples } from './sample-routes.mjs'
 import assert from 'node:assert/strict'
 import { chromium } from 'playwright'
 import { mkdir } from 'node:fs/promises'
@@ -16,14 +17,13 @@ try {
   const page = await browser.newPage({ viewport: { width: 1440, height: 1000 }, reducedMotion: 'reduce' })
   const errors = []
   page.on('pageerror', error => errors.push(error.message))
-  await page.route('**/v1/**', route => new URL(route.request().url()).pathname === '/v1/auth/me'
-    ? route.fulfill({ status: 401, json: { error: '请先登录' } }) : route.fulfill({ json: [] }))
+  await page.route('**/v1/**', route => { if (fulfillSamples(route)) return; const path = new URL(route.request().url()).pathname; return path === '/v1/auth/me' ? route.fulfill({ status: 401, json: { error: '请先登录' } }) : route.fulfill({ json: [] }) })
   await page.goto(base)
   await page.getByRole('heading', { name: '有个想法？ 让它玩起来。' }).waitFor()
   await mkdir('docs/interaction-preview', { recursive: true })
   await page.screenshot({ path: 'docs/interaction-preview/home-desktop.png' })
-  await page.locator('.intro-samples').getByRole('button', { name: '方寸之间' }).click()
-  assert.equal(await page.getByRole('link', { name: '打开方寸之间' }).getAttribute('href'), '/games/puzzle')
+  await page.locator('.intro-samples').getByRole('button', { name: 'Shelter · 避难所' }).click()
+  assert.equal(await page.getByRole('link', { name: '打开Shelter · 避难所' }).getAttribute('href'), '/games/shelter')
   await page.getByRole('tab', { name: '先玩一会儿' }).press('ArrowRight')
   assert.equal(await page.getByRole('tab', { name: '开始创作' }).getAttribute('aria-selected'), 'true')
   await page.getByRole('button', { name: '2 AI 修改' }).click()

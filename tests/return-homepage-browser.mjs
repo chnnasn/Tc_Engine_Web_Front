@@ -1,3 +1,4 @@
+import { fulfillSamples } from './sample-routes.mjs'
 import assert from 'node:assert/strict'
 import { mkdirSync, writeFileSync } from 'node:fs'
 import { resolve } from 'node:path'
@@ -10,7 +11,7 @@ const browser = await chromium.launch({ channel: process.env.TEST_BROWSER_CHANNE
 const page = await browser.newPage({ viewport: { width: 1440, height: 1000 } })
 const errors = []
 page.on('pageerror', error => errors.push(error.message))
-await page.route('**/v1/**', route => route.fulfill({ status: route.request().url().includes('/auth/me') ? 401 : 200, json: [] }))
+await page.route('**/v1/**', route => { if (fulfillSamples(route)) return; return route.fulfill({ status: route.request().url().includes('/auth/me') ? 401 : 200, json: [] }) })
 try {
   await page.goto(base)
   const featured = page.getByRole('region', { name: '精选引擎示例' })
@@ -24,7 +25,7 @@ try {
   await page.waitForURL('**/games/return')
   await page.getByRole('heading', { name: 'Return / Echo World', exact: true }).waitFor()
   const download = page.getByRole('link', { name: '下载示例工程', exact: true })
-  assert.equal(await download.getAttribute('href'), '/samples/return/return-source.zip')
+  assert.equal(await download.getAttribute('href'), '/v1/games/return/source')
   const zip = await page.request.get(new URL(await download.getAttribute('href'), base).href)
   assert.equal(zip.status(), 200)
   assert.equal((await zip.body()).subarray(0, 4).toString('hex'), '504b0304')

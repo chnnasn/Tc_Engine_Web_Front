@@ -1,3 +1,4 @@
+import { fulfillSamples } from './sample-routes.mjs'
 // Opt-in native-player QA. This is deliberately NOT a natural ten-wave run.
 // A copy of the production Tc project starts at wave 10 with all three skills
 // unlocked and 100 HP (TEST_FIXTURE_HEALTH may raise this for long stress runs).
@@ -117,7 +118,7 @@ await page.addInitScript(() => {
   globalThis.fetch = async (...args) => {
     const response = await nativeFetch(...args)
     const requested = typeof args[0] === 'string' ? args[0] : args[0].url
-    if (new URL(response.url || requested, location.href).pathname === '/samples/rougelike/rougelike.tcpak') {
+    if (new URL(response.url || requested, location.href).pathname === '/v1/games/rougelike/package') {
       const bytes = await response.clone().arrayBuffer()
       const digest = await crypto.subtle.digest('SHA-256', bytes)
       top.__rougelikeFixtureReceipt = { bytes: bytes.byteLength,
@@ -154,11 +155,11 @@ page.on('console', message => {
 })
 page.on('pageerror', error => { errors.push(error.message); console.error(error.message) })
 page.on('dialog', dialog => dialog.accept())
-await page.route('**/v1/**', route => route.fulfill({ status: route.request().url().includes('/auth/me') ? 401 : 200, json: [] }))
+await page.route('**/v1/**', route => { if (fulfillSamples(route)) return; return route.fulfill({ status: route.request().url().includes('/auth/me') ? 401 : 200, json: [] }) })
 let fixtureRequests = 0
 // PlayerPreview appends ?engine=<commit>; matching pathname avoids accidentally
 // loading the production package while intending to exercise the QA fixture.
-const isSamplePackage = url => new URL(url).pathname === '/samples/rougelike/rougelike.tcpak'
+const isSamplePackage = url => new URL(url).pathname === '/v1/games/rougelike/package'
 await page.route(url => isSamplePackage(url), route => {
   fixtureRequests++
   return route.fulfill({ status: 200, contentType: 'application/octet-stream', body: readFileSync(packagePath) })

@@ -28,7 +28,7 @@ async function capture(name, fullPage = true) {
 }
 try {
   await page.goto(base)
-  await page.getByRole('heading', { name: '林间来信', exact: true, level: 2 }).waitFor()
+  await page.getByRole('heading', { name: '有个想法？ 让它玩起来。' }).waitFor()
   await capture('home-desktop')
   await page.getByRole('button', { name: '打开我的账户' }).click()
   await page.locator('.menu-identity strong').filter({ hasText: user.email }).waitFor()

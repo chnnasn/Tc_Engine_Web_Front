@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from 'vue'
 import { ArrowRight, MessageSquare, Sparkles } from '@lucide/vue'
-import { games, type Topic } from './data'
+import type { Game, Topic } from './data'
 import { listTopics } from './community-api'
 import AppLink from './AppLink.vue'
 import EmptyState from './EmptyState.vue'
@@ -12,7 +12,7 @@ import PublishedGames from './PublishedGames.vue'
 import HomeIntro from './HomeIntro.vue'
 import FeaturedSamples from './FeaturedSamples.vue'
 
-const props = defineProps<{ saved: string[] }>()
+const props = defineProps<{ saved: string[]; samples: Game[]; samplesReady: boolean }>()
 const topics = ref<Topic[]>([])
 const topicError = ref(false)
 onMounted(async () => {
@@ -22,10 +22,10 @@ onMounted(async () => {
 const emit = defineEmits<{ toggleSave: [id: string]; create: [] }>()
 const category = ref('全部示例')
 const query = ref('')
-const categories = ['全部示例', ...new Set(games.map(game => game.category))]
+const categories = computed(() => ['全部示例', ...new Set(props.samples.map(game => game.category))])
 
 const filtered = computed(() => {
-  const result = games.filter(game =>
+  const result = props.samples.filter(game =>
     (category.value === '全部示例' || game.category === category.value) &&
     `${game.title} ${game.subtitle}`.toLowerCase().includes(query.value.trim().toLowerCase()))
   return result
@@ -34,7 +34,7 @@ const filtered = computed(() => {
 
 <template>
   <main id="main-content" class="page home-page">
-    <HomeIntro @create="emit('create')" />
+    <HomeIntro :samples="samples" @create="emit('create')" />
 
     <section class="home-published" aria-labelledby="published-title">
       <div class="section-index"><span>MADE BY PLAYERS</span><span>创作者发布</span></div>
@@ -43,9 +43,11 @@ const filtered = computed(() => {
     </section>
 
     <section class="discover-section" aria-labelledby="discover-title">
-      <div class="section-index"><span>TRY THE ENGINE</span><span>{{ games.length }} 个内置示例</span></div>
-      <div class="section-heading"><div><h2 id="discover-title">示例体验<span class="subtle-count">{{ games.length }}</span></h2><p>通过内置场景体验引擎，示例不计入玩家发布作品。</p></div></div>
-      <FeaturedSamples :games="games" />
+      <div class="section-index"><span>TRY THE ENGINE</span><span>{{ samplesReady ? `${samples.length} 个内置示例` : '正在读取示例' }}</span></div>
+      <div class="section-heading"><div><h2 id="discover-title">示例体验<span class="subtle-count">{{ samples.length }}</span></h2><p>通过内置场景体验引擎，示例不计入玩家发布作品。</p></div></div>
+      <p v-if="!samplesReady" role="status">正在从云端读取示例…</p>
+      <EmptyState v-else-if="!samples.length" title="示例暂时无法加载" text="示例目录由云端提供。请确认后端已经启动，然后刷新页面。" />
+      <FeaturedSamples v-else :games="samples" />
 
       <div class="filter-bar">
         <div class="filter-tabs" aria-label="示例分类"><button v-for="item in categories" :key="item" :class="{ active: category === item }" :aria-pressed="category === item" @click="category = item">{{ item }}</button></div>

@@ -1,3 +1,4 @@
+import { fulfillSamples } from './sample-routes.mjs'
 // Regress the reported left -> right -> restart vertical flip using actual
 // submitted GPU vertices. The production package receives only ordinary input.
 import assert from 'node:assert/strict'
@@ -72,15 +73,15 @@ let frame, canvas, expectedMips, failure, renderer, expectedFailureObserved = fa
 page.on('console', message => logs.push(message.text()))
 page.on('pageerror', error => errors.push(error.message))
 function healthy() { assert.deepEqual(errors, []); assert.deepEqual(logs.filter(value => fatal.test(value)), []) }
-if (process.env.TEST_LIVE_BACKEND !== '1') await page.route('**/v1/**', route => route.fulfill({ status: route.request().url().includes('/auth/me') ? 401 : 200, json: [] }))
-if (fixture) await page.route(url => new URL(url).pathname === '/samples/return/return.tcpak', route => route.fulfill({
+if (process.env.TEST_LIVE_BACKEND !== '1') await page.route('**/v1/**', route => { if (fulfillSamples(route)) return; return route.fulfill({ status: route.request().url().includes('/auth/me') ? 401 : 200, json: [] }) })
+if (fixture) await page.route(url => new URL(url).pathname === '/v1/games/return/package', route => route.fulfill({
   status: 200, contentType: 'application/octet-stream', body: readFileSync(fixture.packagePath),
 }))
 await page.addInitScript(() => {
   const fetch = window.fetch.bind(window)
   window.fetch = async (...args) => {
     const response = await fetch(...args)
-    if (new URL(response.url || String(args[0]), location.href).pathname === '/samples/return/return.tcpak') {
+    if (new URL(response.url || String(args[0]), location.href).pathname === '/v1/games/return/package') {
       const bytes = await response.clone().arrayBuffer(), hash = await crypto.subtle.digest('SHA-256', bytes)
       top.__returnPackage = { byteLength: bytes.byteLength, sha256: [...new Uint8Array(hash)].map(value => value.toString(16).padStart(2, '0')).join('') }
     }

@@ -1,3 +1,4 @@
+import { fulfillSamples } from './sample-routes.mjs'
 import { chromium } from 'playwright'
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { createHash } from 'node:crypto'
@@ -56,7 +57,7 @@ await page.addInitScript(({ audioCompare }) => {
     const response = await nativeFetch(...args)
     const requestUrl = typeof args[0] === 'string' ? args[0] : args[0].url || String(args[0])
     const url = new URL(response.url || requestUrl, location.href)
-    if (url.pathname === '/samples/rougelike/rougelike.tcpak') {
+    if (url.pathname === '/v1/games/rougelike/package') {
       const bytes = await response.clone().arrayBuffer(), digest = await crypto.subtle.digest('SHA-256', bytes)
       top.__tcPackageReceipt = { url: url.href, status: response.status, byteLength: bytes.byteLength,
         sha256: [...new Uint8Array(digest)].map(value => value.toString(16).padStart(2, '0')).join('') }
@@ -112,7 +113,7 @@ await page.addInitScript(({ audioCompare }) => {
     }
   }
 }, { audioCompare })
-await page.route('**/v1/**', route => route.fulfill({ status: route.request().url().includes('/auth/me') ? 401 : 200, json: [] }))
+await page.route('**/v1/**', route => { if (fulfillSamples(route)) return; return route.fulfill({ status: route.request().url().includes('/auth/me') ? 401 : 200, json: [] }) })
 
 async function stopProfiler() {
   if (!profiler || profile) return

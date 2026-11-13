@@ -1,4 +1,4 @@
-import { games, isScene, type Project, type Scene } from './data'
+import { acceptArtwork, isScene, type Project, type Scene } from './data'
 import { assertDocument, readEngineProject, type EngineDocument } from '../engine/storage'
 
 function download(name: string, value: unknown) {
@@ -33,7 +33,7 @@ export async function readProjectFile(file: File): Promise<{ project: Omit<Proje
     scene = (data.scene as Scene | null) ?? null
   } else throw new Error('不支持的项目格式')
   return {
-    project: { name: String(raw.name).trim().slice(0, 32), template: raw.template === '2D' ? '2D' : '空白', image: games.some(game => game.image === raw.image) ? String(raw.image) : '', status: 'draft', description: typeof raw.description === 'string' ? raw.description.slice(0, 300) : '' },
+    project: { name: String(raw.name).trim().slice(0, 32), template: raw.template === '2D' ? '2D' : '空白', image: acceptArtwork(raw.image) ? String(raw.image) : '', status: 'draft', description: typeof raw.description === 'string' ? raw.description.slice(0, 300) : '' },
     scene, engine,
   }
 }

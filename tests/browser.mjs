@@ -17,14 +17,17 @@ await page.addInitScript(() => {
   localStorage.setItem('tomcat-ui-projects-v2-engine-test', JSON.stringify([{ id: 'my-first-game', name: '我的第一个游戏', description: '', template: '2D', image: '', status: 'draft', updated: '今天' }]))
 })
 let packageMode = 'valid'
-await page.route('**/samples/physics-lab/physics-lab.tcpak*', route => {
-  if (packageMode === 'missing') return route.fulfill({ status: 404, body: 'missing' })
+const physicsLab = { id: 'physics-lab', title: 'Physics Lab · 物理实验室', subtitle: '观察重力、旋转与碰撞如何发生。', author: 'Tc 引擎示例', category: '物理', image: '/samples/physics-lab/cover.png', color: '#d8e1d0', description: '一个自动运行的 2D 刚体实验。' }
+function fulfillPackage(route) {
+  if (packageMode === 'missing') return route.fulfill({ status: 404, contentType: 'application/json', body: JSON.stringify({ error: '没有这个示例游戏包。' }) })
   return route.fulfill({ contentType: 'application/octet-stream', body: packageMode === 'corrupt' ? Buffer.from('not a tcpak') : readFileSync('.engine/games/physics-lab.tcpak') })
-})
+}
 await page.route('**/v1/**', route => {
   const path = new URL(route.request().url()).pathname
   const json = (value, headers = {}) => route.fulfill({ json: value, headers })
   if (path === '/v1/auth/me') return json({ id: 'engine-test', email: 'engine-test@example.com', emailVerified: true })
+  if (path === '/v1/games') return json([physicsLab])
+  if (path === '/v1/games/physics-lab/package') return fulfillPackage(route)
   if (path === '/v1/projects/sync-config') return json({ enabled: false })
   if (path.endsWith('/ai-sessions/')) return json([])
   if (path === '/v1/projects' && route.request().method() === 'GET') return json([])
@@ -236,10 +239,11 @@ public sealed class WebSmoke : MonoBehaviour
     // 面板只有应有的一半——这条断言此前固化的正是那个错误行为。
     const hidpi = await browser.newPage({ viewport: { width: 1200, height: 800 }, deviceScaleFactor: 2 })
     hidpi.on('pageerror', error => errors.push(error.message))
-    await hidpi.route('**/samples/physics-lab/physics-lab.tcpak*', route => route.fulfill({ contentType: 'application/octet-stream', body: readFileSync('.engine/games/physics-lab.tcpak') }))
     await hidpi.route('**/v1/**', route => {
       const path = new URL(route.request().url()).pathname
       if (path === '/v1/auth/me') return route.fulfill({ json: { id: 'engine-test', email: 'engine-test@example.com', emailVerified: true } })
+      if (path === '/v1/games') return route.fulfill({ json: [physicsLab] })
+      if (path === '/v1/games/physics-lab/package') return route.fulfill({ contentType: 'application/octet-stream', body: readFileSync('.engine/games/physics-lab.tcpak') })
       return route.fulfill({ json: {} })
     })
     try {
@@ -277,7 +281,7 @@ public sealed class WebSmoke : MonoBehaviour
     await page.goto(`${base}/games/physics-lab`)
     await page.getByRole('button', { name: '开始游玩', exact: true }).first().click()
     await page.getByRole('alert').waitFor({ timeout: 30000 })
-    assert.match(await page.getByRole('alert').textContent(), /这个示例的游戏资源暂时无法找到/)
+    assert.match(await page.getByRole('alert').textContent(), /后端尚未提供这个示例的游戏包/)
     assert.equal(await page.locator('iframe').count(), 0)
     await page.getByRole('button', { name: '关闭播放器', exact: true }).click()
     // 后端返回损坏的包：引擎拒绝加载，并给出“包损坏/版本不匹配”的提示。
