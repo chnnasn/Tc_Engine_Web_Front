@@ -1,3 +1,4 @@
+import { platformUnavailable, serviceUnavailableMessage } from '../engine/service-error.ts'
 import type { Topic } from './data'
 
 export interface Page<T> { items: T[]; total: number }
@@ -10,9 +11,11 @@ export async function siteApi<T>(path: string, method = 'GET', body?: unknown): 
   })
   if (!response.ok) {
     if (response.status === 401) window.dispatchEvent(new Event('tomcat-auth-expired'))
-    let message = response.status === 401 ? '请先登录账号。' : response.status === 403 ? '当前账号没有此操作权限。' : response.status === 404 ? '内容不存在或已被移除。' : response.status === 429 ? '操作过于频繁，请稍后重试。' : '请求失败，请稍后重试。'
-    try { message = (await response.json()).error || message } catch { /* Empty error response. */ }
-    throw new Error(message)
+    let payload: { error?: unknown } | undefined
+    try { payload = await response.json() } catch { /* Empty error response. */ }
+    if (platformUnavailable(payload)) throw new Error(serviceUnavailableMessage)
+    const fallback = response.status === 401 ? '请先登录账号。' : response.status === 403 ? '当前账号没有此操作权限。' : response.status === 404 ? '内容不存在或已被移除。' : response.status === 429 ? '操作过于频繁，请稍后重试。' : '请求失败，请稍后重试。'
+    throw new Error(typeof payload?.error === 'string' && payload.error ? payload.error : fallback)
   }
   if (response.status === 204) return undefined as T
   if (!response.headers.get('content-type')?.includes('application/json')) throw new Error('服务连接失败，请稍后重试。')

@@ -2,6 +2,7 @@
 import { computed, nextTick, onBeforeUnmount, ref, watch } from 'vue'
 import { ArrowUp, Check, ChevronDown, MessageSquare, PanelRightClose, Plus, Square } from '@lucide/vue'
 import { executeTool, type AutomationCommand, type EngineCall } from '../engine/automation'
+import { platformUnavailable, serviceUnavailableMessage } from '../engine/service-error.ts'
 import { engineCommit } from '../engine/storage'
 import type { Snapshot } from '../engine/protocol'
 import type { CheckpointReceipt } from '../engine/sync-status'
@@ -54,7 +55,7 @@ async function conversationApi(projectId: string, path = '', options: RequestIni
   const response = await fetch(`/v1/projects/${encodeURIComponent(projectId)}/ai-sessions/${path}`, { ...options, headers, credentials: 'same-origin', signal: AbortSignal.timeout(10000) })
   if (!response.ok) {
     const body = await response.json().catch(() => ({}))
-    throw new Error(body.error || `对话记录请求失败 (${response.status})`)
+    throw new Error(platformUnavailable(body) ? serviceUnavailableMessage : body.error || `对话记录请求失败 (${response.status})`)
   }
   return response.json()
 }
@@ -127,7 +128,7 @@ async function api(path: string, options: RequestInit = {}) {
   const response = await fetch(`/v1/editor-sessions${path}`, { ...options, headers, credentials: 'same-origin' })
   if (!response.ok) {
     const body = await response.json().catch(() => ({}))
-    throw new Error(body.error || `编辑器服务请求失败 (${response.status})`)
+    throw new Error(platformUnavailable(body) ? serviceUnavailableMessage : body.error || `编辑器服务请求失败 (${response.status})`)
   }
   return response.status === 204 ? undefined : response.json()
 }

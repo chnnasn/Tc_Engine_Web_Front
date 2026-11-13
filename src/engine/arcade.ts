@@ -1,5 +1,6 @@
 // 玩家作品（已发布游戏）的公开接口。游客可访问，不经过登录态检查；
 // 打包下载与播放器预览保持一致的 256 MiB 上限。
+import { platformUnavailable, serviceUnavailableMessage } from './service-error.ts'
 import { compatibleEngineCommit } from './storage.ts'
 
 export const MAX_PACKAGE = 256 * 1024 * 1024
@@ -24,8 +25,9 @@ async function request(path: string, init: RequestInit = {}, timeoutMs = 20000):
   try { response = await fetch(`/v1${path}`, { ...init, signal: AbortSignal.timeout(timeoutMs) }) }
   catch { throw new ArcadeError(0, '无法连接服务器，请稍后重试') }
   if (!response.ok) {
-    let message = '请求失败，请稍后重试'
-    try { message = (await response.json()).error || message } catch { /* Empty error bodies. */ }
+    let payload: { error?: unknown } | undefined
+    try { payload = await response.json() } catch { /* Empty error bodies. */ }
+    const message = platformUnavailable(payload) ? serviceUnavailableMessage : typeof payload?.error === 'string' && payload.error ? payload.error : '请求失败，请稍后重试'
     throw new ArcadeError(response.status, message)
   }
   return response
@@ -38,7 +40,11 @@ export async function loadPublishedPackage(id: string, signal?: AbortSignal): Pr
   let response: Response
   try { response = await fetch(`/v1/games/published/${encodeURIComponent(id)}/package`, { signal }) }
   catch { throw new ArcadeError(0, '无法连接服务器，游戏包未能下载') }
-  if (response.status === 404) throw new ArcadeError(404, '作品不存在或已取消发布')
+  if (response.status === 404) {
+    let payload: unknown
+    if (response.headers.get('content-type')?.includes('json')) { try { payload = await response.json() } catch { /* Keep the domain message. */ } }
+    throw new ArcadeError(404, platformUnavailable(payload) ? serviceUnavailableMessage : '作品不存在或已取消发布')
+  }
   if (!response.ok) throw new ArcadeError(response.status, `游戏包下载失败（HTTP ${response.status}）`)
   if (Number(response.headers.get('content-length') ?? 0) > MAX_PACKAGE) throw new ArcadeError(413, '游戏包超过 256 MiB，网页播放器无法加载')
   const buffer = await response.arrayBuffer()

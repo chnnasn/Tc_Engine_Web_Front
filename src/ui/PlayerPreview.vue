@@ -3,6 +3,7 @@ import { computed, onBeforeUnmount, ref } from 'vue'
 import type { Game } from './data'
 import AppModal from './AppModal.vue'
 import EngineSurface from './EngineSurface.vue'
+import { platformUnavailable, serviceUnavailableMessage } from '../engine/service-error.ts'
 import engineLock from '../../engine.lock.json'
 const props = defineProps<{ game: Game }>()
 const emit = defineEmits<{ close: [] }>()
@@ -43,7 +44,12 @@ async function load() {
       credentials: 'same-origin', headers: { 'X-TomCat-Request': '1' }, signal: request.signal,
     })
     if (current !== generation.value) return
-    if (response.status === 404) { error.value = props.game.packageUrl ? '这个示例的游戏资源暂时无法找到，请稍后重试' : '后端尚未提供这个作品的游戏包'; return }
+    if (response.status === 404) {
+      let payload: unknown
+      if (response.headers.get('content-type')?.includes('json')) { try { payload = await response.json() } catch { /* A real missing package has no platform body. */ } }
+      error.value = platformUnavailable(payload) ? serviceUnavailableMessage : props.game.packageUrl ? '这个示例的游戏资源暂时无法找到，请稍后重试' : '后端尚未提供这个作品的游戏包'
+      return
+    }
     if (!response.ok) { error.value = `游戏包下载失败（HTTP ${response.status}）`; return }
     if (response.headers.get('content-type')?.includes('text/html')) { error.value = '游戏资源暂时不可用，请稍后重试'; return }
     if (Number(response.headers.get('content-length') ?? 0) > MAX_PACKAGE) { error.value = '游戏包超过 256 MiB，网页播放器无法加载'; return }

@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue'
+import { platformUnavailable, serviceUnavailableMessage } from '../engine/service-error.ts'
 import ChangeSummary from './ChangeSummary.vue'
 const props = defineProps<{ projectId: string; runId: string }>()
 const events = ref<any[]>([]), error = ref(''), busy = ref(false), more = ref(false)
@@ -9,7 +10,10 @@ async function load(reset = true) {
   busy.value = true; error.value = ''
   try {
     const response = await fetch(`/v1/projects/${encodeURIComponent(props.projectId)}/ai-runs/${encodeURIComponent(props.runId)}/events?after=${reset ? 0 : cursor}`, { credentials: 'same-origin', signal: AbortSignal.timeout(10000) })
-    if (!response.ok) throw new Error('无法读取执行证据')
+    if (!response.ok) {
+      const body = await response.json().catch(() => undefined)
+      throw new Error(platformUnavailable(body) ? serviceUnavailableMessage : '无法读取执行证据')
+    }
     const data = await response.json()
     events.value = reset ? data.events : [...events.value, ...data.events]; cursor = data.nextAfter; more.value = data.hasMore
   } catch (cause) { error.value = String(cause) } finally { busy.value = false }

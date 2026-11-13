@@ -1,3 +1,4 @@
+import { platformUnavailable, serviceUnavailableMessage } from '../engine/service-error.ts'
 import { siteApi, type Page } from './community-api'
 import type { Topic } from './data'
 export interface UserProfile { id: string; displayName: string; avatarUrl: string | null; isAdmin: boolean; createdAt: string; topics: number; publishedGames: number }
@@ -23,6 +24,8 @@ export async function uploadAvatar(file: File) {
   const response = await fetch('/v1/users/me/avatar', { method: 'PUT', credentials: 'same-origin', signal: AbortSignal.timeout(30000), headers: { 'Content-Type': 'image/png', 'X-TomCat-Request': '1' }, body: blob })
   if (!response.ok) {
     if (response.status === 401) window.dispatchEvent(new Event('tomcat-auth-expired'))
+    const payload = response.headers.get('content-type')?.includes('json') ? await response.json().catch(() => undefined) : undefined
+    if (platformUnavailable(payload)) throw new Error(serviceUnavailableMessage)
     throw new Error(response.status === 413 ? '头像文件过大，请换一张图片。' : '头像上传失败，请确认登录状态后重试。')
   }
 }

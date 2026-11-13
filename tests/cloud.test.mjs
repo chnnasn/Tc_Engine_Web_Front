@@ -1,7 +1,7 @@
 import test from 'node:test'
 import assert from 'node:assert/strict'
 import { createHash } from 'node:crypto'
-import { saveCloudProject } from '../src/engine/cloud.ts'
+import { forgotPassword, getCloudProject, saveCloudProject } from '../src/engine/cloud.ts'
 import { assertDocument, engineCommit, requiredFiles } from '../src/engine/storage.ts'
 const document = {format:'tomcat-engine-project',version:2,engineCommit,sceneHandle:'18446744073709551615',archive:'Scene: example',files:Object.fromEntries(requiredFiles.map(path=>[path,btoa('{}')]))}
 const binding={ownerId:'alice',projectId:'project',etag:'"previous"',pending:true}
@@ -35,6 +35,15 @@ test('cloud save never creates a revision after partial upload or wrong account'
     requests=[];globalThis.fetch=async(path)=>{requests.push(path);return json({id:'bob'})}
     await assert.rejects(saveCloudProject(document,binding),/其他云端账号/);assert.equal(requests.length,1)
   } finally {globalThis.fetch=original}
+})
+test('account recovery 404 reports an unavailable service, project 404 stays an access error', async () => {
+  const original = globalThis.fetch
+  try {
+    globalThis.fetch = async () => json({ status: 'error', code: 404, message: 'Application not found' }, 404)
+    await assert.rejects(forgotPassword('a@example.com'), error => error.status === 404 && /云端服务暂时不可用/.test(error.message))
+    globalThis.fetch = async () => json({}, 404)
+    await assert.rejects(getCloudProject('missing'), error => error.status === 404 && /没有访问权限/.test(error.message))
+  } finally { globalThis.fetch = original }
 })
 test('412 preserves caller ETag without retrying against server current revision',async()=>{
   const original=globalThis.fetch;let revisions=0

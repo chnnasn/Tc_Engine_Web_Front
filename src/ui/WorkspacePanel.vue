@@ -4,6 +4,7 @@ import type { EngineCall } from '../engine/automation'
 import type { Snapshot } from '../engine/protocol'
 import type { EngineDocument } from '../engine/storage'
 import { sceneDiff, fileDiff } from '../engine/semantic-diff'
+import { platformUnavailable, serviceUnavailableMessage } from '../engine/service-error.ts'
 import ChangeSummary from './ChangeSummary.vue'
 const props = defineProps<{ projectId: string; call: EngineCall; baseline: Snapshot; baselineDocument?: EngineDocument; disabled?: boolean }>()
 const emit = defineEmits<{ close: []; fork: [] }>()
@@ -13,7 +14,11 @@ const report = ref<any>(), notes = ref<any[]>([]), key = ref(''), content = ref(
 const parent = ref<{ sourceProjectId: string | null; baseRevisionId: string }>()
 async function api(path: string, options: RequestInit = {}) {
   const response = await fetch(`/v1/projects/${encodeURIComponent(props.projectId)}/${path}`, { ...options, credentials: 'same-origin', headers: { 'Content-Type': 'application/json', 'X-TomCat-Request': '1' }, signal: AbortSignal.timeout(15000) })
-  if (!response.ok) throw new Error(response.status === 409 ? '笔记已被修改，请重新读取后再保存。' : '项目工具请求失败')
+  if (!response.ok) {
+    const body = await response.json().catch(() => undefined)
+    if (platformUnavailable(body)) throw new Error(serviceUnavailableMessage)
+    throw new Error(response.status === 409 ? '笔记已被修改，请重新读取后再保存。' : '项目工具请求失败')
+  }
   return response.status === 204 ? undefined : response.json()
 }
 async function perform(action: () => Promise<void>) {

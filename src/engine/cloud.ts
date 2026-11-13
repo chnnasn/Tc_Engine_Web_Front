@@ -1,3 +1,4 @@
+import { platformUnavailable, serviceUnavailableMessage } from './service-error.ts'
 import { assertDocument, compatibleEngineCommit, validFilePath, requiredFiles, type CloudBinding, type EngineDocument } from './storage.ts'
 
 export interface CloudUser { id: string; email: string; emailVerified: boolean; isAdmin?: boolean; displayName?: string; avatarUrl?: string | null }
@@ -18,12 +19,15 @@ async function api(path: string, init: RequestInit = {}) {
   } catch { throw new CloudError(0, '无法连接云端，本地内容已保留，请检查网络后重试') }
   if (!response.ok) {
     let message = '云端请求失败'
-    try { message = (await response.json()).error || message } catch { /* Empty precondition responses. */ }
+    let payload: { error?: unknown; message?: unknown; status?: unknown } | undefined
+    try { payload = await response.json() } catch { /* Empty precondition responses. */ }
+    if (typeof payload?.error === 'string' && payload.error) message = payload.error
     if (response.status === 401) {
       message = path === '/auth/login' ? '邮箱或密码错误' : path === '/auth/switch' ? '此账号的保存登录已失效，请重新输入密码' : '请先登录云端账号'
       if (!['/auth/login', '/auth/register', '/auth/switch'].includes(path) && typeof window !== 'undefined') window.dispatchEvent(new Event('tomcat-auth-expired'))
     }
-    if (response.status === 404) message = '云端项目或文件不存在，或当前账号没有访问权限'
+    // Railway returns 404 Application not found when the API process is gone. That is not a missing project.
+    if (response.status === 404) message = platformUnavailable(payload) || path.startsWith('/auth/') ? serviceUnavailableMessage : '云端项目或文件不存在，或当前账号没有访问权限'
     if (response.status === 412) message = '云端已有新修订，本地内容已保留。请从项目列表恢复最新版本进行比较，或另建云端项目'
     throw new CloudError(response.status, message)
   }
@@ -100,7 +104,7 @@ export const publishProject = async (id: string, title: string, description: str
   (await api(`${idPath(id)}/publish`, json('POST', { title, description }))).json()
 export const fetchPublishState = async (id: string): Promise<PublishState | undefined> => {
   try { return (await api(`${idPath(id)}/publish`)).json() as Promise<PublishState> }
-  catch (error) { if (error instanceof CloudError && error.status === 404) return undefined; throw error }
+  catch (error) { if (error instanceof CloudError && error.status === 404 && error.message !== serviceUnavailableMessage) return undefined; throw error }
 }
 export const unpublishProject = async (id: string) => { await api(`${idPath(id)}/publish`, { method: 'DELETE' }) }
 export async function saveCloudProject(document: EngineDocument, binding: CloudBinding, options: { automatic?: boolean; reuseUploads?: boolean; checkpoint?: AiCheckpoint } = {}): Promise<CloudBinding> {
@@ -128,7 +132,7 @@ export async function saveCloudProject(document: EngineDocument, binding: CloudB
         let uploaded: { uploadId: string; contentHash: string; size: number } | undefined
         if (options.reuseUploads) {
           try { uploaded = await (await api(`${idPath(binding.projectId)}/uploads/by-hash/${hash}`)).json() }
-          catch (error) { if (!(error instanceof CloudError && error.status === 404)) throw error }
+          catch (error) { if (!(error instanceof CloudError && error.status === 404 && error.message !== serviceUnavailableMessage)) throw error }
         }
         if (failed) return
         if (!uploaded) uploaded = await (await api(`${idPath(binding.projectId)}/uploads/${hash}`, { method: 'PUT', headers: { 'Content-Type': 'application/octet-stream' }, body: new Uint8Array(bytes).buffer })).json()
