@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import { computed, onMounted, onBeforeUnmount, ref } from 'vue'
+import { computed, onMounted, onBeforeUnmount, ref, watch } from 'vue'
 import { ArrowUpRight, Cloud, Download, FileJson, FolderOpen, Gamepad2, Grid2X2, List, MoreHorizontal, Plus, Upload } from '@lucide/vue'
 import { nowLabel, uid, type Project } from './data'
 import { exportProject, readProjectFile } from './project-file'
 import { readCloudBinding, writeCloudBinding, readEngineProject, writeEngineProject } from '../engine/storage'
-import { listCloudProjects, getCloudProject, restoreCloudProject, createCloudProject, updateCloudProject, deleteCloudProject, type RestoredProject } from '../engine/cloud'
+import { listCloudProjects, getCloudProject, restoreCloudProject, createCloudProject, updateCloudProject, deleteCloudProject, fetchPublishState, type PublishState, type RestoredProject } from '../engine/cloud'
 import { useAccess } from './access'
 import CloudProjects from './CloudProjects.vue'
 import PublishDialog from './PublishDialog.vue'
@@ -34,6 +34,29 @@ const fileInput = ref<HTMLInputElement>()
 const cloudOpen = ref(false)
 const publishing = ref<{ project: Project; projectId?: string; dirty: boolean }>()
 const publishLoading = ref(false)
+const publication = ref<Record<string, PublishState['status'] | 'none'>>({})
+async function refreshPublications() {
+  const ownerId = user.value?.id
+  if (!ownerId) { publication.value = {}; return }
+  const next: Record<string, PublishState['status'] | 'none'> = {}
+  await Promise.all(props.projects.map(async project => {
+    const binding = await readCloudBinding(project.id)
+    if (!binding || binding.ownerId !== ownerId) { next[project.id] = 'none'; return }
+    try {
+      const state = await fetchPublishState(binding.projectId)
+      next[project.id] = state?.status ?? 'none'
+    } catch { next[project.id] = 'none' }
+  }))
+  if (!gone) publication.value = next
+}
+function publicationLabel(project: Project) {
+  const cloud = publication.value[project.id]
+  if (cloud === 'published') return '已发布'
+  if (cloud === 'pending') return '发布中'
+  if (cloud === 'failed') return '发布失败'
+  return project.status === 'published' ? '本地展示草稿' : '草稿'
+}
+function closePublish() { publishing.value = undefined; void refreshPublications() }
 async function openPublish(project: Project) {
   if (publishLoading.value || !await requireLogin()) return
   publishLoading.value = true
@@ -178,7 +201,9 @@ onMounted(async () => {
     }
     if (user.value?.id === ownerId && added.length) setProjects(projects => [...added, ...projects])
   } catch (error) { emit('notify', error instanceof Error ? error.message : '读取云端项目失败') }
+  await refreshPublications()
 })
+watch(() => props.projects.map(project => project.id).join(), () => { void refreshPublications() })
 </script>
 
 <template>
@@ -202,7 +227,7 @@ onMounted(async () => {
         <div class="project-content">
           <div class="project-card-heading"><AppLink :href="`/editor/${project.id}`"><h3>{{ project.name }}</h3></AppLink><details class="project-menu"><summary class="icon-button" :aria-label="`${project.name}更多操作`"><MoreHorizontal :size="19" /></summary><div class="menu-options"><button @click="beginRename(project)">重命名</button><button @click="duplicate(project)">创建副本</button><button @click="exportItem(project)">导出项目</button><button class="danger-text" @click="action = { type: 'delete', project }">删除项目</button></div></details></div>
           <p class="project-description">{{ project.description || '一个新的好玩想法。' }}</p>
-          <div class="project-status-row"><span class="status-pill" :class="{ 'status-published': project.status === 'published' }"><span />{{ project.status === 'published' ? '本地展示草稿' : '草稿' }}</span><span>{{ project.updated }}</span></div>
+          <div class="project-status-row"><span class="status-pill" :class="{ 'status-published': publication[project.id] === 'published' || project.status === 'published' }"><span />{{ publicationLabel(project) }}</span><span>{{ project.updated }}</span></div>
           <div class="project-card-footer"><button class="text-link project-publish" :disabled="publishLoading" @click="openPublish(project)"><Upload :size="14" />发布</button><AppLink :href="`/editor/${project.id}`" class="text-link">打开编辑器<ArrowUpRight :size="15" /></AppLink></div>
         </div>
       </article>
@@ -211,7 +236,7 @@ onMounted(async () => {
     <div class="workspace-help"><span><Gamepad2 :size="18" />还不知道从哪里开始？</span><TextLink href="/community">看看大家正在做什么</TextLink></div>
 
     <CloudProjects v-if="cloudOpen" allow-restore @close="cloudOpen = false" @restored="restoreCloud" />
-    <PublishDialog v-if="publishing" :project-id="publishing.projectId" :project-name="publishing.project.name" :project-description="publishing.project.description" :dirty="publishing.dirty" @close="publishing = undefined" @notify="emit('notify', $event)" />
+    <PublishDialog v-if="publishing" :project-id="publishing.projectId" :project-name="publishing.project.name" :project-description="publishing.project.description" :dirty="publishing.dirty" @close="closePublish" @notify="emit('notify', $event)" />
     <AppModal v-if="action" :title="action.type === 'rename' ? '编辑项目信息' : '删除这个项目？'" @close="action = null">
       <form v-if="action.type === 'rename'" @submit.prevent="renameProject"><label class="field-label" for="rename-project">项目名称</label><input id="rename-project" v-model="name" class="text-input" autofocus required maxlength="32" /><label class="field-label" for="project-description">项目描述</label><textarea id="project-description" v-model="description" class="text-input compose-textarea" rows="4" maxlength="1000" placeholder="介绍项目的玩法、目标与当前进展。" /><div class="dialog-actions"><button type="button" class="button" @click="action = null">取消</button><button class="button button-primary" :disabled="!name.trim()">保存信息</button></div></form>
       <template v-else><p class="dialog-description delete-description">“{{ action.project.name }}”将从云端及此浏览器移除。删除后无法恢复，建议先导出项目备份。</p><div class="dialog-actions"><button class="button" @click="exportItem(action.project)"><Download :size="15" />先导出</button><button class="button" @click="action = null">取消</button><button class="button button-danger" @click="deleteProject">删除项目</button></div></template>
