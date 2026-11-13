@@ -29,6 +29,7 @@ const filter = ref('all')
 const view = ref<'grid' | 'list'>('grid')
 const action = ref<{ type: 'rename' | 'delete'; project: Project } | null>(null)
 const name = ref('')
+const description = ref('')
 const fileInput = ref<HTMLInputElement>()
 const cloudOpen = ref(false)
 const publishing = ref<{ project: Project; projectId?: string; dirty: boolean }>()
@@ -120,6 +121,7 @@ function selectImport(event: Event) {
 
 function beginRename(project: Project) {
   name.value = project.name
+  description.value = project.description
   action.value = { type: 'rename', project }
 }
 
@@ -129,13 +131,13 @@ async function renameProject() {
   const id = action.value.project.id
   try {
     const binding = await readCloudBinding(id)
-    if (binding) await updateCloudProject(binding.projectId, { ...action.value.project, name: name.value.trim() })
-  } catch (error) { emit('notify', error instanceof Error ? error.message : '重命名失败'); return }
+    if (binding) await updateCloudProject(binding.projectId, { ...action.value.project, name: name.value.trim(), description: description.value.trim() })
+  } catch (error) { emit('notify', error instanceof Error ? error.message : '项目信息保存失败'); return }
   setProjects(projects => projects.map(project => project.id === id
-    ? { ...project, name: name.value.trim(), updated: nowLabel() }
+    ? { ...project, name: name.value.trim(), description: description.value.trim(), updated: nowLabel() }
     : project))
   action.value = null
-  emit('notify', '项目已重命名')
+  emit('notify', '项目信息已更新')
 }
 
 async function deleteProject() {
@@ -210,8 +212,8 @@ onMounted(async () => {
 
     <CloudProjects v-if="cloudOpen" allow-restore @close="cloudOpen = false" @restored="restoreCloud" />
     <PublishDialog v-if="publishing" :project-id="publishing.projectId" :project-name="publishing.project.name" :project-description="publishing.project.description" :dirty="publishing.dirty" @close="publishing = undefined" @notify="emit('notify', $event)" />
-    <AppModal v-if="action" :title="action.type === 'rename' ? '给项目换个名字' : '删除这个项目？'" @close="action = null">
-      <form v-if="action.type === 'rename'" @submit.prevent="renameProject"><label class="field-label" for="rename-project">项目名称</label><input id="rename-project" v-model="name" class="text-input" autofocus required maxlength="32" /><div class="dialog-actions"><button type="button" class="button" @click="action = null">取消</button><button class="button button-primary" :disabled="!name.trim()">保存名称</button></div></form>
+    <AppModal v-if="action" :title="action.type === 'rename' ? '编辑项目信息' : '删除这个项目？'" @close="action = null">
+      <form v-if="action.type === 'rename'" @submit.prevent="renameProject"><label class="field-label" for="rename-project">项目名称</label><input id="rename-project" v-model="name" class="text-input" autofocus required maxlength="32" /><label class="field-label" for="project-description">项目描述</label><textarea id="project-description" v-model="description" class="text-input compose-textarea" rows="4" maxlength="1000" placeholder="介绍项目的玩法、目标与当前进展。" /><div class="dialog-actions"><button type="button" class="button" @click="action = null">取消</button><button class="button button-primary" :disabled="!name.trim()">保存信息</button></div></form>
       <template v-else><p class="dialog-description delete-description">“{{ action.project.name }}”将从云端及此浏览器移除。删除后无法恢复，建议先导出项目备份。</p><div class="dialog-actions"><button class="button" @click="exportItem(action.project)"><Download :size="15" />先导出</button><button class="button" @click="action = null">取消</button><button class="button button-danger" @click="deleteProject">删除项目</button></div></template>
     </AppModal>
   </main>
