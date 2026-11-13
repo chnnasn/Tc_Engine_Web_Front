@@ -61,6 +61,11 @@ try {
   }
   await login(userPage, normal.email)
   await userPage.getByRole('heading', { name: '需要管理员权限' }).waitFor()
+  const projectCreated = await userPage.evaluate(async () => {
+    const response = await fetch('/v1/projects', { method: 'POST', headers: { 'Content-Type': 'application/json', 'X-TomCat-Request': '1' }, body: JSON.stringify({ name: '在线二维游戏示例', template: '2D', description: '用于管理统计验收的独立测试项目' }) })
+    return response.status
+  })
+  assert.equal(projectCreated, 201)
   await userPage.goto(base + '/profile')
   await userPage.locator('#display-name').fill('改名后的玩家')
   await userPage.getByRole('button', { name: '保存昵称', exact: true }).click()
@@ -95,7 +100,9 @@ try {
   await adminPage.getByRole('heading', { name: /^管理后台/ }).waitFor()
   await adminPage.locator('.admin-row').getByText(normal.email, { exact: false }).waitFor()
   assert.equal(await adminPage.locator('.admin-stat strong').first().textContent(), '2')
-  for (const label of ['云端项目', '社区回复', '资源存储']) assert.equal(await adminPage.locator('.admin-stats').getByText(label, { exact: true }).count(), 0)
+  assert.equal(await adminPage.locator('.admin-stat').filter({ hasText: '云端项目' }).locator('strong').textContent(), '1')
+  assert.equal(await adminPage.locator('.admin-stat').filter({ hasText: '已发布作品' }).locator('strong').textContent(), '0')
+  for (const label of ['社区回复', '资源存储']) assert.equal(await adminPage.locator('.admin-stats').getByText(label, { exact: true }).count(), 0)
   await adminPage.getByText(/近 14 天活跃趋势/).click()
   assert.equal(await adminPage.locator('.activity-table tbody tr').count(), 14)
   // Save a second account in this browser, then explicitly pick the administrator.
@@ -118,6 +125,8 @@ try {
   assert.equal((await adminContext.cookies()).filter(cookie => cookie.name === 'tomcat.accounts')[0].httpOnly, true)
   assert.equal((await adminContext.cookies()).filter(cookie => cookie.name === 'tomcat.session')[0].expires > Date.now() / 1000 + 29 * 86400, true)
   await adminPage.screenshot({ path: join(shots, 'admin-desktop.png'), fullPage: true })
+  await adminPage.locator('.admin-stats').screenshot({ path: join(shots, 'admin-stats-panel.png') })
+  await adminPage.locator('.admin-panel').screenshot({ path: join(shots, 'admin-users-panel.png') })
   async function action(name, reason, confirmLabel = name) {
     await adminPage.getByRole('button', { name, exact: true }).click()
     await adminPage.locator('#moderation-reason').fill(reason)
@@ -158,6 +167,9 @@ try {
   await userPage.getByRole('alert').filter({ hasText: '话题不存在或已被移除' }).waitFor()
   await adminPage.getByRole('button', { name: '操作记录', exact: true }).click()
   await adminPage.getByText('删除不当话题及关联回复', { exact: true }).waitFor()
+  await adminPage.getByText('删除话题成功，已记录操作原因', { exact: true }).waitFor({ state: 'hidden' })
+  await adminPage.screenshot({ path: join(shots, 'admin-audit-desktop.png'), fullPage: true })
+  await adminPage.locator('.admin-panel').screenshot({ path: join(shots, 'admin-audit-panel.png') })
   await adminPage.setViewportSize({ width: 390, height: 844 })
   assert.equal(await adminPage.evaluate(() => document.documentElement.scrollWidth > innerWidth), false)
   await adminPage.screenshot({ path: join(shots, 'admin-mobile.png'), fullPage: true })

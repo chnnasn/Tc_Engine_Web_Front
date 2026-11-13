@@ -23,7 +23,7 @@ const tabs = [
   { id: 'publications' as Tab, label: '作品管理', icon: Gamepad2 },
   { id: 'audit' as Tab, label: '操作记录', icon: ClipboardList },
 ]
-const statLabels: Record<string, string> = { users: '注册人数', newUsersToday: '今日注册', dailyActiveUsers: '今日活跃', onlineUsers: '当前在线', todayOnlineSeconds: '今日在线时长', totalOnlineSeconds: '累计在线时长' }
+const statLabels: Record<string, string> = { users: '注册人数', projects: '云端项目', publishedGames: '已发布作品', newUsersToday: '今日注册', dailyActiveUsers: '今日活跃', onlineUsers: '当前在线', todayOnlineSeconds: '今日在线时长', totalOnlineSeconds: '累计在线时长' }
 const actionLabels: Record<string, string> = { suspend_user: '封禁账号', restore_user: '解除封禁', pin_topic: '置顶话题', unpin_topic: '取消置顶', delete_topics: '删除话题', delete_replies: '删除回复', block_game: '下架作品', restore_game: '解除下架' }
 const tab = ref<Tab>('users')
 const query = ref('')
